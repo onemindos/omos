@@ -1,0 +1,18 @@
+# onemind-media (FEATURES K1, K2): hardened MediaMTX plus video-registry, namespace onetak.
+# Applied only by the platform-onetak-media Application (manual sync). platform-onetak does not
+# read this directory (directory.recurse: false), and the old onetak-media in ../media-mtx.yaml
+# keeps running untouched until the owner cuts takml over (README.md "Cut-over").
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: onetak
+resources:
+  - pvc.yaml
+  - deployment.yaml
+  - service.yaml
+  - tailnet-service.yaml
+  - video-registry.yaml
+configMapGenerator:
+  # The hash suffix rolls both Deployments when mediamtx.yml changes.
+  - name: onemind-media-config
+    files:
+      - mediamtx.yml

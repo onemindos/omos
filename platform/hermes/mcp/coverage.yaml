@@ -188,6 +188,10 @@ applications:
     - webodm
     - tak
     reason: Application APIs split by purpose; supporting databases and workers stay behind owning apps.
+  platform-onetak-media:
+    apps:
+    - mediamtx
+    reason: OneMind video (onemind-media MediaMTX and video-registry); stream access goes through the mediamtx app and the svc.registry.video.* bus API, not admin tools.
   platform-ops:
     apps:
     - kubernetes

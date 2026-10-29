@@ -1,0 +1,19 @@
+# Example action plugin (FEATURES K6): asset.orbit on simulated drones. The policy service publishes
+# cmd.fleet.drone.{id}.orbit only after policy, audit and a human confirm (run rule 6); this plugin
+# never publishes a command, it consumes the approved one and reports the outcome.
+apiVersion: onemind.io/plugin/v1
+id: org.onemindos.action.drone-orbit
+name: Drone orbit
+version: 0.1.0
+kinds: [action]
+trust: built-in
+licence: GPL-3.0-or-later
+bus:
+  subscribes: [cmd.fleet.drone.*.orbit]
+  publishes: [evt.drone.*.command]
+action:
+  name: asset.orbit
+  subject: cmd.fleet.drone.*.orbit
+  schema: services/schemas/actions/asset.orbit.v1.schema.json
+  policy: openfga:drone#task
+  confirm: human

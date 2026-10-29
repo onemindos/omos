@@ -1,0 +1,115 @@
+# onemind-media: MediaMTX v1.21.3 for OneMind video (FEATURES K1). Mounted into the pod by the
+# configMapGenerator in kustomization.yaml, and read (read-only) by video-registry to derive the
+# permissions it publishes in the stream registry (K2).
+#
+# Rules this file enforces:
+#   * No anonymous publish or read. Every user is a bus identity (BUS-DESIGN section 7) with the
+#     same name; its MediaMTX password is separate from its NATS password.
+#   * Passwords are NOT in this file. Each `pass: from-secret` placeholder is replaced at start by
+#     the environment variable MTX_AUTHINTERNALUSERS_<index>_PASS, which the Deployment fills from
+#     the onemind-media-users Secret (SealedSecret, see SEALING.md). Proven on v1.21.3, see the
+#     K evidence. Keep the user ORDER in sync with deployment.yaml; the video-registry unit test
+#     TestDeploymentEnvMatchesUsers fails if they drift.
+#   * Only the paths below exist: drone/sim-*, robot/sim-* (simulated assets only in this run)
+#     and cam/<id>. Anything else is refused (400) before auth.
+#   * A second publisher cannot take over a live path (overridePublisher: false).
+logLevel: info
+logDestinations: [stdout]
+readTimeout: 10s
+writeTimeout: 10s
+
+authMethod: internal
+authInternalUsers:
+  # 0: MAVLink bridge identity; a companion computer pushing a drone camera straight to the hub.
+  - user: mavlink-bridge
+    pass: from-secret
+    ips: []
+    permissions:
+      - {action: publish, path: "~^drone/sim-[a-z0-9-]+$"}
+  # 1: site edge MediaMTX of the home site (bus identity leaf-home); forwards over SRT (K9).
+  - user: edge-home
+    pass: from-secret
+    ips: []
+    permissions:
+      - {action: publish, path: "~^((drone|robot)/sim-[a-z0-9-]+|cam/[a-z0-9-]+)$"}
+  # 2: OneMind clients (CLIENT account: Unreal, L0 web, headset). Phase B moves humans to JWT.
+  - user: onemind-client
+    pass: from-secret
+    ips: []
+    permissions:
+      - {action: read, path: "~^((drone|robot)/sim-[a-z0-9-]+|cam/[a-z0-9-]+)$"}
+      - {action: playback, path: "~^((drone|robot)/sim-[a-z0-9-]+|cam/[a-z0-9-]+)$"}
+  # 3: TAK users (ATAK/iTAK/WinTAK video alias). Read only, no playback.
+  - user: tak-viewer
+    pass: from-secret
+    ips: []
+    permissions:
+      - {action: read, path: "~^((drone|robot)/sim-[a-z0-9-]+|cam/[a-z0-9-]+)$"}
+  # 4: takml vision worker (detections on det.*), read only.
+  - user: takml
+    pass: from-secret
+    ips: []
+    permissions:
+      - {action: read, path: "~^((drone|robot)/sim-[a-z0-9-]+|cam/[a-z0-9-]+)$"}
+  # 5: video-registry reads /v3/paths/list. The API is cluster-internal (not on the tailnet).
+  - user: video-registry
+    pass: from-secret
+    ips: []
+    permissions:
+      - {action: api}
+  # 6: metrics, from inside the pod only.
+  - user: any
+    pass:
+    ips: ["127.0.0.1", "::1"]
+    permissions:
+      - {action: metrics}
+
+api: true
+apiAddress: :9997
+apiAllowOrigins: []
+metrics: true
+metricsAddress: :9998
+pprof: false
+playback: true
+playbackAddress: :9996
+playbackAllowOrigins: []
+
+rtsp: true
+rtspTransports: [tcp]
+rtspEncryption: "no"
+rtspAddress: :8554
+rtspAuthMethods: [basic]
+rtmp: false
+hls: true
+hlsAddress: :8888
+hlsAllowOrigins: ["*"]
+hlsVariant: lowLatency
+hlsSegmentCount: 7
+hlsSegmentDuration: 1s
+hlsPartDuration: 200ms
+webrtc: true
+webrtcAddress: :8889
+webrtcAllowOrigins: ["*"]
+webrtcLocalUDPAddress: :8189
+webrtcLocalTCPAddress: ""
+srt: true
+srtAddress: :8890
+moq: false
+
+pathDefaults:
+  source: publisher
+  overridePublisher: false
+  rtspDemuxMpegts: true
+  record: true
+  recordPath: /recordings/%path/%Y-%m-%d_%H-%M-%S-%f_%z
+  recordFormat: fmp4
+  recordPartDuration: 1s
+  recordSegmentDuration: 60s
+  recordDeleteAfter: 72h
+
+paths:
+  # Own drones and robots: 7 days of recordings (video-and-plugins.md "How it applies" 5).
+  "~^(drone|robot)/sim-[a-z0-9-]+$":
+    recordDeleteAfter: 168h
+  # Owned cameras: 3 days (pathDefaults). Public cameras are not restreamed here.
+  "~^cam/[a-z0-9-]+$":

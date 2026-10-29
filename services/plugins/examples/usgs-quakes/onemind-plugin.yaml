@@ -1,0 +1,35 @@
+# Example source + layer plugin (FEATURES K6): USGS earthquakes as a new layer with no core change.
+# The source block is one omos-ingest (A0) source entry; the layer block is declarative and is
+# rendered by every client from the layer service's snapshot of the entities the entity service
+# derives from intel.hazard.usgs.quake (entity_type event, kind from the record type; see
+# services/entity adapt/intel.go in PR #552).
+apiVersion: onemind.io/plugin/v1
+id: org.onemindos.layer.usgs-quakes
+name: USGS earthquakes
+description: Earthquakes of the past hour from the USGS GeoJSON summary feed, as a hazard layer.
+version: 0.1.0
+kinds: [source, layer]
+trust: built-in
+licence: Apache-2.0
+compat: {onemind: ">=0.1", omos: ">=2026.10"}
+requires: {secrets: []}
+bus:
+  publishes: [intel.hazard.usgs.quake, tel.feed.usgs-quakes.status]
+  subscribes: [ent.event.*.state]
+  kv: [{bucket: world-state, access: read}]
+source:
+  engine: omos-ingest
+  delivery: rest_poll
+  parser: geojson
+  url: https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson
+  interval: 60s
+  staleAfter: 10m
+  subject: intel.hazard.usgs.quake
+  terms:
+    licence: "USGS data are public domain"
+    url: https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits
+layer:
+  id: usgs-quakes
+  from: ent.event.*.state
+  where: {kind: quake}
+  render: {entity: point, sizeField: magnitude, colorField: depth_km, maxEntities: 5000, lod: on-demand}

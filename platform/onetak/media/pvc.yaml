@@ -1,0 +1,18 @@
+# Recordings (fMP4, 60 s segments; drones/robots kept 7 days, cameras 3 days, see mediamtx.yml).
+# Retain class per omos rule 6. 20 Gi is about 11 h of one 4 Mb/s stream; size it from measured
+# bitrate before adding cameras (video-and-plugins.md "How it applies" 5). This volume is billed
+# once synced, so the owner approves the size with the sync. Not in VolSync on purpose: off-site
+# copies of video cost money (decision 0004 #5); add a source only if the owner wants backups.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: onemind-media-recordings
+  labels:
+    app.kubernetes.io/name: onemind-media
+    app.kubernetes.io/part-of: omos-video
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 20Gi
