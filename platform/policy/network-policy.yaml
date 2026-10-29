@@ -1,0 +1,14 @@
+# The policy service serves only over NATS (outbound). No pod may connect to it; kubelet
+# probes from the pod's own node are admitted by Cilium on DOKS (platform/nats/network-policy.yaml
+# notes the same). Egress stays open: NATS (namespace nats, allowed for onemind-core by
+# nats-clients) and OpenFGA (openfga-clients allows onemind-core).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: policy-service-ingress
+  namespace: onemind-core
+spec:
+  podSelector:
+    matchLabels:
+      app: policy-service
+  policyTypes: [Ingress]

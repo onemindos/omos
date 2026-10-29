@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/tasks/onemind.task.agent_request/v1",
+  "title": "onemind.task.agent_request.v1 spec",
+  "description": "Question for an agent. Task spec (onemind-xr docs/contracts/mission-task.md section 4). Unknown fields are refused.",
+  "type": "object",
+  "required": [
+    "question"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "question": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "context_entity_ids": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9_.-]{0,127}$"
+      }
+    }
+  }
+}

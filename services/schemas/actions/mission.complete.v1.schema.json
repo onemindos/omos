@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/actions/mission.complete/v1",
+  "title": "mission.complete v1 parameters",
+  "description": "Complete a mission (A2). Parameters of an ActionRequest (onemind-xr docs/contracts/asset-command.md section 6.1). Unknown fields are refused.",
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {
+    "note": {
+      "type": "string",
+      "maxLength": 500
+    }
+  }
+}

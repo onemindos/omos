@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/actions/mission.abort/v1",
+  "title": "mission.abort v1 parameters",
+  "description": "Abort a mission and its open tasks (A2). Parameters of an ActionRequest (onemind-xr docs/contracts/asset-command.md section 6.1). Unknown fields are refused.",
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {
+    "reason": {
+      "type": "string",
+      "maxLength": 500
+    }
+  }
+}

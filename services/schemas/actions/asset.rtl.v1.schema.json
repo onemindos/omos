@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/actions/asset.rtl/v1",
+  "title": "asset.rtl v1 parameters",
+  "description": "Return to launch (A3). Parameters of an ActionRequest (onemind-xr docs/contracts/asset-command.md section 6.1). Unknown fields are refused.",
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {}
+}

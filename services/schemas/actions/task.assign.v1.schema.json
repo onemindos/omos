@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/actions/task.assign/v1",
+  "title": "task.assign v1 parameters",
+  "description": "Assign a task to an assignee (A3 for assets, A2 otherwise). mission-task.md section 6.1. Parameters of an ActionRequest (onemind-xr docs/contracts/asset-command.md section 6.1). Unknown fields are refused.",
+  "type": "object",
+  "required": [
+    "parent_id",
+    "type",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "pattern": "^tsk-[0-9a-z]{26}$"
+    },
+    "parent_id": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^(msn|tsk)-[0-9a-z]{26}$"
+        }
+      ]
+    },
+    "type": {
+      "type": "string",
+      "pattern": "^onemind\\.task\\.[a-z_]+\\.v[0-9]+$"
+    },
+    "spec": {
+      "type": "object"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "delivery": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "before_t": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "require_ack": {
+          "const": true
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "start_after_t": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "complete_before_t": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "stale_t": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

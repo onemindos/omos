@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/actions/mission.waypoint/v1",
+  "title": "mission.waypoint v1 parameters",
+  "description": "Append a route waypoint (A2). Parameters of an ActionRequest (onemind-xr docs/contracts/asset-command.md section 6.1). Unknown fields are refused.",
+  "type": "object",
+  "required": [
+    "seq",
+    "lat",
+    "lon",
+    "hae_m"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "lat": {
+      "type": "number",
+      "minimum": -90,
+      "maximum": 90
+    },
+    "lon": {
+      "type": "number",
+      "minimum": -180,
+      "maximum": 180
+    },
+    "hae_m": {
+      "type": "number",
+      "minimum": -500,
+      "maximum": 20000
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 120
+    }
+  }
+}

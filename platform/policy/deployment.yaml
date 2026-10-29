@@ -1,0 +1,121 @@
+# Policy and audit service (FEATURES I4): serves svc.policy.{command,task}.{propose,confirm},
+# svc.policy.action.get and svc.policy.check; the only publisher of cmd.* after a human
+# confirm and the single writer of evt.so.action.*. One replica with Recreate, so two
+# writers never run at once.
+#
+# IMAGE: ghcr.io/onemindos/policy is built by .github/workflows/build-policy.yml on main.
+# The tag below is a placeholder until that first build: replace it with the built tag and
+# PIN THE DIGEST (sha-<commit>@sha256:..., from the run's image-digest artifact) before the
+# first manual sync.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: policy-service
+  namespace: onemind-core
+  labels:
+    app: policy-service
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: policy-service
+  template:
+    metadata:
+      labels:
+        app: policy-service
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: policy
+          image: ghcr.io/onemindos/policy:sha-pending-first-build  # pin digest after first CI build
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          ports:
+            - name: health
+              containerPort: 8080
+          env:
+            - name: NATS_URL
+              value: tls://nats.nats.svc.cluster.local:4222
+            - name: NATS_CA_FILE
+              value: /etc/nats-trust/ca.crt
+            - name: POLICY_AUTHZ
+              value: openfga
+            - name: POLICY_SCHEMA_DIR
+              value: /schemas
+            - name: POLICY_PRINCIPALS_FILE
+              value: /config/principals.json
+            - name: POLICY_GEOFENCE_BUCKET
+              value: geofences
+            - name: POLICY_SIGNING_KEY_FILE
+              value: /keys/policy-signing.pem
+            - name: POLICY_SIGNING_KID
+              value: policy-2026-10
+            - name: OPENFGA_URL
+              valueFrom: {configMapKeyRef: {name: policy-service, key: OPENFGA_URL}}
+            - name: OPENFGA_STORE_ID
+              valueFrom: {configMapKeyRef: {name: policy-service, key: OPENFGA_STORE_ID}}
+            - name: OPENFGA_MODEL_ID
+              valueFrom: {configMapKeyRef: {name: policy-service, key: OPENFGA_MODEL_ID}}
+          # NATS_USER, NATS_PASSWORD (the `policy` user) and OPENFGA_TOKEN: SealedSecret
+          # policy-service-runtime, created by the owner (README.md). Not in Git as plaintext.
+          envFrom:
+            - secretRef:
+                name: policy-service-runtime
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 500m
+              memory: 128Mi
+          startupProbe:
+            httpGet: {path: /healthz, port: health}
+            periodSeconds: 5
+            failureThreshold: 24
+          readinessProbe:
+            httpGet: {path: /healthz, port: health}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /healthz, port: health}
+            periodSeconds: 20
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+            - name: signing-key
+              mountPath: /keys
+              readOnly: true
+            - name: nats-trust
+              mountPath: /etc/nats-trust
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: policy-service
+            items:
+              - key: principals.json
+                path: principals.json
+        # Ed25519 PKCS#8 PEM, key policy-signing.pem: SealedSecret policy-signing-key (README.md).
+        - name: signing-key
+          secret:
+            secretName: policy-signing-key
+        - name: nats-trust
+          configMap:
+            name: onemind-nats-trust
