@@ -50,13 +50,16 @@ def test_transport_against_fake_server():
                 await asyncio.sleep(0.05)
             r = await t.send_goal(msgs.PoseStamped(msgs.Header(msgs.Time(1, 2), "map"), msgs.Pose.from_xy_yaw(3, 4, 0)))
             await t.hold(msgs.PoseStamped(msgs.Header(), msgs.Pose()))
-            await t.estop()
+            await asyncio.sleep(0.2)  # let the server receive everything sent so far
+            n_before = len(got)
+            await t.estop(msgs.PoseStamped(msgs.Header(), msgs.Pose.from_xy_yaw(7, 8, 0)))
             await asyncio.sleep(0.2)
+            got_estop = got[n_before:]
             stats = t.stats()
             await t.close()
-            return got, odoms, bats, r, stats
+            return got, odoms, bats, r, stats, got_estop
 
-    got, odoms, bats, r, stats = asyncio.run(go())
+    got, odoms, bats, r, stats, est = asyncio.run(go())
     ops = [(m["op"], m.get("topic")) for m in got]
     assert ("subscribe", "/bot1/odom") in ops and ("subscribe", "/bot1/battery_state") in ops
     assert ("advertise", "/bot1/goal_pose") in ops and ("advertise", "/bot1/cmd_vel") in ops
@@ -66,6 +69,14 @@ def test_transport_against_fake_server():
     assert len(zero) == 4 and zero[0]["msg"]["linear"]["x"] == 0.0
     assert odoms[0].pose.x == 1.0 and bats[0].percentage == 0.5
     assert r.accepted and "no goal ack" in r.detail and stats["decode_errors"] == 1
+    # estop: zero cmd_vel first, then re-target the goal to the current pose and cancel all goals
+    assert [(m["op"], m.get("topic") or m.get("service")) for m in est] == [
+        ("publish", "/bot1/cmd_vel"), ("publish", "/bot1/goal_pose"),
+        ("call_service", "/bot1/navigate_to_pose/_action/cancel_goal"),
+        ("publish", "/bot1/cmd_vel"), ("publish", "/bot1/cmd_vel")]
+    assert est[1]["msg"]["pose"]["position"] == {"x": 7, "y": 8, "z": 0.0}
+    assert est[2]["type"] == "action_msgs/srv/CancelGoal"
+    assert est[2]["args"]["goal_info"]["goal_id"]["uuid"] == [0] * 16
 
 
 def test_send_without_connection_raises():

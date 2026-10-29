@@ -1,6 +1,6 @@
 """rosbridge fallback transport (rosbridge_suite v2 protocol, BSD-3-Clause server).
 
-Uses the documented ops ``subscribe``, ``advertise`` and ``publish``
+Uses the documented ops ``subscribe``, ``advertise``, ``publish`` and ``call_service``
 (RobotWebTools/rosbridge_suite ROSBRIDGE_PROTOCOL.md). Messages are JSON with ROS 2 field
 names (``header.stamp.sec`` / ``nanosec``). Goals are published on the ``goal_pose`` topic
 (geometry_msgs/msg/PoseStamped), so there is no accepted/rejected answer: the bridge
@@ -171,10 +171,35 @@ class RosbridgeTransport(Transport):
         await self._send({"op": "publish", "topic": self.t(self.topics.cmd_vel), "msg": ZERO_TWIST})
         return f"goal re-targeted to the current pose on {self.t(self.topics.goal_topic)}; cmd_vel zeroed"
 
-    async def estop(self) -> str:
-        for _ in range(3):
-            await self._send({"op": "publish", "topic": self.t(self.topics.cmd_vel), "msg": ZERO_TWIST})
-        return f"cmd_vel zeroed on {self.t(self.topics.cmd_vel)} (rosbridge cannot cancel the Nav2 goal)"
+    async def estop(self, here=None) -> str:
+        # Zero cmd_vel first. Zeroing alone is not enough: Nav2's controller keeps
+        # publishing cmd_vel (about 20 Hz) while a goal is active, so the goal is also
+        # re-targeted to the current pose (as hold does) and canceled through the action's
+        # cancel_goal service (zero goal id and stamp = cancel all goals, action_msgs
+        # CancelGoal). The cancel is fire-and-forget: an e-stop never waits on the robot.
+        cmd_vel, goal_topic = self.t(self.topics.cmd_vel), self.t(self.topics.goal_topic)
+        cancel_srv = self.t(self.topics.nav_action + "/_action/cancel_goal")
+        steps = [("zero cmd_vel", {"op": "publish", "topic": cmd_vel, "msg": ZERO_TWIST})]
+        if here is not None:
+            steps.append(("re-target goal", {"op": "publish", "topic": goal_topic, "msg": pose_stamped_to_json(here)}))
+        steps.append(("cancel_goal", {"op": "call_service", "id": f"estop-cancel-{next(self._ids)}",
+                                      "service": cancel_srv, "type": "action_msgs/srv/CancelGoal",
+                                      "args": {"goal_info": {"goal_id": {"uuid": [0] * 16},
+                                                             "stamp": {"sec": 0, "nanosec": 0}}}}))
+        steps += [("zero cmd_vel", {"op": "publish", "topic": cmd_vel, "msg": ZERO_TWIST})] * 2
+        done, errors = [], []
+        for name, msg in steps:
+            try:
+                await self._send(msg)
+                done.append(name)
+            except TransportError as e:
+                errors.append(f"{name}: {e}")
+        if not done:
+            raise TransportError("; ".join(errors))
+        detail = (f"cmd_vel zeroed on {cmd_vel}; "
+                  + (f"goal re-targeted to the current pose on {goal_topic}; " if here is not None else "")
+                  + f"cancel_goal sent to {cancel_srv} (no reply awaited)")
+        return detail + (f"; errors: {'; '.join(errors)}" if errors else "")
 
     async def wait_connected(self, timeout: float) -> bool:
         try:

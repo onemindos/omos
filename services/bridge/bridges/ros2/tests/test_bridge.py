@@ -61,7 +61,7 @@ class FakeTransport:
         self.holds.append(here)
         return "canceled"
 
-    async def estop(self):
+    async def estop(self, here=None):
         self.estops += 1
         if self.fail:
             raise self.fail
@@ -337,6 +337,84 @@ def test_estop_does_not_wait_for_a_movement_command():
         b._move_lock.release()
         return tr
     assert run(go()).estops == 1
+
+
+def test_estop_overtakes_inflight_and_queued_goto():
+    """Regression (H3 review blocker): an estop while one goto waits on Nav2 and another
+    waits on the lock. The queued goto is never sent; the in-flight goal is canceled
+    again once Nav2 answers; neither records a goal or overwrites the estop mode."""
+    async def go():
+        b, bus, tr, clock = make()
+        gate = asyncio.Event()
+        orig = tr.send_goal
+
+        async def slow(goal):
+            await gate.wait()  # Nav2 answers slowly (a zenoh query can take up to 3 s)
+            return await orig(goal)
+        tr.send_goal = slow
+        b.on_odom(odom())
+        b._spawn(b.handle_command(*build(PRIV, verb="goto", data=target(5, 0), now=clock.t)))
+        b._spawn(b.handle_command(*build(PRIV, verb="goto", data=target(-5, 0), now=clock.t)))
+        for _ in range(10):
+            await asyncio.sleep(0)
+        await b.handle_command(*build(PRIV, verb="estop", now=clock.t))
+        gate.set()
+        await settle(b)
+        return b, bus, tr
+    b, bus, tr = run(go())
+    assert b.estopped and b.mode == "estop" and b.goal is None
+    assert len(tr.goals) == 1  # only the one already on its way to Nav2
+    assert tr.estops == 2  # the estop, then the re-stop after the in-flight goal was accepted
+    final = [x for x in outcomes(bus) if x[1] not in ("acknowledged",)]
+    assert ("estop", "executed", "", "") in final
+    assert [x for x in final if x[0] == "goto"] == [("goto", "failed", C.PRECONDITION, "estopped")] * 2
+
+
+def test_estop_overtakes_goto_that_times_out():
+    async def go():
+        b, bus, tr, clock = make()
+        gate = asyncio.Event()
+
+        async def slow(goal):
+            await gate.wait()
+            raise TransportTimeout("no reply")
+        tr.send_goal = slow
+        b.on_odom(odom())
+        b._spawn(b.handle_command(*build(PRIV, verb="goto", data=target(5, 0), now=clock.t)))
+        for _ in range(10):
+            await asyncio.sleep(0)
+        await b.handle_command(*build(PRIV, verb="estop", now=clock.t))
+        gate.set()
+        await settle(b)
+        return b, bus, tr
+    b, bus, tr = run(go())
+    assert tr.estops == 2 and b.goal is None and b.mode == "estop"
+    assert outcomes(bus)[-1][:3] == ("goto", "failed", C.NO_ACK)
+
+
+def test_hold_while_estopped_keeps_estop_mode():
+    async def go():
+        b, bus, tr, clock = make()
+        b.on_odom(odom())
+        await b.handle_command(*build(PRIV, verb="estop", now=clock.t))
+        await b.handle_command(*build(PRIV, verb="hold", now=clock.t))
+        return b
+    b = run(go())
+    assert b.estopped and b.mode == "estop"
+
+
+def test_goto_whose_straight_path_crosses_keep_out_refused():
+    async def go():
+        b, bus, tr, clock = make()
+        b.on_odom(odom())
+        await b.handle_command(*build(PRIV, verb="goto", data=target(0, 20), now=clock.t))  # pond at y=10
+        b.on_odom(odom(0.0, 10.0))  # drifted into the pond: driving out is allowed
+        await b.handle_command(*build(PRIV, verb="goto", data=target(0, -5), now=clock.t))
+        return bus, tr
+    bus, tr = run(go())
+    o = [x for x in outcomes(bus) if x[1] != "acknowledged"]
+    assert o == [("goto", "refused", C.PRECONDITION, "keep_out"), ("goto", "executed", "", "")]
+    assert len(tr.goals) == 1
 
 
 def test_amcl_pose_source():

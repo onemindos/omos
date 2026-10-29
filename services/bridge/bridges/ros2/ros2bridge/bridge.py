@@ -26,6 +26,7 @@ from . import command as C
 from . import msgs
 from .fence import Fence
 from .fence import check as fence_check
+from .fence import check_path as fence_path_check
 from .geo import LocalFrame
 from .transport import Transport, TransportError, TransportTimeout
 
@@ -104,6 +105,10 @@ class Bridge:
         self.voltage = -1.0
         self.mode = "idle"
         self.estopped = False
+        # Bumped by every executed estop. A command captures it on arrival; a goto or rtl
+        # whose captured value no longer matches was overtaken by an e-stop and must not
+        # move the robot, even if it was already waiting on the lock or on Nav2.
+        self.estop_gen = 0
         self.goal: dict | None = None  # {"x","y","lat","lon","task_env","goal_id"}
         self.home = cfg.home
         self._move_lock = asyncio.Lock()
@@ -338,6 +343,10 @@ class Bridge:
             v = fence_check(self.cfg.fence, *target)
             if v is not None:
                 raise self._precond(v.detail, f"{verb} target: {v.reason}")
+            here = self.latlon()
+            v = fence_path_check(self.cfg.fence, here[0], here[1], *target)
+            if v is not None:
+                raise self._precond(v.detail, f"{verb} path: {v.reason}")
             return target
         return None
 
@@ -350,8 +359,16 @@ class Bridge:
         return msgs.PoseStamped(msgs.Header(msgs.Time.now(), self.cfg.map_frame),
                                 msgs.Pose.from_xy_yaw(gx, gy, yaw)), gx, gy
 
+    def _overtaken(self, gen: int) -> bool:
+        return self.estopped or self.estop_gen != gen
+
+    def _here(self) -> msgs.PoseStamped:
+        return msgs.PoseStamped(msgs.Header(msgs.Time.now(), self.cfg.map_frame),
+                                msgs.Pose.from_xy_yaw(self.x, self.y, self.yaw))
+
     async def handle_command(self, subject: str, data: bytes) -> None:
         self.counters["commands"] += 1
+        gen = self.estop_gen  # before any await: an estop executed after this point overtakes the command
         prefix = f"cmd.fleet.robot.{self.cfg.asset_id}."
         verb = subject[len(prefix):] if subject.startswith(prefix) else subject
         try:
@@ -379,19 +396,23 @@ class Bridge:
         await self.report(env, verb, "acknowledged", sig_ok=sig_ok)
 
         if verb == "estop":
-            await self._execute(env, res, target)
+            await self._execute(env, res, target, gen)
             return
         async with self._move_lock:
             if not self.clock() < res.expires_at:
                 await self.report(env, verb, "failed", C.EXPIRED, "expired while waiting for the previous command")
                 return
-            await self._execute(env, res, target)
+            await self._execute(env, res, target, gen)
 
-    async def _execute(self, env: dict, res: C.Result, target) -> None:
+    async def _execute(self, env: dict, res: C.Result, target, gen: int) -> None:
         verb, p, tp = res.verb.name, res.params, self.transport.name
         ros = {"transport": tp}
         try:
             if verb in ("goto", "rtl"):
+                if self._overtaken(gen):  # an estop ran while this command waited
+                    await self.report(env, verb, "failed", C.PRECONDITION, "e-stopped before the goal was sent",
+                                      detail="estopped", ros=ros)
+                    return
                 pose, gx, gy = self._goal_pose(target[0], target[1], p.yaw_deg if verb == "goto" else None)
                 ros.update(interface=self.transport.topics.nav_action if tp == "zenoh" else self.transport.topics.goal_topic,
                            frame=self.cfg.map_frame, x=round(gx, 3), y=round(gy, 3))
@@ -399,6 +420,17 @@ class Bridge:
                 ros["goal_id"] = r.goal_id
                 if not r.accepted:
                     await self.report(env, verb, "failed", C.VEHICLE_REJECTED, f"goal rejected ({r.detail})", ros=ros)
+                    return
+                if self._overtaken(gen):
+                    # The estop ran while Nav2 was answering, so its cancel may have come
+                    # before this goal existed. Stop again; never record the goal.
+                    try:
+                        stop = await self.transport.estop(self._here())
+                    except (TransportError, TransportTimeout) as e:
+                        stop = f"re-stop failed: {e}"
+                    await self.report(env, verb, "failed", C.PRECONDITION,
+                                      f"e-stopped while the goal was being sent; goal canceled ({stop})",
+                                      detail="estopped", ros=ros)
                     return
                 self.goal = {"verb": verb, "x": gx, "y": gy, "lat": target[0], "lon": target[1], "env": env,
                              "goal_id": r.goal_id}
@@ -408,14 +440,14 @@ class Bridge:
                     msg += "; speed_mps not applied (NavigateToPose has no per-goal speed)"
                 await self.report(env, verb, "executed", message=msg, ros=ros)
             elif verb == "hold":
-                here = msgs.PoseStamped(msgs.Header(msgs.Time.now(), self.cfg.map_frame),
-                                        msgs.Pose.from_xy_yaw(self.x, self.y, self.yaw))
-                detail = await self.transport.hold(here)
-                self.goal, self.mode = None, "holding"
+                detail = await self.transport.hold(self._here())
+                self.goal, self.mode = None, ("estop" if self.estopped else "holding")
                 await self.report(env, verb, "executed", message=detail, ros=ros)
             elif verb == "estop":
-                self.estopped, self.goal, self.mode = True, None, "estop"  # latch before anything can fail
-                detail = await self.transport.estop()
+                # latch before anything can fail
+                self.estopped, self.goal, self.mode = True, None, "estop"
+                self.estop_gen += 1
+                detail = await self.transport.estop(self._here())
                 await self.report(env, verb, "executed", message=detail, ros=ros)
             elif verb == "estop_release":
                 self.estopped = False
@@ -424,6 +456,12 @@ class Bridge:
             else:  # pragma: no cover - VERBS and this switch are kept in step by tests
                 await self.report(env, verb, "failed", C.UNKNOWN_ACTION, f"no ROS mapping for {verb}")
         except TransportTimeout as e:
+            if verb in ("goto", "rtl") and self._overtaken(gen):
+                # Nav2 may have taken the goal without answering; stop again after the estop.
+                try:
+                    await self.transport.estop(self._here())
+                except (TransportError, TransportTimeout) as e2:
+                    log.warning("[%s] re-stop after an overtaken goal: %s", self.cfg.source, e2)
             await self.report(env, verb, "failed", C.NO_ACK, str(e), ros=ros)
         except TransportError as e:
             await self.report(env, verb, "failed", C.NO_ACK, str(e), detail="not_sent", ros=ros)

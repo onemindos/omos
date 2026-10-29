@@ -74,3 +74,17 @@ def test_frame_axes():
 def test_frame_rejects_bad_origin(args):
     with pytest.raises(ValueError):
         LocalFrame(*args)
+
+
+def test_check_path_keep_out():
+    from ros2bridge.fence import check_path
+    f = Fence.load(EXAMPLE)
+    pond = f.keep_out[0]
+    clat, clon = pond.circle[:2] if pond.circle else pond.polygon[0]
+    # a straight line through the keep-out centre is refused; a line that stays clear passes
+    v = check_path(f, clat - 0.0002, clon, clat + 0.0002, clon)
+    assert v is not None and v.detail == "keep_out" and v.zone_id == pond.id
+    assert check_path(f, clat - 0.0002, clon - 0.001, clat - 0.0001, clon - 0.001) is None
+    # starting inside the zone: leaving it is allowed
+    assert check_path(f, clat, clon, clat - 0.0003, clon) is None
+    assert check_path(None, 0, 0, 1, 1) is None

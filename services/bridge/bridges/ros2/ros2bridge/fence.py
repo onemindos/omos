@@ -114,6 +114,35 @@ class Fence:
         return None
 
 
+    def check_path(self, lat0: float, lon0: float, lat1: float, lon1: float,
+                   step_m: float = 0.25, max_samples: int = 4000) -> Violation | None:
+        """Cheap first pass on the way to a goal: sample the straight segment from the
+        current position to the target and refuse if it enters a keep-out zone. A zone
+        that already contains the start is skipped, so a robot that drifted into one can
+        still drive out. Nav2 plans its own path, which may differ from this line; on real
+        robots keep-out zones also belong in the Nav2 costmap keepout filter (owner
+        proposal H3-P7)."""
+        if not (_valid(lat0, lon0) and _valid(lat1, lon1)):
+            return None  # endpoint validity is check()'s job
+        zones = [z for z in self.keep_out if not z.contains(lat0, lon0)]
+        if not zones:
+            return None
+        n = min(max_samples, max(1, int(math.ceil(distance(lat0, lon0, lat1, lon1) / step_m))))
+        for i in range(1, n + 1):
+            f = i / n
+            lat, lon = lat0 + (lat1 - lat0) * f, lon0 + (lon1 - lon0) * f
+            for z in zones:
+                if z.contains(lat, lon):
+                    return Violation("keep_out", f"straight path crosses keep-out zone {z.id}", z.id)
+        return None
+
+
+def check_path(f: Fence | None, lat0: float, lon0: float, lat1: float, lon1: float) -> Violation | None:
+    if f is None:
+        return None  # check() already failed closed on the target
+    return f.check_path(lat0, lon0, lat1, lon1)
+
+
 def check(f: Fence | None, lat: float, lon: float) -> Violation | None:
     if f is None:
         return Violation("keep_in", "no keep-in zone configured (fail closed)")

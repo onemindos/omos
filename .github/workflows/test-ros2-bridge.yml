@@ -7,6 +7,9 @@ name: ROS 2 bridge tests
 # at the edge beside the robot (omos CLAUDE.md "Bus Authority"), so there is no image or
 # Argo Application, as for the MAVLink bridge. The end-to-end test (tests/e2e/run.sh)
 # needs nats-server and the policy service and runs on the operator's machine.
+# Follow-up (owner proposal H3-P8, docs/proposals/2026-10-29-ros2-bridge-h3.md): once
+# services/policy (PR #554) is on main, add a job that builds it and runs tests/e2e/run.sh
+# with a pinned nats-server release.
 
 on:
   pull_request:

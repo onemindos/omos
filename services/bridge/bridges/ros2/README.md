@@ -34,7 +34,7 @@ nats-py").
 | `goto {lat, lon, hae_m, speed_mps?, yaw_deg?}` | A3, one human | NavigateToPose goal on `{ns}/navigate_to_pose/_action/send_goal`; `executed` when Nav2 accepts | `goal_pose` topic, no acknowledgement |
 | `hold {duration_s?, reason?}` | A3 | `cancel_goal` (all goals) and a zero `cmd_vel` | goal re-targeted to the current pose and a zero `cmd_vel` |
 | `rtl {}` | A3 | goal at home (`HOME_LAT/HOME_LON`, or the first position heard) | same via `goal_pose` |
-| `estop {}` | A3, never blocked by a precondition | zero `cmd_vel` three times, then cancel all goals; **latches** | zero `cmd_vel` three times; latches |
+| `estop {}` | A3, never blocked by a precondition | zero `cmd_vel` three times, then cancel all goals; **latches** | zero `cmd_vel`, re-target `goal_pose` to the current pose, `call_service` `{ns}/navigate_to_pose/_action/cancel_goal` (all goals, no reply awaited), zero `cmd_vel` twice more; latches |
 | `estop_release {}` | A4, two distinct humans | clears the latch only; the robot stays stopped | same |
 
 `hae_m` is required by the action schema and ignored by a ground robot. `speed_mps` is
@@ -51,7 +51,16 @@ envelope without `sig` from a key in `POLICY_PUBKEYS`; `ts`/`expires_at` fresh a
 above the verb's, with enough distinct `user:` approvers (an agent approver is
 `agent_cannot_confirm`); `params_hash` equals the hash of the delivered `data`; unseen command id.
 Then the bridge's own checks: robot heard within `LINK_TIMEOUT` (not for `estop`), e-stop latch,
-and its own keep-in/keep-out geofence (the #550 file format, fail closed with no keep-in zone).
+and its own keep-in/keep-out geofence (the #550 file format, fail closed with no keep-in zone)
+on the target and on the straight line from the robot to it (keep-out only; a zone the robot is
+already in is skipped so it can drive out). Nav2 plans its own path, so the line check is a
+first pass, not a guarantee (owner proposal H3-P7).
+
+An `estop` overtakes movement already under way. Every executed `estop` bumps a counter that
+each command captures on arrival. A `goto` or `rtl` that was waiting on the previous command,
+or on Nav2's answer, when an `estop` ran is not sent; if Nav2 had already accepted it, the bridge
+stops the robot again (zero `cmd_vel` and cancel). Either way the command ends `failed`
+`precondition_failed` / `estopped`, records no goal and leaves the mode at `estop`.
 
 The Go verifier cannot be imported here (Go `internal` package of another module, and the
 adapter is Python because Zenoh's Go binding needs zenoh-c via cgo). To stop the copies

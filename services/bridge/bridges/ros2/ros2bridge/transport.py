@@ -56,8 +56,10 @@ class Transport(abc.ABC):
         """Stop navigating and stay at ``here`` (msgs.PoseStamped). Returns a detail string."""
 
     @abc.abstractmethod
-    async def estop(self) -> str:
-        """Cancel every goal and command zero velocity. Must not wait on the robot."""
+    async def estop(self, here=None) -> str:
+        """Command zero velocity, then cancel every goal. ``here`` (msgs.PoseStamped, the
+        current pose) lets a transport without a goal cancel re-target the goal there.
+        Must not wait on the robot before the zero velocity is sent."""
 
     @abc.abstractmethod
     async def close(self) -> None:

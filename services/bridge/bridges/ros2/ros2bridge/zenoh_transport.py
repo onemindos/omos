@@ -140,7 +140,7 @@ class ZenohTransport(Transport):
         self._zero(1)
         return detail
 
-    async def estop(self) -> str:
+    async def estop(self, here=None) -> str:
         # Zero velocity first, without waiting on anything; then cancel goals best effort.
         self._zero(3)
         try:
