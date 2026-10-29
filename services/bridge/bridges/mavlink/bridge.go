@@ -242,6 +242,9 @@ func (b *Bridge) HandleCommand(ctx context.Context, subject string, data []byte)
 	}
 	if !res.Signed {
 		b.logf("[%s] WARNING: command %s accepted without a signature (SIG_REQUIRED=false)", b.cfg.Source, e.ID)
+		if res.TaskBound {
+			b.logf("[%s] WARNING: command %s is task-bound (%s): its params_hash is the task action's and nothing binds data to the approval without a signature", b.cfg.Source, e.ID, e.TaskID)
+		}
 	}
 	sigOK := res.Signed
 

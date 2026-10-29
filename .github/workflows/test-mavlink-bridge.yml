@@ -11,11 +11,13 @@ on:
     paths:
       - ".github/workflows/test-mavlink-bridge.yml"
       - "services/bridge/bridges/mavlink/**"
+      - "services/schemas/command/testdata/params-hash-vectors.json"
   push:
     branches: [main]
     paths:
       - ".github/workflows/test-mavlink-bridge.yml"
       - "services/bridge/bridges/mavlink/**"
+      - "services/schemas/command/testdata/params-hash-vectors.json"
 
 permissions:
   contents: read

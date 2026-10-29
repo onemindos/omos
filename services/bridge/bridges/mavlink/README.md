@@ -55,7 +55,7 @@ every check below, in this order, or it is refused with the code shown and nothi
 | `approval`: required, `approved`, level ≥ the verb's level, enough **distinct `user:`** approvers (A3: 1, A4: 2), approver listed | `not_authorized` |
 | Any approval by a non-`user:` principal (an agent) | `agent_cannot_confirm` |
 | Parameters valid for the verb (unknown members refused) | `schema_invalid` |
-| `approval.params_hash` = sha256 of JCS `{action_type, action_version, target, params}` | `not_authorized` |
+| `approval.params_hash` = sha256 of JCS `{action_type, action_version, target, params}` of the approved action: recomputed as `asset.{verb}` over `data` when the command has no `task_id`. A task-bearing command (`task_id`) carries the `task.assign`/`task.abort` hash, which the bridge cannot recompute: it checks the `tsk-` id and the `sha256:` form and relies on the signature (D2-P1; shared vectors `services/schemas/command/testdata/params-hash-vectors.json`) | `not_authorized` (`schema_invalid` for a malformed task id or hash) |
 | Command `id` not seen before (nonce, kept until `expires_at`) | `replayed` |
 | Vehicle heartbeat within `LINK_TIMEOUT` (not for `estop`) | `precondition_failed` / `offline` |
 | Own geofence: target (goto, land at a point) or current position (arm, takeoff) inside a keep-in zone, outside every keep-out zone, within the altitude band. No keep-in configured = refused (fail closed) | `precondition_failed` / `keep_in`, `keep_out` |

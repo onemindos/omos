@@ -149,6 +149,10 @@ func levelRank(l string) int {
 }
 
 var uuidRe = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`)
+var (
+	taskIDRe = regexp.MustCompile(`^tsk-[0-9a-z][0-9a-z_-]{0,63}$`)
+	hashRe   = regexp.MustCompile(`^sha256:[0-9a-f]{64}$`)
+)
 
 // Config controls verification.
 type Config struct {
@@ -190,6 +194,9 @@ type Result struct {
 	Params     Params
 	Signed     bool // signature present and valid
 	ParamsHash string
+	// TaskBound: the command carries task_id, so ParamsHash is the task action's hash and was
+	// checked for form only; without a signature nothing binds the data to the approval.
+	TaskBound bool
 }
 
 // Verify runs every check of asset-command.md §4 step 6 and §7 rules 1-2 on a command
@@ -313,19 +320,35 @@ func (v *Verifier) Verify(subject string, e *Envelope, now time.Time) (*Result, 
 	if e.ActionVersion != nil {
 		av = *e.ActionVersion
 	}
-	hash, err := ParamsHash("asset."+verb.Name, av, v.cfg.AssetClass, id, e.Data)
-	if err != nil {
-		return nil, refuse(CodeSchemaInvalid, "params_hash: %v", err)
-	}
-	if a.ParamsHash != hash {
-		return nil, refuse(CodeNotAuthorized, "params_hash does not match the approved parameters")
+	// approval.params_hash is the hash of the approved action (asset-command.md §4-§5, §6.3;
+	// mission-task.md §6 step 6). Without task_id that action is asset.{verb} over this data,
+	// so the bridge recomputes it. With task_id it is task.assign or task.abort over the task
+	// parameters, which the command does not carry: the bridge checks the form only and relies
+	// on the signature, which covers data and approval (decision HASH, D2-P1, 2026-10-29).
+	hash := a.ParamsHash
+	taskBound := e.TaskID != ""
+	if taskBound {
+		if !taskIDRe.MatchString(e.TaskID) {
+			return nil, refuse(CodeSchemaInvalid, "task_id %q is not a tsk- id", e.TaskID)
+		}
+		if !hashRe.MatchString(a.ParamsHash) {
+			return nil, refuse(CodeSchemaInvalid, "params_hash is not sha256:{64 hex}")
+		}
+	} else {
+		h, err := ParamsHash("asset."+verb.Name, av, v.cfg.AssetClass, id, e.Data)
+		if err != nil {
+			return nil, refuse(CodeSchemaInvalid, "params_hash: %v", err)
+		}
+		if a.ParamsHash != h {
+			return nil, refuse(CodeNotAuthorized, "params_hash does not match the approved parameters")
+		}
 	}
 
 	// Nonce: refuse a command id seen before; remember it until it expires.
 	if r := v.remember(e.ID, exp, now); r != nil {
 		return nil, r
 	}
-	return &Result{Verb: verb, Params: params, Signed: signed, ParamsHash: hash}, nil
+	return &Result{Verb: verb, Params: params, Signed: signed, ParamsHash: hash, TaskBound: taskBound}, nil
 }
 
 func (v *Verifier) checkSig(e *Envelope) *Refusal {

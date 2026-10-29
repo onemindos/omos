@@ -15,23 +15,24 @@ import (
 
 // Opts describes one command. Zero values give a valid, approved, signed A3/A4 command.
 type Opts struct {
-	AssetID   string
-	Verb      string
-	Data      any // marshalled to the data member; nil means {}
-	Now       time.Time
-	TTL       time.Duration
-	Level     string   // default: the verb's catalogue level
-	Approvers []string // default: one or two "user:" principals per the verb
-	Status    string   // default "approved"
-	Simulated *bool    // default true
-	Source    string   // default service:policy
-	HashData  any      // data the approval hash is computed over (default Data)
-	ID        string   // default random UUID
-	TaskID    string
-	NoSig     bool
-	Kid       string
-	Key       ed25519.PrivateKey
-	Mutate    func(map[string]any) // last-chance edit before signing
+	AssetID    string
+	Verb       string
+	Data       any // marshalled to the data member; nil means {}
+	Now        time.Time
+	TTL        time.Duration
+	Level      string   // default: the verb's catalogue level
+	Approvers  []string // default: one or two "user:" principals per the verb
+	Status     string   // default "approved"
+	Simulated  *bool    // default true
+	Source     string   // default service:policy
+	HashData   any      // data the approval hash is computed over (default Data)
+	ID         string   // default random UUID
+	TaskID     string
+	ParamsHash string // approval.params_hash override (e.g. a task.assign hash); default asset.{verb} over HashData
+	NoSig      bool
+	Kid        string
+	Key        ed25519.PrivateKey
+	Mutate     func(map[string]any) // last-chance edit before signing
 }
 
 // UUID returns a random version-4 UUID.
@@ -90,6 +91,9 @@ func Build(o Opts) (subject string, body []byte, err error) {
 	hash, err := command.ParamsHash("asset."+o.Verb, 1, "drone", o.AssetID, hashRaw)
 	if err != nil {
 		return "", nil, err
+	}
+	if o.ParamsHash != "" {
+		hash = o.ParamsHash
 	}
 	approvals := []map[string]any{}
 	for i, a := range o.Approvers {
