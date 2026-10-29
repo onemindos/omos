@@ -31,6 +31,7 @@ Go services monorepo absorbed from the former `omos-services` repo (merged
 | **nex** | `nex/` | NATS Execution Engine workloads (overwatch bridges, om-task) |
 | **agents/meta** | `agents/meta/` | Meta agent service |
 | **cot2constellation** | `bridge/bridges/tak/` | TAK CoT → Overwatch bridge |
+| **tak-client** | `bridge/bridges/tak-client/` | TAK Server streaming client: TAK CoT → `tak.cot.out`, `tak.cot.inject` → TAK (A21; replaces `takserver/cot-tap`) |
 
 ## Development
 

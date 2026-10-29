@@ -1,6 +1,13 @@
 natsUrl: nats://tak-nats-leaf.takserver.svc.cluster.local:4222
 natsConsumerSubject: tak.cot.inject
 natsProducerSubject: tak.cot.out
+# 1.1.0+: inject subscription in this queue group, shared with the tak-client bridge
+# (services/bridge/bridges/tak-client, INJECT_QUEUE), so each message is injected once.
+# 1.0.0 (the JAR committed today) ignores the keys below.
+natsQueueGroup: tak-cot-inject
+# TAK cluster mode delivers nothing to onMessage; set false once tak-client publishes tak.cot.out.
+natsProducerEnabled: true
+statusIntervalSeconds: 60
 groups:
   - __ANON__
   - Red

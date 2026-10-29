@@ -15,8 +15,21 @@ FROM ${TAKSERVER_IMAGE_REPO}:${TAKSERVER_IMAGE_TAG}
 # The TAK PluginLoader discovers plugins via ClassLoader.getResources("plugin-config.yaml"),
 # so the plugin JAR must be on the Spring Boot classpath. Add lib/ to loader.path
 # in setenv.sh so PropertiesLauncher picks up all JARs in /opt/tak/lib/.
-RUN sed -i 's|loader.path=WEB-INF/lib-provided,WEB-INF/lib,WEB-INF/classes|loader.path=WEB-INF/lib-provided,WEB-INF/lib,WEB-INF/classes,lib/|' /opt/tak/setenv.sh
+#
+# Evidence that this layer is what decides whether the bridge loads (A21, 2026-10-29):
+# the live takserver-plugins pod starts with
+#   "Picked up JDK_JAVA_OPTIONS: -Dloader.path=WEB-INF/lib-provided,WEB-INF/lib,WEB-INF/classes ..."
+# i.e. without lib/, and logs no NatsBridgePlugin line, so the running image does not
+# carry this overlay. The build now fails if the patch does not apply, instead of
+# producing an image that silently runs without the plugin.
+RUN sed -i 's|loader.path=WEB-INF/lib-provided,WEB-INF/lib,WEB-INF/classes|loader.path=WEB-INF/lib-provided,WEB-INF/lib,WEB-INF/classes,lib/|' /opt/tak/setenv.sh \
+ && grep -q 'loader.path=WEB-INF/lib-provided,WEB-INF/lib,WEB-INF/classes,lib/' /opt/tak/setenv.sh \
+ || { echo 'loader.path patch did not apply to /opt/tak/setenv.sh: the NatsBridgePlugin would not load' >&2; exit 1; }
 
 RUN mkdir -p /opt/tak/lib /opt/tak/conf/plugins
-COPY plugin/takserver-nats-plugin-1.0.0.jar /opt/tak/lib/takserver-nats-plugin-1.0.0.jar
+# Exactly one plugin JAR is expected in plugin/ (1.0.0 until it is rebuilt from
+# plugin-src with the TAK SDK as 1.1.0; see services/takserver/plugin-src/README.md).
+COPY plugin/takserver-nats-plugin-*.jar /opt/tak/lib/
 COPY plugin/tak.server.plugins.NatsBridgePlugin.yaml /opt/tak/conf/plugins/tak.server.plugins.NatsBridgePlugin.yaml
+RUN test "$(find /opt/tak/lib -maxdepth 1 -name 'takserver-nats-plugin-*.jar' | wc -l)" -eq 1 \
+ || { echo 'expected exactly one takserver-nats-plugin JAR in /opt/tak/lib' >&2; exit 1; }
