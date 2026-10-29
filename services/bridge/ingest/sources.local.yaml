@@ -1,0 +1,23 @@
+# Local feed registry: the NWS proof against a local nats-server (README "Run locally").
+# The cluster registry is platform/ingest/configmap.yaml.
+leaseTTL: 10s
+statusInterval: 10s
+defaults:
+  headers:
+    User-Agent: "(omos-ingest local test, https://github.com/onemindos/omos)"
+  rateLimit: {every: 5s, burst: 1}
+sources:
+  - id: nws-alerts
+    registry: f094-noaa-nws-alerts
+    kind: rest_poll
+    parser: nws-alerts
+    url: https://api.weather.gov/alerts/active?status=actual&area=NY
+    subject: intel.weather.noaa.alert
+    schema: intel/weather-alert.v1.schema.json
+    interval: 120s
+    staleAfter: 10m
+    headers: {Accept: application/geo+json}
+    terms:
+      licence: "open data, free to use for any purpose"
+      url: https://www.weather.gov/documentation/services-web-api
+      notes: "User-Agent with contact required; rate limit not public, retry after about 5 s"

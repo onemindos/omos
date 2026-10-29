@@ -59,6 +59,15 @@ This entry does not refresh historical counts or certify a working route.
 | --- | --- | --- | --- | --- | --- |
 | 2 | `platform-karakeep` | `karakeep` | Native SQLite/assets 20Gi + Meilisearch 5Gi; [backup activation and isolated restore](../platform/karakeep/BACKUP.md) required before real use | Private `https://karakeep.tail717ba0.ts.net`, app authentication | Manual Argo, all replicas zero; [first-start gates](../platform/karakeep/README.md) pending |
 
+## omos-ingest preparation — 2026-10-29
+
+Feature A0 (collector framework, `services/bridge/ingest`). Not live: it needs this PR merged,
+the first image build, a digest pin and a manual Argo sync ([platform/ingest](../platform/ingest/README.md)).
+
+| Tier | Application | Namespace | State / recovery | Exposure | Status |
+| --- | --- | --- | --- | --- | --- |
+| 2 | `platform-ingest` | `omos` | No PVC. Leases and checkpoints in NATS KV `ingest-locks` and `ingest-state` (NACK CRs in `platform/nats/streams/`), covered by the NATS stream backup | internal; metrics on 9464 scraped by kube-prometheus-stack | Awaiting reviewed merge, image build and digest pin, manual Argo sync. First source NWS alerts on `intel.weather.noaa.alert`, beside the legacy `feed-intel` NOAA task |
+
 ## Summary
 
 | Item | Count / value |

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/ingest/rejected/v1",
+  "title": "Dead-letter record (evt.sys.{source}.rejected data)",
+  "description": "A record omos-ingest refused to publish, with the reason. Wrapped in the bus envelope; raw is truncated to 4096 bytes.",
+  "type": "object",
+  "required": ["source", "reason", "raw", "rawBytes"],
+  "additionalProperties": true,
+  "properties": {
+    "source": {"type": "string"},
+    "reason": {"type": "string", "minLength": 1},
+    "raw": {"type": "string", "maxLength": 4096},
+    "rawBytes": {"type": "integer", "minimum": 0}
+  }
+}
