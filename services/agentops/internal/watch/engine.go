@@ -2,6 +2,7 @@ package watch
 
 import (
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"math"
@@ -398,7 +399,7 @@ func (e *Engine) Sweep() []Trigger {
 					if g.LastError != "" {
 						ev["last_error"] = g.LastError
 					}
-					out = append(out, Trigger{Watch: w, AlertID: NewID("alr"), Kind: "feed_" + g.Reason,
+					out = append(out, Trigger{Watch: w, AlertID: AlertIDFor(w.ID, about, "feed_"+g.Reason, cooldownBucket(w, now)), Kind: "feed_" + g.Reason,
 						Title: fmt.Sprintf("feed %s is %s: %s", src, g.Reason, g.Detail), AboutType: "feed", AboutID: about,
 						Subject: "tel.feed." + src + ".status", Evidence: ev, T: now})
 				}
@@ -435,7 +436,11 @@ func (e *Engine) sweepOne(ent *Entity, now time.Time, deleted bool) []Trigger {
 }
 
 func (e *Engine) newTrigger(w *Watch, ent *Entity, kind, title string, now time.Time, ev map[string]any, lat, lon *float64) Trigger {
-	return Trigger{Watch: w, AlertID: NewID("alr"), Kind: kind, Title: title, AboutType: ent.Type, AboutID: ent.ID,
+	anchor := cooldownBucket(w, now)
+	if w.Rule.Kind == KindStale && ent.T > 0 {
+		anchor = time.UnixMilli(ent.T) // the condition began when the updates stopped
+	}
+	return Trigger{Watch: w, AlertID: AlertIDFor(w.ID, ent.ID, kind, anchor), Kind: kind, Title: title, AboutType: ent.Type, AboutID: ent.ID,
 		Subject: ent.Subject, Evidence: ev, Lat: lat, Lon: lon, T: now}
 }
 
@@ -503,13 +508,41 @@ const crockford = "0123456789abcdefghjkmnpqrstvwxyz"
 
 // NewID returns "{prefix}-{ulid}" with a lowercase ULID (entity.md §3 id format).
 func NewID(prefix string) string {
+	var rnd [10]byte
+	_, _ = rand.Read(rnd[:])
+	return ulidID(prefix, time.Now(), rnd)
+}
+
+// AlertIDFor returns a deterministic alert id for one rising edge of (watch, about, kind)
+// anchored at the time the condition began (stale rules: the entity's last update) or at
+// the start of the watch's cooldown window (other rules). The engine raises at most one
+// alert per (watch, about) per cooldown, so two real alerts never share an id, while the
+// ENT replay after a restart re-derives the same id (and therefore the same proposal
+// request_id) for the same condition within that window. It keeps the ULID shape.
+func AlertIDFor(watchID, aboutID, kind string, anchor time.Time) string {
+	sum := sha256.Sum256([]byte("omos-agentops/watch/alert/" + watchID + "/" + aboutID + "/" + kind + "/" + fmt.Sprint(anchor.UnixMilli())))
+	var rnd [10]byte
+	copy(rnd[:], sum[:])
+	return ulidID("alr", anchor, rnd)
+}
+
+// cooldownBucket is the start of the cooldown-sized window that holds now.
+func cooldownBucket(w *Watch, now time.Time) time.Time {
+	c := time.Duration(w.Rate.CooldownS * float64(time.Second))
+	if c < time.Second {
+		c = time.Second
+	}
+	return time.UnixMilli(0).Add(now.Sub(time.UnixMilli(0)).Truncate(c))
+}
+
+func ulidID(prefix string, t time.Time, rnd [10]byte) string {
 	var b [16]byte
-	ms := uint64(time.Now().UnixMilli())
+	ms := uint64(t.UnixMilli())
 	for i := 5; i >= 0; i-- {
 		b[i] = byte(ms)
 		ms >>= 8
 	}
-	_, _ = rand.Read(b[6:])
+	copy(b[6:], rnd[:])
 	// 128 bits -> 26 base32 chars
 	out := make([]byte, 26)
 	var acc uint64

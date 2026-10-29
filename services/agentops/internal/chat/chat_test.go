@@ -196,3 +196,43 @@ func TestAgentIsAContactAndATAKChatReachesIt(t *testing.T) {
 	})
 	natstest.Evidence(t, "agent offline: user told %q", mesh.chatsTo("ANDROID-3")[0].Text)
 }
+
+// TestRateLimitNoticeOncePerSender: a flooding sender gets one rate-limit notice per minute,
+// the notice uses the global budget, and no notice is sent once that budget is spent.
+func TestRateLimitNoticeOncePerSender(t *testing.T) {
+	g := New(Config{PerSenderPerMin: 2, GlobalPerMin: 6}, nil, nil, nil)
+	now := time.Date(2026, 10, 29, 12, 0, 0, 0, time.UTC)
+	ok, notices := 0, 0
+	for i := 0; i < 20; i++ {
+		a, n := g.allow("ANDROID-1", now)
+		if a {
+			ok++
+		}
+		if n {
+			notices++
+		}
+	}
+	if ok != 2 || notices != 1 || len(g.global) != 3 {
+		t.Fatalf("ok=%d notices=%d global=%d", ok, notices, len(g.global))
+	}
+	// Next minute: one more notice is allowed.
+	later := now.Add(61 * time.Second)
+	_, _ = g.allow("ANDROID-1", later)
+	_, _ = g.allow("ANDROID-1", later)
+	if _, n := g.allow("ANDROID-1", later); !n {
+		t.Fatal("no notice in the next window")
+	}
+	// Global budget spent: other senders are refused without a notice.
+	for i := 0; i < 10; i++ {
+		_, _ = g.allow(fmt.Sprintf("U-%d", i), later)
+	}
+	if a, n := g.allow("U-new", later); a || n {
+		t.Fatalf("global full: allowed=%v notice=%v", a, n)
+	}
+	if len(g.global) > 6 {
+		t.Fatalf("global budget exceeded: %d", len(g.global))
+	}
+	if IsChat([]byte(`<event type="a-f-G-U-C"/>`)) || !IsChat([]byte(`<event type="b-t-f"/>`)) {
+		t.Fatal("prefilter")
+	}
+}

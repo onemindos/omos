@@ -68,6 +68,7 @@ type Config struct {
 // Counters for /metrics.
 type Counters struct {
 	Received, NotForAgent, ReplyDisabled, Echo, TooOld, RateLimited, Forwarded, Replied, AgentErrors, Contacts, Invalid atomic.Int64
+	Dropped                                                                                                             atomic.Int64 // inbound chats dropped because the worker queue was full
 }
 
 // Gateway is the chat path.
@@ -81,8 +82,21 @@ type Gateway struct {
 
 	mu      sync.Mutex
 	buckets map[string][]time.Time
+	noticed map[string]time.Time // last rate-limit notice per sender
 	global  []time.Time
 	sem     chan struct{}
+}
+
+// Inbound worker pool: Run hands chats to a fixed set of workers through a bounded queue.
+const (
+	workers   = 8
+	queueSize = 64
+)
+
+// IsChat is the cheap GeoChat prefilter (CoT type b-t-f) applied before any work is queued.
+func IsChat(data []byte) bool {
+	s := string(data)
+	return strings.Contains(s, `type="b-t-f`) || strings.Contains(s, `type='b-t-f`)
 }
 
 // New returns a gateway.
@@ -108,7 +122,7 @@ func New(cfg Config, nc *nats.Conn, tr *presence.Tracker, log *slog.Logger) *Gat
 	if cfg.ContactEvery <= 0 {
 		cfg.ContactEvery = 60 * time.Second
 	}
-	return &Gateway{cfg: cfg, nc: nc, tracker: tr, log: log, now: time.Now, buckets: map[string][]time.Time{}, sem: make(chan struct{}, 4)}
+	return &Gateway{cfg: cfg, nc: nc, tracker: tr, log: log, now: time.Now, buckets: map[string][]time.Time{}, noticed: map[string]time.Time{}, sem: make(chan struct{}, 4)}
 }
 
 // ContactUID is the TAK uid of an agent: OM.agent.{uid}. The OM. prefix is the projector's
@@ -151,7 +165,7 @@ func (g *Gateway) contactOf(a presence.Agent, now time.Time) cot.Contact {
 
 // Handle processes one inbound message. It returns a short outcome for tests and logs.
 func (g *Gateway) Handle(ctx context.Context, subject string, data []byte) string {
-	if !strings.Contains(string(data), `type="b-t-f`) && !strings.Contains(string(data), `type='b-t-f`) {
+	if !IsChat(data) {
 		return "not_chat"
 	}
 	g.C.Received.Add(1)
@@ -187,9 +201,11 @@ func (g *Gateway) Handle(ctx context.Context, subject string, data []byte) strin
 		g.C.ReplyDisabled.Add(1)
 		return "reply_disabled"
 	}
-	if !g.allow(c.SenderUID, now) {
+	if ok, notify := g.allow(c.SenderUID, now); !ok {
 		g.C.RateLimited.Add(1)
-		g.reply(*target, c, mesh, "Rate limit: too many messages, try again in a minute.", now)
+		if notify { // at most one notice per sender per minute, counted against the global budget
+			g.reply(*target, c, mesh, "Rate limit: too many messages, try again in a minute.", now)
+		}
 		return "rate_limited"
 	}
 	text := c.Text
@@ -270,8 +286,11 @@ func (g *Gateway) reply(a presence.Agent, c *cot.Chat, mesh bool, text string, n
 	g.C.Replied.Add(1)
 }
 
-// allow applies the per-sender and global sliding one-minute windows.
-func (g *Gateway) allow(sender string, now time.Time) bool {
+// allow applies the per-sender and global sliding one-minute windows. When a message is
+// refused, notify reports whether the sender should get a rate-limit notice: only the first
+// refusal per sender per minute, and only while the global budget (which the notice then
+// uses) has room, so a flood never turns into one outbound GeoChat per inbound message.
+func (g *Gateway) allow(sender string, now time.Time) (ok, notify bool) {
 	g.mu.Lock()
 	defer g.mu.Unlock()
 	cut := now.Add(-time.Minute)
@@ -286,14 +305,28 @@ func (g *Gateway) allow(sender string, now time.Time) bool {
 	b := prune(g.buckets[sender])
 	if len(b) >= g.cfg.PerSenderPerMin || len(g.global) >= g.cfg.GlobalPerMin {
 		g.buckets[sender] = b
-		return false
+		if last, seen := g.noticed[sender]; (!seen || now.Sub(last) >= time.Minute) && len(g.global) < g.cfg.GlobalPerMin {
+			g.noticed[sender] = now
+			g.global = append(g.global, now)
+			notify = true
+		}
+		g.bound()
+		return false, notify
 	}
 	g.buckets[sender] = append(b, now)
 	g.global = append(g.global, now)
-	if len(g.buckets) > 10000 { // bound memory against uid floods
+	g.bound()
+	return true, false
+}
+
+// bound caps memory against uid floods. Caller holds g.mu.
+func (g *Gateway) bound() {
+	if len(g.buckets) > 10000 {
 		g.buckets = map[string][]time.Time{}
 	}
-	return true
+	if len(g.noticed) > 10000 {
+		g.noticed = map[string]time.Time{}
+	}
 }
 
 // AnnounceContacts publishes the contact presence of every reachable agent.
@@ -323,10 +356,35 @@ func (g *Gateway) AnnounceContacts(now time.Time) int {
 // chat is read with core subscriptions on purpose: after a restart, old chats must not be
 // replayed and answered late.
 func (g *Gateway) Run(ctx context.Context) error {
+	type job struct {
+		subject string
+		data    []byte
+	}
+	queue := make(chan job, queueSize)
+	for i := 0; i < workers; i++ {
+		go func() {
+			for {
+				select {
+				case <-ctx.Done():
+					return
+				case j := <-queue:
+					g.Handle(ctx, j.subject, j.data)
+				}
+			}
+		}()
+	}
 	var subs []*nats.Subscription
 	for _, s := range []string{InServer, InMesh} {
 		sub, err := g.nc.Subscribe(s, func(m *nats.Msg) {
-			go g.Handle(ctx, m.Subject, m.Data)
+			// tak.cot.out carries all TAK CoT; only GeoChat is queued, and never without bound.
+			if !IsChat(m.Data) {
+				return
+			}
+			select {
+			case queue <- job{m.Subject, m.Data}:
+			default:
+				g.C.Dropped.Add(1)
+			}
 		})
 		if err != nil {
 			return err

@@ -33,6 +33,7 @@ const (
 	CapLLMPerHour       = 60
 	CapProposalsPerHour = 20
 	MinCooldownS        = 10
+	SimPrefix           = "sim-" // ids a proposing watch may target
 )
 
 // AllowedTaskTypes is the closed list of responses a watch may propose. Only types whose
@@ -289,6 +290,23 @@ func (w *Watch) normalise() error {
 		}
 		if r.Kind == KindFeedStale && p.Assignee == "about" {
 			return errors.New("a feed_stale watch must name its assignee (a feed is not an asset)")
+		}
+		// Simulated assets only (run rule; the policy service also refuses not_simulated):
+		// a proposing watch must select sim-* entities by id and name only a sim-* assignee.
+		if r.Kind != KindFeedStale {
+			if len(r.EntityIDs) == 0 {
+				return errors.New(`a proposing watch must list entity_ids, each starting with "sim-"`)
+			}
+			for _, id := range r.EntityIDs {
+				if !strings.HasPrefix(id, SimPrefix) {
+					return fmt.Errorf(`entity id %q: a proposing watch selects simulated assets only ("sim-*")`, id)
+				}
+			}
+		}
+		if p.Assignee != "about" {
+			if _, id, _ := strings.Cut(p.Assignee, "/"); !strings.HasPrefix(id, SimPrefix) {
+				return fmt.Errorf(`propose.assignee %q: proposals go to simulated assets only ("sim-*")`, p.Assignee)
+			}
 		}
 	}
 	return nil

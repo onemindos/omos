@@ -2,6 +2,7 @@ package presence
 
 import (
 	"encoding/json"
+	"errors"
 	"testing"
 	"time"
 )
@@ -66,5 +67,42 @@ func TestHeartbeatMismatchRefused(t *testing.T) {
 	}
 	if _, err := tr.OnHeartbeat("agents.prompt.hermes.zeus.legacy", []byte(`{}`)); err == nil {
 		t.Fatal("non-heartbeat subject accepted")
+	}
+}
+
+// TestReplayedHeartbeatUsesSentTime: after a restart the AGENTS replay hands back the last
+// heartbeat per subject. LastSeen comes from heartbeat.ts, so an old beat is offline at once
+// and one older than ForgetAfter is not recorded at all.
+func TestReplayedHeartbeatUsesSentTime(t *testing.T) {
+	now := time.Date(2026, 10, 29, 12, 0, 0, 0, time.UTC)
+	tr := New(Config{Site: Anchor{30.2672, -97.7431}}, func() time.Time { return now })
+	beat := func(ts string) string {
+		return `{"agent":"hermes","owner":"zeus","instance_id":"i1","ts":"` + ts + `","interval_s":30,"onemind":{"mode":"busy","activity":"old task"}}`
+	}
+	// Two minutes old: recorded with the sent time, offline (3 x 30 s), mode reported offline.
+	a, err := tr.OnHeartbeat("agents.hb.hermes.zeus.legacy", []byte(beat("2026-10-29T11:58:00Z")))
+	if err != nil || !a.LastSeen.Equal(now.Add(-2*time.Minute)) || a.Online(now) {
+		t.Fatalf("old beat: %v %+v", err, a)
+	}
+	if d := tr.Due(now, false); len(d) != 1 || d[0].Meta["mode"] != "offline" {
+		t.Fatalf("due %+v", d)
+	}
+	// An hour old (> ForgetAfter): skipped.
+	if _, err := tr.OnHeartbeat("agents.hb.hermes.zeus.other", []byte(beat("2026-10-29T11:00:00Z"))); !errors.Is(err, ErrStaleHeartbeat) {
+		t.Fatalf("hour-old beat accepted: %v", err)
+	}
+	// A ts in the future is clamped to now; an older beat of the same instance does not win.
+	a, err = tr.OnHeartbeat("agents.hb.hermes.zeus.legacy", []byte(beat("2026-10-29T12:05:00Z")))
+	if err != nil || !a.LastSeen.Equal(now) || !a.Online(now) {
+		t.Fatalf("future beat: %v %+v", err, a)
+	}
+	if _, err := tr.OnHeartbeat("agents.hb.hermes.zeus.legacy", []byte(beat("2026-10-29T11:59:00Z"))); !errors.Is(err, ErrStaleHeartbeat) {
+		t.Fatalf("out-of-order beat accepted: %v", err)
+	}
+	if _, err := tr.OnHeartbeat("agents.hb.hermes.zeus.legacy", []byte(beat("yesterday"))); err == nil {
+		t.Fatal("bad ts accepted")
+	}
+	if len(tr.List()) != 1 {
+		t.Fatalf("agents %d", len(tr.List()))
 	}
 }

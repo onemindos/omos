@@ -138,6 +138,12 @@ Two small changes are asked of PR #552 (not grammar):
 2. Copy `meta.current_task` into the contract field `current_task` and `meta.activity` into
    `status.activity` (today both reach clients only inside `meta`).
 
+Both items belong to PR #552 (`feat/entity-service`, `services/entity`) and are tracked there:
+until #552 adopts them, agent entity ids need the `ENTITY_LINKS` workaround and Hermes'
+current task and activity reach clients only in `meta.*`. I1 is therefore built and tested
+here, but stays **awaiting owner rulings** (I1-P1, I1-P2, I1-P5) rather than done; ATAK to
+Hermes messaging ships off (`REPLY_TARGETS` empty) until I1-P1 and I1-P2 are ruled.
+
 ```subjects
 proposed  tel.fleet.agent.{id}.position
 current   agents.hb.{agent}.{owner}.{name}

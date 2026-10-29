@@ -46,6 +46,9 @@ ATAK ──GeoChat (mesh)──► mesh gateway ──► tak.cot.mesh.rx ──
   `AGENT_ANCHORS[ref]`, else `SITE_LAT`/`SITE_LON`; `meta.position_kind` says which, and `ce`
   is 50 m so nobody takes it for a fix. `stale` is 3 × the heartbeat interval (protocol §8.2
   offline rule); an offline agent is published as `mode: offline` for 10 minutes, then dropped.
+  "Last seen" is the heartbeat's own `ts` (clamped to now), not the time it arrived, so the
+  `AGENTS` replay after a restart does not bring a dead agent back online; a heartbeat older
+  than 10 minutes, or older than the last one from the same instance, is ignored.
 - **Entity id.** The uid is `agent-{agent}-{owner}-{name}`. PR #552 prefixes non-`sim-` fleet
   uids with `fleet-`; set `ENTITY_LINKS={"fleet_uid:agent-hermes-zeus-legacy":"agent-hermes-zeus-legacy"}`
   on the entity service until I1-P5 item 1 lands. Status and current task arrive in `meta`
@@ -54,7 +57,9 @@ ATAK ──GeoChat (mesh)──► mesh gateway ──► tak.cot.mesh.rx ──
 - **Contact uid** is `OM.agent.{uid}`: the entity service and tak-client drop `OM.*` as the
   projector's echo, so the contact never comes back as a `person`.
 - **Chat safety.** Text is framed as data from a claimed TAK identity; at most 1000 characters
-  forwarded, 1000 (mesh 600) returned; 6 messages per sender and 60 overall per minute; chats
+  forwarded, 1000 (mesh 600) returned; 6 messages per sender and 60 overall per minute (a
+  flooding sender gets one rate-limit notice per minute, which counts against the 60); only
+  GeoChat (`b-t-f`) is queued, to 8 workers through a 64-slot queue, the rest dropped; chats
   older than 2 minutes dropped; the agent's own echo ignored; a protocol §7 query (approval
   prompt) is refused, because approvals are only given in the OneMind app.
 
@@ -82,7 +87,9 @@ watches:
 
 Load-time checks (the service refuses to start otherwise): unknown fields; inputs must cover
 what the rule reads and nothing more, and may not be wildcards wider than one entity type;
-`owner` must be `user:…`; rates within caps (cooldown ≥ 10 s, ≤ 600 alerts, ≤ 60 model calls,
+`owner` must be `user:…`; a watch that proposes must list `entity_ids`, each starting with
+`sim-`, and an explicit `assignee` id must start with `sim-` (simulated assets only; the policy
+service also refuses `not_simulated`); rates within caps (cooldown ≥ 10 s, ≤ 600 alerts, ≤ 60 model calls,
 ≤ 20 proposals per hour); `propose.action_type` is only `task.assign`; task types only
 `rtl`, `hold`, `manual`, `agent_request` (types whose spec needs no coordinates from a model);
 stop-line words refused.
@@ -93,7 +100,10 @@ On a rising edge (after cooldown and hourly cap) the runner:
    alert, evidence and the allowed list as data;
 3. sends at most one `task.assign` to `svc.policy.task.propose` with `requested_by {kind: agent,
    id: agent:onemind-watch/zeus/hub, on_behalf_of: <owner>}`, `request_id` and `corr` as UUIDs
-   derived from the alert id (idempotent), and the hashes `prompt_sha256`/`tool_input_sha256`;
+   derived from the alert id, and the hashes `prompt_sha256`/`tool_input_sha256`; the alert id
+   is itself derived from (watch, entity, kind, and the time the condition began: the last
+   update for `stale`, the start of the cooldown window otherwise), so a restart that replays
+   the same condition inside that window repeats the id and the policy service dedups it;
    a choice outside the list is recorded as `not_sent`;
 4. publishes revision 2 of the alert with the explanation and the policy answer
    (`awaiting_confirmation` for an A3 asset task). A human confirms in the OneMind app; the
@@ -131,6 +141,7 @@ models and their licences: [LOCAL-MODELS.md](LOCAL-MODELS.md).
 | `CONTACT_EVERY`, `AGENT_COT_TYPE`, `AGENT_TAK_TEAM`, `AGENT_TAK_ROLE` | `60s`, `a-f-G-U-C`, `Cyan`, `HQ` | contact PLI |
 | `WATCH_FILE`, `WATCH_AGENT` | `/config/watches.yaml`, `onemind-watch/zeus/hub` | watch runner |
 | `BRIEF_AOIS`, `BRIEF_EVERY`, `BRIEF_AGENT` | `[]`, `15m`, `onemind-brief/zeus/hub` | briefer |
+| `BRIEF_MAX_PENDING`, `BRIEF_ADHOC_PER_HOUR`, `BRIEF_MODEL_PER_HOUR` | `4`, `12`, scheduled per hour + ad-hoc | `svc.brief.generate` requests waiting or running (more get `busy`); inline AOIs not in `BRIEF_AOIS` per hour (more get `rate_limited`); model calls per hour (past it the brief is written from the facts, `model.skipped: model_hourly_cap`) |
 | `EXPECTED_FEEDS`, `FEED_LAYERS` | `{}` | `{source: staleAfterSec}`, `{source: [layer]}` |
 | `MODEL_PRIMARY`, `MODEL_LOCAL`, `MODEL_TIMEOUT`, `MODEL_ALLOW_REMOTE` | `none`, `none`, `60s`, `false` | model chain |
 | `HTTP_ADDR` | `:8080` | `/healthz`, `/metrics` |
@@ -171,3 +182,11 @@ go test -race -count=1 ./internal/e2e
 - Hermes answering chats and explaining alerts with a real model: Hermes' own configuration,
   checked by the owner (onemind-xr `docs/evidence/M4/I1/OWNER-STEPS.md`).
 - Multi-replica watch runner (leader lease); one replica today, `Recreate`.
+- Durable watch state. Cooldowns, hourly caps and which alerts are active live in memory. After
+  a restart the `ENT` replay re-raises every condition that is still true; the alert id (and so
+  the proposal `request_id`) repeats only when the restart falls in the same cooldown window
+  (`stale` rules: while the entity has not updated), so a later restart can put one more
+  `task.assign` proposal per still-true condition in the confirm queue. Proposals still wait
+  for a human. A KV bucket for active alerts would close this; it needs a new bucket CR.
+- `svc.brief.latest` keeps only the configured `BRIEF_AOIS`; an ad-hoc brief is returned to
+  its caller and published on `EVT`, not kept.

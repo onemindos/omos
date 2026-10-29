@@ -21,7 +21,7 @@ watches:
     inputs: [tel.feed.*.status]
     on_trigger:
       explain: true
-      propose: {task_types: [onemind.task.manual.v1], assignee: team/team-cyan}
+      propose: {task_types: [onemind.task.manual.v1], assignee: team/sim-team-cyan}
 `
 
 func TestParseGood(t *testing.T) {
@@ -50,7 +50,11 @@ func TestParseRefuses(t *testing.T) {
 		"raw command":      strings.Replace(good, `propose: {task_types: [onemind.task.rtl.v1, onemind.task.hold.v1]}`, `propose: {action_type: asset.goto, task_types: [onemind.task.rtl.v1]}`, 1),
 		"task not allowed": strings.Replace(good, `onemind.task.hold.v1]`, `onemind.task.orbit.v1]`, 1),
 		"stop line":        strings.Replace(good, `onemind.task.hold.v1]`, `onemind.task.intercept.v1]`, 1),
-		"feed about":       strings.Replace(good, `, assignee: team/team-cyan`, ``, 1),
+		"feed about":       strings.Replace(good, `, assignee: team/sim-team-cyan`, ``, 1),
+		"real assignee":    strings.Replace(good, `assignee: team/sim-team-cyan`, `assignee: team/team-cyan`, 1),
+		"no entity ids":    strings.Replace(good, `entity_ids: ["sim-*"], `, ``, 1),
+		"real entity id":   strings.Replace(good, `entity_ids: ["sim-*"]`, `entity_ids: ["sim-*", "drone-7"]`, 1),
+		"sim without dash": strings.Replace(good, `entity_ids: ["sim-*"]`, `entity_ids: ["sim*"]`, 1),
 		"cooldown cap":     strings.Replace(good, `level: warning`, "level: warning\n    rate: {cooldown_s: 1}", 1),
 		"llm cap":          strings.Replace(good, `level: warning`, "level: warning\n    rate: {max_llm_per_hour: 1000}", 1),
 		"no types":         strings.Replace(good, `entity_types: [drone], `, ``, 1),

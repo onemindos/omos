@@ -194,3 +194,46 @@ func TestNewID(t *testing.T) {
 		t.Fatalf("ids %s %s", a, b)
 	}
 }
+
+// TestAlertIDDeterministic: the same condition in the same cooldown window (an ENT replay
+// after a restart) gives the same alert id; the next window or another entity does not.
+func TestAlertIDDeterministic(t *testing.T) {
+	w := &Watch{ID: "w1", Rate: Rate{CooldownS: 300}}
+	t0 := time.Date(2026, 10, 29, 12, 1, 0, 0, time.UTC)
+	a := AlertIDFor(w.ID, "sim-x1", "threshold", cooldownBucket(w, t0))
+	b := AlertIDFor(w.ID, "sim-x1", "threshold", cooldownBucket(w, t0.Add(3*time.Minute)))
+	c := AlertIDFor(w.ID, "sim-x1", "threshold", cooldownBucket(w, t0.Add(5*time.Minute)))
+	d := AlertIDFor(w.ID, "sim-x2", "threshold", cooldownBucket(w, t0))
+	if a != b || a == c || a == d || len(a) != 30 || !strings.HasPrefix(a, "alr-") || strings.ToLower(a) != a {
+		t.Fatalf("ids %s %s %s %s", a, b, c, d)
+	}
+}
+
+// TestRestartReplayKeepsAlertID: a fresh engine (a pod restart) that gets the ENT
+// last-per-subject replay of a drone still outside its zone raises the same alert id as
+// the first engine did, so the proposal request_id repeats and the policy service dedups it.
+func TestRestartReplayKeepsAlertID(t *testing.T) {
+	ws := mustParse(t, `
+watches:
+  - id: keep-in
+    owner: user:zeus
+    rule: {kind: zone, entity_types: [drone], entity_ids: ["sim-*"], zone: zone-home}
+    inputs: [ent.drone.*.state, "kv:geofences"]
+    rate: {cooldown_s: 300}
+`)
+	first := func(at time.Time) string {
+		ck := &clock{at}
+		e := NewEngine(ws, nil, ck.now)
+		_ = e.OnZone("zone-home", zoneRec("zone-home", "keep_in"))
+		trig, _, _ := e.OnEntity("ent.drone.sim-x1.state", entRec("sim-x1", 30.30, -97.74, at, ""))
+		if len(trig) != 1 {
+			t.Fatalf("no alert: %+v", trig)
+		}
+		return trig[0].AlertID
+	}
+	t0 := time.Date(2026, 10, 29, 12, 0, 30, 0, time.UTC)
+	a, b := first(t0), first(t0.Add(2*time.Minute))
+	if a != b || requestID(a) != requestID(b) {
+		t.Fatalf("restart changed alert id: %s %s", a, b)
+	}
+}

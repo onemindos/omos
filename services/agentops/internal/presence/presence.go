@@ -14,6 +14,7 @@ package presence
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"regexp"
 	"sort"
@@ -100,6 +101,9 @@ func New(cfg Config, now func() time.Time) *Tracker {
 	return &Tracker{cfg: cfg, now: now, agents: map[string]*Agent{}, last: map[string]string{}, lastT: map[string]time.Time{}}
 }
 
+// ErrStaleHeartbeat marks a heartbeat older than ForgetAfter, or older than the last one seen.
+var ErrStaleHeartbeat = errors.New("stale heartbeat")
+
 // OnHeartbeat records one `agents.hb.{agent}.{owner}.{name}` message.
 func (t *Tracker) OnHeartbeat(subject string, data []byte) (*Agent, error) {
 	tok := strings.Split(subject, ".")
@@ -115,8 +119,31 @@ func (t *Tracker) OnHeartbeat(subject string, data []byte) (*Agent, error) {
 		return nil, fmt.Errorf("heartbeat body %s/%s does not match subject %s", hb.Agent, hb.Owner, subject)
 	}
 	ref := tok[2] + "/" + tok[3] + "/" + tok[4]
-	a := &Agent{UID: UIDFor(tok[2], tok[3], tok[4]), Ref: ref, InstanceID: hb.InstanceID,
-		Interval: time.Duration(hb.IntervalS * float64(time.Second)), LastSeen: t.now()}
+	// LastSeen is when the agent sent the beat, not when it reached us: a replay of the last
+	// heartbeat per subject (on every restart) must not bring a dead agent back online.
+	now := t.now()
+	seen := now
+	if hb.TS != "" {
+		ts, err := time.Parse(time.RFC3339Nano, hb.TS)
+		if err != nil {
+			return nil, fmt.Errorf("heartbeat ts %q is not RFC 3339: %w", hb.TS, err)
+		}
+		if ts.Before(seen) {
+			seen = ts
+		}
+	}
+	if now.Sub(seen) > t.cfg.ForgetAfter {
+		return nil, fmt.Errorf("%w: %s sent %s", ErrStaleHeartbeat, ref, hb.TS)
+	}
+	uid := UIDFor(tok[2], tok[3], tok[4])
+	t.mu.Lock()
+	prev := t.agents[uid]
+	t.mu.Unlock()
+	if prev != nil && prev.InstanceID == hb.InstanceID && prev.LastSeen.After(seen) {
+		return nil, fmt.Errorf("%w: %s older than the last beat", ErrStaleHeartbeat, ref)
+	}
+	a := &Agent{UID: uid, Ref: ref, InstanceID: hb.InstanceID,
+		Interval: time.Duration(hb.IntervalS * float64(time.Second)), LastSeen: seen}
 	if a.Interval <= 0 {
 		a.Interval = 30 * time.Second
 	}

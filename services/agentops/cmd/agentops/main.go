@@ -44,6 +44,15 @@ func envDur(k string, def time.Duration) time.Duration {
 	return def
 }
 
+func envInt(k string, def int) int {
+	if v := os.Getenv(k); v != "" {
+		if n, err := strconv.Atoi(v); err == nil {
+			return n
+		}
+	}
+	return def
+}
+
 func envJSON(k string, into any) error {
 	v := os.Getenv(k)
 	if v == "" {
@@ -257,11 +266,15 @@ func run(log *slog.Logger) error {
 		}
 		beater := agentproto.NewBeater(nc, a, o, n, "Brief", 30*time.Second)
 		go func() { _ = beater.Run(ctx) }()
-		br := brief.New(brief.Config{AOIs: aois, Every: envDur("BRIEF_EVERY", 15*time.Minute)}, nc, pub, chain, board, beater, log)
+		br := brief.New(brief.Config{AOIs: aois, Every: envDur("BRIEF_EVERY", 15*time.Minute),
+			MaxPending: envInt("BRIEF_MAX_PENDING", 0), AdhocPerHour: envInt("BRIEF_ADHOC_PER_HOUR", 0), ModelPerHour: envInt("BRIEF_MODEL_PER_HOUR", 0)}, nc, pub, chain, board, beater, log)
 		metrics["agentops_brief_total"] = br.C.Briefs.Load
 		metrics["agentops_brief_offline_total"] = br.C.Offline.Load
 		metrics["agentops_brief_repaired_total"] = br.C.Repaired.Load
 		metrics["agentops_brief_unknown_ids_total"] = br.C.UnknownIDs.Load
+		metrics["agentops_brief_busy_total"] = br.C.Busy.Load
+		metrics["agentops_brief_adhoc_limited_total"] = br.C.AdhocLimited.Load
+		metrics["agentops_brief_model_limited_total"] = br.C.ModelLimited.Load
 		if err := followFeeds(); err != nil {
 			return err
 		}
