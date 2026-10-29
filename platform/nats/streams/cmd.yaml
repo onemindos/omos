@@ -12,7 +12,11 @@ spec:
   storage: file
   replicas: 3
   retention: limits
-  discard: old
-  maxAge: 720h
+  # discard: new (not old): a full CMD refuses the publish, so the policy service fails
+  # closed and no command goes out without its audit record (BUS-DESIGN 4.1, run rule 6).
+  # Alert NATSCmdStreamNearFull fires at 80% of maxBytes (prometheus-rules-onemind.yaml).
+  discard: new
+  maxAge: 8760h
+  maxBytes: 536870912
   duplicateWindow: 2m
   preventDelete: true
