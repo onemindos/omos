@@ -157,7 +157,7 @@ func member(d *Def, e *entry) bool {
 		return false
 	}
 	ok, cotOnly := d.HasType(e.r.EntityType)
-	return ok && (!cotOnly || e.fromCot)
+	return ok && (!cotOnly || e.fromCot) && d.Qualifies(e.kind, e.subjects)
 }
 
 func parseSubject(subj string) (typ, id string, ok bool) {

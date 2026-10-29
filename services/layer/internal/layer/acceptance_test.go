@@ -245,7 +245,7 @@ func TestA5StaleFeed(t *testing.T) {
 	srv := startServer(t, "")
 	nc, js := connect(t, srv.url)
 	setupBus(t, js, bucketTTL{})
-	hz := Def{ID: "hazards", Title: "Hazards", Tier: TierMedium, EntityTypes: []string{"hazard"}, Cap: 5000, LimitS: 2,
+	hz := Def{ID: "hazards", Title: "Hazards", Tier: TierMedium, EntityTypes: []string{"event"}, Cap: 5000, LimitS: 2,
 		Feeds: []string{"feed-a", "feed-b"}, DefaultStaleS: 3600, Marking: "CLEAR"}
 	pub := func(src string, fetched time.Time, lastErr any) {
 		b, _ := json.Marshal(map[string]any{"source": src, "kind": "rest_poll", "collector": "omos-ingest", "instance": "t", "leader": true,

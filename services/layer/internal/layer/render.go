@@ -3,6 +3,7 @@ package layer
 import (
 	"encoding/json"
 	"fmt"
+	"slices"
 )
 
 // Render is the render subset of an entity (layer-snapshot.md §4). Unknown course and speed
@@ -31,6 +32,7 @@ type Render struct {
 type entIn struct {
 	EntityID    string   `json:"entity_id"`
 	EntityType  string   `json:"entity_type"`
+	Kind        string   `json:"kind"`
 	Lat         float64  `json:"lat"`
 	Lon         float64  `json:"lon"`
 	HAE         *float64 `json:"hae"`
@@ -62,6 +64,7 @@ type entIn struct {
 	} `json:"marking"`
 	Sources []struct {
 		DataType string `json:"data_type"`
+		Subject  string `json:"subject"`
 	} `json:"sources"`
 	Geo *GeoIn `json:"geo"`
 }
@@ -80,6 +83,8 @@ type entry struct {
 	tlp        string
 	releasable []string
 	fromCot    bool
+	kind       string          // entity kind (layer kind rules)
+	subjects   []string        // distinct source subjects (layer source-subject rules)
 	geo        *GeoIn          // zones only (AOI by zone_id)
 	raw        json.RawMessage // full entity (fields: "full")
 	renderJSON []byte
@@ -137,10 +142,13 @@ func parseEntity(subjType, subjID string, data []byte, defOrigin string) (*entry
 	if e.tlp == "" {
 		e.tlp = "AMBER" // entity service default (engine.go) when no source sets a marking
 	}
+	e.kind = in.Kind
 	for _, s := range in.Sources {
 		if s.DataType == "cot" {
 			e.fromCot = true
-			break
+		}
+		if s.Subject != "" && !slices.Contains(e.subjects, s.Subject) {
+			e.subjects = append(e.subjects, s.Subject)
 		}
 	}
 	if in.EntityType == "zone" {

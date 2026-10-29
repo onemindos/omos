@@ -46,8 +46,23 @@ the existing CRs `platform/nats/streams/kv-world-state.yaml` and `kv-fleet-state
   together hold at most `WATCH_MEM_BUDGET_MB`; over it, the largest watch gets `resnapshot`.
   Queued ops point at the shared entity and are rendered when the batch is built. A cells
   watch takes a new diff only after the last one was sent.
-- **Layer membership.** Default layers follow layer-snapshot.md section 1. A `zone` belongs to
-  the `tak` layer only when one of its sources has `data_type: cot`; every zone is in `zones`.
+- **Layer membership.** Default layers follow layer-snapshot.md section 1, mapped onto the
+  ONTOLOGY types and kinds the entity service (omos #552) writes. The contract's `hazard`,
+  `satellite`, `train` and `station` types do not exist on `ENT`, so a layer can narrow its
+  entity types by `kinds`, by `source_subjects` (prefixes of a source's `subject`) and by
+  `exclude_kinds`:
+
+  | layer | ENT type | narrowed by |
+  |---|---|---|
+  | `hazards` | `event` | kind `weather_alert`, `earthquake`, `wildfire`, `flood`, `storm`, `volcano`, `tsunami`, or a source subject under `intel.weather.`, `intel.seismic.`, `intel.fire.`, `intel.disaster.`, `intel.natural.`, `evt.world.fire.`, `evt.world.seismic.` (conflict and chokepoint events stay out) |
+  | `space` | `vehicle` | kind `satellite` (`norad-*`) |
+  | `transit` | `vehicle` | kind `train` (`gtfs-*`) |
+  | `fleet` | `drone`, `robot`, `vehicle`, `node`, `edge` | excludes kinds `satellite`, `train` |
+  | `rf` | `sensor` | kind `aprs`, `meshtastic`, `rf`; no entity-service adapter emits these yet, so the layer is empty |
+
+  The manifest carries `kinds`, `source_subjects` and `exclude_kinds` (additive) next to
+  `filters`. A `zone` belongs to the `tak` layer only when one of its sources has
+  `data_type: cot`; every zone is in `zones`.
 - **Manifest `filters`.** A layer with several entity types has `filter: "ent.*.*.state"` and
   the exact list in `filters` (for a direct-path ordered consumer with `FilterSubjects`).
 
