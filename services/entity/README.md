@@ -113,6 +113,33 @@ against the 5 km acceptance limit. The latest TLE per satellite is kept in memor
 from the restored entity's `meta.line1/line2` on restart (JetStream mode only; in `core` mode
 satellites reappear with the next TLE). Next-pass prediction and orbit rings are client work.
 
+## Capabilities (task gate)
+
+The policy service (omos #554) refuses an asset verb unless the target entity's `capabilities`
+lists the matching task type (mission-task.md §4, `not_capable`). The service fills
+`capabilities` only for **`sim-*` fleet assets**, from the verbs the bridge advertises in a
+`tel.fleet.{class}.{id}.status` envelope's `meta.commands_accepted` (a comma-separated string
+or an array; omos #550 MAVLink sends `goto,rtl,land,arm,disarm,estop,takeoff`, the ROS 2 bridge
+in #566 sends `goto,hold,rtl,estop,estop_release`). `internal/adapt/capabilities.go`:
+
+| verb | task type | drone | robot, vehicle |
+|---|---|---|---|
+| `goto` | `onemind.task.goto.v1` | yes | yes |
+| `hold` | `onemind.task.hold.v1` | yes | yes |
+| `rtl` | `onemind.task.rtl.v1` | yes | yes |
+| `land` | `onemind.task.land.v1` | yes | no (air verb) |
+| `orbit` | `onemind.task.orbit.v1` | yes | no (air verb) |
+| `observe` | `onemind.task.observe.v1` | yes (observable) | only if `observable` (never today) |
+
+Every rule fails closed. A verb is listed only if the bridge advertises it, with no default for
+the class. A position message (no list) keeps the last list, and an explicit empty list clears it.
+Verbs with no task type (`arm`, `disarm`, `takeoff`, `estop`, `estop_release`) are dropped,
+because estop is an unblockable action that needs no capability. A non-sim fleet id, a feed, a
+CoT/TAK record and anything outside `fleet-*` integrations never get capabilities. A record that
+stops being simulated loses them. The bridge's `meta.connection`
+(`online|degraded|offline`) is copied into `health.connection` (before this change it was always
+`online`), and a change in capabilities or connection publishes at once.
+
 ## Tests
 
 ```bash

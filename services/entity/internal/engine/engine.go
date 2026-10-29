@@ -273,6 +273,9 @@ func (e *Engine) Apply(o *model.Observation) Result {
 	}
 	tr.rec.Status = mergeMap(tr.rec.Status, o.Status)
 	tr.rec.Health = mergeMap(tr.rec.Health, o.Health)
+	if o.HasCapabilities && o.Simulated && strings.HasPrefix(o.Integration, "fleet-") {
+		tr.rec.Capabilities = append([]string{}, o.Capabilities...)
+	}
 	if o.Emergency {
 		tr.rec.Indicators.Emergency = true
 	}
@@ -568,6 +571,11 @@ func (e *Engine) derive(t *track, now int64) {
 	}
 	r.Indicators.Simulated = sim
 	r.Indicators.EgressTAK = egress
+	// Capabilities only on a simulated, taskable sim-* asset (adapt.FleetCapabilities); any
+	// other record, including a restored one that no longer qualifies, advertises none.
+	if !sim || !strings.HasPrefix(strings.ToLower(r.EntityID), "sim-") || !hasTrait(r.Traits, "taskable") {
+		r.Capabilities = nil
+	}
 
 	// Confidence (entity.md §7): parts kept so the UI and Hermes can explain it.
 	prior, miss := 0.0, 1.0
@@ -627,7 +635,8 @@ func mergeMap(dst, src map[string]any) map[string]any {
 func (t *track) signature() string {
 	r := &t.rec
 	return fmt.Sprint(r.EntityType, r.Type, r.Callsign, r.Disposition, r.Kind, r.Environment, r.CotType,
-		r.Indicators, r.Marking.TLP, r.Lifecycle, len(r.Sources), r.Status, r.Health["battery_pct"])
+		r.Indicators, r.Marking.TLP, r.Lifecycle, len(r.Sources), r.Status, r.Health["battery_pct"],
+		r.Health["connection"], r.Capabilities)
 }
 
 func heartbeatMs(stale int, max int64, pinned bool) int64 {
@@ -699,6 +708,7 @@ func ttlHeader(r model.Entity, now int64) string {
 func clone(r model.Entity) model.Entity {
 	c := r
 	c.Traits = append([]string(nil), r.Traits...)
+	c.Capabilities = append([]string(nil), r.Capabilities...)
 	c.Aliases.IDs = append([]model.Alias(nil), r.Aliases.IDs...)
 	c.Sources = append([]model.Source(nil), r.Sources...)
 	c.Conflicts = append([]model.Conflict(nil), r.Conflicts...)

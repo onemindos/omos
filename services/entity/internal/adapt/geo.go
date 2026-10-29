@@ -94,12 +94,15 @@ func Fleet(data []byte, subject string) (*model.Observation, string, error) {
 	switch et {
 	case "drone":
 		o.Kind, o.Environment = metaString(g.Meta, "airframe"), "air"
-		o.Traits = []string{"locatable", "trackable", "taskable", "observable"}
 		if o.Kind == "" {
+			o.Kind = metaString(g.Meta, "kind") // omos #550 bridge: multirotor|fixed_wing|vtol
+		}
+		o.Traits = []string{"locatable", "trackable", "taskable", "observable"}
+		if o.Kind == "" || o.Kind == "unknown" {
 			o.Kind = "multirotor"
 		}
 	case "robot", "vehicle":
-		o.Environment = "land"
+		o.Kind, o.Environment = metaString(g.Meta, "kind"), "land" // omos #566 bridge: ugv
 		o.Traits = []string{"locatable", "trackable", "taskable"}
 	default:
 		o.Traits = []string{"locatable"}
@@ -110,9 +113,21 @@ func Fleet(data []byte, subject string) (*model.Observation, string, error) {
 			h[k] = v
 		}
 	}
+	// A bridge that tracks its link (omos #550 heartbeat, #566 last_heard) says so in
+	// meta.connection; the policy service refuses commands unless it reads "online".
+	switch conn := metaString(g.Meta, "connection"); conn {
+	case "online", "degraded", "offline":
+		h["connection"] = conn
+	default:
+		if len(h) > 0 {
+			h["connection"] = "online"
+		}
+	}
 	if len(h) > 0 {
-		h["connection"] = "online"
 		o.Health = h
+	}
+	if caps, ok := FleetCapabilities(et, g.UID, o.Traits, g.Meta); ok && o.Simulated {
+		o.Capabilities, o.HasCapabilities = caps, true
 	}
 	if mode := metaString(g.Meta, "mode"); mode != "" {
 		o.Status = map[string]any{"mode": mode}
