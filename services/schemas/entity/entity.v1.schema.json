@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/entity/v1",
+  "title": "OneMind Entity State v1",
+  "description": "Fused entity record published by the omos entity service on ent.{entity_type}.{entity_id}.state (onemind-xr docs/contracts/entity.md, v 1). Plain JSON, not wrapped in the event envelope: the TAK projector reads top-level fields. Consumers MUST tolerate unknown fields. Stop-line SL9: disposition has no hostile value.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "uid", "type", "lat", "lon", "t",
+    "entity_id", "entity_type", "confidence", "properties",
+    "v", "seq", "live", "lifecycle", "created_t", "expiry_t", "pinned", "template", "traits",
+    "aliases", "relationships", "indicators", "marking", "provenance", "sources", "confidence_parts"
+  ],
+  "$defs": {
+    "entity_id": { "type": "string", "pattern": "^[a-z0-9_-]{1,64}$" },
+    "ms": { "type": "integer", "minimum": 0 },
+    "unit": { "type": "number", "minimum": 0, "maximum": 1 },
+    "cov6": { "oneOf": [ { "type": "null" }, { "type": "array", "items": { "type": "number" }, "minItems": 6, "maxItems": 6 } ] }
+  },
+  "properties": {
+    "uid": { "$ref": "#/$defs/entity_id" },
+    "type": { "type": "string", "minLength": 1 },
+    "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+    "lon": { "type": "number", "minimum": -180, "maximum": 180 },
+    "hae": { "type": "number" },
+    "course": { "type": "number" },
+    "speed": { "type": "number" },
+    "callsign": { "type": "string" },
+    "stale": { "type": "integer", "minimum": 0 },
+    "t": { "$ref": "#/$defs/ms" },
+    "meta": { "type": "object" },
+
+    "entity_id": { "$ref": "#/$defs/entity_id" },
+    "entity_type": {
+      "enum": ["drone", "robot", "vehicle", "node", "aircraft", "vessel", "person", "team", "agent",
+               "sensor", "camera", "track", "place", "structure", "zone", "event", "alert"]
+    },
+    "confidence": { "type": "number", "minimum": 0, "exclusiveMaximum": 1 },
+    "properties": {
+      "type": "object",
+      "properties": {
+        "callsign": { "type": "string" },
+        "altitude": { "type": "number" },
+        "speed": { "type": "number" },
+        "course": { "type": "number" },
+        "ce": { "type": "number" },
+        "le": { "type": "number" }
+      }
+    },
+
+    "v": { "const": 1 },
+    "seq": { "type": "integer", "minimum": 1 },
+    "live": { "type": "boolean" },
+    "lifecycle": { "enum": ["tentative", "active", "stale", "lost", "expired"] },
+    "created_t": { "$ref": "#/$defs/ms" },
+    "expiry_t": { "oneOf": [ { "type": "null" }, { "$ref": "#/$defs/ms" } ] },
+    "pinned": { "type": "boolean" },
+    "kind": { "type": "string" },
+    "template": { "enum": ["asset", "track", "geo", "spi"] },
+    "traits": { "type": "array", "items": { "enum": ["locatable", "trackable", "taskable", "observable"] }, "uniqueItems": true },
+    "disposition": { "enum": ["friendly", "assumed_friendly", "neutral", "unknown", "suspicious", "pending"] },
+    "environment": { "enum": ["air", "surface", "subsurface", "land", "space"] },
+    "cot_type": { "type": "string" },
+    "aliases": {
+      "type": "object",
+      "required": ["name", "ids"],
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "ids": {
+          "type": "array",
+          "items": { "type": "object", "required": ["type", "id"], "properties": { "type": { "type": "string" }, "id": { "type": "string" } } }
+        }
+      }
+    },
+    "location": {
+      "type": "object",
+      "required": ["lat", "lon", "measured_t"],
+      "properties": {
+        "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+        "lon": { "type": "number", "minimum": -180, "maximum": 180 },
+        "hae_m": { "type": "number" },
+        "agl_m": { "type": "number" },
+        "course_deg": { "type": "number" },
+        "speed_mps": { "type": "number" },
+        "vel_enu_mps": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+        "attitude_q": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 },
+        "measured_t": { "$ref": "#/$defs/ms" }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "required": ["ce_m", "le_m"],
+      "properties": {
+        "ce_m": { "type": "number", "minimum": 0 },
+        "le_m": { "type": "number", "minimum": 0 },
+        "pos_enu_cov": { "$ref": "#/$defs/cov6" },
+        "vel_enu_cov": { "$ref": "#/$defs/cov6" },
+        "error_ellipse": { "type": ["object", "null"] }
+      }
+    },
+    "geo": { "type": ["object", "null"] },
+    "status": { "type": "object" },
+    "health": { "type": "object" },
+    "sensors": { "type": "array" },
+    "capabilities": { "type": "array", "items": { "type": "string" } },
+    "current_task": { "type": ["object", "null"] },
+    "tracked": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "object", "required": ["quality", "hits", "last_meas_t"],
+          "properties": { "quality": { "type": "integer", "minimum": 0, "maximum": 15 }, "hits": { "type": "integer", "minimum": 0 } } }
+      ]
+    },
+    "correlation": { "type": ["object", "null"] },
+    "relationships": { "type": "array" },
+    "media": { "type": "array" },
+    "route": { "type": ["object", "null"] },
+    "indicators": {
+      "type": "object",
+      "required": ["simulated", "exercise", "emergency", "starred", "egress_tak"],
+      "properties": {
+        "simulated": { "type": "boolean" }, "exercise": { "type": "boolean" }, "emergency": { "type": "boolean" },
+        "starred": { "type": "boolean" }, "egress_tak": { "type": "boolean" }
+      }
+    },
+    "marking": {
+      "type": "object",
+      "required": ["tlp", "releasable_to"],
+      "properties": {
+        "tlp": { "enum": ["CLEAR", "GREEN", "AMBER", "AMBER+STRICT", "RED"] },
+        "releasable_to": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "cot_security": { "type": ["object", "null"] },
+    "provenance": {
+      "type": "object",
+      "required": ["primary", "how", "source_t"],
+      "properties": { "primary": { "type": "string" }, "how": { "type": "string" }, "source_t": { "$ref": "#/$defs/ms" } }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["integration", "source_id", "data_type", "subject", "stream", "seq", "first_seen_t", "last_seen_t", "source_t", "components"],
+        "properties": {
+          "integration": { "type": "string" }, "source_id": { "type": "string" }, "data_type": { "type": "string" },
+          "subject": { "type": "string" }, "stream": { "type": "string" }, "seq": { "type": "integer", "minimum": 0 },
+          "first_seen_t": { "$ref": "#/$defs/ms" }, "last_seen_t": { "$ref": "#/$defs/ms" }, "source_t": { "$ref": "#/$defs/ms" },
+          "components": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "confidence_parts": {
+      "type": "object",
+      "required": ["source_prior", "track_quality", "corroboration"],
+      "properties": {
+        "source_prior": { "$ref": "#/$defs/unit" }, "track_quality": { "$ref": "#/$defs/unit" }, "corroboration": { "$ref": "#/$defs/unit" }
+      }
+    },
+    "conflicts": { "type": "array" },
+    "overrides": { "type": "array" }
+  },
+  "allOf": [
+    { "if": { "properties": { "pinned": { "const": false } } }, "then": { "properties": { "expiry_t": { "type": "integer" } } } },
+    { "if": { "properties": { "traits": { "contains": { "const": "locatable" } } } }, "then": { "required": ["location", "uncertainty"] } },
+    { "if": { "properties": { "entity_type": { "const": "person" } } }, "then": { "properties": { "indicators": { "properties": { "egress_tak": { "const": false } } } } } }
+  ]
+}

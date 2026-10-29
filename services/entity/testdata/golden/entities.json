@@ -1,0 +1,1613 @@
+[
+  {
+    "aliases": {
+      "ids": [
+        {
+          "id": "a1b2c3",
+          "type": "icao"
+        },
+        {
+          "id": "ADSB-A1B2C3",
+          "type": "cot_uid"
+        }
+      ],
+      "name": "UAL123"
+    },
+    "callsign": "UAL123",
+    "confidence": 0.9623,
+    "confidence_parts": {
+      "corroboration": 0.9775,
+      "source_prior": 0.85,
+      "track_quality": 0.9689
+    },
+    "correlation": null,
+    "cot_security": null,
+    "cot_type": "a-f-A-M-F-Q",
+    "course": 44.3,
+    "created_t": 1793275260000,
+    "current_task": null,
+    "disposition": "friendly",
+    "entity_id": "icao-a1b2c3",
+    "entity_type": "aircraft",
+    "environment": "air",
+    "expiry_t": 1793275342000,
+    "geo": null,
+    "hae": 1410,
+    "indicators": {
+      "egress_tak": true,
+      "emergency": false,
+      "exercise": false,
+      "simulated": false,
+      "starred": false
+    },
+    "lat": 40.6605742,
+    "lifecycle": "active",
+    "live": true,
+    "location": {
+      "course_deg": 44.3,
+      "hae_m": 1410,
+      "lat": 40.6605742,
+      "lon": -73.7549675,
+      "measured_t": 1793275222000,
+      "speed_mps": 129.64,
+      "vel_enu_mps": [
+        90.553,
+        92.766,
+        0
+      ]
+    },
+    "lon": -73.7549675,
+    "marking": {
+      "releasable_to": [],
+      "tlp": "CLEAR"
+    },
+    "meta": {
+      "icao": "A1B2C3",
+      "origin_iata": "JFK"
+    },
+    "pinned": false,
+    "properties": {
+      "altitude": 1410,
+      "callsign": "UAL123",
+      "ce": 32.12,
+      "course": 44.3,
+      "le": 50,
+      "speed": 129.64
+    },
+    "provenance": {
+      "how": "m-f",
+      "primary": "world-air",
+      "source_t": 1793275222000
+    },
+    "relationships": [],
+    "route": null,
+    "seq": 5,
+    "sources": [
+      {
+        "components": [
+          "location"
+        ],
+        "data_type": "cot",
+        "first_seen_t": 1793275260000,
+        "integration": "feed-aircraft",
+        "last_seen_t": 1793275260000,
+        "seq": 3,
+        "source_id": "ADSB-A1B2C3",
+        "source_t": 1793275220000,
+        "stream": "COT",
+        "subject": "tak.cot.inject",
+        "tier": "self_report"
+      },
+      {
+        "components": [
+          "location"
+        ],
+        "data_type": "geo",
+        "first_seen_t": 1793275260000,
+        "integration": "world-air",
+        "last_seen_t": 1793275260000,
+        "seq": 3,
+        "source_id": "icao-a1b2c3",
+        "source_t": 1793275222000,
+        "stream": "WORLD",
+        "subject": "evt.world.air.icao-a1b2c3",
+        "tier": "self_report"
+      }
+    ],
+    "speed": 129.64,
+    "stale": 30,
+    "t": 1793275222000,
+    "template": "asset",
+    "tracked": null,
+    "traits": [
+      "locatable",
+      "trackable"
+    ],
+    "type": "air.commercial",
+    "uid": "icao-a1b2c3",
+    "uncertainty": {
+      "ce_m": 32.12,
+      "error_ellipse": null,
+      "le_m": 50,
+      "pos_enu_cov": [
+        1031.405,
+        0,
+        0,
+        1031.405,
+        0,
+        2500
+      ],
+      "vel_enu_cov": [
+        24.8107,
+        0,
+        0,
+        24.8107,
+        0,
+        0
+      ]
+    },
+    "v": 1
+  },
+  {
+    "aliases": {
+      "ids": [
+        {
+          "id": "abc123",
+          "type": "icao"
+        },
+        {
+          "id": "ADSB-ABC123",
+          "type": "cot_uid"
+        }
+      ],
+      "name": "DAL45"
+    },
+    "callsign": "DAL45",
+    "confidence": 0.5599,
+    "confidence_parts": {
+      "corroboration": 0.85,
+      "source_prior": 0.85,
+      "track_quality": 0.3175
+    },
+    "correlation": null,
+    "cot_security": null,
+    "cot_type": "a-f-A-M-F-Q",
+    "course": 270,
+    "created_t": 1793275260000,
+    "current_task": null,
+    "disposition": "friendly",
+    "entity_id": "icao-abc123",
+    "entity_type": "aircraft",
+    "environment": "air",
+    "expiry_t": 1793275325000,
+    "geo": null,
+    "hae": 3000,
+    "indicators": {
+      "egress_tak": false,
+      "emergency": false,
+      "exercise": false,
+      "simulated": false,
+      "starred": false
+    },
+    "lat": 40.7,
+    "lifecycle": "active",
+    "live": true,
+    "location": {
+      "course_deg": 270,
+      "hae_m": 3000,
+      "lat": 40.7,
+      "lon": -73.9,
+      "measured_t": 1793275205000,
+      "speed_mps": 154.33,
+      "vel_enu_mps": [
+        -154.333,
+        -0,
+        0
+      ]
+    },
+    "lon": -73.9,
+    "marking": {
+      "releasable_to": [],
+      "tlp": "CLEAR"
+    },
+    "pinned": false,
+    "properties": {
+      "altitude": 3000,
+      "callsign": "DAL45",
+      "ce": 50,
+      "course": 270,
+      "le": 50,
+      "speed": 154.33
+    },
+    "provenance": {
+      "how": "m-g",
+      "primary": "feed-aircraft",
+      "source_t": 1793275205000
+    },
+    "relationships": [],
+    "route": null,
+    "seq": 1,
+    "sources": [
+      {
+        "components": [
+          "location"
+        ],
+        "data_type": "cot",
+        "first_seen_t": 1793275260000,
+        "integration": "feed-aircraft",
+        "last_seen_t": 1793275260000,
+        "seq": 4,
+        "source_id": "ADSB-ABC123",
+        "source_t": 1793275205000,
+        "stream": "COT",
+        "subject": "tak.cot.inject",
+        "tier": "self_report"
+      }
+    ],
+    "speed": 154.33,
+    "stale": 60,
+    "t": 1793275205000,
+    "template": "asset",
+    "tracked": null,
+    "traits": [
+      "locatable",
+      "trackable"
+    ],
+    "type": "air.unknown",
+    "uid": "icao-abc123",
+    "uncertainty": {
+      "ce_m": 50,
+      "error_ellipse": null,
+      "le_m": 50,
+      "pos_enu_cov": [
+        2500,
+        0,
+        0,
+        2500,
+        0,
+        2500
+      ],
+      "vel_enu_cov": [
+        59.5468,
+        0,
+        0,
+        59.5468,
+        0,
+        0
+      ]
+    },
+    "v": 1
+  },
+  {
+    "aliases": {
+      "ids": [
+        {
+          "id": "sim-x1",
+          "type": "sim"
+        },
+        {
+          "id": "sim-x1",
+          "type": "cot_uid"
+        },
+        {
+          "id": "1",
+          "type": "mavlink_sysid"
+        }
+      ],
+      "name": "SIM-X1"
+    },
+    "callsign": "SIM-X1",
+    "confidence": 0.9875,
+    "confidence_parts": {
+      "corroboration": 0.99,
+      "source_prior": 0.95,
+      "track_quality": 0.995
+    },
+    "correlation": null,
+    "cot_security": null,
+    "cot_type": "a-f-A-M-H-Q",
+    "course": 90,
+    "created_t": 1793275260000,
+    "current_task": null,
+    "disposition": "friendly",
+    "entity_id": "sim-x1",
+    "entity_type": "drone",
+    "environment": "air",
+    "expiry_t": 1793275297000,
+    "geo": null,
+    "hae": 152.4,
+    "health": {
+      "battery_pct": 79,
+      "connection": "online",
+      "link_rssi": -66,
+      "overall": "healthy"
+    },
+    "indicators": {
+      "egress_tak": true,
+      "emergency": false,
+      "exercise": false,
+      "simulated": true,
+      "starred": false
+    },
+    "kind": "multirotor",
+    "lat": 30.2672,
+    "lifecycle": "active",
+    "live": true,
+    "location": {
+      "course_deg": 90,
+      "hae_m": 152.4,
+      "lat": 30.2672,
+      "lon": -97.7417,
+      "measured_t": 1793275237000,
+      "speed_mps": 12.5,
+      "vel_enu_mps": [
+        12.5,
+        0,
+        0
+      ]
+    },
+    "lon": -97.7417,
+    "marking": {
+      "releasable_to": [],
+      "tlp": "AMBER+STRICT"
+    },
+    "meta": {
+      "battery_pct": 79,
+      "link_rssi": -66,
+      "mavlink_sysid": 1,
+      "mode": "AUTO",
+      "node_id": "build-mac"
+    },
+    "pinned": false,
+    "properties": {
+      "altitude": 152.4,
+      "callsign": "SIM-X1",
+      "ce": 5,
+      "course": 90,
+      "le": 3,
+      "speed": 12.5
+    },
+    "provenance": {
+      "how": "m-s",
+      "primary": "tak-mesh",
+      "source_t": 1793275237000
+    },
+    "relationships": [],
+    "route": null,
+    "seq": 5,
+    "sources": [
+      {
+        "components": [
+          "health",
+          "status"
+        ],
+        "data_type": "geo",
+        "first_seen_t": 1793275260000,
+        "integration": "fleet-drone-build-mac",
+        "last_seen_t": 1793275260000,
+        "seq": 4,
+        "source_id": "sim-x1",
+        "source_t": 1793275236000,
+        "stream": "TEL",
+        "subject": "tel.fleet.drone.sim-x1.status",
+        "tier": "self_report"
+      },
+      {
+        "components": [
+          "location"
+        ],
+        "data_type": "cot",
+        "first_seen_t": 1793275260000,
+        "integration": "tak-mesh",
+        "last_seen_t": 1793275260000,
+        "seq": 15,
+        "source_id": "sim-x1",
+        "source_t": 1793275237000,
+        "stream": "COT",
+        "subject": "tak.cot.mesh.rx",
+        "tier": "self_report"
+      }
+    ],
+    "speed": 12.5,
+    "stale": 60,
+    "status": {
+      "mode": "AUTO"
+    },
+    "t": 1793275237000,
+    "template": "asset",
+    "tracked": null,
+    "traits": [
+      "locatable",
+      "trackable",
+      "taskable",
+      "observable"
+    ],
+    "type": "fleet.drone",
+    "uid": "sim-x1",
+    "uncertainty": {
+      "ce_m": 5,
+      "error_ellipse": null,
+      "le_m": 3,
+      "pos_enu_cov": [
+        25,
+        0,
+        0,
+        25,
+        0,
+        9
+      ],
+      "vel_enu_cov": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    "v": 1
+  },
+  {
+    "aliases": {
+      "ids": [
+        {
+          "id": "emsc-20261029_0001",
+          "type": "intel_id"
+        }
+      ],
+      "name": "GREECE"
+    },
+    "callsign": "GREECE",
+    "confidence": 0.7,
+    "confidence_parts": {
+      "corroboration": 0.7,
+      "source_prior": 0.7,
+      "track_quality": 1
+    },
+    "correlation": null,
+    "cot_security": null,
+    "created_t": 1793275260000,
+    "current_task": null,
+    "entity_id": "emsc-20261029_0001",
+    "entity_type": "event",
+    "expiry_t": 1793361300000,
+    "geo": {
+      "coords": {
+        "coordinates": [
+          21.7,
+          38.2
+        ],
+        "type": "Point"
+      },
+      "kind": "hazard",
+      "shape": "point"
+    },
+    "indicators": {
+      "egress_tak": true,
+      "emergency": false,
+      "exercise": false,
+      "simulated": false,
+      "starred": false
+    },
+    "kind": "earthquake",
+    "lat": 38.2,
+    "lifecycle": "active",
+    "live": true,
+    "location": {
+      "lat": 38.2,
+      "lon": 21.7,
+      "measured_t": 1793274900000
+    },
+    "lon": 21.7,
+    "marking": {
+      "releasable_to": [],
+      "tlp": "CLEAR"
+    },
+    "meta": {
+      "magnitude": 3.1,
+      "place": "GREECE",
+      "region": "GREECE"
+    },
+    "pinned": false,
+    "properties": {
+      "callsign": "GREECE",
+      "ce": 1000,
+      "le": 1000
+    },
+    "provenance": {
+      "how": "m-g",
+      "primary": "feed-intel-emsc",
+      "source_t": 1793274900000
+    },
+    "relationships": [],
+    "route": null,
+    "seq": 1,
+    "sources": [
+      {
+        "components": [
+          "location",
+          "geo"
+        ],
+        "data_type": "intel",
+        "first_seen_t": 1793275260000,
+        "integration": "feed-intel-emsc",
+        "last_seen_t": 1793275260000,
+        "seq": 2,
+        "source_id": "emsc-20261029_0001",
+        "source_t": 1793274900000,
+        "stream": "INTEL",
+        "subject": "intel.seismic.emsc.m3.20261029_0001",
+        "tier": "sensor"
+      }
+    ],
+    "stale": 3600,
+    "t": 1793274900000,
+    "template": "geo",
+    "tracked": null,
+    "traits": [
+      "locatable"
+    ],
+    "type": "onemind.event",
+    "uid": "emsc-20261029_0001",
+    "uncertainty": {
+      "ce_m": 1000,
+      "error_ellipse": null,
+      "le_m": 1000,
+      "pos_enu_cov": null,
+      "vel_enu_cov": null
+    },
+    "v": 1
+  },
+  {
+    "aliases": {
+      "ids": [
+        {
+          "id": "usgs-us7000abcd",
+          "type": "intel_id"
+        }
+      ],
+      "name": "12 km SW of Ridgecrest, CA"
+    },
+    "callsign": "12 km SW of Ridgecrest, CA",
+    "confidence": 0.7,
+    "confidence_parts": {
+      "corroboration": 0.7,
+      "source_prior": 0.7,
+      "track_quality": 1
+    },
+    "correlation": null,
+    "cot_security": null,
+    "created_t": 1793275260000,
+    "current_task": null,
+    "entity_id": "usgs-us7000abcd",
+    "entity_type": "event",
+    "expiry_t": 1793361000000,
+    "geo": {
+      "coords": {
+        "coordinates": [
+          -117.5678,
+          35.1234
+        ],
+        "type": "Point"
+      },
+      "kind": "hazard",
+      "shape": "point"
+    },
+    "indicators": {
+      "egress_tak": true,
+      "emergency": false,
+      "exercise": false,
+      "simulated": false,
+      "starred": false
+    },
+    "kind": "earthquake",
+    "lat": 35.1234,
+    "lifecycle": "active",
+    "live": true,
+    "location": {
+      "lat": 35.1234,
+      "lon": -117.5678,
+      "measured_t": 1793274600000
+    },
+    "lon": -117.5678,
+    "marking": {
+      "releasable_to": [],
+      "tlp": "CLEAR"
+    },
+    "meta": {
+      "depth_km": 8.1,
+      "magnitude": 4.4,
+      "magnitude_type": "mw",
+      "place": "12 km SW of Ridgecrest, CA",
+      "status": "reviewed",
+      "tsunami": false
+    },
+    "pinned": false,
+    "properties": {
+      "callsign": "12 km SW of Ridgecrest, CA",
+      "ce": 1000,
+      "le": 1000
+    },
+    "provenance": {
+      "how": "m-g",
+      "primary": "feed-intel-usgs",
+      "source_t": 1793274600000
+    },
+    "relationships": [],
+    "route": null,
+    "seq": 1,
+    "sources": [
+      {
+        "components": [
+          "location",
+          "geo"
+        ],
+        "data_type": "intel",
+        "first_seen_t": 1793275260000,
+        "integration": "feed-intel-usgs",
+        "last_seen_t": 1793275260000,
+        "seq": 1,
+        "source_id": "us7000abcd",
+        "source_t": 1793274600000,
+        "stream": "INTEL",
+        "subject": "intel.seismic.usgs.m4.us7000abcd",
+        "tier": "sensor"
+      }
+    ],
+    "stale": 3600,
+    "t": 1793274600000,
+    "template": "geo",
+    "tracked": null,
+    "traits": [
+      "locatable"
+    ],
+    "type": "onemind.event",
+    "uid": "usgs-us7000abcd",
+    "uncertainty": {
+      "ce_m": 1000,
+      "error_ellipse": null,
+      "le_m": 1000,
+      "pos_enu_cov": null,
+      "vel_enu_cov": null
+    },
+    "v": 1
+  },
+  {
+    "aliases": {
+      "ids": [
+        {
+          "id": "ANDROID-a1b2c3d4e5f6",
+          "type": "cot_uid"
+        },
+        {
+          "id": "CYAN-1",
+          "type": "tak_callsign"
+        }
+      ],
+      "name": "CYAN-1"
+    },
+    "callsign": "CYAN-1",
+    "confidence": 0.7473,
+    "confidence_parts": {
+      "corroboration": 0.9,
+      "source_prior": 0.9,
+      "track_quality": 0.6606
+    },
+    "correlation": null,
+    "cot_security": null,
+    "cot_type": "a-f-G-U-C",
+    "course": 59.9,
+    "created_t": 1793275260000,
+    "current_task": null,
+    "disposition": "friendly",
+    "entity_id": "tak-android-a1b2c3d4e5f6",
+    "entity_type": "person",
+    "environment": "land",
+    "expiry_t": 1793275593000,
+    "geo": null,
+    "hae": 210.5,
+    "health": {
+      "battery_pct": 88
+    },
+    "indicators": {
+      "egress_tak": false,
+      "emergency": false,
+      "exercise": false,
+      "simulated": false,
+      "starred": false
+    },
+    "lat": 30.2676697,
+    "lifecycle": "active",
+    "live": true,
+    "location": {
+      "course_deg": 59.9,
+      "hae_m": 210.5,
+      "lat": 30.2676697,
+      "lon": -97.7425607,
+      "measured_t": 1793275233000,
+      "speed_mps": 1.03,
+      "vel_enu_mps": [
+        0.893,
+        0.517,
+        0
+      ]
+    },
+    "lon": -97.7425607,
+    "marking": {
+      "releasable_to": [],
+      "tlp": "AMBER+STRICT"
+    },
+    "meta": {
+      "team": "Cyan"
+    },
+    "pinned": false,
+    "properties": {
+      "altitude": 210.5,
+      "callsign": "CYAN-1",
+      "ce": 9.12,
+      "course": 59.9,
+      "le": 9.9,
+      "speed": 1.03
+    },
+    "provenance": {
+      "how": "m-g",
+      "primary": "tak-server",
+      "source_t": 1793275233000
+    },
+    "relationships": [],
+    "route": null,
+    "seq": 2,
+    "sources": [
+      {
+        "components": [
+          "location"
+        ],
+        "data_type": "cot",
+        "first_seen_t": 1793275260000,
+        "integration": "tak-server",
+        "last_seen_t": 1793275260000,
+        "seq": 12,
+        "source_id": "ANDROID-a1b2c3d4e5f6",
+        "source_t": 1793275233000,
+        "stream": "COT",
+        "subject": "tak.cot.out",
+        "tier": "self_report"
+      }
+    ],
+    "speed": 1.03,
+    "stale": 360,
+    "status": {
+      "activity": "",
+      "mode": "",
+      "role": "Team Member"
+    },
+    "t": 1793275233000,
+    "template": "asset",
+    "tracked": null,
+    "traits": [
+      "locatable"
+    ],
+    "type": "tak.atak",
+    "uid": "tak-android-a1b2c3d4e5f6",
+    "uncertainty": {
+      "ce_m": 9.12,
+      "error_ellipse": null,
+      "le_m": 9.9,
+      "pos_enu_cov": [
+        83.141,
+        0,
+        0,
+        83.141,
+        0,
+        98.01
+      ],
+      "vel_enu_cov": [
+        0.6473,
+        0,
+        0,
+        0.6473,
+        0,
+        0
+      ]
+    },
+    "v": 1
+  },
+  {
+    "aliases": {
+      "ids": [
+        {
+          "id": "S-1-5-21-942292099.WINTAK",
+          "type": "cot_uid"
+        },
+        {
+          "id": "GREEN-2",
+          "type": "tak_callsign"
+        }
+      ],
+      "name": "GREEN-2"
+    },
+    "callsign": "GREEN-2",
+    "confidence": 0.5985,
+    "confidence_parts": {
+      "corroboration": 0.9,
+      "source_prior": 0.9,
+      "track_quality": 0.3301
+    },
+    "correlation": null,
+    "cot_security": null,
+    "cot_type": "a-f-G-U-C",
+    "course": 0,
+    "created_t": 1793275260000,
+    "current_task": null,
+    "disposition": "friendly",
+    "entity_id": "tak-pbe3cesvp2esvfbrw3eze2we2h",
+    "entity_type": "person",
+    "environment": "land",
+    "expiry_t": 1793275564000,
+    "geo": null,
+    "hae": 210.5,
+    "health": {
+      "battery_pct": 88
+    },
+    "indicators": {
+      "egress_tak": false,
+      "emergency": false,
+      "exercise": false,
+      "simulated": false,
+      "starred": false
+    },
+    "lat": 30.27,
+    "lifecycle": "active",
+    "live": true,
+    "location": {
+      "course_deg": 0,
+      "hae_m": 210.5,
+      "lat": 30.27,
+      "lon": -97.75,
+      "measured_t": 1793275204000,
+      "speed_mps": 0,
+      "vel_enu_mps": [
+        0,
+        0,
+        0
+      ]
+    },
+    "lon": -97.75,
+    "marking": {
+      "releasable_to": [],
+      "tlp": "AMBER+STRICT"
+    },
+    "meta": {
+      "team": "Green"
+    },
+    "pinned": false,
+    "properties": {
+      "altitude": 210.5,
+      "callsign": "GREEN-2",
+      "ce": 9.9,
+      "course": 0,
+      "le": 9.9,
+      "speed": 0
+    },
+    "provenance": {
+      "how": "m-g",
+      "primary": "tak-server",
+      "source_t": 1793275204000
+    },
+    "relationships": [],
+    "route": null,
+    "seq": 1,
+    "sources": [
+      {
+        "components": [
+          "location"
+        ],
+        "data_type": "cot",
+        "first_seen_t": 1793275260000,
+        "integration": "tak-server",
+        "last_seen_t": 1793275260000,
+        "seq": 13,
+        "source_id": "S-1-5-21-942292099.WINTAK",
+        "source_t": 1793275204000,
+        "stream": "COT",
+        "subject": "tak.cot.out",
+        "tier": "self_report"
+      }
+    ],
+    "speed": 0,
+    "stale": 360,
+    "status": {
+      "activity": "",
+      "mode": "",
+      "role": "Team Member"
+    },
+    "t": 1793275204000,
+    "template": "asset",
+    "tracked": null,
+    "traits": [
+      "locatable"
+    ],
+    "type": "tak.atak",
+    "uid": "tak-pbe3cesvp2esvfbrw3eze2we2h",
+    "uncertainty": {
+      "ce_m": 9.9,
+      "error_ellipse": null,
+      "le_m": 9.9,
+      "pos_enu_cov": [
+        98.01,
+        0,
+        0,
+        98.01,
+        0,
+        98.01
+      ],
+      "vel_enu_cov": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    "v": 1
+  },
+  {
+    "aliases": {
+      "ids": [
+        {
+          "id": "lirr-GO103_25_2611",
+          "type": "gtfs"
+        },
+        {
+          "id": "MTA-LIRR-GO103_25_2611",
+          "type": "cot_uid"
+        }
+      ],
+      "name": "LIRR-2"
+    },
+    "callsign": "LIRR-2",
+    "confidence": 0.5599,
+    "confidence_parts": {
+      "corroboration": 0.85,
+      "source_prior": 0.85,
+      "track_quality": 0.3175
+    },
+    "correlation": null,
+    "cot_security": null,
+    "cot_type": "a-n-G-E-V-C-R",
+    "course": 0,
+    "created_t": 1793275260000,
+    "current_task": null,
+    "disposition": "neutral",
+    "entity_id": "gtfs-lirr-go103_25_2611",
+    "entity_type": "vehicle",
+    "environment": "land",
+    "expiry_t": 1793275322000,
+    "geo": null,
+    "hae": 0,
+    "indicators": {
+      "egress_tak": false,
+      "emergency": false,
+      "exercise": false,
+      "simulated": false,
+      "starred": false
+    },
+    "kind": "train",
+    "lat": 40.75,
+    "lifecycle": "active",
+    "live": true,
+    "location": {
+      "course_deg": 0,
+      "hae_m": 0,
+      "lat": 40.75,
+      "lon": -73.42,
+      "measured_t": 1793275202000,
+      "speed_mps": 0,
+      "vel_enu_mps": [
+        0,
+        0,
+        0
+      ]
+    },
+    "lon": -73.42,
+    "marking": {
+      "releasable_to": [],
+      "tlp": "CLEAR"
+    },
+    "pinned": false,
+    "properties": {
+      "altitude": 0,
+      "callsign": "LIRR-2",
+      "ce": 50,
+      "course": 0,
+      "le": 50,
+      "speed": 0
+    },
+    "provenance": {
+      "how": "m-g",
+      "primary": "feed-mta",
+      "source_t": 1793275202000
+    },
+    "relationships": [],
+    "route": null,
+    "seq": 1,
+    "sources": [
+      {
+        "components": [
+          "location"
+        ],
+        "data_type": "cot",
+        "first_seen_t": 1793275260000,
+        "integration": "feed-mta",
+        "last_seen_t": 1793275260000,
+        "seq": 10,
+        "source_id": "MTA-LIRR-GO103_25_2611",
+        "source_t": 1793275202000,
+        "stream": "COT",
+        "subject": "tak.cot.inject",
+        "tier": "self_report"
+      }
+    ],
+    "speed": 0,
+    "stale": 120,
+    "t": 1793275202000,
+    "template": "asset",
+    "tracked": null,
+    "traits": [
+      "locatable",
+      "trackable"
+    ],
+    "type": "onemind.vehicle",
+    "uid": "gtfs-lirr-go103_25_2611",
+    "uncertainty": {
+      "ce_m": 50,
+      "error_ellipse": null,
+      "le_m": 50,
+      "pos_enu_cov": [
+        2500,
+        0,
+        0,
+        2500,
+        0,
+        2500
+      ],
+      "vel_enu_cov": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    "v": 1
+  },
+  {
+    "aliases": {
+      "ids": [
+        {
+          "id": "mnr-1234_5678",
+          "type": "gtfs"
+        },
+        {
+          "id": "MTA-MNR-1234_5678",
+          "type": "cot_uid"
+        }
+      ],
+      "name": "MNR-1"
+    },
+    "callsign": "MNR-1",
+    "confidence": 0.6983,
+    "confidence_parts": {
+      "corroboration": 0.85,
+      "source_prior": 0.85,
+      "track_quality": 0.643
+    },
+    "correlation": null,
+    "cot_security": null,
+    "cot_type": "a-n-G-E-V-C-R",
+    "course": 89.1,
+    "created_t": 1793275260000,
+    "current_task": null,
+    "disposition": "neutral",
+    "entity_id": "gtfs-mnr-1234_5678",
+    "entity_type": "vehicle",
+    "environment": "land",
+    "expiry_t": 1793275351000,
+    "geo": null,
+    "hae": 0,
+    "indicators": {
+      "egress_tak": false,
+      "emergency": false,
+      "exercise": false,
+      "simulated": false,
+      "starred": false
+    },
+    "kind": "train",
+    "lat": 41.0305442,
+    "lifecycle": "active",
+    "live": true,
+    "location": {
+      "course_deg": 89.1,
+      "hae_m": 0,
+      "lat": 41.0305442,
+      "lon": -73.6139001,
+      "measured_t": 1793275231000,
+      "speed_mps": 20.39,
+      "vel_enu_mps": [
+        20.388,
+        0.336,
+        0
+      ]
+    },
+    "lon": -73.6139001,
+    "marking": {
+      "releasable_to": [],
+      "tlp": "CLEAR"
+    },
+    "pinned": false,
+    "properties": {
+      "altitude": 0,
+      "callsign": "MNR-1",
+      "ce": 36.88,
+      "course": 89.1,
+      "le": 50,
+      "speed": 20.39
+    },
+    "provenance": {
+      "how": "m-g",
+      "primary": "feed-mta",
+      "source_t": 1793275231000
+    },
+    "relationships": [],
+    "route": null,
+    "seq": 2,
+    "sources": [
+      {
+        "components": [
+          "location"
+        ],
+        "data_type": "cot",
+        "first_seen_t": 1793275260000,
+        "integration": "feed-mta",
+        "last_seen_t": 1793275260000,
+        "seq": 9,
+        "source_id": "MTA-MNR-1234_5678",
+        "source_t": 1793275231000,
+        "stream": "COT",
+        "subject": "tak.cot.inject",
+        "tier": "self_report"
+      }
+    ],
+    "speed": 20.39,
+    "stale": 120,
+    "t": 1793275231000,
+    "template": "asset",
+    "tracked": null,
+    "traits": [
+      "locatable",
+      "trackable"
+    ],
+    "type": "onemind.vehicle",
+    "uid": "gtfs-mnr-1234_5678",
+    "uncertainty": {
+      "ce_m": 36.88,
+      "error_ellipse": null,
+      "le_m": 50,
+      "pos_enu_cov": [
+        1360.415,
+        0,
+        0,
+        1360.415,
+        0,
+        2500
+      ],
+      "vel_enu_cov": [
+        1.0513,
+        0,
+        0,
+        1.0513,
+        0,
+        0
+      ]
+    },
+    "v": 1
+  },
+  {
+    "aliases": {
+      "ids": [
+        {
+          "id": "25544",
+          "type": "norad"
+        },
+        {
+          "id": "SAT-25544",
+          "type": "cot_uid"
+        }
+      ],
+      "name": "ISS (ZARYA)"
+    },
+    "callsign": "ISS (ZARYA)",
+    "confidence": 0.6,
+    "confidence_parts": {
+      "corroboration": 0.9,
+      "source_prior": 0.9,
+      "track_quality": 0.3333
+    },
+    "correlation": null,
+    "cot_security": null,
+    "cot_type": "a-f-A-M-F-Q",
+    "course": 97.5,
+    "created_t": 1793275260000,
+    "current_task": null,
+    "disposition": "friendly",
+    "entity_id": "norad-25544",
+    "entity_type": "vehicle",
+    "environment": "space",
+    "expiry_t": 1793275320000,
+    "geo": null,
+    "hae": 418000,
+    "indicators": {
+      "egress_tak": false,
+      "emergency": false,
+      "exercise": false,
+      "simulated": false,
+      "starred": false
+    },
+    "kind": "satellite",
+    "lat": 50.1000054,
+    "lifecycle": "active",
+    "live": true,
+    "location": {
+      "course_deg": 97.5,
+      "hae_m": 418000,
+      "lat": 50.1000054,
+      "lon": 2.8999338,
+      "measured_t": 1793275230000,
+      "speed_mps": 62844.36,
+      "vel_enu_mps": [
+        62311.912,
+        -8163.303,
+        0
+      ]
+    },
+    "lon": 2.8999338,
+    "marking": {
+      "releasable_to": [],
+      "tlp": "CLEAR"
+    },
+    "pinned": false,
+    "properties": {
+      "altitude": 418000,
+      "callsign": "ISS (ZARYA)",
+      "ce": 1000,
+      "course": 97.5,
+      "le": 1000,
+      "speed": 62844.36
+    },
+    "provenance": {
+      "how": "m-g",
+      "primary": "feed-satellites",
+      "source_t": 1793275230000
+    },
+    "relationships": [],
+    "route": null,
+    "seq": 2,
+    "sources": [
+      {
+        "components": [
+          "location"
+        ],
+        "data_type": "cot",
+        "first_seen_t": 1793275260000,
+        "integration": "feed-satellites",
+        "last_seen_t": 1793275260000,
+        "seq": 7,
+        "source_id": "SAT-25544",
+        "source_t": 1793275230000,
+        "stream": "COT",
+        "subject": "tak.cot.inject",
+        "tier": "self_report"
+      }
+    ],
+    "speed": 62844.36,
+    "stale": 90,
+    "t": 1793275230000,
+    "template": "asset",
+    "tracked": null,
+    "traits": [
+      "locatable",
+      "trackable"
+    ],
+    "type": "onemind.vehicle",
+    "uid": "norad-25544",
+    "uncertainty": {
+      "ce_m": 1000,
+      "error_ellipse": null,
+      "le_m": 1000,
+      "pos_enu_cov": [
+        999995.062,
+        0,
+        0,
+        999995.062,
+        0,
+        1000000
+      ],
+      "vel_enu_cov": [
+        11388.6746,
+        0,
+        0,
+        11388.6746,
+        0,
+        0
+      ]
+    },
+    "v": 1
+  },
+  {
+    "aliases": {
+      "ids": [
+        {
+          "id": "367000001",
+          "type": "mmsi"
+        }
+      ],
+      "name": "SPOOF"
+    },
+    "callsign": "SPOOF",
+    "confidence": 0.5307,
+    "confidence_parts": {
+      "corroboration": 0.8,
+      "source_prior": 0.8,
+      "track_quality": 0.3268
+    },
+    "conflicts": [
+      {
+        "attribute": "identity",
+        "kept": "mmsi-367000001-x2",
+        "rejected": "duplicate_key",
+        "sources": [
+          "world-sea"
+        ]
+      }
+    ],
+    "correlation": null,
+    "cot_security": null,
+    "course": 0,
+    "created_t": 1793275260000,
+    "current_task": null,
+    "entity_id": "mmsi-367000001-x2",
+    "entity_type": "vessel",
+    "environment": "surface",
+    "expiry_t": 1793277025000,
+    "geo": null,
+    "hae": 0,
+    "indicators": {
+      "egress_tak": true,
+      "emergency": false,
+      "exercise": false,
+      "simulated": false,
+      "starred": false
+    },
+    "lat": 42.4,
+    "lifecycle": "active",
+    "live": true,
+    "location": {
+      "course_deg": 0,
+      "hae_m": 0,
+      "lat": 42.4,
+      "lon": -74.04,
+      "measured_t": 1793275225000,
+      "speed_mps": 5,
+      "vel_enu_mps": [
+        0,
+        5,
+        0
+      ]
+    },
+    "lon": -74.04,
+    "marking": {
+      "releasable_to": [],
+      "tlp": "CLEAR"
+    },
+    "meta": {
+      "mmsi": "367000001"
+    },
+    "pinned": false,
+    "properties": {
+      "altitude": 0,
+      "callsign": "SPOOF",
+      "ce": 20,
+      "course": 0,
+      "le": 20,
+      "speed": 5
+    },
+    "provenance": {
+      "how": "m-g",
+      "primary": "world-sea",
+      "source_t": 1793275225000
+    },
+    "relationships": [],
+    "route": null,
+    "seq": 1,
+    "sources": [
+      {
+        "components": [
+          "location"
+        ],
+        "data_type": "geo",
+        "first_seen_t": 1793275260000,
+        "integration": "world-sea",
+        "last_seen_t": 1793275260000,
+        "seq": 7,
+        "source_id": "mmsi-367000001",
+        "source_t": 1793275225000,
+        "stream": "WORLD",
+        "subject": "evt.world.sea.mmsi-367000001",
+        "tier": "self_report"
+      }
+    ],
+    "speed": 5,
+    "stale": 600,
+    "t": 1793275225000,
+    "template": "asset",
+    "tracked": null,
+    "traits": [
+      "locatable",
+      "trackable"
+    ],
+    "type": "sea.cargo",
+    "uid": "mmsi-367000001-x2",
+    "uncertainty": {
+      "ce_m": 20,
+      "error_ellipse": null,
+      "le_m": 20,
+      "pos_enu_cov": [
+        400,
+        0,
+        0,
+        400,
+        0,
+        400
+      ],
+      "vel_enu_cov": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    "v": 1
+  },
+  {
+    "aliases": {
+      "ids": [
+        {
+          "id": "367000001",
+          "type": "mmsi"
+        }
+      ],
+      "name": "EVER GIVEN"
+    },
+    "callsign": "EVER GIVEN",
+    "confidence": 0.795,
+    "confidence_parts": {
+      "corroboration": 0.8,
+      "source_prior": 0.8,
+      "track_quality": 0.9874
+    },
+    "correlation": null,
+    "cot_security": null,
+    "course": 0,
+    "created_t": 1793275260000,
+    "current_task": null,
+    "entity_id": "mmsi-367000001",
+    "entity_type": "vessel",
+    "environment": "surface",
+    "expiry_t": 1793277020000,
+    "geo": null,
+    "hae": 0,
+    "indicators": {
+      "egress_tak": true,
+      "emergency": false,
+      "exercise": false,
+      "simulated": false,
+      "starred": false
+    },
+    "lat": 40.6009949,
+    "lifecycle": "active",
+    "live": true,
+    "location": {
+      "course_deg": 0,
+      "hae_m": 0,
+      "lat": 40.6009949,
+      "lon": -74.04,
+      "measured_t": 1793275220000,
+      "speed_mps": 5.51,
+      "vel_enu_mps": [
+        0,
+        5.509,
+        0
+      ]
+    },
+    "lon": -74.04,
+    "marking": {
+      "releasable_to": [],
+      "tlp": "CLEAR"
+    },
+    "meta": {
+      "flag": "US",
+      "mmsi": "367000001"
+    },
+    "pinned": false,
+    "properties": {
+      "altitude": 0,
+      "callsign": "EVER GIVEN",
+      "ce": 12.74,
+      "course": 0,
+      "le": 20,
+      "speed": 5.51
+    },
+    "provenance": {
+      "how": "m-g",
+      "primary": "world-sea",
+      "source_t": 1793275220000
+    },
+    "relationships": [],
+    "route": null,
+    "seq": 3,
+    "sources": [
+      {
+        "components": [
+          "location"
+        ],
+        "data_type": "geo",
+        "first_seen_t": 1793275260000,
+        "integration": "world-sea",
+        "last_seen_t": 1793275260000,
+        "seq": 6,
+        "source_id": "mmsi-367000001",
+        "source_t": 1793275220000,
+        "stream": "WORLD",
+        "subject": "evt.world.sea.mmsi-367000001",
+        "tier": "self_report"
+      }
+    ],
+    "speed": 5.51,
+    "stale": 600,
+    "t": 1793275220000,
+    "template": "asset",
+    "tracked": null,
+    "traits": [
+      "locatable",
+      "trackable"
+    ],
+    "type": "sea.cargo",
+    "uid": "mmsi-367000001",
+    "uncertainty": {
+      "ce_m": 12.74,
+      "error_ellipse": null,
+      "le_m": 20,
+      "pos_enu_cov": [
+        162.417,
+        0,
+        0,
+        162.417,
+        0,
+        400
+      ],
+      "vel_enu_cov": [
+        0.4,
+        0,
+        0,
+        0.4,
+        0,
+        0
+      ]
+    },
+    "v": 1
+  }
+]
