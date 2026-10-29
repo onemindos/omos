@@ -9,9 +9,11 @@ Commands
   gen-passwords --out FILE [--users a,b]
                                     random passwords as JSON {user: password}, mode 0600.
                                     Never write FILE inside the repository.
-  conf --passwords FILE [--stage A1|A2|B|C] [--hash] [--out FILE]
+  conf --passwords FILE [--stage A1|A2|B|C] [--hash] [--test-users] [--out FILE]
                                     nats.conf JSON fragment (system_account + accounts) with the
-                                    passwords (or bcrypt hashes) filled in; used by the tests
+                                    passwords (or bcrypt hashes) filled in; used by the tests.
+                                    --test-users adds the test_only humans (alice), which no
+                                    other command ever renders
   live --live-conf FILE --passwords FILE [--stage A1|A2|B|C] --out FILE
                                     full new nats.conf for the nats-config ConfigMap: the live
                                     config with accounts replaced and (from A2) leafnodes.authorization
@@ -21,9 +23,11 @@ Commands
   leaf-local --user U               the local-account fragment of U's leaf sidecar (no credentials):
                                     a local user with U's allow lists, so the sidecar itself refuses
                                     a forbidden publish with a Permissions Violation (used by permtest)
-  leaf-conf --user U --passwords FILE --out FILE
+  leaf-conf --user U --passwords FILE --out FILE [--remote HOST:PORT --plain --port N --http-port N]
                                     the full leaf.conf for U's sidecar (to seal as a SecretKey),
-                                    written outside the repository
+                                    written outside the repository. --remote/--plain/--port point
+                                    a local stand-in sidecar at a test hub's leafnode listener
+                                    (plain nats://, no CA) and move its client port off 4222
   secrets                           table of where each user's password must be sealed
   check-roles --roles FILE          check an auth-callout role file (#565 platform/security/roles/
                                     onemind-roles.json format) against the CLIENT account: no role
@@ -170,11 +174,14 @@ def user_entry(u: dict, stage: str, password: str) -> dict | None:
     return e
 
 
-def render_accounts(spec: dict, stage: str, pw) -> dict:
+def render_accounts(spec: dict, stage: str, pw, test_users: bool = False) -> dict:
+    """Accounts with their users. test_only humans only with test_users (test configs)."""
     accounts = copy.deepcopy(spec["accounts"])
     for a in accounts.values():
         a["users"] = []
     for u in spec["users"]:
+        if u.get("test_only") and not test_users:
+            continue
         e = user_entry(u, stage, pw(u["user"]))
         if e is not None:
             accounts[u["account"]]["users"].append(e)
@@ -223,13 +230,27 @@ def sidecar_local(spec: dict, name: str) -> dict:
     return {"accounts": {sc["account"]: {"users": [local]}}, "no_auth_user": sc["local_user"]}
 
 
-def render_leaf_conf(spec: dict, name: str, password: str) -> dict:
+def render_leaf_conf(spec: dict, name: str, password: str, remote: str | None = None,
+                     plain: bool = False, port: int = 4222, http_port: int | None = None) -> dict:
+    """The sidecar's leaf.conf. Defaults are the pod's (TLS to the hub, client port 4222);
+    remote/plain/port serve a local stand-in against a disposable test hub."""
     u = find_user(spec, name)
     sc = u["sidecar"] if u.get("sidecar") else sys.exit(f"{name} has no sidecar in the spec")
-    conf = {"port": 4222, "http": 8222, "server_name": sc["server_name"]}
+    if http_port is None and port == 4222:
+        http_port = 8222  # the pod's layout
+    conf: dict = {"port": port}
+    if http_port:
+        conf["http"] = http_port
+    conf["server_name"] = sc["server_name"]
+    if plain:
+        conf["host"] = "127.0.0.1"  # a local stand-in listens on loopback only
     conf.update(sidecar_local(spec, name))
-    url = f"tls://{urllib.parse.quote(name, safe='')}:{urllib.parse.quote(password, safe='')}@{sc['remote']}"
-    conf["leafnodes"] = {"remotes": [{"urls": [url], "account": sc["account"], "tls": {"ca_file": sc["ca_file"]}}]}
+    scheme = "nats" if plain else "tls"
+    url = f"{scheme}://{urllib.parse.quote(name, safe='')}:{urllib.parse.quote(password, safe='')}@{remote or sc['remote']}"
+    r = {"urls": [url], "account": sc["account"]}
+    if not plain:
+        r["tls"] = {"ca_file": sc["ca_file"]}
+    conf["leafnodes"] = {"remotes": [r]}
     return conf
 
 
@@ -304,7 +325,12 @@ def check_invariants(spec: dict) -> list[str]:
             errs.append(f"{u['user']}: unknown account {u['account']}")
         if "password" in u:
             errs.append(f"{u['user']}: a password field is not allowed in the spec")
-        if u.get("stage") != "legacy" and u["account"] != "SYS":
+        if u.get("test_only"):
+            if u["account"] != "CLIENT" or u.get("stage") == "legacy":
+                errs.append(f"{u['user']}: test_only is only for CLIENT humans")
+            if "secret" in u:
+                errs.append(f"{u['user']}: a test_only user is never sealed (no secret field)")
+        elif u.get("stage") != "legacy" and u["account"] != "SYS":
             if "secret" not in u:
                 errs.append(f"{u['user']}: missing secret location")
         pub = list(u.get("publish") or []) + expand_jetstream(u.get("jetstream"))
@@ -474,7 +500,8 @@ def cmd_conf(args) -> int:
             return cache[user]
         return pws[user]
 
-    out = {"system_account": spec["system_account"], "accounts": render_accounts(spec, args.stage, pw)}
+    out = {"system_account": spec["system_account"],
+           "accounts": render_accounts(spec, args.stage, pw, test_users=args.test_users)}
     if args.stage == "A1":
         out["leafnodes"] = {"authorization": leaf_auth_a1(spec, pw)}
     text = json.dumps(out, indent=2) + "\n"
@@ -545,7 +572,7 @@ def cmd_leaf_conf(args) -> int:
     pws = read_passwords(args.passwords)
     if args.user not in pws:
         sys.exit(f"no password for {args.user} in {args.passwords}")
-    conf = render_leaf_conf(load_spec(), args.user, pws[args.user])
+    conf = render_leaf_conf(load_spec(), args.user, pws[args.user], args.remote, args.plain, args.port, args.http_port)
     write_private(args.out, json.dumps(conf, indent=2) + "\n")
     print(f"wrote {args.out} (0600); seal it as key leaf.conf (platform/nats/IDENTITIES.md step 2)")
     return 0
@@ -558,6 +585,8 @@ def cmd_secrets(args) -> int:
     for u in spec["users"]:
         s = u.get("secret")
         where = f"`{s['namespace']}/{s['name']}` keys `{s['user_key']}`, `{s['password_key']}`" if s else "values.secret.yaml (existing)"
+        if u.get("test_only"):
+            where = "test configs only (never sealed, never live)"
         print(f"| `{u['user']}` | {u['account']} | {u.get('stage')} | {where} |")
     return 0
 
@@ -569,12 +598,15 @@ def main() -> int:
     p = sp.add_parser("check"); p.set_defaults(fn=cmd_check)
     p = sp.add_parser("gen-passwords"); p.add_argument("--out", required=True); p.add_argument("--users"); p.set_defaults(fn=cmd_gen_passwords)
     p = sp.add_parser("conf"); p.add_argument("--passwords", required=True); p.add_argument("--stage", default="B", choices=STAGES)
-    p.add_argument("--hash", action="store_true"); p.add_argument("--out"); p.set_defaults(fn=cmd_conf)
+    p.add_argument("--hash", action="store_true"); p.add_argument("--test-users", action="store_true")
+    p.add_argument("--out"); p.set_defaults(fn=cmd_conf)
     p = sp.add_parser("live"); p.add_argument("--live-conf", required=True); p.add_argument("--passwords", required=True)
     p.add_argument("--stage", default="A1", choices=STAGES); p.add_argument("--out", required=True); p.set_defaults(fn=cmd_live)
     p = sp.add_parser("leaf-local"); p.add_argument("--user", required=True); p.set_defaults(fn=cmd_leaf_local)
     p = sp.add_parser("leaf-conf"); p.add_argument("--user", required=True); p.add_argument("--passwords", required=True)
-    p.add_argument("--out", required=True); p.set_defaults(fn=cmd_leaf_conf)
+    p.add_argument("--out", required=True); p.add_argument("--remote"); p.add_argument("--plain", action="store_true")
+    p.add_argument("--port", type=int, default=4222); p.add_argument("--http-port", type=int)
+    p.set_defaults(fn=cmd_leaf_conf)
     p = sp.add_parser("secrets"); p.set_defaults(fn=cmd_secrets)
     p = sp.add_parser("check-roles"); p.add_argument("--roles", required=True); p.set_defaults(fn=cmd_check_roles)
     args = ap.parse_args()

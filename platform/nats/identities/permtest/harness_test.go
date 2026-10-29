@@ -125,7 +125,8 @@ func renderStage(t *testing.T, stage string) map[string]any {
 	t.Helper()
 	setup(t)
 	args := []string{filepath.Join(repoRoot, "scripts/nats_identities.py"), "conf",
-		"--passwords", filepath.Join(workDir, "passwords.json"), "--stage", stage}
+		"--passwords", filepath.Join(workDir, "passwords.json"), "--stage", stage,
+		"--test-users"} // adds the test_only second human (alice) for two-person confirms
 	name := "fragment-" + stage
 	if os.Getenv("NATS_IDENTITY_HASH") == "1" {
 		args = append(args, "--hash")

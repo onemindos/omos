@@ -170,6 +170,7 @@ config:
               - evt.vehicle.>
               - evt.mission.>
               - evt.entity.>
+              - evt.map.geofence.>
               - _INBOX.>
             allow_responses: true
         - user: entity

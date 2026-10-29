@@ -34,6 +34,9 @@
 #                      legacy = existing shared user, kept until every client has moved
 #   stage_b            restrictions applied to a legacy user in stage B (runbook step 4)
 #   secret             where the plaintext password lives for the workload (SealedSecret)
+#   test_only          true = a CLIENT human that exists only in test configs (`conf --test-users`,
+#                      permtest, the E2E harness). Never rendered into the Helm values or the live
+#                      nats.conf, never sealed, no `secret` field (IDENTITIES.md "Adding a human")
 #   sidecar            (leaf users) the in-pod leaf server the workload's client logs in to.
 #                      `nats_identities.py leaf-conf` renders its leaf.conf with a local user that
 #                      carries the same allow lists, so a forbidden publish fails at the sidecar
@@ -289,6 +292,13 @@ users:
       - "evt.vehicle.>"
       - "evt.mission.>"
       - "evt.entity.>"
+      # Zone command results evt.map.geofence.{created|updated|deleted|refused} (four tokens,
+      # D1-P2): policy closes zone.create/update/remove on them, else the action ends no_ack
+      # (onemind-xr E2E run 1). `>` rather than `*`: nats-server matches a `>` subscription
+      # against an allowed `*` as one token, so `*` would not keep the crossings
+      # evt.map.geofence.{id}.{enter|exit} out anyway; they are read-only facts zeus and
+      # agentops already receive.
+      - "evt.map.geofence.>"
       - "_INBOX.>"
     allow_responses: true
     # Reads zones for keep-in/keep-out checks. It writes neither bucket: the geofence service
@@ -631,7 +641,7 @@ users:
     purpose: "owner's clients (Unreal, L0 web, Quest); maps to user:zeus in the policy principals.json"
     secret: {namespace: "(device)", name: "owner keychain on each client device", user_key: NATS_USER, password_key: NATS_PASSWORD}
     connection_types: [STANDARD, WEBSOCKET]
-    publish:
+    publish: &client_human_publish
       - "svc.layer.>"
       - "svc.entity.>"
       - "svc.policy.>"
@@ -646,7 +656,7 @@ users:
       - "cmd.map.>"
       - "agents.prompt.hermes.>"
     # Read-only displays (A19-P11; onemind-xr WEB-P2, UE-P3), all through CLIENT stream imports.
-    subscribe:
+    subscribe: &client_human_subscribe
       - "cmd.map.>"
       - "evt.so.action.>"
       - "evt.mission.>"
@@ -656,6 +666,18 @@ users:
       - "tak.cot.mesh.rx"
       - "_INBOX.>"
     allow_responses: {max: -1, expires: "5s"}   # acks to Hermes map actions (cmd.map.> service import, I2-P2)
+  # Second human for tests only: A4 actions (asset.arm, asset.takeoff) need two distinct humans
+  # (asset-command.md). Same lists as zeus; no credentials, never rendered for the live server.
+  # A real second operator is added as described in IDENTITIES.md "Adding a human".
+  - user: alice
+    account: CLIENT
+    stage: A
+    test_only: true
+    purpose: "TEST ONLY second human (two-person A4 confirms in permtest and the E2E harness); maps to user:alice in a test principals.json"
+    connection_types: [STANDARD, WEBSOCKET]
+    publish: *client_human_publish
+    subscribe: *client_human_subscribe
+    allow_responses: {max: -1, expires: "5s"}
 
   # ---- AUTH (J2, #565) ----
   - user: auth-callout

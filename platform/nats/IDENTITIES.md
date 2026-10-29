@@ -35,7 +35,7 @@ every requester. Responders use `allow_responses`, so no service may publish on 
 
 | User | Account | Publishes | Subscribes / serves | Password goes to |
 |---|---|---|---|---|
-| `policy` | ONEMIND | `cmd.>`, `evt.so.action.>`, `svc.entity.get`, `svc.mission.apply` | `svc.policy.>`, `evt.{drone,robot,vehicle,mission,entity}.>`; reads KV `geofences` (writes no bucket) | SealedSecret `onemind-core/policy-service-runtime` (`NATS_USER`, `NATS_PASSWORD`; it also holds `OPENFGA_TOKEN`, #554) |
+| `policy` | ONEMIND | `cmd.>`, `evt.so.action.>`, `svc.entity.get`, `svc.mission.apply` | `svc.policy.>`, `evt.{drone,robot,vehicle,mission,entity}.>`, `evt.map.geofence.>` (zone command results `evt.map.geofence.{created,updated,deleted,refused}`, D1-P2; without it zone actions end `no_ack`); reads KV `geofences` (writes no bucket) | SealedSecret `onemind-core/policy-service-runtime` (`NATS_USER`, `NATS_PASSWORD`; it also holds `OPENFGA_TOKEN`, #554) |
 | `entity` | ONEMIND | `ent.*.*.state`, `evt.entity.>`, `evt.sys.entity.rejected`, KV `entity-correlation` | `svc.entity.>`, `cmd.entity.>`, `$SRV` (micro); consumes COT TEL WORLD INTEL DET ENT | `omos/omos-entity-nats` (`user`, `password`) |
 | `ingest` | ONEMIND | `intel.>`, `evt.world.>`, `tel.feed.>`, `evt.sys.*.rejected`, KV `ingest-locks`, `ingest-state` | reads KV `feed-config` | `omos/omos-ingest-nats` |
 | `layer` (#561) | ONEMIND | KV `world-state`, `fleet-state` | `svc.layer.>` (streamed replies), `tel.feed.*.status`, `tel.fleet.node.*.status`; consumes ENT, last value from TEL, lists streams (A19-P15) | `omos/omos-layer-nats` |
@@ -54,6 +54,7 @@ every requester. Responders use `allow_responses`, so no service may publish on 
 | `leaf-site-mac` (leaf only) | ONEMIND | the site's bridges: `tel.fleet.drone.sim-x1.>`, `evt.drone.sim-x1.>`, `tel.fleet.robot.sim-tb1.>`, `evt.robot.sim-tb1.>`, `tak.cot.mesh.rx`, `tel.fleet.edge.tak-mesh.status` | `cmd.fleet.drone.sim-x1.>`, `cmd.fleet.robot.sim-tb1.>`, `tak.cot.mesh.tx`, `ent.*.*.state` | Mac leaf config (`infra/edge/mac-leaf`, keychain) |
 | `hermes` (leaf only) | AGENTS | `agents.*.hermes.>`, `cmd.map.>` (acked by clients, I2-P2), requests `svc.entity.>`, `svc.layer.{list,meta}`, `svc.policy.{command,task}.propose`, `svc.policy.action.get`, `svc.mission.{get,list}`; replies `_R_.>` | `agents.prompt.hermes.>`, `svc.bridge.>`, `$SRV` | inside `leaf.conf` of `hermes/hermes-leaf-conf` (rendered by `leaf-conf`; its local user carries the same lists) |
 | `zeus` | CLIENT | requests `svc.{layer,entity,policy}.>`, `svc.cot.send`, `svc.mission.{get,list,report}`, `svc.geofence.alerts`, `svc.registry.video.{get,list}`, `svc.tak.mission.>`, `agents.prompt.hermes.>`; `cmd.map.>`; acks with `allow_responses {max: -1, expires: 5s}` | `cmd.map.>`, `evt.so.action.>`, `evt.mission.>`, `evt.map.geofence.>`, `tel.feed.*.status`, `tak.cot.out`, `tak.cot.mesh.rx` (stream imports, A19-P11) | owner keychain on each client device |
+| `alice` (test only) | CLIENT | same lists as `zeus` | same as `zeus` | none: `test_only`, rendered only by `conf --test-users` (permtest, E2E harness); never in the values files or the live config |
 | `auth-callout` (#565) | AUTH | nothing (answers through `allow_responses {max: 1, expires: 5s}`) | `$SYS.REQ.USER.AUTH` | `onemind-core/auth-callout-runtime` (`NATS_USER`, `NATS_PASSWORD`) |
 | `onemind`, `leaf_tak` | ONEMIND | everything until stage B; then denied `cmd.{fleet,drone,robot,vehicle,mission,entity}.>`, `tak.cot.inject`, `tak.cot.mesh.tx`, `ent.*.*.state`, `evt.so.action.>`, `svc.policy.>` (other `cmd.*` domains and forged inputs stay open until stage C, see Limits) | everything; from stage B not `svc.{policy,entity,layer,cot,mission,geofence,registry}.>` and not `svc.mission.apply` (cannot impersonate a service or assign tasks) | existing `values.secret.yaml` |
 
@@ -287,6 +288,57 @@ The reloader keeps the last good config running when a reload is refused, so a b
 not take the bus down. A server that restarts reads whatever the ConfigMap holds: keep the
 ConfigMap and the running stage the same before any pod restart.
 
+## Adding a human
+
+Asset actions at A4 (`asset.arm`, `asset.takeoff`) need two distinct humans: the second
+approver must be a different principal from the first (asset-command.md). The live layout has one
+human, `zeus`. Until browsers log in through Authentik and the auth callout (#565, where a human
+is an Authentik user and no NATS user is configured), a human is a CLIENT user in
+`identities.yaml`:
+
+1. Copy the `alice` entry, rename it (lowercase; no `;`, no `ak:` prefix), remove
+   `test_only: true` and add a `secret` location (for a person: their device keychain, as
+   `zeus`). `publish: *client_human_publish` and `subscribe: *client_human_subscribe` keep the
+   lists identical to `zeus`.
+2. `python3 scripts/nats_identities.py values` and commit the spec and the three values files.
+3. Generate the password (`gen-passwords --users <name>`), give it to that person, and add the
+   bcrypt hash through `live` (step 3 below). Never commit it.
+4. Map the user in the policy service's `principals.json` (`{"account": "CLIENT", "user":
+   "<name>", "kind": "user", "id": "user:<name>"}`), in the layer service's principals (groups),
+   and give `user:<name>` the OpenFGA `approver` / `second_approver` tuples for the action types
+   that person may confirm (#554).
+
+`alice` is the test-only second human. She has no credentials anywhere: `nats_identities.py`
+renders her only with `conf --test-users`, which the permtest harness passes and the E2E harness
+can pass. `check` refuses a `test_only` user outside CLIENT or with a `secret`, and the Python
+tests fail if she shows up in a values file or a `live` render. `TestTwoDistinctHumans` proves
+both humans reach `svc.policy.{command,task}.confirm` and that the policy service sees two
+different server-set identities (`CLIENT/zeus`, `CLIENT/alice`). For a test, the policy
+`principals.json` needs her mapped as `user:alice` (as in onemind-xr
+`docs/evidence/INT/E2E/harness/main.go`).
+
+## Local and stand-in Hermes (tests)
+
+The `hermes` credential is LEAFNODE only (`allowed_connection_types: [LEAFNODE]`). A STANDARD
+login as `hermes` gets `Authorization Violation` (`TestConnectionTypes`). The onemind-xr E2E run
+worked around that by allowing STANDARD for its scripted stand-in. That skips the sidecar,
+where Hermes' refusals are logged. Connect a local or scripted Hermes the way the pod does:
+
+```bash
+# disposable hub with a leafnode listener, e.g. leafnodes { host: 127.0.0.1, port: 17422 }
+python3 scripts/nats_identities.py leaf-conf --user hermes --passwords "$W/passwords.json" \
+  --out "$W/hermes-standin.conf" --remote 127.0.0.1:17422 --plain --port 14222 --http-port 18222
+nats-server -c "$W/hermes-standin.conf"     # binds AGENTS through the leaf, loopback only
+# the agent (scripted or real) connects with no credentials:
+NATS_URL=nats://127.0.0.1:14222  <agent>
+```
+
+`--plain` drops the CA (plain `nats://` to a local hub) and listens on 127.0.0.1. `--port`
+moves the client port off 4222, which a local nats-server may already use. Without these flags
+the output is the pod's `leaf.conf` (step 2). The agent's identity at the hub is
+`AGENTS/hermes`. A forbidden publish fails at the sidecar with `Permissions Violation` (client
+error and sidecar log line). `TestHermesStandInSidecar` runs exactly this route.
+
 ## Limits that remain in stage 1
 
 - Any user in an account that may subscribe `_INBOX.>` can read replies sent to other users'
@@ -324,6 +376,7 @@ NATS_SERVER_BIN=/path/to/nats-server-v2.14.2 go test -tags natsbin -race -count=
 # bcrypt like live (needs the nats CLI): NATS_IDENTITY_HASH=1 go test -count=1 ./...
 ```
 
-The Go harness renders the configs by running `scripts/nats_identities.py`, so `python3` must
+The Go harness renders the configs with `conf --test-users` (two humans) by running
+`scripts/nats_identities.py`, so `python3` must
 have PyYAML (`pip install pyyaml==6.0.2`), or set `PYTHON` to an interpreter that has it.
 Without it every Go test fails in setup with `ModuleNotFoundError: No module named 'yaml'`.

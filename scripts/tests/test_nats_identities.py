@@ -130,6 +130,9 @@ class InvariantTests(unittest.TestCase):
             for u in self.spec["users"]:
                 if stage == "A1" and u["user"] == "leaf_tak":
                     continue  # stays in leafnodes.authorization, untouched by these values
+                if u.get("test_only"):
+                    self.assertNotIn(ni.placeholder(u["user"]), text)  # never rendered for live
+                    continue
                 self.assertIn(ni.placeholder(u["user"]), text)
 
     def test_client_and_agents_have_no_jetstream(self):
@@ -159,6 +162,53 @@ class RenderTests(unittest.TestCase):
             else:
                 self.assertIn("allow", p["publish"], name)
                 self.assertIn("allow", p["subscribe"], name)
+
+    def test_policy_receives_zone_results(self):
+        # onemind-xr E2E run 1: without this grant zone.create/update/remove end no_ack.
+        sub = self.users(ni.render_accounts(self.spec, "B", ni.placeholder))["policy"][1]["permissions"]["subscribe"]["allow"]
+        self.assertIn("evt.map.geofence.>", sub)
+
+    def test_test_only_humans_never_reach_live_renders(self):
+        for stage in ni.STAGES:
+            self.assertNotIn("alice", self.users(ni.render_accounts(self.spec, stage, ni.placeholder)))
+        for stage in ni.VALUES:
+            self.assertNotIn("alice", ni.render_values(self.spec, stage))
+        test = self.users(ni.render_accounts(self.spec, "B", ni.placeholder, test_users=True))
+        (acc_a, alice), (acc_z, zeus) = test["alice"], test["zeus"]
+        self.assertEqual((acc_a, acc_z), ("CLIENT", "CLIENT"))
+        self.assertEqual(alice["permissions"], zeus["permissions"])
+        self.assertEqual(alice["allowed_connection_types"], zeus["allowed_connection_types"])
+        humans = [n for n, (a, _) in test.items() if a == "CLIENT"]
+        self.assertGreaterEqual(len(humans), 2, "A4 actions need two distinct humans in test configs")
+
+    def test_test_only_rules(self):
+        spec = copy.deepcopy(self.spec)
+        spec["users"].append({"user": "svc-x", "account": "ONEMIND", "stage": "A", "test_only": True,
+                              "secret": {"namespace": "a", "name": "b", "user_key": "u", "password_key": "p"}})
+        errs = ni.check_invariants(spec)
+        self.assertTrue(any("only for CLIENT humans" in e for e in errs), errs)
+        self.assertTrue(any("never sealed" in e for e in errs), errs)
+
+    def test_conf_test_users_flag(self):
+        with tempfile.TemporaryDirectory() as d:
+            pw = Path(d) / "pw.json"
+            pw.write_text(json.dumps({u["user"]: "x" for u in self.spec["users"]}))
+            out = Path(d) / "conf.json"
+            for flag, want in (([], False), (["--test-users"], True)):
+                argv = ["nats_identities.py", "conf", "--passwords", str(pw), "--out", str(out)] + flag
+                with mock.patch.object(sys, "argv", argv), mock.patch("sys.stdout"):
+                    self.assertEqual(ni.main(), 0)
+                users = [u["user"] for u in json.loads(out.read_text())["accounts"]["CLIENT"]["users"]]
+                self.assertEqual("alice" in users, want)
+
+    def test_standin_leaf_conf(self):
+        conf = ni.render_leaf_conf(self.spec, "hermes", "pw", remote="127.0.0.1:17422", plain=True, port=14222)
+        (remote,) = conf["leafnodes"]["remotes"]
+        self.assertEqual(remote["urls"], ["nats://hermes:pw@127.0.0.1:17422"])
+        self.assertNotIn("tls", remote)
+        self.assertEqual(conf["port"], 14222)
+        self.assertNotIn("http", conf)
+        self.assertEqual(conf["no_auth_user"], "local")
 
     def test_stage_a1_is_additive(self):
         accounts = ni.render_accounts(self.spec, "A1", ni.placeholder)
