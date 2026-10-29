@@ -204,6 +204,28 @@ func World(data []byte, subject string) (*model.Observation, string, error) {
 		if o.DocType == "" {
 			o.DocType = "sea.unknown"
 		}
+	case "rail":
+		// MTA trains from the grammar pipeline (#558 A1-P1/A1-P4): uid `mta-{feed}-{trip}`.
+		// Keyed as gtfs `{feed}-{trip_id}`, the key the legacy MTA- CoT gives the same train
+		// (cot.go), so both paths fuse into one entity during the parallel run.
+		feed, trip := "", metaString(g.Meta, "trip_id")
+		if rest, ok := strings.CutPrefix(strings.ToLower(g.UID), "mta-"); ok {
+			f, tok, _ := strings.Cut(rest, "-")
+			feed = f
+			if trip == "" {
+				trip = tok
+			}
+		}
+		key := strings.ToLower(g.UID)
+		if feed != "" && trip != "" {
+			key = feed + "-" + trip
+		}
+		o.Keys = []model.Alias{{Type: identity.KeyGTFS, ID: key}}
+		o.EntityType, o.Kind, o.Template, o.Environment = "vehicle", "train", "asset", "land"
+		o.Traits = []string{"locatable", "trackable"}
+		if o.DocType == "" {
+			o.DocType = "ground.rail"
+		}
 	default:
 		kind, ok := worldEventKinds[class]
 		if !ok {

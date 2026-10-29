@@ -5,6 +5,8 @@
 // contract allows to be null are pointers without omitempty; optional fields use omitempty.
 package model
 
+import "github.com/onemindos/omos/services/entity/internal/orbit"
+
 // ContractVersion is the `v` field of entity.v1.
 const ContractVersion = 1
 
@@ -255,4 +257,8 @@ type Observation struct {
 	Emergency   bool
 	Person      bool // the record asserts a person (TAK EUD); see SL9
 	Components  []string
+
+	// Orbit is set on a satellite observation built from a TLE, so the bus layer can
+	// re-propagate it between TLE updates (FEATURES A12).
+	Orbit *orbit.Elements
 }

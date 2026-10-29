@@ -98,6 +98,7 @@ func main() {
 		LeaseTTL:      envDur("LEASE_TTL", 15*time.Second),
 		Holder:        env("POD_NAME", host) + "-" + strconv.Itoa(os.Getpid()),
 		ServeRPC:      env("SERVE_RPC", "true") == "true",
+		OrbitEvery:    envDur("ORBIT_EVERY", 30*time.Second),
 	}
 	if cfg.LeaseBucket == "none" { // local runs only
 		cfg.LeaseBucket = ""

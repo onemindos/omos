@@ -62,10 +62,15 @@ type Config struct {
 	// before the service deletes it (the same 60 s the Nats-TTL header gives it when on).
 	FinalRetain time.Duration
 	QueryLimit  int // svc.entity.query page size: default and maximum; default 200
+	// OrbitEvery is how often satellites are re-propagated from their latest TLE between
+	// CelesTrak updates (FEATURES A12); default 30 s, the legacy feed's cadence; < 0 disables.
+	OrbitEvery time.Duration
 
 	// crashAfter, when > 0, makes Run return errCrash right after the n-th ENT publish and
 	// before acking the input message. Tests use it to prove a restart never duplicates.
 	crashAfter int
+	// clock, when set, replaces time.Now for orbit propagation (tests run a TLE at its epoch).
+	clock func() time.Time
 }
 
 var errCrash = errors.New("simulated crash after publish, before ack")
@@ -80,7 +85,8 @@ type Service struct {
 	ready  atomic.Bool
 	pubs   int
 	ent    jetstream.Stream
-	finals []finalMsg // ENT sequences of final records to delete when MsgTTL is off
+	finals []finalMsg                    // ENT sequences of final records to delete when MsgTTL is off
+	orbits map[string]*model.Observation // latest TLE observation per NORAD id
 }
 
 type finalMsg struct {
@@ -127,7 +133,10 @@ func New(nc *nats.Conn, eng *engine.Engine, cfg Config, log *slog.Logger) (*Serv
 	if cfg.Inputs == nil {
 		cfg.Inputs = DefaultInputs()
 	}
-	return &Service{cfg: cfg, nc: nc, js: js, eng: eng, log: log}, nil
+	if cfg.OrbitEvery == 0 {
+		cfg.OrbitEvery = 30 * time.Second
+	}
+	return &Service{cfg: cfg, nc: nc, js: js, eng: eng, log: log, orbits: map[string]*model.Observation{}}, nil
 }
 
 // Ready reports whether the service holds the lease and is consuming.
@@ -190,6 +199,7 @@ func (s *Service) Run(ctx context.Context) (retErr error) {
 	defer s.ready.Store(false)
 
 	nextSweep := time.Now().Add(s.cfg.SweepEvery)
+	nextOrbit := time.Now().Add(s.cfg.OrbitEvery)
 	for {
 		if err := context.Cause(ctx); err != nil {
 			if errors.Is(err, context.Canceled) {
@@ -220,6 +230,10 @@ func (s *Service) Run(ctx context.Context) (retErr error) {
 			s.deleteFinals(ctx)
 			nextSweep = time.Now().Add(s.cfg.SweepEvery)
 		}
+		if s.cfg.OrbitEvery > 0 && time.Now().After(nextOrbit) {
+			s.propagateOrbits(ctx, s.now())
+			nextOrbit = time.Now().Add(s.cfg.OrbitEvery)
+		}
 		if got == 0 {
 			select {
 			case <-ctx.Done():
@@ -247,6 +261,9 @@ func (s *Service) handle(ctx context.Context, msg jetstream.Msg) error {
 		return msg.Ack()
 	}
 	obs.Stream, obs.StreamSeq = meta.Stream, meta.Sequence.Stream
+	if obs.Orbit != nil {
+		s.keepOrbit(obs)
+	}
 	res := s.eng.Apply(obs)
 	if res.Reject != nil {
 		if err := s.deadLetter(ctx, msg.Subject(), meta, res.Reject.Reason, obs); err != nil {
@@ -433,6 +450,7 @@ func (s *Service) restore(ctx context.Context) (int, error) {
 					if e.Live {
 						s.eng.Restore(e)
 						n++
+						s.restoreOrbit(e)
 					} else if !s.cfg.MsgTTL && meta != nil { // left by a previous process
 						s.finals = append(s.finals, finalMsg{seq: meta.Sequence.Stream, due: time.Now().Add(s.cfg.FinalRetain)})
 					}
@@ -445,6 +463,60 @@ func (s *Service) restore(ctx context.Context) (int, error) {
 		if done || got == 0 {
 			return n, nil
 		}
+	}
+}
+
+func (s *Service) now() time.Time {
+	if s.cfg.clock != nil {
+		return s.cfg.clock()
+	}
+	return time.Now()
+}
+
+// keepOrbit remembers the newest TLE per satellite for re-propagation.
+func (s *Service) keepOrbit(o *model.Observation) {
+	key := o.Keys[0].ID
+	if old, ok := s.orbits[key]; ok && old.Orbit.Epoch.After(o.Orbit.Epoch) {
+		return // an older element set delivered late
+	}
+	s.orbits[key] = o
+}
+
+// restoreOrbit rebuilds a satellite's TLE from its restored entity, so propagation resumes
+// after a restart without waiting hours for the next CelesTrak poll.
+func (s *Service) restoreOrbit(e model.Entity) {
+	if e.Kind != "satellite" || e.Meta["line1"] == nil {
+		return
+	}
+	o, err := adapt.TLEFromMeta(e.Meta, s.now())
+	if err != nil {
+		s.log.Info("satellite not re-propagated after restore", "entity", e.EntityID, "err", err)
+		return
+	}
+	s.keepOrbit(o)
+}
+
+// propagateOrbits moves every satellite to now with SGP4 and fuses the result like any other
+// observation. An element set past orbit.MaxAge is dropped; the entity then expires normally.
+func (s *Service) propagateOrbits(ctx context.Context, now time.Time) {
+	for key, tmpl := range s.orbits {
+		o, err := adapt.Propagate(tmpl, now)
+		if err != nil {
+			delete(s.orbits, key)
+			s.eng.Count("orbit_dropped")
+			s.log.Info("satellite TLE dropped", "norad", key, "err", err)
+			continue
+		}
+		res := s.eng.Apply(o)
+		if res.Publish == nil {
+			continue
+		}
+		if err := s.publish(ctx, res.Publish); err != nil {
+			s.log.Warn("orbit publish failed", "subject", res.Publish.Subject, "err", err)
+			s.eng.PublishFailed(res.Publish)
+			continue
+		}
+		s.eng.Count("orbit_propagated")
 	}
 }
 

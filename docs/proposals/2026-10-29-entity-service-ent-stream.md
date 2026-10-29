@@ -126,11 +126,26 @@ ruled, satellites from `feed-satellites` are `ent.vehicle.norad-{n}.state` with
 `kind: satellite` and `environment: space`. MTA trains are `vehicle` with `kind: train`; BUS-P6
 covers their world class.
 
+The same applies to satellites propagated from `intel.space.celestrak.tle` (FEATURES A12) and to
+trains on `evt.world.rail.*` (#558 A1-P4): both resolve to the entity the legacy CoT makes
+(`norad-{n}`, `gtfs-{feed}-{trip}`), so the parallel run in #558's cut-over shows one entity each.
+
 ## A4-P5: lifecycle events (information)
 
 BUS-DESIGN BUS-P5 says lifecycle events are "not published until ruled". The service follows
 that. If the owner accepts domain `entity`, add `evt.entity.>` to `EVT` and set the service to
 emit `created`, `expired`, `deleted` and `conflict` events.
+
+## A4-P6: SGP4 library (information)
+
+FEATURES A12 needs SGP4 in Go. The most widely used pure-Go implementation is
+`github.com/joshuaferrara/go-satellite` (BSD-2-Clause; last commit June 2022; cgo-free). It has
+three defects the wrapper in `services/entity/internal/orbit` works around and tests: `log.Fatal`
+on a malformed TLE number (prevented by validating every column first), whole-second epoch
+truncation (compensated exactly), and a wrong longitude wrap in `LatLongDeg` (not used). Measured
+against python-sgp4 the result is within 3.7 m over 7 days. **Proposed:** accept the dependency.
+Alternative if the owner prefers no unmaintained dependency: vendor a reviewed copy under
+`services/entity/third_party/` (BSD-2 permits it) or port Vallado's public-domain reference.
 
 ## Risks the owner should know
 

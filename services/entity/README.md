@@ -17,10 +17,11 @@ projector read entities; only this service writes them.
 
 | Direction | Subject | Stream | Notes |
 |---|---|---|---|
-| in | `tak.cot.>` (`tak.cot.inject`, `tak.cot.out`, `tak.cot.mesh.rx`) | `COT` | CoT XML. The projector's own output (uid `OM.*` or `_flow-tags_ omos-tak-projector`) is ignored |
+| in | `tak.cot.>` (`tak.cot.inject`, `tak.cot.out`, `tak.cot.mesh.rx`) | `COT` | CoT XML. The projector's own output (uid `OM.*` or `INTEL.*`, or `_flow-tags_ omos-tak-projector`) is ignored (cot-projection.md §8.2) |
 | in | `tel.fleet.{class}.{id}.position\|status` | `TEL` | doctrine §9.2 geo-envelope |
-| in | `evt.world.{air\|sea\|fire\|seismic\|conflict\|chokepoint}.{id}` | `WORLD` | military surge subjects are skipped (BUS-DESIGN D9) |
-| in | `intel.>` | `INTEL` | the live feed-intel payload; records without coordinates are skipped |
+| in | `evt.world.{air\|sea\|rail\|fire\|seismic\|conflict\|chokepoint}.{id}` | `WORLD` | military surge subjects are skipped (BUS-DESIGN D9). `rail` (#558 A1-P1, owner proposal BUS-P6) is a `vehicle` of kind `train`, keyed `gtfs-{feed}-{trip_id}` so it fuses with the legacy `MTA-*` CoT |
+| in | `intel.>` | `INTEL` | the flat feed-intel payload or the omos-ingest bus envelope (`{v, id, ts, type: <subject>, source, data}`, #553); records without coordinates are skipped, so NWS zone-only alerts (no polygon) make no entity yet |
+| in | `intel.space.celestrak.tle` | `INTEL` | one TLE per message (#558); propagated with SGP4 (`internal/orbit`) into `ent.vehicle.norad-{n}.state`, then re-propagated every `ORBIT_EVERY` until the next TLE |
 | in | `det.{domain}.{type}.{id}` | `DET` | read only if the stream exists (it is proposed, not live) |
 | out | `ent.{entity_type}.{entity_id}.state` | `ENT` | JetStream publish with ack; headers `Nats-Msg-Id: {entity_id}:{seq}`, `Nats-TTL`, `OneMind-Marking`, `OneMind-Releasable-To`, `OneMind-Schema: entity.v1` |
 | out | `evt.sys.entity.rejected` | `SYS` | dead letters with a reason (stop-line SL9, unparseable input); BUS-P9 form |
@@ -95,7 +96,21 @@ Safety rules in code: a `person` with `disposition: hostile` is rejected and dea
 | `SOURCE_PRIORS` | — | JSON per-integration `source_prior` overrides |
 | `REJECT_SUBJECT` | `evt.sys.entity.rejected` | dead-letter subject; acked JetStream publish with `Nats-Msg-Id: {stream}:{seq}`, the input is redelivered if it fails |
 | `SERVE_RPC` | `true` | `svc.entity.get` and `svc.entity.query` (`{types, bbox, limit, cursor}`; pages of at most 200, `cursor` is the last `entity_id`, `null` on the last page) |
+| `ORBIT_EVERY` | `30s` | satellite re-propagation interval; negative disables. A TLE older than 7 days is no longer propagated |
 | `HTTP_ADDR` | `:8080` | `/healthz`, `/readyz` (lease held and consuming), `/metrics` (counters) |
+
+## Satellites (FEATURES A12)
+
+`internal/orbit` propagates TLEs with SGP4 using
+[`github.com/joshuaferrara/go-satellite`](https://github.com/joshuaferrara/go-satellite)
+(BSD-2-Clause, a Go port of Vallado's reference SGP4; last commit 2022). The wrapper validates
+every TLE column before calling the library (its parser calls `log.Fatal` on a bad number),
+compensates for its whole-second epoch truncation, and converts TEME to WGS84 itself. Its test
+compares 95 positions of 16 stations-group objects (including the ISS) out to 7 days
+against python-sgp4 (`internal/orbit/testdata/gen_reference.py`): worst difference 3.7 m,
+against the 5 km acceptance limit. The latest TLE per satellite is kept in memory and rebuilt
+from the restored entity's `meta.line1/line2` on restart (JetStream mode only; in `core` mode
+satellites reappear with the next TLE). Next-pass prediction and orbit rings are client work.
 
 ## Tests
 
