@@ -49,8 +49,8 @@ for _ in $(seq 1 50); do natsc rtt >/dev/null 2>&1 && break; sleep 0.1; done
 # The streams the pipelines and the legacy output land in (names and filters as in
 # platform/nats/streams/, duplicate window 2m as there).
 for s in "COT tak.cot.>" "WORLD evt.world.>" "INTEL intel.>" "SYS evt.sys.>"; do
-  set -- $s
-  natsc stream add "$1" --subjects "$2" --storage file --replicas 1 \
+  read -r name subj <<<"$s"
+  natsc stream add "$name" --subjects "$subj" --storage file --replicas 1 \
     --retention limits --discard old --max-age 24h --dupe-window 2m --max-msgs=-1 \
     --max-bytes=-1 --max-msg-size=-1 --max-msgs-per-subject=-1 --no-allow-rollup \
     --no-deny-delete --no-deny-purge --allow-direct --defaults >/dev/null
