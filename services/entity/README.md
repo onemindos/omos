@@ -97,6 +97,7 @@ Safety rules in code: a `person` with `disposition: hostile` is rejected and dea
 | `REJECT_SUBJECT` | `evt.sys.entity.rejected` | dead-letter subject; acked JetStream publish with `Nats-Msg-Id: {stream}:{seq}`, the input is redelivered if it fails |
 | `SERVE_RPC` | `true` | `svc.entity.get` and `svc.entity.query` (`{types, bbox, limit, cursor}`; pages of at most 200, `cursor` is the last `entity_id`, `null` on the last page) |
 | `ORBIT_EVERY` | `30s` | satellite re-propagation interval; negative disables. A TLE older than 7 days is no longer propagated |
+| `MAX_ORBITS` | `500` | most satellites kept for re-propagation; negative means no cap. Each sweep runs in the consume loop and publishes one record per satellite, so feed small CelesTrak groups (stations, ~50), not the full catalogue. A new NORAD id past the cap is fused once and counted as `orbit_cap` |
 | `HTTP_ADDR` | `:8080` | `/healthz`, `/readyz` (lease held and consuming), `/metrics` (counters) |
 
 ## Satellites (FEATURES A12)

@@ -38,6 +38,13 @@ func envDur(k string, def time.Duration) time.Duration {
 	return def
 }
 
+func envInt(k string, def int) int {
+	if n, err := strconv.Atoi(os.Getenv(k)); err == nil {
+		return n
+	}
+	return def
+}
+
 // parseInputs reads "COT=tak.cot.>;TEL=tel.fleet.>,tel.drone.>".
 func parseInputs(s string) []bus.Input {
 	if s == "" {
@@ -99,6 +106,7 @@ func main() {
 		Holder:        env("POD_NAME", host) + "-" + strconv.Itoa(os.Getpid()),
 		ServeRPC:      env("SERVE_RPC", "true") == "true",
 		OrbitEvery:    envDur("ORBIT_EVERY", 30*time.Second),
+		MaxOrbits:     envInt("MAX_ORBITS", 500),
 	}
 	if cfg.LeaseBucket == "none" { // local runs only
 		cfg.LeaseBucket = ""

@@ -130,6 +130,21 @@ The same applies to satellites propagated from `intel.space.celestrak.tle` (FEAT
 trains on `evt.world.rail.*` (#558 A1-P4): both resolve to the entity the legacy CoT makes
 (`norad-{n}`, `gtfs-{feed}-{trip}`), so the parallel run in #558's cut-over shows one entity each.
 
+Intel events follow the same rule for the omos-ingest parallel run (#553, BUS-P3). The adapter
+reduces a URL record id to its last path segment, so the legacy NWS `feature.id`
+(`https://api.weather.gov/alerts/urn:oid:...`) and the omos-ingest `properties.id`
+(`urn:oid:...`) give one entity. It also maps legacy `source` values to the grammar token
+(`nasa_firms` to `firms`, `nasa-eonet` to `eonet`). Known migration gaps, for the owner:
+
+- **FIRMS id shape**: the legacy collector's id is a SHA-1 of `lat:lon:acq_date:acq_time`; the
+  #553 CSV source's id is `firms:{lat}:{lon}:{date}:{time}`. The prefix now matches, but the
+  native ids differ, so a hotspot seen by both shows twice until one collector is retired or
+  #553 adopts the legacy key.
+- **Event time**: #553's GeoJSON parser defaults `timeField` to `time` and reads epoch
+  milliseconds, so USGS envelopes already carry the quake time in `ts`. A source whose time
+  field does not parse falls back to `fetchedAt`; the adapter therefore prefers a numeric
+  `data.time` in milliseconds when present, as the flat path did.
+
 ## A4-P5: lifecycle events (information)
 
 BUS-DESIGN BUS-P5 says lifecycle events are "not published until ruled". The service follows

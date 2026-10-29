@@ -65,6 +65,11 @@ type Config struct {
 	// OrbitEvery is how often satellites are re-propagated from their latest TLE between
 	// CelesTrak updates (FEATURES A12); default 30 s, the legacy feed's cadence; < 0 disables.
 	OrbitEvery time.Duration
+	// MaxOrbits caps how many satellites are re-propagated. Each sweep runs inside the consume
+	// loop and publishes one record per satellite, so it is sized for small CelesTrak groups
+	// (stations is ~50 element sets), not the full catalogue. A new NORAD id past the cap is
+	// fused once but not re-propagated (counter orbit_cap). Default 500; < 0 means no cap.
+	MaxOrbits int
 
 	// crashAfter, when > 0, makes Run return errCrash right after the n-th ENT publish and
 	// before acking the input message. Tests use it to prove a restart never duplicates.
@@ -135,6 +140,9 @@ func New(nc *nats.Conn, eng *engine.Engine, cfg Config, log *slog.Logger) (*Serv
 	}
 	if cfg.OrbitEvery == 0 {
 		cfg.OrbitEvery = 30 * time.Second
+	}
+	if cfg.MaxOrbits == 0 {
+		cfg.MaxOrbits = 500
 	}
 	return &Service{cfg: cfg, nc: nc, js: js, eng: eng, log: log, orbits: map[string]*model.Observation{}}, nil
 }
@@ -261,15 +269,17 @@ func (s *Service) handle(ctx context.Context, msg jetstream.Msg) error {
 		return msg.Ack()
 	}
 	obs.Stream, obs.StreamSeq = meta.Stream, meta.Sequence.Stream
-	if obs.Orbit != nil {
-		s.keepOrbit(obs)
-	}
 	res := s.eng.Apply(obs)
 	if res.Reject != nil {
 		if err := s.deadLetter(ctx, msg.Subject(), meta, res.Reject.Reason, obs); err != nil {
 			return s.nakDeadLetter(msg, err)
 		}
 		return msg.Ack()
+	}
+	if obs.Orbit != nil {
+		// Only an element set the engine accepted is re-propagated; a rejected one would be
+		// rejected again on every sweep until orbit.MaxAge.
+		s.keepOrbit(obs)
 	}
 	if res.Publish != nil {
 		if err := s.publish(ctx, res.Publish); err != nil {
@@ -473,11 +483,16 @@ func (s *Service) now() time.Time {
 	return time.Now()
 }
 
-// keepOrbit remembers the newest TLE per satellite for re-propagation.
+// keepOrbit remembers the newest TLE per satellite for re-propagation, up to MaxOrbits.
 func (s *Service) keepOrbit(o *model.Observation) {
 	key := o.Keys[0].ID
-	if old, ok := s.orbits[key]; ok && old.Orbit.Epoch.After(o.Orbit.Epoch) {
+	old, ok := s.orbits[key]
+	if ok && old.Orbit.Epoch.After(o.Orbit.Epoch) {
 		return // an older element set delivered late
+	}
+	if !ok && s.cfg.MaxOrbits > 0 && len(s.orbits) >= s.cfg.MaxOrbits {
+		s.eng.Count("orbit_cap")
+		return
 	}
 	s.orbits[key] = o
 }

@@ -59,6 +59,7 @@ func Intel(data []byte, subject string) (*model.Observation, string, error) {
 	if src == "" && len(tok) > 2 {
 		src = tok[2]
 	}
+	src = canonSource(src)
 	if subject == TLESubject || strings.EqualFold(r.Type, "tle") {
 		return tleObservation(r.Properties, subject, src, Now())
 	}
@@ -75,7 +76,7 @@ func Intel(data []byte, subject string) (*model.Observation, string, error) {
 	if !ok {
 		return nil, "", fmt.Errorf("intel timestamp %q", r.Timestamp)
 	}
-	native := strings.TrimPrefix(strings.ToLower(r.ID), src+"-")
+	native := strings.TrimPrefix(nativeID(r.ID), src+"-")
 	id := identity.MakeID(src, native)
 	o := &model.Observation{
 		Integration: "feed-intel-" + src, SourceID: r.ID, DataType: "intel", Subject: subject,
@@ -94,6 +95,51 @@ func Intel(data []byte, subject string) (*model.Observation, string, error) {
 		o.ExpireT = exp
 	}
 	return o, "", nil
+}
+
+// sourceAliases maps legacy feed-intel `source` values to the grammar source token omos-ingest
+// uses, so both input forms give the same entity id prefix and integration (FEATURES A4).
+var sourceAliases = map[string]string{
+	"nasa_firms": "firms", "nasa-firms": "firms",
+	"nasa-eonet": "eonet", "nasa_eonet": "eonet",
+}
+
+func canonSource(src string) string {
+	if a, ok := sourceAliases[src]; ok {
+		return a
+	}
+	return src
+}
+
+// nativeID lowercases a record id and reduces a URL id to its last path segment. The legacy
+// NWS collector sends feature.id ("https://api.weather.gov/alerts/urn:oid:...") where
+// omos-ingest sends properties.id ("urn:oid:..."); both then name the same alert.
+func nativeID(id string) string {
+	n := strings.ToLower(strings.TrimSpace(id))
+	for _, scheme := range []string{"https://", "http://"} {
+		if !strings.HasPrefix(n, scheme) {
+			continue
+		}
+		path := strings.TrimRight(n[len(scheme):], "/")
+		if i := strings.LastIndex(path, "/"); i >= 0 {
+			return path[i+1:] // host/.../segment: keep the last segment
+		}
+	}
+	return n
+}
+
+// eventTimeMs reads a numeric epoch-millisecond event time (USGS `time`). Values outside
+// 2001..2286 are not milliseconds and are ignored.
+func eventTimeMs(v any) (int64, bool) {
+	n, ok := v.(json.Number)
+	if !ok {
+		return 0, false
+	}
+	ms, err := n.Int64()
+	if err != nil || ms < 1e12 || ms >= 1e13 {
+		return 0, false
+	}
+	return ms, true
 }
 
 // envelopeDropKeys are data fields the envelope form maps to observation fields, or that are
@@ -149,6 +195,11 @@ func decodeIntel(data []byte, subject string) (intelRecord, error) {
 		r.Type = tok[3]
 	}
 	r.Lat, r.Lon = jsonFloat(d["lat"]), jsonFloat(d["lon"])
+	// Prefer the record's own event time: omos-ingest falls back to fetchedAt for `ts` when
+	// its timeField does not parse (USGS epoch ms), and the entity's source_t is the event.
+	if ms, ok := eventTimeMs(d["time"]); ok {
+		r.Timestamp = time.UnixMilli(ms).UTC().Format(time.RFC3339Nano)
+	}
 	if s, ok := d["expires"].(string); ok {
 		r.Expires = s
 	}

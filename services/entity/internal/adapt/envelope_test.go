@@ -275,3 +275,82 @@ func TestTLERejects(t *testing.T) {
 		t.Error("23-day-old TLE propagated")
 	}
 }
+
+// TestNWSLegacyAndEnvelopeSameID: the legacy feed-intel record carries feature.id (a URL) and
+// the omos-ingest envelope carries properties.id (the bare URN). During the BUS-P3 parallel
+// run both must resolve to one entity.
+func TestNWSLegacyAndEnvelopeSameID(t *testing.T) {
+	const urn = "urn:oid:2.49.0.1.840.0.606ff9564ba6e3501c3fd04db3d7ead560d8cf68.001.1"
+	flat := fmt.Sprintf(`{"id":"https://api.weather.gov/alerts/%s","type":"weather_alert","source":"noaa","lat":29.0025,"lon":-81.405,"timestamp":"2026-10-29T03:16:00-04:00","expires":"2026-10-29T13:00:00-04:00","properties":{"event":"Flood Warning"}}`, urn)
+	lo, _, err := Parse("intel.weather.noaa.alert.fl.flood-warning", []byte(flat))
+	if err != nil || lo == nil {
+		t.Fatalf("legacy: %v %v", lo, err)
+	}
+	r := ingestRow{MsgID: "nws:" + urn, TS: "2026-10-29T03:16:00-04:00", Data: map[string]any{
+		"id": urn, "lat": 29.0025, "lon": -81.405, "event": "Flood Warning", "expires": "2026-10-29T13:00:00-04:00",
+	}}
+	eo, _, err := Parse("intel.weather.noaa.alert", envelope(t, "nws-alerts", "intel.weather.noaa.alert", r))
+	if err != nil || eo == nil {
+		t.Fatalf("envelope: %v %v", eo, err)
+	}
+	if lid, eid := identity.Canonical(lo.Keys[0]), identity.Canonical(eo.Keys[0]); lid != eid {
+		t.Fatalf("legacy %s vs envelope %s", lid, eid)
+	}
+	if lo.Integration != eo.Integration {
+		t.Fatalf("integration %s vs %s", lo.Integration, eo.Integration)
+	}
+}
+
+// TestSourceAliases: legacy `source` values that differ from the grammar token (FIRMS, EONET)
+// map to the omos-ingest token, so both forms share the id prefix and integration.
+func TestSourceAliases(t *testing.T) {
+	flat := `{"id":"eonet-EONET_6812","type":"wildfire","source":"nasa-eonet","lat":40.1,"lon":-120.2,"timestamp":"2026-10-29T00:00:00Z"}`
+	lo, _, err := Parse("intel.natural.nasa.eonet.wildfires.EONET_6812", []byte(flat))
+	if err != nil {
+		t.Fatal(err)
+	}
+	r := ingestRow{MsgID: "eonet:EONET_6812", TS: "2026-10-29T00:00:00Z", Data: map[string]any{"id": "EONET_6812", "lat": 40.1, "lon": -120.2}}
+	eo, _, err := Parse("intel.natural.eonet.wildfire", envelope(t, "eonet", "intel.natural.eonet.wildfire", r))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if lo.Keys[0].ID != "eonet-eonet_6812" || eo.Keys[0].ID != lo.Keys[0].ID || lo.Integration != "feed-intel-eonet" || eo.Integration != lo.Integration {
+		t.Fatalf("legacy %s/%s envelope %s/%s", lo.Keys[0].ID, lo.Integration, eo.Keys[0].ID, eo.Integration)
+	}
+	fo, _, err := Parse("intel.fire.nasa.firms.conus", []byte(`{"id":"abc123","type":"wildfire","source":"nasa_firms","lat":34.1,"lon":-117.5,"timestamp":"2026-10-29T10:30:00Z"}`))
+	if err != nil || fo.Integration != "feed-intel-firms" || fo.Keys[0].ID != "firms-abc123" {
+		t.Fatalf("%+v %v", fo, err)
+	}
+}
+
+// TestEnvelopeEventTime: a USGS envelope whose ts fell back to fetchedAt still gets the quake
+// time (data.time, epoch ms) as source_t, like the flat feed-intel record.
+func TestEnvelopeEventTime(t *testing.T) {
+	r := ingestRow{MsgID: "usgs:us7000abcd", TS: "", Data: map[string]any{
+		"id": "us7000abcd", "lat": 35.7, "lon": -117.5, "place": "Synthetic place A", "time": 1761728400000,
+	}}
+	o, _, err := Parse("intel.seismic.usgs.event", envelope(t, "usgs", "intel.seismic.usgs.event", r))
+	if err != nil || o.SourceT != 1761728400000 {
+		t.Fatalf("%+v %v", o, err)
+	}
+	// A non-millisecond time field is ignored and ts is kept.
+	r.Data["time"], r.TS = 1761728400, "2025-10-29T09:00:00Z"
+	o, _, err = Parse("intel.seismic.usgs.event", envelope(t, "usgs", "intel.seismic.usgs.event", r))
+	if err != nil || o.SourceT != 1761728400000 {
+		t.Fatalf("%+v %v", o, err)
+	}
+}
+
+func TestNativeID(t *testing.T) {
+	for in, want := range map[string]string{
+		"https://api.weather.gov/alerts/urn:oid:2.49.0.1": "urn:oid:2.49.0.1",
+		"https://api.weather.gov/alerts/urn:oid:X/":       "urn:oid:x",
+		"us7000ABCD":   "us7000abcd",
+		"https://":     "https://",
+		"http://host/": "http://host/",
+	} {
+		if got := nativeID(in); got != want {
+			t.Errorf("nativeID(%q) = %q, want %q", in, got, want)
+		}
+	}
+}
