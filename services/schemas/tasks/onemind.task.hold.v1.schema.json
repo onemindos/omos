@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/tasks/onemind.task.hold/v1",
+  "title": "onemind.task.hold.v1 spec",
+  "description": "Hold position. Task spec (onemind-xr docs/contracts/mission-task.md section 4). Unknown fields are refused.",
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {
+    "duration_s": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3600
+    }
+  }
+}

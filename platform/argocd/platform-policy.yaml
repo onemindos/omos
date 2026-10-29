@@ -1,0 +1,30 @@
+# platform-policy: the OneMind policy and audit service (FEATURES I4) in namespace onemind-core,
+# from platform/policy/. The namespace already exists and is labelled by
+# platform/security/shared-namespaces.yaml, so this Application does not create it.
+#
+# Manual sync only, and no resources-finalizer (deleting the Application deletes nothing).
+# Before the first sync (platform/policy/README.md): the per-service NATS users are live,
+# the SealedSecrets policy-service-runtime and policy-signing-key exist, the OpenFGA actions
+# model is adopted and its store/model ids are in the ConfigMap, and the image digest is pinned.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-policy
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/policy
+    directory:
+      recurse: false
+      exclude: "*.md"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: onemind-core
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true

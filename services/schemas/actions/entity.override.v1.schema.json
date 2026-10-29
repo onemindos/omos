@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/actions/entity.override/v1",
+  "title": "entity.override v1 parameters",
+  "description": "Operator override of one overridable field (A2). Parameters of an ActionRequest (onemind-xr docs/contracts/asset-command.md section 6.1). Unknown fields are refused.",
+  "type": "object",
+  "required": [
+    "field",
+    "value"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "field": {
+      "type": "string",
+      "pattern": "^[a-z_][a-z0-9_.]{0,63}$"
+    },
+    "value": {},
+    "reason": {
+      "type": "string",
+      "maxLength": 500
+    }
+  }
+}

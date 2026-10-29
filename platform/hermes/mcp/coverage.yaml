@@ -196,6 +196,10 @@ applications:
     apps:
     - paperclip
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-policy:
+    apps:
+    - onemind_core
+    reason: Policy and audit service beside OpenFGA in onemind-core. Agents reach it only as proposers over svc.policy.*.propose; no MCP admin tools, and never svc.policy.*.confirm.
   platform-redpanda-connect:
     apps:
     - onemind_core

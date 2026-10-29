@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/actions/asset.goto/v1",
+  "title": "asset.goto v1 parameters",
+  "description": "Fly or drive a simulated asset to a point (A3). Parameters of an ActionRequest (onemind-xr docs/contracts/asset-command.md section 6.1). Unknown fields are refused.",
+  "type": "object",
+  "required": [
+    "lat",
+    "lon",
+    "hae_m"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "lat": {
+      "type": "number",
+      "minimum": -90,
+      "maximum": 90
+    },
+    "lon": {
+      "type": "number",
+      "minimum": -180,
+      "maximum": 180
+    },
+    "hae_m": {
+      "type": "number",
+      "minimum": -500,
+      "maximum": 20000
+    },
+    "speed_mps": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 50
+    },
+    "yaw_deg": {
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMaximum": 360
+    }
+  }
+}

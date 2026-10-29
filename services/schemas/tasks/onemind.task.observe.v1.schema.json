@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/tasks/onemind.task.observe/v1",
+  "title": "onemind.task.observe.v1 spec",
+  "description": "Observe a point or a non-person entity with a sensor. Task spec (onemind-xr docs/contracts/mission-task.md section 4). Unknown fields are refused.",
+  "type": "object",
+  "required": [
+    "target",
+    "sensor_id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "target": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "lat",
+            "lon",
+            "hae_m"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "lat": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "lon": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            "hae_m": {
+              "type": "number",
+              "minimum": -500,
+              "maximum": 20000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "entity_id"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "entity_id": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9_.-]{0,127}$"
+            }
+          }
+        }
+      ]
+    },
+    "sensor_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_.-]{0,127}$"
+    },
+    "duration_s": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 7200
+    }
+  }
+}

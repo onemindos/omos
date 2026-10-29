@@ -59,6 +59,17 @@ This entry does not refresh historical counts or certify a working route.
 | --- | --- | --- | --- | --- | --- |
 | 2 | `platform-karakeep` | `karakeep` | Native SQLite/assets 20Gi + Meilisearch 5Gi; [backup activation and isolated restore](../platform/karakeep/BACKUP.md) required before real use | Private `https://karakeep.tail717ba0.ts.net`, app authentication | Manual Argo, all replicas zero; [first-start gates](../platform/karakeep/README.md) pending |
 
+## Policy service preparation — 2026-10-29
+
+FEATURES I4 (onemind-xr): `svc.policy.*`, the only publisher of `cmd.*` after a human confirm and the single
+writer of `evt.so.action.*`. Not deployed: the Application is manual and waits for the owner steps in
+[`platform/policy/README.md`](../platform/policy/README.md) (NATS per-service users, OpenFGA model adoption,
+two SealedSecrets, pinned image digest).
+
+| Tier | Application | Namespace | State / recovery | Exposure | Status |
+| --- | --- | --- | --- | --- | --- |
+| 2 | `platform-policy` | `onemind-core` | No PVC; action records in memory (pending actions are forgotten on restart and cannot be confirmed); audit in `EVT` (`evt.so.>`), commands in `CMD` | None (NATS client only; no Service or ingress); ecosystem pool | Manual Argo, not synced; [owner steps](../platform/policy/README.md) pending |
+
 ## Summary
 
 | Item | Count / value |

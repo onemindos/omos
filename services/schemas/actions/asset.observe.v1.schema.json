@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/actions/asset.observe/v1",
+  "title": "asset.observe v1 parameters",
+  "description": "Point a sensor at a location or a non-person entity (A3). Parameters of an ActionRequest (onemind-xr docs/contracts/asset-command.md section 6.1). Unknown fields are refused.",
+  "type": "object",
+  "required": [
+    "target",
+    "sensor_id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "target": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "lat",
+            "lon",
+            "hae_m"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "lat": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "lon": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            "hae_m": {
+              "type": "number",
+              "minimum": -500,
+              "maximum": 20000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "entity_id"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "entity_id": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9_.-]{0,127}$"
+            }
+          }
+        }
+      ]
+    },
+    "sensor_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_.-]{0,127}$"
+    }
+  }
+}

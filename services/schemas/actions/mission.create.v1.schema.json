@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/actions/mission.create/v1",
+  "title": "mission.create v1 parameters",
+  "description": "Create a mission (A2). Parameters of an ActionRequest (onemind-xr docs/contracts/asset-command.md section 6.1). Unknown fields are refused.",
+  "type": "object",
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "intent": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "aoi": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "window": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "start_t": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_t": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

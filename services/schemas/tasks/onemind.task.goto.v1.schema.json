@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/tasks/onemind.task.goto/v1",
+  "title": "onemind.task.goto.v1 spec",
+  "description": "Go to a point. Task spec (onemind-xr docs/contracts/mission-task.md section 4). Unknown fields are refused.",
+  "type": "object",
+  "required": [
+    "lat",
+    "lon",
+    "hae_m"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "lat": {
+      "type": "number",
+      "minimum": -90,
+      "maximum": 90
+    },
+    "lon": {
+      "type": "number",
+      "minimum": -180,
+      "maximum": 180
+    },
+    "hae_m": {
+      "type": "number",
+      "minimum": -500,
+      "maximum": 20000
+    },
+    "speed_mps": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 50
+    },
+    "yaw_deg": {
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMaximum": 360
+    }
+  }
+}

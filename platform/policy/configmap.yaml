@@ -1,0 +1,28 @@
+# Identity directory and runtime settings for the policy service (FEATURES I4). No secrets.
+# principals.json maps a verified NATS identity (account/user from the server-set
+# Nats-Request-Info header on a `share: true` service import) to a OneMind principal.
+# Accounts in agent_accounts always resolve to kind "agent", so an agent can never confirm.
+# The CLIENT and AGENTS accounts do not exist on the live bus yet: they arrive with the
+# per-service NATS users PR (docs/proposals/2026-10-29-nats-per-service-permissions.md).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: policy-service
+  namespace: onemind-core
+  labels:
+    app: policy-service
+data:
+  principals.json: |
+    {
+      "own_account": "ONEMIND",
+      "agent_accounts": ["AGENTS"],
+      "principals": [
+        {"account": "CLIENT", "user": "zeus", "kind": "user", "id": "user:zeus"},
+        {"account": "AGENTS", "user": "hermes", "kind": "agent", "id": "agent:hermes/zeus/legacy"}
+      ]
+    }
+  # OpenFGA store and model of the actions model (platform/security/openfga/). Both are set
+  # when the owner adopts the model; until then the service refuses to start (fail closed).
+  OPENFGA_URL: http://openfga.onemind-core.svc.cluster.local:8080
+  OPENFGA_STORE_ID: ""
+  OPENFGA_MODEL_ID: ""

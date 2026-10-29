@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/actions/entity.star/v1",
+  "title": "entity.star v1 parameters",
+  "description": "Star or unstar an entity (A1). Parameters of an ActionRequest (onemind-xr docs/contracts/asset-command.md section 6.1). Unknown fields are refused.",
+  "type": "object",
+  "required": [
+    "starred"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "starred": {
+      "type": "boolean"
+    }
+  }
+}

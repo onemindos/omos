@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/actions/asset.takeoff/v1",
+  "title": "asset.takeoff v1 parameters",
+  "description": "Take off to a height (A4, two humans). Parameters of an ActionRequest (onemind-xr docs/contracts/asset-command.md section 6.1). Unknown fields are refused.",
+  "type": "object",
+  "required": [
+    "hae_m"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "hae_m": {
+      "type": "number",
+      "minimum": -500,
+      "maximum": 20000
+    }
+  }
+}
