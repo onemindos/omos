@@ -7,7 +7,7 @@
 | File | What |
 |---|---|
 | `configmap.yaml` | Feed registry (`sources.yaml`). First source: NWS alerts on `intel.weather.noaa.alert` |
-| `deployment.yaml` | One replica, ecosystem pool preferred, 20m/48Mi requests, 250m/128Mi limits, non-root, read-only root FS |
+| `deployment.yaml` | One replica, ecosystem pool preferred, 20m/48Mi requests, 250m/256Mi limits (sized from measured peaks, see `deployment.yaml`), non-root, read-only root FS |
 | `service.yaml`, `servicemonitor.yaml` | Metrics on port 9464, scraped by kube-prometheus-stack (`release: monitoring`) |
 | `prometheusrule.yaml` | `OneMindFeedStale`, `OneMindFeedNeverFetched`, `OneMindFeedNoLeader`, `OneMindIngestDown`, `OneMindIngestPublishRetrying`, `OneMindIngestDeadLetters` |
 

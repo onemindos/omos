@@ -11,6 +11,7 @@ on:
       - services/schemas/intel/**
       - services/schemas/ingest/**
       - services/schemas/envelope/**
+      - platform/ingest/configmap.yaml
       - .github/workflows/build-omos-ingest.yml
   pull_request:
     paths:
@@ -18,6 +19,7 @@ on:
       - services/schemas/intel/**
       - services/schemas/ingest/**
       - services/schemas/envelope/**
+      - platform/ingest/configmap.yaml
       - .github/workflows/build-omos-ingest.yml
   workflow_dispatch:
 permissions:
@@ -42,8 +44,14 @@ jobs:
       - run: go vet ./...
       - name: Unit, integration and golden tests (embedded JetStream)
         run: go test -race -count=1 ./...
-      - name: Registry check
+      - name: Registry check (local)
         run: go run ./cmd/omos-ingest -check -config sources.local.yaml -schemas ../../schemas
+      # The registry the cluster runs is data['sources.yaml'] in the ConfigMap; -check fails
+      # when it finds no enabled source, so an empty or misplaced extract cannot pass.
+      - name: Registry check (cluster ConfigMap)
+        run: |
+          yq -r '.data["sources.yaml"]' ../../../platform/ingest/configmap.yaml > "$RUNNER_TEMP/sources.cluster.yaml"
+          go run ./cmd/omos-ingest -check -config "$RUNNER_TEMP/sources.cluster.yaml" -schemas ../../schemas
   image:
     needs: test
     if: github.event_name != 'pull_request'

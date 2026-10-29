@@ -19,6 +19,7 @@ type Server struct {
 	Port int
 	Dir  string
 	S    *server.Server
+	mods []func(*server.Options)
 }
 
 func freePort(t testing.TB) int {
@@ -30,10 +31,11 @@ func freePort(t testing.TB) int {
 	return l.Addr().(*net.TCPAddr).Port
 }
 
-// Start runs a JetStream server; it is shut down when the test ends.
-func Start(t testing.TB) *Server {
+// Start runs a JetStream server; it is shut down when the test ends. mods adjust the
+// server options (users and permissions).
+func Start(t testing.TB, mods ...func(*server.Options)) *Server {
 	t.Helper()
-	s := &Server{t: t, Port: freePort(t), Dir: t.TempDir()}
+	s := &Server{t: t, Port: freePort(t), Dir: t.TempDir(), mods: mods}
 	s.start()
 	t.Cleanup(s.Stop)
 	return s
@@ -41,6 +43,9 @@ func Start(t testing.TB) *Server {
 
 func (s *Server) start() {
 	opts := &server.Options{Host: "127.0.0.1", Port: s.Port, JetStream: true, StoreDir: s.Dir, NoLog: true, NoSigs: true}
+	for _, m := range s.mods {
+		m(opts)
+	}
 	srv, err := server.NewServer(opts)
 	if err != nil {
 		s.t.Fatal(err)
@@ -69,8 +74,15 @@ func (s *Server) Restart() { s.Stop(); s.start() }
 // Connect returns a client that reconnects forever, as omos-ingest does.
 func (s *Server) Connect(t testing.TB, name string) (*nats.Conn, jetstream.JetStream) {
 	t.Helper()
-	nc, err := nats.Connect(s.URL(), nats.Name(name), nats.RetryOnFailedConnect(true), nats.MaxReconnects(-1),
-		nats.ReconnectWait(100*time.Millisecond))
+	return ConnectURL(t, s.URL(), name)
+}
+
+// ConnectURL is Connect for another URL (a Proxy) and extra options (credentials).
+func ConnectURL(t testing.TB, url, name string, extra ...nats.Option) (*nats.Conn, jetstream.JetStream) {
+	t.Helper()
+	opts := append([]nats.Option{nats.Name(name), nats.RetryOnFailedConnect(true), nats.MaxReconnects(-1),
+		nats.ReconnectWait(100 * time.Millisecond), nats.ReconnectBufSize(-1)}, extra...)
+	nc, err := nats.Connect(url, opts...)
 	if err != nil {
 		t.Fatal(err)
 	}

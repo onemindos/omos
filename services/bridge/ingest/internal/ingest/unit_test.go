@@ -211,3 +211,60 @@ func TestNextDelayBackoff(t *testing.T) {
 		t.Errorf("quota wait %v", got)
 	}
 }
+
+// No loss: in block mode (the websocket default) a full queue makes the reader wait for
+// room instead of dropping a frame.
+func TestDropQueueBlockModeLosesNothing(t *testing.T) {
+	q := NewDropQueue[int](2)
+	q.Block = true
+	ctx := context.Background()
+	go func() {
+		for i := 1; i <= 100; i++ {
+			if dropped, err := q.PushCtx(ctx, i); dropped || err != nil {
+				panic("dropped in block mode")
+			}
+		}
+	}()
+	for want := 1; want <= 100; want++ {
+		if v, _ := q.Pop(ctx); v != want {
+			t.Fatalf("got %d want %d", v, want)
+		}
+	}
+	_, _ = q.PushCtx(ctx, 1)
+	_, _ = q.PushCtx(ctx, 2)
+	cctx, cancel := context.WithTimeout(ctx, 20*time.Millisecond)
+	defer cancel()
+	if _, err := q.PushCtx(cctx, 3); err == nil {
+		t.Fatal("push on a full blocking queue must wait for ctx")
+	}
+}
+
+func TestQueueFullConfig(t *testing.T) {
+	c, err := ParseConfig([]byte(strings.Replace(validCfg, "kind: rest_poll", "kind: rest_poll\n    queueFull: drop-oldest", 1)))
+	if err != nil || c.Sources[0].QueueFull != QueueDropOldest {
+		t.Fatalf("%v", err)
+	}
+	if c, _ := ParseConfig([]byte(validCfg)); c.Sources[0].QueueFull != QueueBlock {
+		t.Fatal("default must be block")
+	}
+	if _, err := ParseConfig([]byte(strings.Replace(validCfg, "kind: rest_poll", "kind: rest_poll\n    queueFull: maybe", 1))); err == nil {
+		t.Fatal("bad queueFull accepted")
+	}
+}
+
+// The seen index lives with the checkpoint and stays in step with trimming.
+func TestSeenIndexFollowsTrim(t *testing.T) {
+	var cp Checkpoint
+	for _, k := range []string{"a", "b", "c", "d"} {
+		cp.addSeen(k)
+	}
+	idx := cp.seenIndex()
+	cp.trimSeen(2)
+	if _, ok := idx["a"]; ok || len(idx) != 2 || len(cp.Seen) != 2 {
+		t.Fatalf("index %v seen %v", idx, cp.Seen)
+	}
+	cp.addSeen("e")
+	if _, ok := idx["e"]; !ok {
+		t.Fatal("index was rebuilt instead of reused")
+	}
+}

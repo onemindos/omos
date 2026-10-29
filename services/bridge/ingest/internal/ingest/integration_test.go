@@ -528,38 +528,45 @@ func TestLeaseSingleOwnerAndTakeover(t *testing.T) {
 	t.Logf("takeover after crash: %v (lease TTL %v)", took.Round(10*time.Millisecond), e.cfg.LeaseTTL.Duration)
 }
 
-// Reliability: a lease survives a bus outage longer than its TTL: the source keeps
-// running (its context is never cancelled) and the lease is re-created afterwards.
-func TestLeaseSurvivesBusOutage(t *testing.T) {
+// Reliability: during a bus outage longer than the lease TTL the source stops before the
+// lease can expire (another instance could take it), and the lease is taken again with
+// Create and the source restarted once the bus is back.
+func TestLeaseOutageStopsSourceAndReacquires(t *testing.T) {
 	e := newEnv(t, 2*time.Minute)
 	rt, lb := e.runtime(t, "a")
 	rt.Board.Add("src", ingest.KindRESTPoll, time.Minute)
-	var cancelled atomic.Bool
-	started := make(chan struct{})
+	var starts atomic.Int32
+	stopped := make(chan time.Time, 4)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	go rt.RunOwned(ctx, "src", func(c context.Context) {
-		close(started)
+		starts.Add(1)
 		<-c.Done()
-		cancelled.Store(true)
+		stopped <- time.Now()
 	})
-	<-started
+	waitFor(t, 3*time.Second, "first start", func() bool { return starts.Load() == 1 })
+	down := time.Now()
 	e.srv.Stop()
-	time.Sleep(3 * e.cfg.LeaseTTL.Duration)
+	select {
+	case at := <-stopped:
+		if d := at.Sub(down); d > e.cfg.LeaseTTL.Duration {
+			t.Fatalf("source stopped %v after the outage began, later than the lease TTL %v", d, e.cfg.LeaseTTL.Duration)
+		}
+	case <-time.After(2 * e.cfg.LeaseTTL.Duration):
+		t.Fatal("source kept running past the lease TTL while the bus was down")
+	}
+	time.Sleep(2 * e.cfg.LeaseTTL.Duration)
 	e.srv.Restart()
-	waitFor(t, 10*time.Second, "lease back", func() bool {
+	waitFor(t, 10*time.Second, "lease back and source restarted", func() bool {
 		kv, err := e.srvJS(t).KeyValue(context.Background(), e.cfg.LockBucket)
 		if err != nil {
 			return false
 		}
 		v, err := kv.Get(context.Background(), "src")
-		return err == nil && string(v.Value()) == "a"
+		return err == nil && string(v.Value()) == "a" && starts.Load() == 2
 	})
-	if cancelled.Load() {
-		t.Fatal("source stopped during a bus outage")
-	}
-	if !strings.Contains(lb.String(), "lease renew deferred") {
-		t.Fatal("expected deferred renewals in the log")
+	if !strings.Contains(lb.String(), "lease not renewed within its TTL") {
+		t.Fatal("expected the lease-expiry stop in the log")
 	}
 }
 

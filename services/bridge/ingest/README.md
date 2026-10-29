@@ -36,13 +36,13 @@ Tests run with `go test -race ./...` against an embedded JetStream server
 
 | Item (run prompt §10) | Mechanism | Test |
 |---|---|---|
-| Publish with server ack, retries with backoff, `Nats-Msg-Id` dedup | `Runtime.Publish`: `js.PublishMsg` with `Nats-Msg-Id`, waits for the PubAck, capped exponential backoff, never drops | `TestPublishAckAndMsgIDDedup`, `TestPublishRetriesUntilStreamExists`, `TestPublishBlocksThroughNATSRestart` |
-| Restart or replay never duplicates | Checkpoint (seen set, ETag, cursor) in KV only after every record of a fetch is acked; a failed checkpoint read skips the poll | `TestRestartBeyondDedupWindowDoesNotDuplicate`, `TestCheckpointOnlyAfterAck`, `TestCheckpointReadErrorSkipsPoll`, chaos |
-| Exactly one owner per source | KV lease: `Create`, renew with `Update(revision)` every TTL/3; a bus outage defers renewal; only a lease held by another instance stops the source; clean shutdown hands it over | `TestLeaseSingleOwnerAndTakeover`, `TestLeaseSurvivesBusOutage`, `TestLeaseLostStopsSource`, chaos (two instances, leader killed) |
+| Publish with server ack, retries with backoff, `Nats-Msg-Id` dedup | `Runtime.Publish`: `js.PublishMsg` with `Nats-Msg-Id`, waits for the PubAck, capped exponential backoff, never drops. Errors no retry can fix (over `max_payload` or the stream's `max_msg_size`, publish permission denied) dead-letter the record with the reason instead of blocking the feed | `TestPublishAckAndMsgIDDedup`, `TestPublishRetriesUntilStreamExists`, `TestPublishBlocksThroughNATSRestart`, `TestPermanentPublishErrorsDeadLettered`, `TestPermissionViolationDeadLettered` |
+| Restart or replay never duplicates | Checkpoint (seen set, ETag, cursor) in KV only after every record of a fetch is acked; a failed checkpoint read skips the poll | `TestRestartBeyondDedupWindowDoesNotDuplicate`, `TestCheckpointOnlyAfterAck`, `TestCheckpointReadErrorSkipsPoll`, `TestCheckpointCompareAndSet`, chaos |
+| Exactly one owner per source | KV lease: `Create`, renew with `Update(revision)` every TTL/3. If no renewal succeeds within 4/5 of the TTL (the leader is cut off, alone or with the whole bus), a local timer stops the source before the lease can expire, and the instance competes for the lease again with `Create` after reconnecting. The client keeps no reconnect buffer (`ReconnectBufSize(-1)`), so a stopped leader cannot replay publishes. Checkpoint writes are fenced: the lease must still be held, and the KV write is a compare-and-set on the revision read. Clean shutdown hands the lease over | `TestLeaseSingleOwnerAndTakeover`, `TestLeaderCutOffAloneNeverPublishesAfterTakeover` (one instance cut off by a TCP proxy), `TestLeaseOutageStopsSourceAndReacquires`, `TestLeaseLostStopsSource`, `TestCheckpointCompareAndSet`, chaos (two instances, leader killed) |
 | Schema validation, dead letters with the reason | JSON Schema from `services/schemas` per source; bad records and unparseable bodies go to `evt.sys.{source}.rejected`; a snapshot that keeps listing a bad record dead-letters it once; stream frames are recorded per occurrence | `TestMalformedRecordsToDeadLetter`, `TestWholeBodyParseErrorDeadLettered`, `TestNWSMalformed`, chaos |
 | Upstream politeness | Per-source rate limiter, fixed-window quota, `If-None-Match`/`If-Modified-Since`, `Retry-After` on 429/503, jittered backoff on 429/5xx, no retry on other 4xx, poll backoff after failures; terms of use required per source | `TestFetchConditionalHeadersAnd304`, `TestFetch429HonoursRetryAfter`, `TestFetch5xxBackoffThenGiveUp`, `TestFetch403NoRetry`, `TestFetchRateLimit`, `TestQuotaWindow`, `TestFetchQuotaStopsRequests`, `TestNextDelayBackoff`, `TestConfigDefaultsAndValidation` |
 | Freshness: `fetchedAt`, record count, last error; stale alert | Status board → `tel.feed.{source}.status` and `ingest_feed_*` metrics; `OneMindFeedStale` in `platform/ingest/prometheusrule.yaml` | `TestStatusBoardFreshness`, `TestFreshnessMetrics`, `TestFreshnessStatusAndUpstreamOutage`, `test/alerts/run.sh` (promtool), `test/chaos/stale-alert.sh` (live Prometheus) |
-| Backpressure, limits, bounded memory | Response size cap, bounded drop-oldest queue for streams (`ingest_dropped_total`), bounded seen ring kept under 512 KiB, SSE line cap, `GOMEMLIMIT` and container limits; KV buckets have `maxBytes` | `TestFetchBodyLimit`, `TestDropQueueBoundedDropsOldest`, `TestKeepCurrentLastKeepsSnapshotInRing` |
+| Backpressure, limits, bounded memory | Response size cap, bounded websocket queue (`queueFull: block`, the default, loses no received frame; `drop-oldest` for position streams, counted in `ingest_dropped_total`), bounded seen ring kept under 512 KiB, SSE line cap, `GOMEMLIMIT` and container limits; KV buckets have `maxBytes` | `TestFetchBodyLimit`, `TestDropQueueBoundedDropsOldest`, `TestDropQueueBlockModeLosesNothing`, `TestKeepCurrentLastKeepsSnapshotInRing` |
 | Survives NATS down, upstream down, malformed data, clock skew, full disk | Blocking publish and reconnect forever; last good count kept and marked stale; dead letters; dedup keys from upstream ids only; a full stream (`discard: new`) blocks without checkpointing | `TestPublishBlocksThroughNATSRestart`, `TestFreshnessStatusAndUpstreamOutage`, `TestKeysIndependentOfClock`, `TestFullStreamBlocksWithoutLossOrCheckpoint`, chaos |
 | Replayable: fixtures drive golden tests; a stream rebuilds state | Parsers are pure; recorded fixtures in `testdata/fixtures` (NWS: one real api.weather.gov response from 2026-10-29, trimmed to 12 alerts) and golden files in `testdata/golden` | `TestNWSGolden`, `TestRSSAndAtom`, `TestCSVAndGeoJSONAndJSON`, `TestReplayRebuildsRecords` |
 | Observable | JSON logs (`log/slog`) with `source` and `instance`; Prometheus metrics; ServiceMonitor | `TestFreshnessStatusAndUpstreamOutage` (log lines), `TestFreshnessMetrics`. OpenTelemetry traces are **not built** (follow-up) |
@@ -56,7 +56,7 @@ Tests run with `go test -race ./...` against an embedded JetStream server
 | `rss` | poll loop with the `rss` parser (RSS 2.0, Atom, W3C geo, GeoRSS) | same | |
 | `file` | poll loop; `http(s)://` or `file://` (mtime as Last-Modified); `-once` for a CronJob | same | CSV, GeoJSON |
 | `sse` | one long-lived stream | `Last-Event-ID` from the checkpointed cursor (saved after acks, at most once per second) | |
-| `websocket` | reader → bounded drop-oldest queue → publisher | none (upstream has no replay) | optional `subscribe` message, env-expanded |
+| `websocket` | reader → bounded queue → publisher; `queueFull: block` (default) or `drop-oldest` | none (upstream has no replay) | optional `subscribe` message, env-expanded |
 
 Webhook push and MQTT stay with the existing bridges (`bridges/webhook`, `bridges/mqtt`)
 until they adopt this core. Generic parsers: `nws-alerts`, `rss`, `geojson`, `csv`, `json`
@@ -101,7 +101,9 @@ curl -s 127.0.0.1:9464/metrics | grep ingest_feed
 ```
 
 `-create-buckets` is for local runs only; in the cluster the buckets are NACK CRs.
-`-check` validates the registry and schemas and exits.
+`-check` validates the registry and schemas and exits; it fails when no enabled source is
+found. CI runs it on `sources.local.yaml` and on `data['sources.yaml']` extracted from
+`platform/ingest/configmap.yaml`.
 
 ## Chaos and alert tests
 

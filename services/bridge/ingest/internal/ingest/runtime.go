@@ -9,6 +9,8 @@ import (
 	"io"
 	"log/slog"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/nats-io/nats.go"
@@ -33,6 +35,30 @@ type Runtime struct {
 	AckTimeout        time.Duration
 	MaxPublishBackoff time.Duration
 	Now               func() time.Time
+
+	leaseMu sync.Mutex
+	// fenced lists the sources run through RunOwned; held is true while this instance
+	// holds the lease. SaveCheckpoint refuses to write a fenced source's checkpoint
+	// unless the lease is held here and in the bucket.
+	fenced map[string]bool
+	held   map[string]bool
+}
+
+func (r *Runtime) setHeld(key string, v bool) {
+	r.leaseMu.Lock()
+	defer r.leaseMu.Unlock()
+	if r.fenced == nil {
+		r.fenced, r.held = map[string]bool{}, map[string]bool{}
+	}
+	r.fenced[key] = true
+	r.held[key] = v
+}
+
+// leaseState reports whether src runs under a lease and whether this instance holds it.
+func (r *Runtime) leaseState(src string) (fenced, held bool) {
+	r.leaseMu.Lock()
+	defer r.leaseMu.Unlock()
+	return r.fenced[src], r.held[src]
 }
 
 func (r *Runtime) now() time.Time {
@@ -65,10 +91,37 @@ func (r *Runtime) BindBuckets(ctx context.Context, cfg *Config, create bool) err
 
 // ---------------------------------------------------------------- publish with ack
 
+// ErrPermanentPublish wraps a publish error that no retry can fix: the message is larger
+// than the server's max_payload or the stream's max_msg_size, or the user may not publish
+// on the subject. Emit dead-letters such a record instead of blocking its feed.
+var ErrPermanentPublish = errors.New("publish cannot succeed")
+
+// permanentPublishError classifies err. A publish permission violation reaches the client
+// asynchronously (the JetStream publish itself just times out), so it is read from the
+// connection's last error for this subject.
+// It returns the error to report, or nil when a retry may succeed.
+func (r *Runtime) permanentPublishError(subject string, err error) error {
+	if errors.Is(err, nats.ErrMaxPayload) || errors.Is(err, jetstream.ErrStreamMessageExceedsMaximum) || errors.Is(err, nats.ErrPermissionViolation) {
+		return err
+	}
+	var je jetstream.JetStreamError
+	if errors.As(err, &je) && je.APIError() != nil && je.APIError().ErrorCode == jetstream.JSErrCodeStreamMessageExceedsMaximum {
+		return err
+	}
+	if r.NC != nil {
+		if le := r.NC.LastError(); le != nil && errors.Is(le, nats.ErrPermissionViolation) &&
+			strings.Contains(strings.ToLower(le.Error()), strings.ToLower(`publish to "`+subject+`"`)) {
+			return le
+		}
+	}
+	return nil
+}
+
 // Publish sends one message with Nats-Msg-Id and waits for the JetStream PubAck. It
 // retries with capped exponential backoff until it is acked or ctx ends, so a record is
 // never dropped: a NATS outage, a missing stream or a full stream (discard new) all block
-// here, and the caller does not checkpoint. It reports whether the ack was a duplicate.
+// here, and the caller does not checkpoint. Errors no retry can fix return at once,
+// wrapped in ErrPermanentPublish. It reports whether the ack was a duplicate.
 func (r *Runtime) Publish(ctx context.Context, src, subject, msgID string, data []byte) (bool, error) {
 	backoff := 100 * time.Millisecond
 	maxB := r.MaxPublishBackoff
@@ -96,6 +149,9 @@ func (r *Runtime) Publish(ctx context.Context, src, subject, msgID string, data 
 		}
 		if ctx.Err() != nil {
 			return false, ctx.Err()
+		}
+		if perr := r.permanentPublishError(subject, err); perr != nil {
+			return false, fmt.Errorf("%w: %v", ErrPermanentPublish, perr)
 		}
 		r.Metrics.Retries.WithLabelValues(src).Inc()
 		r.Log.Warn("publish retry", "source", src, "subject", subject, "msgId", msgID, "err", err.Error(), "backoff", backoff.String())
@@ -143,7 +199,48 @@ type Checkpoint struct {
 	Cursor       string   `json:"cursor,omitempty"`
 	Seen         []string `json:"seen,omitempty"` // bounded ring of recent dedup keys
 	UpdatedAt    string   `json:"updatedAt,omitempty"`
+
+	// Rev is the KV revision this checkpoint was read or last written at (0: none).
+	// SaveCheckpoint writes only on top of it, so an instance that lost its lease cannot
+	// overwrite a newer checkpoint written by the new owner.
+	Rev uint64 `json:"-"`
+	// index mirrors Seen for lookups; it lives as long as the Checkpoint, so a stream
+	// does not rebuild it on every event.
+	index map[string]struct{}
 }
+
+func (cp *Checkpoint) seenIndex() map[string]struct{} {
+	if cp.index == nil {
+		cp.index = make(map[string]struct{}, len(cp.Seen))
+		for _, k := range cp.Seen {
+			cp.index[k] = struct{}{}
+		}
+	}
+	return cp.index
+}
+
+func (cp *Checkpoint) addSeen(k string) {
+	cp.seenIndex()[k] = struct{}{}
+	cp.Seen = append(cp.Seen, k)
+}
+
+// trimSeen drops the oldest keys so at most n remain.
+func (cp *Checkpoint) trimSeen(n int) {
+	if len(cp.Seen) <= n {
+		return
+	}
+	drop := cp.Seen[:len(cp.Seen)-n]
+	if cp.index != nil {
+		for _, k := range drop {
+			delete(cp.index, k)
+		}
+	}
+	cp.Seen = append([]string(nil), cp.Seen[len(cp.Seen)-n:]...)
+}
+
+// ErrCheckpointFenced means a checkpoint was not written because this instance no longer
+// holds the source's lease, or another instance wrote the checkpoint since it was read.
+var ErrCheckpointFenced = errors.New("checkpoint not written: lease or checkpoint changed")
 
 // LoadCheckpoint never treats "could not read" as "no state": that would republish
 // everything the upstream still lists (ingestion-platform.md finding 4). Only a missing
@@ -160,27 +257,57 @@ func (r *Runtime) LoadCheckpoint(ctx context.Context, src string) (Checkpoint, e
 	if err := json.Unmarshal(e.Value(), &cp); err != nil {
 		return cp, fmt.Errorf("%w: %v", errCheckpointRead, err)
 	}
+	cp.Rev = e.Revision()
 	return cp, nil
 }
 
 // SaveCheckpoint is called only after every record of a fetch is acked. A failed save is
 // safe: the next fetch republishes and Nats-Msg-Id or the seen set absorbs it.
 // It trims cp.Seen in place to seenMax, so long-lived streams keep bounded memory.
+//
+// The write is fenced twice: a source run through RunOwned must still hold its lease
+// (here and in the lock bucket), and the KV write is a compare-and-set on cp.Rev. A
+// fenced write returns ErrCheckpointFenced; the caller reloads the checkpoint.
 func (r *Runtime) SaveCheckpoint(ctx context.Context, src string, cp *Checkpoint, seenMax int) error {
-	if seenMax > 0 && len(cp.Seen) > seenMax {
-		cp.Seen = append([]string(nil), cp.Seen[len(cp.Seen)-seenMax:]...)
+	if seenMax > 0 {
+		cp.trimSeen(seenMax)
 	}
 	cp.UpdatedAt = r.now().UTC().Format(time.RFC3339)
 	b, _ := json.Marshal(*cp)
 	for len(b) > 512<<10 && len(cp.Seen) > 0 { // stay well under the 1 MiB max payload
-		cp.Seen = cp.Seen[len(cp.Seen)/2:]
+		cp.trimSeen(len(cp.Seen) / 2)
 		b, _ = json.Marshal(*cp)
 	}
-	if _, err := r.State.Put(ctx, src, b); err != nil {
+	if fenced, held := r.leaseState(src); fenced {
+		ok := held
+		if ok {
+			e, err := r.Locks.Get(ctx, src)
+			ok = err == nil && string(e.Value()) == r.Instance
+		}
+		if !ok {
+			r.Metrics.Checkpoints.WithLabelValues(src, "fenced").Inc()
+			r.Log.Warn("checkpoint not written: lease not held", "source", src)
+			return ErrCheckpointFenced
+		}
+	}
+	var rev uint64
+	var err error
+	if cp.Rev == 0 {
+		rev, err = r.State.Create(ctx, src, b)
+	} else {
+		rev, err = r.State.Update(ctx, src, b, cp.Rev)
+	}
+	if err != nil {
+		if errors.Is(err, jetstream.ErrKeyExists) {
+			r.Metrics.Checkpoints.WithLabelValues(src, "fenced").Inc()
+			r.Log.Warn("checkpoint not written: another instance wrote it since it was read", "source", src)
+			return fmt.Errorf("%w: %v", ErrCheckpointFenced, err)
+		}
 		r.Metrics.Checkpoints.WithLabelValues(src, "error").Inc()
 		r.Log.Warn("checkpoint failed; next fetch refetches and dedup absorbs it", "source", src, "err", err.Error())
 		return err
 	}
+	cp.Rev = rev
 	r.Metrics.Checkpoints.WithLabelValues(src, "ok").Inc()
 	return nil
 }
@@ -196,12 +323,10 @@ type EmitOptions struct {
 
 // Emit validates, dead-letters, skips seen keys, wraps in the envelope and publishes each
 // record with an ack. It appends acked keys to cp.Seen. It returns the number of new
-// records stored. On error the caller must not checkpoint.
+// records stored. On error the caller must not checkpoint. A record whose publish can
+// never succeed (ErrPermanentPublish) is dead-lettered with the reason and marked seen.
 func (r *Runtime) Emit(ctx context.Context, s *Source, recs []Record, cp *Checkpoint, opt EmitOptions) (int, error) {
-	seen := make(map[string]struct{}, len(cp.Seen))
-	for _, k := range cp.Seen {
-		seen[k] = struct{}{}
-	}
+	seen := cp.seenIndex()
 	fetchedAt := r.now()
 	n := 0
 	for _, rec := range recs {
@@ -231,8 +356,7 @@ func (r *Runtime) Emit(ctx context.Context, s *Source, recs []Record, cp *Checkp
 				return n, err
 			}
 			if opt.SuppressRepeatRejects {
-				seen[rk] = struct{}{}
-				cp.Seen = append(cp.Seen, rk)
+				cp.addSeen(rk)
 			}
 			continue
 		}
@@ -254,14 +378,20 @@ func (r *Runtime) Emit(ctx context.Context, s *Source, recs []Record, cp *Checkp
 			return n, err
 		}
 		dup, err := r.Publish(ctx, s.cfg.ID, subj, rec.ID, b)
+		if errors.Is(err, ErrPermanentPublish) {
+			if err := r.Reject(ctx, s.cfg.ID, oneLine(err.Error()), b); err != nil {
+				return n, err
+			}
+			cp.addSeen(rec.ID)
+			continue
+		}
 		if err != nil {
 			return n, err
 		}
 		if !dup {
 			n++
 		}
-		seen[rec.ID] = struct{}{}
-		cp.Seen = append(cp.Seen, rec.ID)
+		cp.addSeen(rec.ID)
 	}
 	return n, nil
 }
@@ -280,18 +410,32 @@ func oneLine(s string) string {
 // entry created with Create (fails if held) and renewed with Update(revision) every
 // LeaseTTL/3; the bucket TTL expires it if the holder dies.
 //
-// A renewal that fails because the bus is unreachable is deferred, not treated as loss:
-// nobody else can take the lease while the bus is down, and publishes wait for acks
-// anyway (ingestion-platform.md finding 3). Only a lease seen held by another instance
-// stops fn.
+// A renewal that fails while the bus is unreachable is retried, but only until the lease
+// could have expired in the bucket: fn is cancelled once safeWindow (4/5 of LeaseTTL) has
+// passed since the last renewal that succeeded was sent. A leader cut off alone therefore
+// stops before another instance can take the lease, and after reconnecting it competes
+// for the lease again with Create. The NATS client must not buffer publishes while
+// disconnected (nats.ReconnectBufSize(-1)), or a stopped leader would replay them.
 func (r *Runtime) RunOwned(ctx context.Context, key string, fn func(context.Context)) {
 	renewEvery := max(r.LeaseTTL/3, 100*time.Millisecond)
+	safeWindow := r.LeaseTTL * 4 / 5
+	r.setHeld(key, false)
 	for ctx.Err() == nil {
+		sent := time.Now()
 		rev, err := r.Locks.Create(ctx, key, []byte(r.Instance))
 		if err != nil {
-			if e, gerr := r.Locks.Get(ctx, key); gerr == nil && string(e.Value()) == r.Instance {
-				rev = e.Revision() // our own lease survived a restart of this process loop
-			} else {
+			gctx, gcancel := context.WithTimeout(ctx, renewEvery)
+			e, gerr := r.Locks.Get(gctx, key)
+			gcancel()
+			if gerr == nil && string(e.Value()) == r.Instance {
+				// Our own entry: only this instance writes its name. Renew it before use so
+				// the safe window starts now.
+				sent = time.Now()
+				uctx, ucancel := context.WithTimeout(ctx, renewEvery)
+				rev, err = r.Locks.Update(uctx, key, []byte(r.Instance), e.Revision())
+				ucancel()
+			}
+			if err != nil {
 				if sleepCtx(ctx, renewEvery) != nil {
 					return
 				}
@@ -299,8 +443,21 @@ func (r *Runtime) RunOwned(ctx context.Context, key string, fn func(context.Cont
 			}
 		}
 		r.Log.Info("lease acquired", "source", key)
+		r.setHeld(key, true)
 		r.Board.SetLeader(key, true)
 		lctx, cancel := context.WithCancel(ctx)
+		var expired atomic.Bool
+		// The fence runs on its own timer, so a renewal call that blocks cannot delay it.
+		fence := time.AfterFunc(safeWindow-time.Since(sent), func() {
+			expired.Store(true)
+			r.setHeld(key, false)
+			cancel()
+		})
+		extend := func(sentAt time.Time) {
+			if !expired.Load() {
+				fence.Reset(safeWindow - time.Since(sentAt))
+			}
+		}
 		done := make(chan struct{})
 		go func() { defer close(done); fn(lctx) }()
 		t := time.NewTicker(renewEvery)
@@ -308,35 +465,34 @@ func (r *Runtime) RunOwned(ctx context.Context, key string, fn func(context.Cont
 		for {
 			select {
 			case <-t.C:
+				if expired.Load() {
+					break renew
+				}
 				// Bound each renewal so a dead bus cannot stall the loop past the TTL.
-				rctx, rcancel := context.WithTimeout(ctx, renewEvery)
+				sentAt := time.Now()
+				rctx, rcancel := context.WithTimeout(lctx, renewEvery)
 				nrev, err := r.Locks.Update(rctx, key, []byte(r.Instance), rev)
 				rcancel()
 				if err == nil {
 					rev = nrev
+					extend(sentAt)
 					continue
 				}
-				if r.NC.Status() != nats.CONNECTED || errors.Is(err, context.DeadlineExceeded) || errors.Is(err, nats.ErrTimeout) {
-					r.Log.Warn("lease renew deferred (bus unreachable)", "source", key, "err", err.Error())
+				if r.NC.Status() != nats.CONNECTED || errors.Is(err, context.DeadlineExceeded) || errors.Is(err, nats.ErrTimeout) || errors.Is(err, context.Canceled) {
+					r.Log.Warn("lease renew failed (bus unreachable); source stops if it does not recover within the lease TTL", "source", key, "err", err.Error())
 					continue
 				}
-				gctx, gcancel := context.WithTimeout(ctx, renewEvery)
+				gctx, gcancel := context.WithTimeout(lctx, renewEvery)
 				e, gerr := r.Locks.Get(gctx, key)
 				gcancel()
-				switch {
-				case gerr == nil && string(e.Value()) == r.Instance:
-					rev = e.Revision()
-					continue
-				case errors.Is(gerr, jetstream.ErrKeyNotFound):
-					if r2, cerr := r.Locks.Create(ctx, key, []byte(r.Instance)); cerr == nil {
-						rev = r2 // expired during an outage and nobody took it
-						r.Log.Info("lease re-created after outage", "source", key)
-						continue
-					}
-				case gerr != nil && r.NC.Status() != nats.CONNECTED:
+				if gerr == nil && string(e.Value()) == r.Instance {
+					rev = e.Revision() // our entry at a newer revision; renew on the next tick
 					continue
 				}
-				r.Log.Warn("lease lost to another instance", "source", key, "err", err.Error())
+				if gerr != nil && !errors.Is(gerr, jetstream.ErrKeyNotFound) {
+					continue // transient read error; the fence still bounds how long fn runs
+				}
+				r.Log.Warn("lease lost", "source", key, "err", err.Error())
 				break renew
 			case <-done:
 				break renew
@@ -345,14 +501,22 @@ func (r *Runtime) RunOwned(ctx context.Context, key string, fn func(context.Cont
 			}
 		}
 		t.Stop()
+		fence.Stop()
+		r.setHeld(key, false)
 		cancel()
 		<-done
 		r.Board.SetLeader(key, false)
+		if expired.Load() {
+			r.Log.Warn("lease not renewed within its TTL; source stopped, competing for the lease again", "source", key)
+		}
 		if ctx.Err() != nil {
 			// Clean shutdown: hand the lease over now instead of after the TTL.
 			dctx, dcancel := context.WithTimeout(context.Background(), 2*time.Second)
 			_ = r.Locks.Delete(dctx, key, jetstream.LastRevision(rev))
 			dcancel()
+			return
+		}
+		if sleepCtx(ctx, renewEvery) != nil {
 			return
 		}
 	}

@@ -16,8 +16,11 @@ const (
 	KindRESTPoll  = "rest_poll"
 	KindSSE       = "sse"
 	KindWebSocket = "websocket"
-	KindRSS       = "rss"
-	KindFile      = "file"
+
+	QueueBlock      = "block"
+	QueueDropOldest = "drop-oldest"
+	KindRSS         = "rss"
+	KindFile        = "file"
 )
 
 // Duration is a time.Duration that reads "30s" / "5m" from YAML.
@@ -47,14 +50,18 @@ type Config struct {
 
 // SourceConfigBase holds the knobs every source has, so defaults can set them once.
 type SourceConfigBase struct {
-	Interval     Duration          `yaml:"interval"`
-	StaleAfter   Duration          `yaml:"staleAfter"`
-	MaxBackoff   Duration          `yaml:"maxBackoff"`
-	MaxBodyBytes int64             `yaml:"maxBodyBytes"`
-	SeenMax      int               `yaml:"seenMax"`
-	QueueMax     int               `yaml:"queueMax"`
-	Headers      map[string]string `yaml:"headers"`
-	RateLimit    RateLimitConfig   `yaml:"rateLimit"`
+	Interval     Duration `yaml:"interval"`
+	StaleAfter   Duration `yaml:"staleAfter"`
+	MaxBackoff   Duration `yaml:"maxBackoff"`
+	MaxBodyBytes int64    `yaml:"maxBodyBytes"`
+	SeenMax      int      `yaml:"seenMax"`
+	QueueMax     int      `yaml:"queueMax"`
+	// QueueFull is what a websocket source does when its queue is full: "block" (default,
+	// loses no received frame) or "drop-oldest" (position streams, where only the latest
+	// value matters).
+	QueueFull string            `yaml:"queueFull"`
+	Headers   map[string]string `yaml:"headers"`
+	RateLimit RateLimitConfig   `yaml:"rateLimit"`
 }
 
 type RateLimitConfig struct {
@@ -169,6 +176,12 @@ func (c *Config) applyDefaults() {
 				s.QueueMax = 10000
 			}
 		}
+		if s.QueueFull == "" {
+			s.QueueFull = d.QueueFull
+			if s.QueueFull == "" {
+				s.QueueFull = QueueBlock
+			}
+		}
 		if s.RateLimit.Every.Duration == 0 {
 			s.RateLimit.Every = or(d.RateLimit.Every, time.Second)
 		}
@@ -225,6 +238,9 @@ func (c *Config) Validate() error {
 			if err := CheckDataSubject(s.Subject); err != nil {
 				return fmt.Errorf("source %q: %w", s.ID, err)
 			}
+		}
+		if s.QueueFull != QueueBlock && s.QueueFull != QueueDropOldest {
+			return fmt.Errorf("source %q: queueFull must be %q or %q", s.ID, QueueBlock, QueueDropOldest)
 		}
 		if s.Quota.Requests > 0 && s.Quota.Per.Duration <= 0 {
 			return fmt.Errorf("source %q: quota.per is required with quota.requests", s.ID)

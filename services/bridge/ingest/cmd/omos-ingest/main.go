@@ -66,6 +66,10 @@ func main() {
 		sources = append(sources, s)
 	}
 	if *check {
+		if len(sources) == 0 {
+			fmt.Fprintf(os.Stderr, "check failed: no enabled sources in %s (%d entries)\n", *cfgPath, len(cfg.Sources))
+			os.Exit(1)
+		}
 		fmt.Printf("ok: %d sources valid\n", len(sources))
 		return
 	}
@@ -77,7 +81,10 @@ func main() {
 	go serve(*addr, rt, ready, log)
 
 	opts := []nats.Option{nats.Name("omos-ingest-" + *instance), nats.RetryOnFailedConnect(true),
-		nats.MaxReconnects(-1), nats.ReconnectWait(time.Second), nats.ReconnectBufSize(8 << 20),
+		nats.MaxReconnects(-1), nats.ReconnectWait(time.Second),
+		// No reconnect buffer: a publish while disconnected fails at once and Publish retries
+		// it. A buffered copy would be sent on reconnect even if the lease was lost meanwhile.
+		nats.ReconnectBufSize(-1),
 		nats.DisconnectErrHandler(func(_ *nats.Conn, err error) { log.Warn("nats disconnected", "err", fmt.Sprint(err)) }),
 		nats.ReconnectHandler(func(_ *nats.Conn) { log.Info("nats reconnected") })}
 	if u, p := os.Getenv("NATS_USER"), os.Getenv("NATS_PASSWORD"); u != "" {

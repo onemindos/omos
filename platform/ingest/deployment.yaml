@@ -76,8 +76,13 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            # Measured 2026-10-29 (omos-ingest -once, macOS arm64, cluster registry entry):
+            # live full-US active alerts, 1.56 MB / 356 alerts: 30 MiB RSS, 10 MB peak heap;
+            # 10x outbreak, 10 MB / 3560 alerts: 85 MiB RSS, 62 MB heap; at the 16 MiB
+            # maxBodyBytes cap, 16 MB / 5712 alerts: 122 MiB RSS, 98 MB heap (107 MiB RSS
+            # with GOMEMLIMIT=100MiB). The limit leaves headroom above the cap case.
             - name: GOMEMLIMIT
-              value: "100MiB"
+              value: "200MiB"
           envFrom:
             # Keys for keyed sources (none yet). SealedSecret steps: README "API keys".
             - secretRef:
@@ -103,7 +108,7 @@ spec:
               memory: 48Mi
             limits:
               cpu: 250m
-              memory: 128Mi
+              memory: 256Mi
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

@@ -143,8 +143,11 @@ func (s *Source) sseOnce(ctx context.Context) error {
 		pending = true
 		s.rt.Board.OK(s.cfg.ID, len(recs), n)
 		if time.Since(lastSave) >= time.Second {
-			_ = s.rt.SaveCheckpoint(ctx, s.cfg.ID, &cp, s.cfg.SeenMax)
+			err := s.rt.SaveCheckpoint(ctx, s.cfg.ID, &cp, s.cfg.SeenMax)
 			lastSave, pending = time.Now(), false
+			if errors.Is(err, ErrCheckpointFenced) {
+				return err // reconnect from the checkpoint the current owner wrote
+			}
 		}
 		return nil
 	})
@@ -153,16 +156,18 @@ func (s *Source) sseOnce(ctx context.Context) error {
 // ---------------------------------------------------------------- WebSocket
 
 // runWebSocket reads frames into a bounded queue and publishes from it on another
-// goroutine, so the reader keeps answering pings while the bus is slow or down. When the
-// queue is full the oldest frame is dropped and counted (ingest_dropped_total): a policy
-// for position streams, which have no replay. Memory is bounded by QueueMax frames of at
-// most MaxBodyBytes each (capped at 1 MiB).
+// goroutine, so the reader keeps answering pings while the bus is slow or down. What a
+// full queue does is set per source by queueFull: "block" (the default) stops reading
+// until there is room, so no received frame is lost (the upstream may disconnect a slow
+// reader, as with any stream without replay); "drop-oldest" drops the oldest frame and
+// counts it (ingest_dropped_total), for position streams where only the latest matters.
+// Memory is bounded by QueueMax frames of at most MaxBodyBytes each (capped at 1 MiB).
 func (s *Source) runWebSocket(ctx context.Context) {
 	q := NewDropQueue[[]byte](s.cfg.QueueMax)
+	q.Block = s.cfg.QueueFull != QueueDropOldest
 	depth := s.rt.Metrics.QueueDepth.WithLabelValues(s.cfg.ID)
 	dropped := s.rt.Metrics.Dropped.WithLabelValues(s.cfg.ID)
 	go func() {
-		var cp Checkpoint // streams without replay keep no seen set; Nats-Msg-Id dedups
 		for {
 			raw, ok := q.Pop(ctx)
 			if !ok {
@@ -173,7 +178,7 @@ func (s *Source) runWebSocket(ctx context.Context) {
 			if perr != nil {
 				recs = []Record{{Raw: raw, Err: fmt.Errorf("parse: %v", perr)}}
 			}
-			cp.Seen = cp.Seen[:0]
+			var cp Checkpoint // streams without replay keep no seen set; Nats-Msg-Id dedups
 			n, err := s.rt.Emit(ctx, s, recs, &cp, EmitOptions{})
 			if err != nil {
 				return
@@ -228,7 +233,11 @@ func (s *Source) wsOnce(ctx context.Context, q *DropQueue[[]byte], onDrop, onPus
 		if err != nil {
 			return err
 		}
-		if q.Push(raw) {
+		dropped, err := q.PushCtx(ctx, raw)
+		if err != nil {
+			return err
+		}
+		if dropped {
 			onDrop()
 		}
 		onPush()

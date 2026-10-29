@@ -119,7 +119,7 @@ func (s *Source) PollOnce(ctx context.Context) (int, int, error) {
 		return len(recs), n, err // not checkpointed: the next poll refetches, dedup absorbs it
 	}
 	cp.ETag, cp.LastModified = res.ETag, res.LastModified
-	cp.Seen = keepCurrentLast(cp.Seen, recs)
+	cp.Seen, cp.index = keepCurrentLast(cp.Seen, recs), nil
 	if len(recs) > s.cfg.SeenMax {
 		s.rt.Log.Warn("snapshot larger than seenMax; raise seenMax or rely on Nats-Msg-Id", "source", s.cfg.ID, "records", len(recs), "seenMax", s.cfg.SeenMax)
 	}
