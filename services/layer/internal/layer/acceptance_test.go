@@ -245,7 +245,7 @@ func TestA5StaleFeed(t *testing.T) {
 	srv := startServer(t, "")
 	nc, js := connect(t, srv.url)
 	setupBus(t, js, bucketTTL{})
-	hz := Def{ID: "hazards", Title: "Hazards", Tier: TierMedium, EntityTypes: []string{"hazard"}, Cap: 5000, LimitS: 2,
+	hz := Def{ID: "hazards", Title: "Hazards", Tier: TierMedium, EntityTypes: []string{"event"}, Cap: 5000, LimitS: 2,
 		Feeds: []string{"feed-a", "feed-b"}, DefaultStaleS: 3600, Marking: "CLEAR"}
 	pub := func(src string, fetched time.Time, lastErr any) {
 		b, _ := json.Marshal(map[string]any{"source": src, "kind": "rest_poll", "collector": "omos-ingest", "instance": "t", "leader": true,
@@ -320,8 +320,39 @@ accounts {
     users: [ { user: alice, password: "%s" }, { user: bob, password: "%s" }, { user: eve, password: "%s" } ]
     imports: [ { service: { account: ONEMIND, subject: "svc.layer.>" }, share: true } ]
   }
+  NOSHARE {
+    users: [ { user: mallory, password: "%s" } ]
+    imports: [ { service: { account: ONEMIND, subject: "svc.layer.>" }, share: false } ]
+  }
 }
-`, pw["svc"], threshold, pw["alice"], pw["bob"], pw["eve"])
+`, pw["svc"], threshold, pw["alice"], pw["bob"], pw["eve"], pw["mallory"])
+}
+
+// An import without share: true carries no Nats-Request-Info header; the layer service must
+// not mistake such a request for a trusted same-account service (fail closed).
+func TestA5ImportWithoutShare(t *testing.T) {
+	pw := map[string]string{"svc": randHex(12), "alice": randHex(12), "bob": randHex(12), "eve": randHex(12), "mallory": randHex(12)}
+	srv := startServer(t, accountsConf(pw, "2m"))
+	_, js := connect(t, srv.url, nats.UserInfo("svc", pw["svc"]))
+	setupBus(t, js, bucketTTL{})
+	publishEnts(t, js, []ent{{typ: "drone", id: "sim-r", seq: 1, lat: 40.7, lon: -74, live: true, sim: true, tlp: "RED"}}, "")
+	r := startService(t, srv.url, testConfig([]Def{fleetLayer()}), nats.UserInfo("svc", pw["svc"]))
+	r.waitReady(t)
+	mallory, _ := connect(t, srv.url, nats.UserInfo("mallory", pw["mallory"]))
+	req := map[string]any{"v": 1, "layer": "fleet", "aoi": nil, "zoom": 12}
+	if _, err := lc.GetSnapshot(mallory, req, 5*time.Second); !lc.IsCode(err, ErrForbidden) {
+		t.Fatalf("share:false snapshot: %v", err)
+	}
+	rw := startRawWatch(t, mallory, map[string]any{"layer": "fleet", "aoi": nil, "zoom": 12})
+	waitFor(t, 5*time.Second, "watch reply", func() bool { return rw.Err() != "" })
+	if rw.Err() != ErrForbidden {
+		t.Fatalf("share:false watch: %q", rw.Err())
+	}
+	list, err := mallory.Request("svc.layer.list", []byte(`{"v":1}`), 5*time.Second)
+	if err != nil || !strings.Contains(string(list.Data), ErrForbidden) {
+		t.Fatalf("share:false list: %v %s", err, list.Data)
+	}
+	t.Log("CLIENT import with share:false: snapshot, watch and list all refused with forbidden")
 }
 
 // Releasability: an entity marked AMBER+STRICT for team-a is absent from a CLIENT snapshot
@@ -329,7 +360,7 @@ accounts {
 // refused. Also proves streamed multi-chunk replies and watch batches across the account
 // boundary (BUS-DESIGN §12 "unverified": streamed responses to a CLIENT inbox).
 func TestA5Releasability(t *testing.T) {
-	pw := map[string]string{"svc": randHex(12), "alice": randHex(12), "bob": randHex(12), "eve": randHex(12)}
+	pw := map[string]string{"svc": randHex(12), "alice": randHex(12), "bob": randHex(12), "eve": randHex(12), "mallory": randHex(12)}
 	threshold := "15s"
 	if v := os.Getenv("A5_RESPONSE_THRESHOLD"); v != "" { // experiment knob, see README
 		threshold = v
@@ -715,8 +746,53 @@ func TestA5AOIMove(t *testing.T) {
 	waitFor(t, 5*time.Second, "entities again", func() bool { return same(wb) })
 }
 
-// Backpressure: a 50,000-vessel burst keeps every batch <= 256 KiB and <= 1,000 ops, batches
-// at most max_rate_hz per second, and memory bounded.
+// rawWatch opens a watch with from_seq 0 and records its batches and the first error.
+type rawWatch struct {
+	mu      sync.Mutex
+	batches int
+	err     string
+}
+
+func startRawWatch(t *testing.T, nc *nats.Conn, req map[string]any) *rawWatch {
+	t.Helper()
+	rw := &rawWatch{}
+	inbox := nc.NewInbox()
+	if _, err := nc.Subscribe(inbox, func(m *nats.Msg) {
+		var b struct {
+			N     uint64 `json:"n"`
+			Error string `json:"error"`
+		}
+		_ = json.Unmarshal(m.Data, &b)
+		rw.mu.Lock()
+		defer rw.mu.Unlock()
+		if b.Error != "" && rw.err == "" {
+			rw.err = b.Error
+		}
+		if b.N > 0 {
+			rw.batches++
+		}
+	}); err != nil {
+		t.Fatal(err)
+	}
+	req["v"] = 1
+	body, _ := json.Marshal(req)
+	if err := nc.PublishRequest("svc.layer.watch", inbox, body); err != nil {
+		t.Fatal(err)
+	}
+	return rw
+}
+
+func (rw *rawWatch) Err() string {
+	rw.mu.Lock()
+	defer rw.mu.Unlock()
+	return rw.err
+}
+
+// Backpressure: a 50,000-vessel burst into a large layer watched by an AOI entity watch, four
+// world cell watches and eight world entity watches (zoom 10, which would hold every vessel).
+// Every batch stays <= 256 KiB and <= 1,000 ops at most max_rate_hz per second; the world
+// entity watches end with too_many once their view passes the layer cap (5,000) instead of
+// holding 50,000 entities each; the heap stays well under the 512Mi pod limit.
 func TestA5Backpressure(t *testing.T) {
 	srv := startServer(t, "")
 	nc, js := connect(t, srv.url)
@@ -725,27 +801,68 @@ func TestA5Backpressure(t *testing.T) {
 	r.waitReady(t)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+	fx := vessels(50000, rand.New(rand.NewSource(9)), 0)
+	box := []float64{-180, -70, -120, 5}
+	want := 0
+	for _, v := range fx {
+		if inBox(v.lat, v.lon, box) {
+			want++
+		}
+	}
+	if want == 0 || want > 5000 {
+		t.Fatalf("fixture: %d vessels in the AOI, want 1..5000", want)
+	}
 	world := map[string]any{"bbox": []float64{-180, -85, 180, 85}}
-	f := &lc.Follower{NC: nc, Req: map[string]any{"layer": "sea", "aoi": world, "zoom": 10, "lease_s": 60, "max_rate_hz": 4}, DeadAfter: 5 * time.Second}
-	fc := &lc.Follower{NC: nc, Req: map[string]any{"layer": "sea", "aoi": world, "zoom": 5, "lease_s": 60, "max_rate_hz": 4}, DeadAfter: 5 * time.Second}
+	f := &lc.Follower{NC: nc, Req: map[string]any{"layer": "sea", "aoi": map[string]any{"bbox": box}, "zoom": 10, "lease_s": 60, "max_rate_hz": 4}, DeadAfter: 5 * time.Second}
 	go func() { _ = f.Run(ctx) }()
-	go func() { _ = fc.Run(ctx) }()
-	waitFor(t, 5*time.Second, "watches running", func() bool { return len(f.Batches()) > 0 && len(fc.Batches()) > 0 })
+	var cells []*lc.Follower
+	for i := 0; i < 4; i++ {
+		fc := &lc.Follower{NC: nc, Req: map[string]any{"layer": "sea", "aoi": world, "zoom": 5, "lease_s": 60, "max_rate_hz": 4}, DeadAfter: 5 * time.Second}
+		cells = append(cells, fc)
+		go func() { _ = fc.Run(ctx) }()
+	}
+	var raws []*rawWatch
+	for i := 0; i < 8; i++ {
+		raws = append(raws, startRawWatch(t, nc, map[string]any{"layer": "sea", "aoi": world, "zoom": 10, "lease_s": 60, "max_rate_hz": 4}))
+	}
+	waitFor(t, 5*time.Second, "watches running", func() bool {
+		for _, fc := range cells {
+			if len(fc.Batches()) == 0 {
+				return false
+			}
+		}
+		return len(f.Batches()) > 0 && r.svc.Store().WatchCount() == 13
+	})
 	var before runtime.MemStats
 	runtime.GC()
 	runtime.ReadMemStats(&before)
-	publishEnts(t, js, vessels(50000, rand.New(rand.NewSource(9)), 0), "")
-	maxPend := 0
-	waitFor(t, 60*time.Second, "all 50,000 delivered", func() bool {
+	publishEnts(t, js, fx, "")
+	maxPend, peakHeap, peakWatchBytes := 0, uint64(0), int64(0)
+	sample := func() {
+		var ms runtime.MemStats
+		runtime.ReadMemStats(&ms)
+		peakHeap = max(peakHeap, ms.HeapAlloc)
+		peakWatchBytes = max(peakWatchBytes, r.svc.Store().WatchBytes())
 		r.svc.Store().wmu.RLock()
 		for _, w := range r.svc.Store().watches {
 			maxPend = max(maxPend, w.pendingLen())
 		}
 		r.svc.Store().wmu.RUnlock()
-		return len(f.Entities()) == 50000
+	}
+	waitFor(t, 60*time.Second, "AOI watch has its vessels; world entity watches ended", func() bool {
+		sample()
+		for _, rw := range raws {
+			if rw.Err() == "" {
+				return false
+			}
+		}
+		return len(f.Entities()) == want
 	})
-	var after runtime.MemStats
-	runtime.ReadMemStats(&after)
+	for i, rw := range raws {
+		if rw.Err() != ErrTooMany {
+			t.Fatalf("world entity watch %d ended with %q, want too_many", i, rw.Err())
+		}
+	}
 	check := func(name string, bs []lc.Batch) (int, int, time.Duration) {
 		maxB, maxOps, minGap := 0, 0, time.Hour
 		for i, b := range bs {
@@ -771,24 +888,32 @@ func TestA5Backpressure(t *testing.T) {
 	}
 	bs := f.Batches()
 	maxB, maxOps, minGap := check("entities", bs)
-	cb, cops, cgap := check("cells", fc.Batches())
-	heapMB := float64(after.HeapAlloc) / (1 << 20)
-	t.Logf("50,000-vessel burst, max_rate_hz 4: entities watch %d batches, max %d bytes, max %d ops, min gap %v; cells watch %d batches, max %d bytes, max %d ops, min gap %v; max queued ops %d; heap %.1f MiB (before %.1f MiB)",
-		len(bs), maxB, maxOps, minGap.Round(time.Millisecond), len(fc.Batches()), cb, cops, cgap.Round(time.Millisecond), maxPend, heapMB, float64(before.HeapAlloc)/(1<<20))
-	if maxPend > 50000 {
-		t.Fatalf("queue %d exceeds the entity count", maxPend)
+	for i, fc := range cells {
+		total := 0.0
+		waitFor(t, 10*time.Second, "cells total 50000", func() bool {
+			total = 0
+			for _, c := range fc.Cells() {
+				total += c[2]
+			}
+			return int(total) == 50000
+		})
+		check(fmt.Sprintf("cells %d", i), fc.Batches())
 	}
-	if heapMB > 768 {
+	cb, cops, cgap := check("cells 0", cells[0].Batches())
+	sample()
+	heapMB := float64(peakHeap) / (1 << 20)
+	t.Logf("50,000-vessel burst, max_rate_hz 4, 13 watches: AOI entities watch %d vessels in %d batches, max %d bytes, max %d ops, min gap %v; cells watch 0 %d batches, max %d bytes, max %d ops, min gap %v; 8 world entity watches ended with too_many; max queued ops %d; peak watch memory %.1f MiB (budget %d MiB); peak test-process heap %.1f MiB (before %.1f MiB)",
+		want, len(bs), maxB, maxOps, minGap.Round(time.Millisecond), len(cells[0].Batches()), cb, cops, cgap.Round(time.Millisecond), maxPend,
+		float64(peakWatchBytes)/(1<<20), DefaultWatchMemBudget>>20, heapMB, float64(before.HeapAlloc)/(1<<20))
+	if maxPend > 5000 {
+		t.Fatalf("queue %d exceeds the layer cap", maxPend)
+	}
+	if peakWatchBytes > DefaultWatchMemBudget {
+		t.Fatalf("watch memory %d over the budget", peakWatchBytes)
+	}
+	if heapMB > 256 { // the pod limit is 512Mi; this process also holds 5 client followers
 		t.Fatalf("heap %.1f MiB", heapMB)
 	}
-	total := 0.0
-	waitFor(t, 10*time.Second, "cells total 50000", func() bool {
-		total = 0
-		for _, c := range fc.Cells() {
-			total += c[2]
-		}
-		return int(total) == 50000
-	})
 }
 
 // Dead watch: killing the layer service makes the client re-snapshot within the dead-watch

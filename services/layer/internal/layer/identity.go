@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/nats-io/nats.go"
 )
@@ -12,6 +13,10 @@ import (
 // `share: true`, and the server replaces any value the client sent (the same mechanism the
 // policy service relies on, services/policy/internal/policy/identity.go in omos PR #554).
 const RequestInfoHeader = "Nats-Request-Info"
+
+// importReplyPrefix starts the reply subject nats-server substitutes on a request that crossed
+// a service import (the response mapping). A same-account requester replies on its own inbox.
+const importReplyPrefix = "_R_."
 
 // Principal entry: one verified NATS identity and its OneMind groups.
 type Principal struct {
@@ -61,13 +66,19 @@ type Caller struct {
 	org     string
 }
 
-// Resolve returns the caller of msg.
+// Resolve returns the caller of msg. A request with no server-set identity is a trusted
+// same-account service only when its reply subject was not rewritten by a service import.
 func (d *Directory) Resolve(msg *nats.Msg) Caller {
 	raw := ""
 	if msg.Header != nil {
 		raw = msg.Header.Get(RequestInfoHeader)
 	}
 	if raw == "" {
+		if strings.HasPrefix(msg.Reply, importReplyPrefix) {
+			// Crossed a service import that does not share the requester's identity
+			// (`share: false`): fail closed instead of trusting it as a same-account service.
+			return Caller{ID: "import-without-share"}
+		}
 		return Caller{Trusted: true, Known: true, ID: "service"}
 	}
 	var ci struct {

@@ -1,8 +1,10 @@
 package layer
 
 import (
+	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
@@ -18,8 +20,8 @@ type change struct {
 
 // Store holds the latest render state of every ENT entity, the replay ring and the watches.
 //
-// Lock order: Store.mu, then Store.wmu, then Watch.mu. Never take an earlier lock while
-// holding a later one.
+// Lock order: Store.mu, then Store.wmu, then Watch.mu, then Store.cellMu. Never take an
+// earlier lock while holding a later one, and never hold two Watch.mu at once.
 type Store struct {
 	mu       sync.RWMutex
 	defs     []*Def
@@ -40,8 +42,85 @@ type Store struct {
 	origin string
 	now    func() time.Time
 
+	version uint64 // bumped on every change of ents (Store.mu write)
+
 	wmu     sync.RWMutex
 	watches map[string]*Watch
+
+	units       atomic.Int64 // sum of Watch.units
+	budgetUnits int64        // service-wide watch budget in units (0: none)
+
+	cellMu    sync.Mutex
+	cellVer   uint64
+	cellCache map[string]map[[2]int]cell
+}
+
+// SetWatchBudget sets the service-wide memory budget of all watches, in bytes (0: none).
+// When the total passes it, the watch holding the most is ended with `resnapshot`.
+func (s *Store) SetWatchBudget(bytes int64) {
+	s.wmu.Lock()
+	s.budgetUnits = bytes / UnitBytes
+	s.wmu.Unlock()
+}
+
+// WatchBytes returns the estimated memory held by all watches, in bytes.
+func (s *Store) WatchBytes() int64 { return s.units.Load() * UnitBytes }
+
+// enforceBudgetLocked ends the largest watches until the total is within the budget.
+// Store.wmu (read or write) is held; no Watch.mu is held.
+func (s *Store) enforceBudgetLocked() {
+	for s.budgetUnits > 0 && s.units.Load() > s.budgetUnits {
+		var big *Watch
+		var bu int64
+		for _, w := range s.watches {
+			if u := w.units.Load(); u > bu {
+				big, bu = w, u
+			}
+		}
+		if big == nil {
+			return
+		}
+		big.mu.Lock()
+		if big.closed || big.endCode != "" {
+			big.clearLocked() // already ending: make sure its units are returned
+		} else {
+			big.endLocked(ErrResnapshot, "layer service watch memory budget reached; re-snapshot")
+		}
+		big.mu.Unlock()
+	}
+}
+
+// sharedCellsLocked returns the cell grid of w's view. Watches with the same layer, cell
+// zoom, AOI and caller share one grid per store version, so N identical views cost one scan.
+// Store.mu (read) and w.mu are held; the returned map must not be modified.
+func (s *Store) sharedCellsLocked(w *Watch) map[[2]int]cell {
+	vis := w.caller.ID
+	if w.caller.Trusted {
+		vis = "*"
+	}
+	key := strconv.Itoa(w.li) + "|" + strconv.Itoa(w.cellZ) + "|" + w.aoiKey + "|" + vis
+	s.cellMu.Lock()
+	if s.cellVer != s.version || s.cellCache == nil {
+		s.cellVer, s.cellCache = s.version, map[string]map[[2]int]cell{}
+	}
+	if m, ok := s.cellCache[key]; ok {
+		s.cellMu.Unlock()
+		return m
+	}
+	s.cellMu.Unlock()
+	g := newCellGrid(w.cellZ)
+	for _, e := range s.perLayer[w.li] {
+		if w.visible(e) {
+			g.add(e.r.Lat, e.r.Lon)
+		}
+	}
+	m := g.asMap()
+	s.cellMu.Lock()
+	if s.cellVer == s.version {
+		s.cellCache[key] = m
+	}
+	s.cellMu.Unlock()
+	return m
 }
 
 // NewStore builds an empty store for the layer definitions.
@@ -78,7 +157,7 @@ func member(d *Def, e *entry) bool {
 		return false
 	}
 	ok, cotOnly := d.HasType(e.r.EntityType)
-	return ok && (!cotOnly || e.fromCot)
+	return ok && (!cotOnly || e.fromCot) && d.Qualifies(e.kind, e.subjects)
 }
 
 func parseSubject(subj string) (typ, id string, ok bool) {
@@ -130,6 +209,7 @@ func (s *Store) Apply(subject string, data []byte, marker string, seq uint64) {
 		return
 	}
 	s.ents[key] = e
+	s.version++
 	for _, i := range s.byType[typ] {
 		if member(s.defs[i], e) {
 			s.perLayer[i][key] = e
@@ -143,6 +223,7 @@ func (s *Store) Apply(subject string, data []byte, marker string, seq uint64) {
 
 func (s *Store) removeLocked(old *entry, reason string, sweep bool) {
 	delete(s.ents, old.key)
+	s.version++
 	for _, i := range s.byType[old.r.EntityType] {
 		delete(s.perLayer[i], old.key)
 	}
@@ -300,6 +381,7 @@ func (s *Store) dispatchLocked(key string, old, nw *entry, reason string) {
 		}
 		w.onChange(key, old, nw, reason)
 	}
+	s.enforceBudgetLocked()
 }
 
 // WatchCount returns the number of open watches.

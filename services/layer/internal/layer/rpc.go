@@ -81,6 +81,15 @@ func (s *Store) resolveAreaLocked(a *AOIReq) (*area, string) {
 	return nil, errBadAOI.Error()
 }
 
+// aoiKey is a canonical form of an AOI request (shared cell grids).
+func aoiKey(a *AOIReq) string {
+	if isEmptyAOI(a) {
+		return ""
+	}
+	b, _ := json.Marshal(a)
+	return string(b)
+}
+
 // isEmptyAOI reports an aoi of null or {}.
 func isEmptyAOI(a *AOIReq) bool {
 	return a == nil || (len(a.BBox) == 0 && len(a.Polygon) == 0 && a.ZoneID == "")
@@ -319,10 +328,13 @@ func (s *Store) Watch(raw []byte, reply string, caller Caller, o WatchOpts) (*Wa
 		return nil, errReply(ErrTooMany, "watch limit reached")
 	}
 	now := s.now()
-	w := &Watch{id: newWatchID(), li: li, def: d, caller: caller, reply: reply, area: ar, full: full,
-		rateHz: rate, leaseUntil: now.Add(time.Duration(leaseS) * time.Second), held: map[string]struct{}{},
-		pend: map[string][]byte{}, lastSent: now, wake: make(chan struct{}, 1)}
+	w := &Watch{id: newWatchID(), li: li, def: d, caller: caller, s: s, reply: reply, area: ar, aoiKey: aoiKey(req.AOI),
+		full: full, rateHz: rate, leaseUntil: now.Add(time.Duration(leaseS) * time.Second), held: map[string]struct{}{},
+		pend: map[string]pendOp{}, lastSent: now, wake: make(chan struct{}, 1)}
 	w.setZoomLocked(req.Zoom, o.ZoomsFor(li))
+	if !w.cellsMode && w.countVisibleLocked(s, d.Cap) > d.Cap {
+		return nil, errReply(ErrTooMany, w.capDetail())
+	}
 	if req.FromSeq == 0 {
 		w.nextFrom = s.lastSeq + 1
 		w.resetViewLocked(s, true, -1) // no snapshot: the whole current view goes out as enter ops
@@ -330,8 +342,10 @@ func (s *Store) Watch(raw []byte, reply string, caller Caller, o WatchOpts) (*Wa
 		w.nextFrom = req.FromSeq
 		w.replayLocked(s, req.FromSeq)
 	}
+	w.accountLocked()
 	s.wmu.Lock()
 	s.watches[w.id] = w
+	s.enforceBudgetLocked() // may end this watch: its first batch is then `resnapshot`
 	s.wmu.Unlock()
 	ack, _ := json.Marshal(watchAck{V: 1, WatchID: w.id, LeaseS: leaseS, EntSeq: s.lastSeq})
 	return w, ack
@@ -383,17 +397,17 @@ func (w *Watch) replayLocked(s *Store, fromSeq uint64) {
 		e := s.ents[key]
 		switch {
 		case e != nil && w.visible(e):
-			w.queue(key, opEntity("upsert", w.entityJSON(e)))
+			w.queue(key, pendOp{op: "upsert", e: e})
 		case e == nil:
 			r := reasons[key]
 			if r == "" {
 				r = "deleted"
 			}
-			w.queue(key, opID("remove", idOf(key), r))
+			w.queue(key, pendOp{op: "remove", reason: r})
 		case member(w.def, e) && !w.caller.CanSee(e.tlp, e.releasable):
-			w.queue(key, opID("remove", idOf(key), "released_out"))
+			w.queue(key, pendOp{op: "remove", reason: "released_out"})
 		default:
-			w.queue(key, opID("exit", idOf(key), "left_aoi"))
+			w.queue(key, pendOp{op: "exit", reason: "left_aoi"})
 		}
 	}
 	for key, e := range s.perLayer[w.li] {
@@ -424,10 +438,21 @@ func (s *Store) renewLocked(req watchReq, reply string, caller Caller, leaseS, r
 	if changeAOI && ar == nil && w.def.Tier == TierLarge {
 		return errReply(ErrAOIRequired, "large layer")
 	}
+	reply2, changed := w.renew(s, req, reply, ar, changeAOI, leaseS, rate, o)
+	if changed {
+		s.wmu.RLock()
+		s.enforceBudgetLocked()
+		s.wmu.RUnlock()
+	}
+	return reply2
+}
+
+// renew applies a renew to w (Store.mu read held). changed reports a view reset.
+func (w *Watch) renew(s *Store, req watchReq, reply string, ar *area, changeAOI bool, leaseS, rate int, o WatchOpts) ([]byte, bool) {
 	w.mu.Lock()
 	defer w.mu.Unlock()
-	if w.closed {
-		return errReply(ErrResnapshot, "watch ended")
+	if w.closed || w.endCode != "" {
+		return errReply(ErrResnapshot, "watch ended"), false
 	}
 	w.leaseUntil = s.now().Add(time.Duration(leaseS) * time.Second)
 	w.rateHz = rate
@@ -436,18 +461,25 @@ func (s *Store) renewLocked(req watchReq, reply string, caller Caller, leaseS, r
 	if changeAOI || zoomChanged {
 		wasCells, prevZ := w.cellsMode, w.cellZ
 		if changeAOI {
-			w.area = ar
+			w.area, w.aoiKey = ar, aoiKey(req.AOI)
 		}
 		z := &w.zoom
 		if req.Zoom != nil {
 			z = req.Zoom
 		}
 		w.setZoomLocked(z, o.ZoomsFor(w.li))
+		if !w.cellsMode && w.countVisibleLocked(s, w.def.Cap) > w.def.Cap {
+			// The client's new view is over the cap: end the watch (the client re-snapshots).
+			w.endLocked(ErrTooMany, w.capDetail())
+			return errReply(ErrTooMany, w.capDetail()), false
+		}
 		w.resetViewLocked(s, wasCells, prevZ)
 		w.signal()
+		ack, _ := json.Marshal(watchAck{V: 1, WatchID: w.id, LeaseS: leaseS, EntSeq: s.lastSeq})
+		return ack, true
 	}
 	ack, _ := json.Marshal(watchAck{V: 1, WatchID: w.id, LeaseS: leaseS, EntSeq: s.lastSeq})
-	return ack
+	return ack, false
 }
 
 // Unwatch ends a watch.
@@ -471,17 +503,22 @@ func (s *Store) Unwatch(raw []byte, caller Caller) []byte {
 		return errReply(ErrForbidden, "watch belongs to another caller")
 	}
 	w.mu.Lock()
-	w.closed = true
+	w.releaseLocked()
 	w.mu.Unlock()
 	w.signal()
 	return []byte(`{"v":1,"ok":true}`)
 }
 
-// removeWatch drops a closed watch.
-func (s *Store) removeWatch(id string) {
+// removeWatch drops a closed watch and returns its units.
+func (s *Store) removeWatch(w *Watch) {
 	s.wmu.Lock()
-	delete(s.watches, id)
+	if s.watches[w.id] == w {
+		delete(s.watches, w.id)
+	}
 	s.wmu.Unlock()
+	w.mu.Lock()
+	w.releaseLocked()
+	w.mu.Unlock()
 }
 
 // SetMeta hands a changed manifest to every watch of layer li.

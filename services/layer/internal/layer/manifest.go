@@ -69,24 +69,29 @@ type freshness struct {
 // Manifest is the `{layer}.meta` value (layer-snapshot.md §2). `filters` is additive: the
 // exact ENT filter set for layers with more than one entity type.
 type Manifest struct {
-	V             int        `json:"v"`
-	Layer         string     `json:"layer"`
-	Title         string     `json:"title"`
-	Tier          string     `json:"tier"`
-	EntityTypes   []string   `json:"entity_types"`
-	Filter        string     `json:"filter"`
-	Filters       []string   `json:"filters"`
-	Site          string     `json:"site"`
-	Count         int        `json:"count"`
-	AsOf          int64      `json:"as_of"`
-	EntSeq        uint64     `json:"ent_seq"`
-	Cap           int        `json:"cap"`
-	Cells         *CellsCfg  `json:"cells"`
-	Object        *ObjectRef `json:"object"`
-	Freshness     freshness  `json:"freshness"`
-	DefaultStaleS int        `json:"default_stale_s"`
-	Marking       string     `json:"marking"`
-	Style         string     `json:"style"`
+	V           int      `json:"v"`
+	Layer       string   `json:"layer"`
+	Title       string   `json:"title"`
+	Tier        string   `json:"tier"`
+	EntityTypes []string `json:"entity_types"`
+	Filter      string   `json:"filter"`
+	Filters     []string `json:"filters"`
+	// Kinds, SourceSubjects and ExcludeKinds (additive) narrow `filters`: an ENT record on a
+	// filter subject is in the layer only if it also passes them (Def.Qualifies).
+	Kinds          []string   `json:"kinds,omitempty"`
+	SourceSubjects []string   `json:"source_subjects,omitempty"`
+	ExcludeKinds   []string   `json:"exclude_kinds,omitempty"`
+	Site           string     `json:"site"`
+	Count          int        `json:"count"`
+	AsOf           int64      `json:"as_of"`
+	EntSeq         uint64     `json:"ent_seq"`
+	Cap            int        `json:"cap"`
+	Cells          *CellsCfg  `json:"cells"`
+	Object         *ObjectRef `json:"object"`
+	Freshness      freshness  `json:"freshness"`
+	DefaultStaleS  int        `json:"default_stale_s"`
+	Marking        string     `json:"marking"`
+	Style          string     `json:"style"`
 }
 
 // computeFreshness applies layer-snapshot.md §2 "Field rules": fresh when every feed is within
@@ -208,7 +213,8 @@ func (m *Manifests) build(d *Def, li int, site string, count int, seq uint64, en
 	man := &Manifest{V: 1, Layer: d.ID, Title: d.Title, Tier: d.Tier, EntityTypes: append(append([]string{}, d.EntityTypes...), d.CotOnlyTypes...),
 		Filter: d.Filter(), Filters: d.Filters(), Site: site, Count: count, AsOf: now.UnixMilli(), EntSeq: seq,
 		Cap: d.Cap, Object: m.objs[li], Freshness: computeFreshness(d, m.feeds, entDown, now),
-		DefaultStaleS: d.DefaultStaleS, Marking: d.Marking, Style: d.Style}
+		DefaultStaleS: d.DefaultStaleS, Marking: d.Marking, Style: d.Style,
+		Kinds: d.Kinds, SourceSubjects: d.SourceSubjects, ExcludeKinds: d.ExcludeKinds}
 	if man.EntityTypes == nil {
 		man.EntityTypes = []string{}
 	}

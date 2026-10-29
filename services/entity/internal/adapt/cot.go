@@ -70,6 +70,10 @@ var (
 // (tak-projector.yaml `uid = f"OM.{entity_type}.{entity_id}"`); entity.md §5 "Echo filter".
 const ProjectorUIDPrefix = "OM."
 
+// IntelUIDPrefix marks the projector's interim intel CoT (`INTEL.{id}`, cot-projection.md §8.2
+// and the `intel.>` row of its source table); it is dropped as an echo too.
+const IntelUIDPrefix = "INTEL."
+
 // unknownCE is the CoT "unknown" error value; real feeds send 9999999 (feed-scripts.yaml).
 const unknownCE = 999999
 
@@ -148,8 +152,9 @@ func CoT(data []byte, subject string) (*model.Observation, string, error) {
 	if ev.UID == "" {
 		return nil, "", fmt.Errorf("cot event without uid")
 	}
-	// Echo filter: the projector's own output (uid "OM." or its _flow-tags_ marker).
-	if strings.HasPrefix(ev.UID, ProjectorUIDPrefix) {
+	// Echo filter (cot-projection.md §8.2): the projector's own output (uid "OM." or
+	// "INTEL.", or its _flow-tags_ marker).
+	if strings.HasPrefix(ev.UID, ProjectorUIDPrefix) || strings.HasPrefix(ev.UID, IntelUIDPrefix) {
 		return nil, SkipEcho, nil
 	}
 	if ev.Detail.FlowTags != nil {

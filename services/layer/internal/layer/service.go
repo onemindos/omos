@@ -34,6 +34,7 @@ type Config struct {
 	ReplayWindow   time.Duration
 	ReplayMax      int
 	MaxWatches     int
+	WatchMemBudget int64         // bytes all watches may hold together (held sets, queued ops, cells)
 	Heartbeat      time.Duration // empty batch when quiet (10s)
 	CellEvery      time.Duration // cell-mode watch recompute (1s)
 	ManifestTick   time.Duration // freshness evaluation (1s)
@@ -43,6 +44,8 @@ type Config struct {
 	SiteEvery      time.Duration // fleet-state refresh (10s)
 	SiteTimeout    time.Duration // a site with no contact for this long is not written (30s)
 	SiteSubject    string        // tel.fleet.node.*.status
+	SiteAllow      []string      // sites accepted from SiteSubject (empty: any valid token, up to MaxSites)
+	MaxSites       int           // distinct sites tracked from SiteSubject (64)
 	SiteStreams    []string      // hub streams whose sources give per-site lag ("" = all)
 	SweepEvery     time.Duration // expiry sweep (1s)
 	MaxCellRecord  int
@@ -81,7 +84,13 @@ func (c *Config) Defaults() {
 		c.ReplayMax = 200000
 	}
 	if c.MaxWatches == 0 {
-		c.MaxWatches = 1000
+		c.MaxWatches = DefaultMaxWatches
+	}
+	if c.WatchMemBudget == 0 {
+		c.WatchMemBudget = DefaultWatchMemBudget
+	}
+	if c.MaxSites == 0 {
+		c.MaxSites = 64
 	}
 	if c.SiteSubject == "" {
 		c.SiteSubject = "tel.fleet.node.*.status"
@@ -105,6 +114,15 @@ func (c *Config) Defaults() {
 	def(&c.SweepEvery, time.Second)
 }
 
+// Watch limits sized for the 512Mi pod limit (platform/omos/layer/deployment.yaml): the
+// entity store of a 50,000-vessel layer plus ENT read buffers stay under about 200 MiB, and
+// all watches together hold at most DefaultWatchMemBudget; each entities-mode watch holds at
+// most the layer cap. The count limit bounds goroutines and per-watch timers.
+const (
+	DefaultMaxWatches     = 200
+	DefaultWatchMemBudget = 128 << 20
+)
+
 // Service is one layer service process.
 type Service struct {
 	nc    *nats.Conn
@@ -122,6 +140,9 @@ type Service struct {
 
 	siteMu   sync.Mutex
 	siteSeen map[string]time.Time
+
+	watchMu  sync.Mutex // guards stopping and wg.Add for watch goroutines
+	stopping bool
 }
 
 // New builds the service.
@@ -136,6 +157,7 @@ func New(nc *nats.Conn, cfg Config, log *slog.Logger) (*Service, error) {
 	}
 	s := &Service{nc: nc, js: js, cfg: cfg, log: log, now: time.Now, siteSeen: map[string]time.Time{}}
 	s.store = NewStore(cfg.Layers, cfg.Site, cfg.ReplayWindow, cfg.ReplayMax, s.now)
+	s.store.SetWatchBudget(cfg.WatchMemBudget)
 	s.mans = NewManifests(cfg.Layers)
 	return s, nil
 }
@@ -162,7 +184,7 @@ func (s *Service) Metrics() map[string]uint64 {
 	}
 	return map[string]uint64{"ready": b(ready && s.ready.Load()), "ent_down": b(down), "ent_seq": seq,
 		"entities": uint64(total), "watches": uint64(s.store.WatchCount()), "snapshots_total": s.snapshots.Load(),
-		"batches_total": s.batches.Load(), "kv_errors_total": s.kvErrors.Load(), "ent_unreadable_total": s.store.Bad()}
+		"batches_total": s.batches.Load(), "watch_bytes": uint64(max(0, s.store.WatchBytes())), "kv_errors_total": s.kvErrors.Load(), "ent_unreadable_total": s.store.Bad()}
 }
 
 // Run holds the lease, follows ENT, writes KV and serves svc.layer.* until ctx ends or the
@@ -196,6 +218,13 @@ func (s *Service) Run(ctx context.Context) error {
 
 	var wg sync.WaitGroup
 	defer wg.Wait()
+	// Runs before wg.Wait (defers are LIFO): a watch request still in a NATS callback after
+	// this point is refused instead of calling wg.Add during Wait.
+	defer func() {
+		s.watchMu.Lock()
+		s.stopping = true
+		s.watchMu.Unlock()
+	}()
 	subs, err := s.subscribe(ctx, &wg)
 	for _, sub := range subs {
 		defer func(sub *nats.Subscription) { _ = sub.Unsubscribe() }(sub)
@@ -290,9 +319,7 @@ func (s *Service) subscribe(ctx context.Context, wg *sync.WaitGroup) ([]*nats.Su
 		if err := add(s.cfg.SiteSubject, func(m *nats.Msg) {
 			p := strings.Split(m.Subject, ".")
 			if len(p) == 5 && siteRe.MatchString(p[3]) {
-				s.siteMu.Lock()
-				s.siteSeen[p[3]] = s.now()
-				s.siteMu.Unlock()
+				s.seeSite(p[3])
 			}
 		}, false); err != nil {
 			return subs, err
@@ -302,6 +329,43 @@ func (s *Service) subscribe(ctx context.Context, wg *sync.WaitGroup) ([]*nats.Su
 }
 
 var siteRe = regexp.MustCompile(`^[A-Za-z0-9_-]{1,64}$`)
+
+// seeSite records contact from a site. Only allowlisted sites are accepted when SiteAllow is
+// set; otherwise at most MaxSites distinct sites are tracked (stale ones are pruned first), so
+// a publisher cannot grow the map or fill fleet-state with arbitrary site names.
+func (s *Service) seeSite(site string) {
+	if len(s.cfg.SiteAllow) > 0 {
+		ok := false
+		for _, a := range s.cfg.SiteAllow {
+			if a == site {
+				ok = true
+				break
+			}
+		}
+		if !ok {
+			return
+		}
+	}
+	now := s.now()
+	s.siteMu.Lock()
+	defer s.siteMu.Unlock()
+	if _, known := s.siteSeen[site]; !known && len(s.siteSeen) >= s.cfg.MaxSites {
+		s.pruneSitesLocked(now)
+		if len(s.siteSeen) >= s.cfg.MaxSites {
+			return
+		}
+	}
+	s.siteSeen[site] = now
+}
+
+// pruneSitesLocked drops sites not heard from within SiteTimeout. siteMu is held.
+func (s *Service) pruneSitesLocked(now time.Time) {
+	for site, t := range s.siteSeen {
+		if now.Sub(t) > s.cfg.SiteTimeout {
+			delete(s.siteSeen, site)
+		}
+	}
+}
 
 // loadFeeds reads the latest status of each configured feed from TEL (by last message for
 // subject; Direct Get when the stream allows it). Missing streams or messages are ignored:
@@ -433,23 +497,33 @@ func (s *Service) handleSnapshot(m *nats.Msg) {
 }
 
 func (s *Service) handleWatch(ctx context.Context, wg *sync.WaitGroup, m *nats.Msg) {
+	s.watchMu.Lock()
+	if s.stopping || ctx.Err() != nil {
+		s.watchMu.Unlock()
+		if m.Reply != "" {
+			_ = s.nc.Publish(m.Reply, errReply(ErrLayerDown, "layer service stopping"))
+		}
+		return
+	}
+	wg.Add(1) // under watchMu, so Run's wg.Wait cannot have started
+	s.watchMu.Unlock()
 	caller := s.cfg.Directory.Resolve(m)
 	w, reply := s.store.Watch(m.Data, m.Reply, caller, WatchOpts{MaxWatches: s.cfg.MaxWatches, ZoomsFor: s.mans.Zooms})
 	if reply != nil && m.Reply != "" {
 		_ = s.nc.Publish(m.Reply, reply)
 	}
 	if w == nil {
+		wg.Done()
 		return
 	}
-	wg.Add(1)
 	go func() { defer wg.Done(); s.runWatch(ctx, w) }()
 }
 
 // runWatch sends batches for one watch at most max_rate_hz times per second until its lease
 // ends, it is unwatched, or the service stops.
 func (s *Service) runWatch(ctx context.Context, w *Watch) {
-	defer s.store.removeWatch(w.id)
-	tick := min(time.Second, s.cfg.Heartbeat)
+	defer s.store.removeWatch(w)
+	tick := min(time.Second, s.cfg.Heartbeat, s.cfg.CellEvery)
 	var next time.Time
 	for {
 		select {
@@ -468,10 +542,16 @@ func (s *Service) runWatch(ctx context.Context, w *Watch) {
 		s.store.mu.RLock()
 		w.mu.Lock()
 		b, alive := w.buildBatchLocked(s.store, s.now(), s.cfg.Heartbeat, s.cfg.CellEvery)
-		more := len(w.order) > 0 || len(w.cellOps) > 0 || w.cellsDirty
+		// A dirty cells view whose next diff is not due yet waits for the tick instead of
+		// re-signalling itself (which would spin until CellEvery passes).
+		more := len(w.order) > 0 || len(w.cellOps) > 0 || (w.cellsDirty && b != nil)
 		interval := time.Second / time.Duration(w.rateHz)
 		w.mu.Unlock()
 		s.store.mu.RUnlock()
+		if b != nil && !alive { // the service ended the watch: send the error, then stop
+			_ = s.nc.Publish(b.reply, b.data)
+			return
+		}
 		if !alive {
 			return
 		}
@@ -615,10 +695,9 @@ func (s *Service) writeSites(ctx context.Context, kv jetstream.KeyValue) {
 	now := s.now()
 	sites := map[string]*SiteStatus{s.cfg.Site: {V: 1, Site: s.cfg.Site, Connected: true, LastContact: now.UnixMilli(), SourceLagS: map[string]float64{}}}
 	s.siteMu.Lock()
+	s.pruneSitesLocked(now)
 	for site, t := range s.siteSeen {
-		if now.Sub(t) <= s.cfg.SiteTimeout {
-			sites[site] = &SiteStatus{V: 1, Site: site, Connected: true, LastContact: t.UnixMilli(), SourceLagS: map[string]float64{}}
-		}
+		sites[site] = &SiteStatus{V: 1, Site: site, Connected: true, LastContact: t.UnixMilli(), SourceLagS: map[string]float64{}}
 	}
 	s.siteMu.Unlock()
 	for _, si := range s.sourceInfos(ctx) {

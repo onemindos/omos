@@ -38,6 +38,13 @@ func envDur(k string, def time.Duration) time.Duration {
 	return def
 }
 
+func envInt(k string, def int) int {
+	if n, err := strconv.Atoi(os.Getenv(k)); err == nil {
+		return n
+	}
+	return def
+}
+
 // parseInputs reads "COT=tak.cot.>;TEL=tel.fleet.>,tel.drone.>".
 func parseInputs(s string) []bus.Input {
 	if s == "" {
@@ -64,6 +71,16 @@ func main() {
 		if err := json.Unmarshal([]byte(s), &ecfg.Links); err != nil {
 			log.Error("ENTITY_LINKS is not a JSON object", "err", err)
 			os.Exit(2)
+		}
+	}
+	// OWN_RELEASABLE_TO: comma-separated release groups for own sim-* fleet assets (entity.md
+	// §3); default "homestead"; set to an empty value to release them to no group.
+	if s, ok := os.LookupEnv("OWN_RELEASABLE_TO"); ok {
+		ecfg.OwnReleasableTo = nil
+		for _, g := range strings.Split(s, ",") {
+			if g = strings.TrimSpace(g); g != "" {
+				ecfg.OwnReleasableTo = append(ecfg.OwnReleasableTo, g)
+			}
 		}
 	}
 	if s := os.Getenv("SOURCE_PRIORS"); s != "" { // JSON {"feed-aircraft": 0.8}
@@ -98,6 +115,8 @@ func main() {
 		LeaseTTL:      envDur("LEASE_TTL", 15*time.Second),
 		Holder:        env("POD_NAME", host) + "-" + strconv.Itoa(os.Getpid()),
 		ServeRPC:      env("SERVE_RPC", "true") == "true",
+		OrbitEvery:    envDur("ORBIT_EVERY", 30*time.Second),
+		MaxOrbits:     envInt("MAX_ORBITS", 500),
 	}
 	if cfg.LeaseBucket == "none" { // local runs only
 		cfg.LeaseBucket = ""
