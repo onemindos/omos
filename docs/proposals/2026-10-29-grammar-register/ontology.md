@@ -136,6 +136,14 @@ and fails closed on a publish error (POL-10).
 
 **Depends on it.** #554 (POL-10); A22 stream caps PR.
 
+**Correction (integration pass, from #555 A22-P2).** The fail-closed argument above is wrong.
+When a `discard: new` stream is full, the server refuses to store the publish but still
+delivers it to core subscribers, and the #554 bridge and task identities subscribe to commands
+on core. A full stream would therefore stop recording commands while the asset still ran them.
+Rule this entry together with A22-P2: 365 d, 512 MiB, `discard: old` with the 80 % alert, and
+`discard: new` only after A22-P2 option (a), which makes every command consumer read through a
+JetStream consumer on `CMD`.
+
 ```subjects
 filter    cmd.>
 ```
