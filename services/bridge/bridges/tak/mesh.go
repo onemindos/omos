@@ -16,8 +16,11 @@ import (
 	"log"
 	"net"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
+
+	"golang.org/x/net/ipv4"
 )
 
 const (
@@ -37,6 +40,7 @@ const (
 	DeliveryMesh   Delivery = "mesh"   // multicast group
 	DeliveryDirect Delivery = "direct" // TCP send-once to the gateway
 	DeliveryUDP    Delivery = "udp"    // unicast UDP input
+	DeliveryChat   Delivery = "chat"   // GeoChat multicast group
 )
 
 // Received is one decoded message heard by the gateway.
@@ -52,20 +56,34 @@ type contact struct {
 	lastControl time.Time
 	lastVersion uint32 // version of the most recent message
 	lastSeen    time.Time
+	endpoint    string // "host:port:proto" from the contact's SA, if any
 }
 
 // MeshConfig configures a Mesh.
 type MeshConfig struct {
 	Group      *net.UDPAddr   // SA multicast group, e.g. 239.2.3.1:6969
-	Interface  *net.Interface // nil = system default
+	ChatGroup  *net.UDPAddr   // GeoChat "All Chat Rooms" group, e.g. 224.10.10.1:17012; nil disables
+	Interface  *net.Interface // join and transmit on this interface; nil = system default
+	TTL        int            // multicast TTL; 0 means 1, as Commo uses
 	ContactUID string         // our identity in TakControl
 	ForceXML   bool           // never send protobuf (legacy-only meshes)
+	Crypto     *MeshCrypto    // mesh encryption; nil = plaintext
+}
+
+// groupConn is one joined multicast group.
+type groupConn struct {
+	conn     *net.UDPConn
+	group    *net.UDPAddr
+	delivery Delivery
 }
 
 // Mesh is a TAK mesh participant.
 type Mesh struct {
 	cfg  MeshConfig
-	recv *net.UDPConn
+	recv []groupConn
+	// send is an unconnected socket whose multicast interface is set with
+	// IP_MULTICAST_IF, so MESH_INTERFACE applies to transmit as well as
+	// receive. Without it, the kernel picks the default route's interface.
 	send *net.UDPConn
 
 	mu       sync.Mutex
@@ -74,26 +92,102 @@ type Mesh struct {
 	version  uint32 // last computed broadcast version
 }
 
-// NewMesh joins the multicast group.
+// NewMesh joins the SA group (and the chat group, if set) and opens the
+// transmit socket on the configured interface.
 func NewMesh(cfg MeshConfig) (*Mesh, error) {
-	recv, err := net.ListenMulticastUDP("udp4", cfg.Interface, cfg.Group)
-	if err != nil {
-		return nil, fmt.Errorf("join %s: %w", cfg.Group, err)
+	m := &Mesh{cfg: cfg, contacts: map[string]*contact{}, sent: map[[32]byte]time.Time{}}
+	groups := []groupConn{{group: cfg.Group, delivery: DeliveryMesh}}
+	if cfg.ChatGroup != nil {
+		groups = append(groups, groupConn{group: cfg.ChatGroup, delivery: DeliveryChat})
 	}
-	_ = recv.SetReadBuffer(1 << 20)
-	send, err := net.DialUDP("udp4", nil, cfg.Group)
-	if err != nil {
-		recv.Close()
-		return nil, fmt.Errorf("dial %s: %w", cfg.Group, err)
+	for _, g := range groups {
+		conn, err := net.ListenMulticastUDP("udp4", cfg.Interface, g.group)
+		if err != nil {
+			m.Close()
+			return nil, fmt.Errorf("join %s: %w", g.group, err)
+		}
+		_ = conn.SetReadBuffer(1 << 20)
+		g.conn = conn
+		m.recv = append(m.recv, g)
 	}
-	m := &Mesh{cfg: cfg, recv: recv, send: send, contacts: map[string]*contact{}, sent: map[[32]byte]time.Time{}}
+	send, err := openTransmit(cfg.Interface, cfg.TTL)
+	if err != nil {
+		m.Close()
+		return nil, err
+	}
+	m.send = send
 	m.version = m.computeVersion(time.Now())
 	return m, nil
 }
 
+// openTransmit opens the multicast transmit socket. The interface is applied
+// with IP_MULTICAST_IF; loopback stays on so peers on the same host (another
+// gateway, a test peer) hear us, and our own copy is dropped by isEcho.
+func openTransmit(iface *net.Interface, ttl int) (*net.UDPConn, error) {
+	conn, err := net.ListenUDP("udp4", &net.UDPAddr{IP: net.IPv4zero})
+	if err != nil {
+		return nil, fmt.Errorf("open transmit socket: %w", err)
+	}
+	pc := ipv4.NewPacketConn(conn)
+	if iface != nil {
+		if err := pc.SetMulticastInterface(iface); err != nil {
+			conn.Close()
+			return nil, fmt.Errorf("transmit on %s: %w", iface.Name, err)
+		}
+	}
+	if ttl <= 0 {
+		ttl = 1
+	}
+	if err := pc.SetMulticastTTL(ttl); err != nil {
+		conn.Close()
+		return nil, fmt.Errorf("multicast TTL %d: %w", ttl, err)
+	}
+	if err := pc.SetMulticastLoopback(true); err != nil {
+		conn.Close()
+		return nil, fmt.Errorf("multicast loopback: %w", err)
+	}
+	return conn, nil
+}
+
+// TransmitInterface is the interface the transmit socket sends multicast on,
+// as the kernel reports it (nil when the system default is used).
+func (m *Mesh) TransmitInterface() (*net.Interface, error) {
+	return ipv4.NewPacketConn(m.send).MulticastInterface()
+}
+
 func (m *Mesh) Close() {
-	m.recv.Close()
-	m.send.Close()
+	for _, g := range m.recv {
+		g.conn.Close()
+	}
+	if m.send != nil {
+		m.send.Close()
+	}
+}
+
+// open decrypts an inbound message when mesh encryption is on.
+func (m *Mesh) open(b []byte) ([]byte, error) {
+	if m.cfg.Crypto == nil {
+		return b, nil
+	}
+	return m.cfg.Crypto.Decrypt(b)
+}
+
+// seal encrypts an outbound message when mesh encryption is on.
+func (m *Mesh) seal(b []byte) ([]byte, error) {
+	if m.cfg.Crypto == nil {
+		return b, nil
+	}
+	return m.cfg.Crypto.Encrypt(b)
+}
+
+// DecodeInbound decrypts (if configured) and decodes one mesh, directed or
+// unicast message. With encryption on, plaintext is rejected, as in Commo.
+func (m *Mesh) DecodeInbound(b []byte) (*Event, *TakControl, uint64, error) {
+	plain, err := m.open(b)
+	if err != nil {
+		return nil, nil, 0, err
+	}
+	return Decode(plain)
 }
 
 // Decode turns one datagram or directed payload into an Event. ctl is set
@@ -131,18 +225,44 @@ func (m *Mesh) observe(ev *Event, ctl *TakControl, version uint64, now time.Time
 		c.lastSeen = now
 		return c
 	}
-	if ctl != nil && ctl.ContactUID != "" && ctl.ContactUID != m.cfg.ContactUID {
-		c := update(ctl.ContactUID)
-		c.maxVersion = ctl.MaxProtoVersion // 3b
+	// takcontrol.proto: contactUid may be omitted when the TakControl is paired
+	// with the sender's own CotEvent.
+	ctlUID := ""
+	if ctl != nil {
+		ctlUID = ctl.ContactUID
+		if ctlUID == "" && ev != nil {
+			ctlUID = ev.UID
+		}
+	}
+	if ctlUID != "" && ctlUID != m.cfg.ContactUID {
+		c := update(ctlUID)
+		c.maxVersion = controlVersion(ctl.MaxProtoVersion) // 3b
 		c.lastControl = now
 	}
 	// SA from a mesh participant carries a contact endpoint. Markers and other
 	// relayed events do not identify a client, so they are not tracked.
 	if ev != nil && ev.UID != m.cfg.ContactUID && ev.Detail.Contact != nil && ev.Detail.Contact.Endpoint != "" {
-		if ctl == nil || ctl.ContactUID != ev.UID {
-			update(ev.UID)
+		var c *contact
+		if ctlUID != ev.UID {
+			c = update(ev.UID)
+		} else {
+			c = m.contacts[ev.UID]
+		}
+		if c != nil {
+			c.endpoint = ev.Detail.Contact.Endpoint
 		}
 	}
+}
+
+// controlVersion reads a TakControl version field. takcontrol.proto: "If not
+// filled in (reads as 0), version 1 is assumed"; README rule 3b: TakControl
+// never carries version 0. Python takproto, for example, attaches a TakControl
+// with only contactUid set to every GeoChat message.
+func controlVersion(v uint32) uint32 {
+	if v == 0 {
+		return 1
+	}
+	return v
 }
 
 // computeVersion applies rules 3c and 4. Caller holds mu or owns m.
@@ -181,6 +301,17 @@ func (m *Mesh) Contacts() int {
 	return len(m.contacts)
 }
 
+// Endpoint returns the contact endpoint ("host:port:proto") last advertised
+// by uid, or "" if unknown.
+func (m *Mesh) Endpoint(uid string) string {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	if c := m.contacts[uid]; c != nil {
+		return c.endpoint
+	}
+	return ""
+}
+
 // recheck recomputes the broadcast version and, per rule 5, announces a change.
 func (m *Mesh) recheck(now time.Time) {
 	m.mu.Lock()
@@ -198,12 +329,16 @@ func (m *Mesh) recheck(now time.Time) {
 	}
 }
 
-func (m *Mesh) write(b []byte) error {
+func (m *Mesh) write(b []byte, to *net.UDPAddr) error {
+	b, err := m.seal(b)
+	if err != nil {
+		return err
+	}
 	sum := sha256.Sum256(b)
 	m.mu.Lock()
 	m.sent[sum] = time.Now()
 	m.mu.Unlock()
-	_, err := m.send.Write(b)
+	_, err = m.send.WriteToUDP(b, to)
 	return err
 }
 
@@ -229,18 +364,69 @@ func (m *Mesh) SendControl() error {
 	}
 	return m.write(EncodeMesh(&TakMessage{Control: &TakControl{
 		MinProtoVersion: 1, MaxProtoVersion: ourMaxVersion, ContactUID: m.cfg.ContactUID,
-	}}))
+	}}), m.cfg.Group)
 }
 
-// Send broadcasts an event in the negotiated protocol version.
-func (m *Mesh) Send(ev *Event) error {
+// IsChat reports whether ev is a GeoChat message (b-t-f, b-t-f-d, ...).
+func IsChat(ev *Event) bool { return ev.Type == "b-t-f" || strings.HasPrefix(ev.Type, "b-t-f-") }
+
+// encode renders ev in the negotiated protocol version.
+func (m *Mesh) encode(ev *Event) []byte {
 	if m.Version() >= 1 {
-		return m.write(EncodeMesh(&TakMessage{Event: ev}))
+		return EncodeMesh(&TakMessage{Event: ev})
 	}
-	return m.write(ev.MarshalCotXML(true))
+	return ev.MarshalCotXML(true)
 }
 
-// Run reads the multicast group until the socket closes, calling fn for every
+// Send broadcasts an event in the negotiated protocol version. GeoChat goes
+// to the chat group when one is configured, everything else to the SA group.
+func (m *Mesh) Send(ev *Event) error {
+	to := m.cfg.Group
+	if m.cfg.ChatGroup != nil && IsChat(ev) {
+		to = m.cfg.ChatGroup
+	}
+	return m.write(m.encode(ev), to)
+}
+
+// SendDirect delivers ev to one contact endpoint ("host:port" or
+// "host:port:tcp") as a directed message: connect, send, close.
+func (m *Mesh) SendDirect(ev *Event, endpoint string) error {
+	addr, err := directAddr(endpoint)
+	if err != nil {
+		return err
+	}
+	b, err := m.seal(m.encode(ev))
+	if err != nil {
+		return err
+	}
+	c, err := net.DialTimeout("tcp4", addr, directTimeout)
+	if err != nil {
+		return err
+	}
+	defer c.Close()
+	_ = c.SetWriteDeadline(time.Now().Add(directTimeout))
+	_, err = c.Write(b)
+	return err
+}
+
+// directAddr turns a TAK endpoint into a TCP dial address. Only TCP
+// endpoints can take directed messages; "*:-1:stcp" means "via a server".
+func directAddr(endpoint string) (string, error) {
+	parts := strings.Split(endpoint, ":")
+	switch {
+	case len(parts) == 2:
+	case len(parts) == 3 && parts[2] == "tcp":
+	default:
+		return "", fmt.Errorf("endpoint %q is not host:port:tcp", endpoint)
+	}
+	port, err := strconv.Atoi(parts[1])
+	if err != nil || port < 1 || port > 65535 || parts[0] == "" || parts[0] == "*" {
+		return "", fmt.Errorf("endpoint %q is not host:port:tcp", endpoint)
+	}
+	return net.JoinHostPort(parts[0], parts[1]), nil
+}
+
+// Run reads the multicast groups until the sockets close, calling fn for every
 // event heard. It also sends TakControl on schedule.
 func (m *Mesh) Run(fn func(Received), onErr func(error)) {
 	go func() {
@@ -260,14 +446,26 @@ func (m *Mesh) Run(fn func(Received), onErr func(error)) {
 		}
 	}()
 
+	var wg sync.WaitGroup
+	for _, g := range m.recv {
+		wg.Add(1)
+		go func(g groupConn) {
+			defer wg.Done()
+			m.readGroup(g, fn, onErr)
+		}(g)
+	}
+	wg.Wait()
+}
+
+func (m *Mesh) readGroup(g groupConn, fn func(Received), onErr func(error)) {
 	buf := make([]byte, 65536)
 	for {
-		n, from, err := m.recv.ReadFromUDP(buf)
+		n, from, err := g.conn.ReadFromUDP(buf)
 		if err != nil {
 			if errors.Is(err, net.ErrClosed) {
 				return
 			}
-			onErr(fmt.Errorf("mesh read: %w", err))
+			onErr(fmt.Errorf("%s read: %w", g.delivery, err))
 			continue
 		}
 		now := time.Now()
@@ -275,22 +473,26 @@ func (m *Mesh) Run(fn func(Received), onErr func(error)) {
 		if m.isEcho(data, now) {
 			continue
 		}
-		ev, ctl, version, err := Decode(data)
+		ev, ctl, version, err := m.DecodeInbound(data)
 		if err != nil {
-			onErr(fmt.Errorf("mesh decode from %s: %w", from, err))
+			onErr(fmt.Errorf("%s decode from %s: %w", g.delivery, from, err))
 			continue
 		}
 		m.observe(ev, ctl, version, now)
 		m.recheck(now)
 		if ev != nil {
-			fn(Received{Event: ev, Version: version, Delivery: DeliveryMesh, From: from.String()})
+			fn(Received{Event: ev, Version: version, Delivery: g.delivery, From: from.String()})
 		}
 	}
 }
 
+// decodeFunc decodes one inbound message (Decode, or Mesh.DecodeInbound when
+// mesh encryption may be on).
+type decodeFunc func([]byte) (*Event, *TakControl, uint64, error)
+
 // ServeDirect accepts directed TCP messages (connect, send one message, close),
 // the way TAK clients reach a contact's "host:port:tcp" endpoint.
-func ServeDirect(ln net.Listener, observe func(*Event, *TakControl, uint64), fn func(Received), onErr func(error)) {
+func ServeDirect(ln net.Listener, decode decodeFunc, observe func(*Event, *TakControl, uint64), fn func(Received), onErr func(error)) {
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
@@ -312,7 +514,7 @@ func ServeDirect(ln net.Listener, observe func(*Event, *TakControl, uint64), fn 
 				onErr(fmt.Errorf("direct message from %s over %d bytes", c.RemoteAddr(), maxDirectBytes))
 				return
 			}
-			ev, ctl, version, err := Decode(data)
+			ev, ctl, version, err := decode(data)
 			if err != nil {
 				onErr(fmt.Errorf("direct decode from %s: %w", c.RemoteAddr(), err))
 				return
@@ -328,7 +530,7 @@ func ServeDirect(ln net.Listener, observe func(*Event, *TakControl, uint64), fn 
 }
 
 // ServeUDP reads unicast UDP CoT, such as an ATAK "output" pointed at the gateway.
-func ServeUDP(conn *net.UDPConn, fn func(Received), onErr func(error)) {
+func ServeUDP(conn *net.UDPConn, decode decodeFunc, fn func(Received), onErr func(error)) {
 	buf := make([]byte, 65536)
 	for {
 		n, from, err := conn.ReadFromUDP(buf)
@@ -339,7 +541,7 @@ func ServeUDP(conn *net.UDPConn, fn func(Received), onErr func(error)) {
 			onErr(fmt.Errorf("udp read: %w", err))
 			continue
 		}
-		ev, _, version, err := Decode(buf[:n])
+		ev, _, version, err := decode(buf[:n])
 		if err != nil {
 			onErr(fmt.Errorf("udp decode from %s: %w", from, err))
 			continue

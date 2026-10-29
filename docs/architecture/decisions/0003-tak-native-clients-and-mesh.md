@@ -64,6 +64,25 @@ they were outside the locked grammar and nothing in the platform consumed them.
 All subjects used are under the `tak.cot.>` and `tel.` patterns already in the
 grammar, and land in the existing `COT` and `TEL` streams.
 
+### Second slice (v0.3.0, feature A7)
+
+- `MESH_INTERFACE` applies to transmit as well as receive (`IP_MULTICAST_IF`);
+  before, SA left by the default route, which on a Mac is often not the ATAK LAN.
+- GeoChat: joins `224.10.10.1:17012`; chat travels `tak.cot.mesh.rx` and
+  `tak.cot.mesh.tx` like any CoT (`Tak-Delivery: chat` on receive).
+- Commo-compatible mesh encryption (AES-256-CBC + HMAC-SHA256 over IV and
+  ciphertext, keys from the environment), checked against OpenSSL.
+- Peer-hosted data packages: directed `b-f-t-r` requests are fetched,
+  verified and acked; an outbox is served at `/getfile`.
+- Directed transmit to one contact with the `Tak-Dest-Uid` header.
+- With `MESH_TO_TAK_SERVER=true`, OneMind's own CoT (`OM.*`, `INTEL.*`) and
+  gateway presence are not copied to `tak.cot.inject` (contract proposal CP-2).
+- A TakControl with unset versions counts as version 1, as `takcontrol.proto`
+  says, so GeoChat from a `takproto` sender no longer drops the mesh to XML.
+
+Open questions for the owner are in
+`docs/roadmap/2026-10-29-tak-mesh-gateway-owner-proposals.md`.
+
 Not deployed. The gateway runs on an edge host (Mac, home server, Jetson) next
 to a NATS leaf, not in the cloud cluster: multicast does not cross the DOKS
 network.

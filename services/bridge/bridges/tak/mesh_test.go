@@ -174,6 +174,18 @@ func TestNegotiation(t *testing.T) {
 		t.Fatal("marker was tracked as a contact")
 	}
 
+	// A TakControl with unset versions means version 1 (takcontrol.proto); a
+	// GeoChat message carrying one must not pull the mesh down to XML.
+	m.observe(&Event{UID: "GeoChat.ANDROID-9.All Chat Rooms.1", Type: "b-t-f"}, &TakControl{ContactUID: "ANDROID-9"}, 1, now)
+	if v := m.computeVersion(now); v != 1 || m.contacts["ANDROID-9"] == nil || m.contacts["ANDROID-9"].maxVersion != 1 {
+		t.Fatalf("zero-version TakControl: version %d, contact %+v", v, m.contacts["ANDROID-9"])
+	}
+	// contactUid omitted: the paired event's uid is the contact.
+	m.observe(sa("ANDROID-10"), &TakControl{MinProtoVersion: 1, MaxProtoVersion: 1}, 1, now)
+	if c := m.contacts["ANDROID-10"]; c == nil || c.lastControl.IsZero() || c.endpoint == "" {
+		t.Fatalf("omitted contactUid: %+v", c)
+	}
+
 	if v := newTestMesh(true).computeVersion(now); v != 0 {
 		t.Fatalf("MESH_PROTOCOL=xml: version %d, want 0", v)
 	}
@@ -235,7 +247,7 @@ func TestDirectTCP(t *testing.T) {
 	}
 	defer ln.Close()
 	got := make(chan Received, 1)
-	go ServeDirect(ln, nil, func(r Received) { got <- r }, func(err error) { t.Errorf("direct: %v", err) })
+	go ServeDirect(ln, Decode, nil, func(r Received) { got <- r }, func(err error) { t.Errorf("direct: %v", err) })
 
 	c, err := net.Dial("tcp4", ln.Addr().String())
 	if err != nil {
