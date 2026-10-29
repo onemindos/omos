@@ -371,8 +371,12 @@ func (f *Follower) session(ctx context.Context, first bool) (string, error) {
 			}
 			continue
 		}
+		if errors.Is(err, nats.ErrNoResponders) {
+			// A renew sent with the watch inbox as reply found no layer service.
+			return "dead watch: no responders to the renew", nil
+		}
 		if err != nil {
-			return "inbox error", err
+			return "inbox error: " + err.Error(), err
 		}
 		var b Batch
 		if err := json.Unmarshal(m.Data, &b); err != nil {
