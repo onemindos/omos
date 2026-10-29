@@ -22,7 +22,10 @@ type area struct {
 	circle                         *[3]float64  // lon, lat, radius metres
 }
 
-var errBadAOI = errors.New("aoi must be {bbox:[minLon,minLat,maxLon,maxLat]}, {polygon:[[lon,lat],...]} or {zone_id}")
+// MaxPolygonPoints bounds the per-entity cost of a polygon AOI.
+const MaxPolygonPoints = 1000
+
+var errBadAOI = errors.New("aoi must be {bbox:[minLon,minLat,maxLon,maxLat]}, {polygon:[[lon,lat],...] with 3 to 1000 points} or {zone_id}")
 
 func validLL(lon, lat float64) bool {
 	return lon >= -180 && lon <= 180 && lat >= -90 && lat <= 90 && !math.IsNaN(lon) && !math.IsNaN(lat)
@@ -38,7 +41,7 @@ func bboxArea(b []float64) (*area, error) {
 
 // polyArea builds an area from a ring of [lon,lat] points (bbox of the ring plus the ring).
 func polyArea(pts [][]float64) (*area, error) {
-	if len(pts) < 3 {
+	if len(pts) < 3 || len(pts) > MaxPolygonPoints {
 		return nil, errBadAOI
 	}
 	a := &area{minLon: 180, minLat: 90, maxLon: -180, maxLat: -90}

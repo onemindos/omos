@@ -382,7 +382,15 @@ func (s *Service) followOnce(ctx context.Context, markReady func()) error {
 		return err
 	}
 	defer it.Stop()
-	go func() { <-ctx.Done(); it.Stop() }()
+	stopped := make(chan struct{})
+	defer close(stopped)
+	go func() {
+		select {
+		case <-ctx.Done():
+			it.Stop()
+		case <-stopped:
+		}
+	}()
 	if last > 0 {
 		markReady()
 	}

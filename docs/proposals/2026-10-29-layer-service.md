@@ -112,4 +112,5 @@ server source. Conservative setting: `response_threshold` of at least 2 minutes 
 | Unknown values in render entities | `hae` and `expiry_t` are `null` (contract says number) |
 | `aoi` `zone_id` | resolved from the `ent.zone.{id}.state` record's `geo.coords` (GeoJSON Polygon, or Point with `radius_m`) |
 | `zoom` omitted | entities mode (the cap still applies) |
+| `aoi` `polygon` | 3 to 1,000 points (bounds the per-entity cost); otherwise `bad_request` |
 | Watch on a large layer in entities mode | not capped; ops are paced by `max_rate_hz` and coalesced |

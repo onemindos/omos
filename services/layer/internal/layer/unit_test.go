@@ -67,6 +67,13 @@ func TestAreas(t *testing.T) {
 	if _, err := zoneArea(&GeoIn{Coords: json.RawMessage(`{"type":"LineString","coordinates":[[0,0],[1,1]]}`)}); err == nil {
 		t.Fatal("line accepted as area")
 	}
+	big := make([][]float64, MaxPolygonPoints+1)
+	for i := range big {
+		big[i] = []float64{float64(i%100) * 0.01, float64(i/100) * 0.01}
+	}
+	if _, err := polyArea(big); err == nil {
+		t.Fatal("oversized polygon accepted")
+	}
 	var nilArea *area
 	if !nilArea.contains(89, 179) {
 		t.Fatal("nil area")
