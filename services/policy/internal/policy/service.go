@@ -341,11 +341,22 @@ func (s *Service) propose(req *ActionRequest, p Principal, known bool, fam Famil
 	// Free text (reason, task instructions, agent questions) that asks for a stop-line
 	// action: an agent can otherwise turn "follow that person" into an allowed verb or a
 	// manual task (I6 red team RT08; JADC2-MAP section 5.3 test 6).
+	// Safety verbs (estop, rtl, land, hold) are exempt: a stop must never be blocked by its
+	// wording. The hit is kept and recorded in the audit events instead.
+	textFlag := ""
 	if hit, why := TextStopLine(req.Reason); hit {
-		return s.denyNew(req, p, fam, deny(CodeForbiddenAction, "reason asks for a stop-line action ("+why+")"))
+		if !spec.Unblockable && !SafetyVerbs[spec.Name] {
+			return s.denyNew(req, p, fam, deny(CodeForbiddenAction, "reason asks for a stop-line action ("+why+")"))
+		}
+		textFlag = "reason: " + why
 	}
 	if hit, why := scanText(req.Params); hit {
-		return s.denyNew(req, p, fam, deny(CodeForbiddenAction, "parameters ask for a stop-line action ("+why+")"))
+		if !spec.Unblockable && !SafetyVerbs[spec.Name] {
+			return s.denyNew(req, p, fam, deny(CodeForbiddenAction, "parameters ask for a stop-line action ("+why+")"))
+		}
+		if textFlag == "" {
+			textFlag = "params: " + why
+		}
 	}
 	// Keep one unambiguous form: duplicate keys or odd spacing in the request must not let the
 	// confirmer, the bridge or an audit reader see other values than the ones checked and
@@ -403,7 +414,7 @@ func (s *Service) propose(req *ActionRequest, p Principal, known bool, fam Famil
 		RequestedBy: req.RequestedBy, ActorVerified: verified, Reason: req.Reason, State: StateAwaiting,
 		ApprovalsNeeded: needed, Approvals: []Approval{}, ConfirmBy: now.Add(s.cfg.ConfirmWindow),
 		CreatedAt: now, UpdatedAt: now, TaskID: req.TaskID, Policy: pol, Corr: req.Corr,
-		Simulated: isAsset, Agent: req, rqKey: key,
+		Simulated: isAsset, Agent: req, rqKey: key, quotaKey: quotaKey(req, p), TextFlag: textFlag,
 	}
 	// Reserve the request_id with the operation lock held, so a concurrent duplicate gets
 	// this action and nothing can act on it before the proposed event is recorded.
@@ -424,7 +435,9 @@ func (s *Service) propose(req *ActionRequest, p Principal, known bool, fam Famil
 	// Per-requester cap on actions awaiting a human (security-and-trust.md T1 "rate limit
 	// per agent"; I6 red team RT14): a flooding agent cannot bury the confirm queue. A stop
 	// is never limited. Counted and reserved under one lock, so concurrent floods cannot pass it.
-	if !spec.Unblockable && s.openFor(req.RequestedBy.ID) >= MaxOpenPerRequester {
+	// The bucket is the verified identity; an unverified (same-account) caller's claimed id
+	// gets its own bucket, so it cannot use up a real principal's slots (I6 review).
+	if !spec.Unblockable && s.openFor(a.quotaKey) >= MaxOpenPerRequester {
 		s.mu.Unlock()
 		return s.denyNewWithPolicy(req, p, fam, &Denial{Code: CodePreconditionFailed, Detail: DetailRateLimited,
 			Message: fmt.Sprintf("%s already has %d actions awaiting confirmation", req.RequestedBy.ID, MaxOpenPerRequester)}, pol, level)
@@ -955,15 +968,24 @@ func (s *Service) auditRefusal(a *Action, req ConfirmRequest, p Principal, fam F
 	s.cfg.Log.Info("confirm refused", "action_id", req.ActionID, "code", d.Code, "by", who)
 }
 
-// openFor counts the actions a requester holds awaiting confirmation. Caller holds s.mu.
-func (s *Service) openFor(requester string) int {
+// openFor counts the actions a quota bucket holds awaiting confirmation. Caller holds s.mu.
+func (s *Service) openFor(bucket string) int {
 	n := 0
 	for _, e := range s.byID {
-		if e.cur.State == StateAwaiting && e.cur.RequestedBy.ID == requester {
+		if e.cur.State == StateAwaiting && e.cur.quotaKey == bucket {
 			n++
 		}
 	}
 	return n
+}
+
+// quotaKey is the open-proposal bucket: the verified identity, or for an unverified caller
+// a bucket of its own keyed by the id it claims.
+func quotaKey(req *ActionRequest, p Principal) string {
+	if p.Verified {
+		return req.RequestedBy.ID
+	}
+	return "unverified:" + req.RequestedBy.ID
 }
 
 func attemptBy(p Principal) string {
@@ -1605,6 +1627,9 @@ func (s *Service) auditFull(a *Action, event string, d *Denial, attempt, id, cau
 	}
 	if attempt != "" {
 		data["attempt_by"] = attempt
+	}
+	if a.TextFlag != "" {
+		data["text_stop_line"] = a.TextFlag
 	}
 	if r := a.Agent; r != nil && a.RequestedBy.Kind == "agent" {
 		for k, v := range map[string]string{"agent_session": r.AgentSession, "model_alias": r.ModelAlias,

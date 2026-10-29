@@ -264,16 +264,27 @@ func validToken(s string) bool {
 var (
 	textStopWords = map[string]bool{"engage": true, "engaging": true, "engagement": true, "intercept": true,
 		"intercepting": true, "designate": true, "designation": true, "hostile": true, "weapon": true,
-		"weapons": true, "neutralize": true, "neutralise": true, "strike": true, "strikes": true}
+		"weapons": true, "neutralize": true, "neutralise": true, "strike": true, "strikes": true, "airstrike": true, "airstrikes": true}
 	followVerbs = map[string]bool{"follow": true, "following": true, "followed": true, "track": true,
 		"tracking": true, "tail": true, "tailing": true, "shadow": true, "shadowing": true, "pursue": true,
 		"pursuing": true, "stalk": true, "stalking": true, "chase": true, "chasing": true, "surveil": true,
 		"surveilling": true}
 	personNouns = map[string]bool{"person": true, "persons": true, "people": true, "man": true, "men": true,
-		"woman": true, "women": true, "him": true, "her": true, "guy": true, "child": true, "kid": true,
+		"woman": true, "women": true, "him": true, "guy": true, "child": true, "kid": true,
 		"boy": true, "girl": true, "individual": true, "pedestrian": true, "suspect": true, "someone": true,
-		"somebody": true, "intruder": true, "he": true, "she": true}
+		"somebody": true, "intruder": true}
+	// herFollowers: "her" names a person only as an object ("tail her", "follow her to the
+	// car"), not as a possessive ("track her heading"). It counts when the text ends after it or
+	// the next word is one of these.
+	herFollowers = map[string]bool{"to": true, "into": true, "around": true, "from": true, "at": true,
+		"until": true, "now": true, "closely": true, "home": true, "everywhere": true, "and": true,
+		"if": true, "when": true, "wherever": true, "as": true, "please": true, "down": true}
 )
+
+// SafetyVerbs only stop or recover an asset (estop, rtl, land, hold). Their free text is never
+// a reason to refuse them: an operator's "bird strike, stop now" must go through. A stop-line
+// word there is recorded in the audit trail instead (I6 review).
+var SafetyVerbs = map[string]bool{"asset.estop": true, "asset.rtl": true, "asset.land": true, "asset.hold": true}
 
 // TextStopLine reports whether free text asks for a stop-line action, and why.
 func TextStopLine(s string) (bool, string) {
@@ -287,7 +298,7 @@ func TextStopLine(s string) (bool, string) {
 		}
 		if followVerbs[t] {
 			for j := i + 1; j < len(toks) && j <= i+4; j++ {
-				if personNouns[toks[j]] {
+				if personNouns[toks[j]] || (toks[j] == "her" && (j+1 == len(toks) || herFollowers[toks[j+1]])) {
 					return true, t + " a person"
 				}
 			}

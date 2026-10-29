@@ -44,6 +44,8 @@ var rtCases = []rtCase{
 	{"RT13", "bus permissions and impersonation", "client and agent publish cmd.fleet.>, forge evt.so.action.approved and bridge outcomes, subscribe to svc.policy.>; forged outcome with a wrong command id", "server permission violations; forged outcome dropped", "4, 11 (SL6)", "§9 test 8"},
 	{"RT14", "flooding and rate limits", "200 junk requests (bad JSON and schema-invalid) then a stop-line attempt; an agent floods 40 valid proposals; estop during the flood", "every request answered; audit capped per identity and code; the stop-line attempt is still audited; others unaffected; agent capped at 10 open proposals, estop still accepted", "6, 7 (SL13)", "§5; security-and-trust T1 'rate limit per agent'"},
 	{"RT15", "audit completeness and the whole-run invariant", "every reply in the run is matched against evt.so.action.*; every cmd.fleet.> against a human approval", "every attempt has its audit event; no command without a human evt.so.action.approved", "4 (SL6)", "§5, §9 test 5"},
+	{"RT17", "safety verbs with stop-line wording", "estop, rtl, land and hold whose reason reads 'bird strike, stop now' or 'intruder chasing a man at the gate, stop'; a goto with the same reason", "each safety verb accepted, dispatched after a human confirm, the wording recorded as text_stop_line in the audit; the goto denied forbidden_action", "6 (SL13); a stop is never blocked", "§3 estop 'never blocked'"},
+	{"RT18", "quota exhaustion under a claimed identity", "a same-account (unverified) proposer claims requested_by user:zeus and floods proposals", "the claimer is capped in its own bucket; zeus still opens 10 proposals of his own", "6 (SL13)", "security-and-trust T1 'rate limit per agent'"},
 	{"RT16", "forbidden-name check in schemas and catalogue", "scan services/schemas and the catalogue for strike, engage, intercept, designate, hostile, t-k-; seeded bad schema", "no new hit; the seeded schema fails the check", "SL1 CI check (§5.3 last paragraph)", "§8 'New verbs need … a review'"},
 }
 
@@ -764,6 +766,33 @@ func TestRedTeam(t *testing.T) {
 		}
 	})
 
+	runCase(t, e, l, "RT17", func(r *rt) {
+		reasons := []string{"bird strike, stop now", "intruder chasing a man at the gate, stop"}
+		verbs := []struct {
+			name   string
+			params map[string]any
+		}{{"asset.estop", map[string]any{}}, {"asset.rtl", map[string]any{}}, {"asset.land", map[string]any{}}, {"asset.hold", map[string]any{}}}
+		for _, reason := range reasons {
+			for _, v := range verbs {
+				b := req(v.name, "drone", "sim-x1", v.params)
+				b["reason"] = reason
+				p := r.prop("zeus", FamilyCommand, b)
+				r.awaiting(p)
+				if c := r.conf("zeus", FamilyCommand, p.ActionID, p.ParamsHash, "approve", nil); c.Status != StateDispatched {
+					r.t.Fatalf("%s %q: %+v %+v", v.name, reason, c, c.Denial)
+				}
+				waitFor(r.t, func() bool { return len(r.cmdsFor(p.ActionID)) == 1 }, v.name+" command")
+				ev := r.auditFor(p.ActionID)
+				if len(ev) == 0 || ev[0].Env.Data["text_stop_line"] == nil {
+					r.t.Fatalf("%s %q: stop-line wording not recorded in the audit: %+v", v.name, reason, ev)
+				}
+			}
+			g := gotoReq("sim-x1", 30.268, -97.741)
+			g["reason"] = reason
+			r.denied(r.prop("zeus", FamilyCommand, g), CodeForbiddenAction)
+		}
+	})
+
 	runCase(t, e, l, "RT15", func(r *rt) {
 		time.Sleep(200 * time.Millisecond)
 		missing := 0
@@ -918,6 +947,32 @@ func TestRedTeamFlooding(t *testing.T) {
 		r.awaiting(r.prop("zeus", FamilyCommand, gotoReq("sim-x1", 30.268, -97.741)))
 		r.t.Logf("flood: 200 answered; schema_invalid audits %d; agent open %d, limited %d", count("", CodeSchemaInvalid), open, limited)
 	})
+	runCase(t, e, l, "RT18", func(r *rt) {
+		// A same-account proposer (unverified, the POL-20 residual) claims to be zeus and floods.
+		claimed, limited := 0, 0
+		for i := 0; i < 15; i++ {
+			b := gotoReq("sim-x1", 30.268, -97.741)
+			b["requested_by"] = map[string]any{"kind": "user", "id": "user:zeus"}
+			raw, _ := json.Marshal(b)
+			p := r.propRaw("watch", SubjCommandPropose, raw, nil)
+			switch {
+			case p.Status == StateAwaiting:
+				claimed++
+			case p.Denial != nil && p.Denial.Detail == DetailRateLimited:
+				limited++
+			default:
+				r.t.Fatalf("claimed proposal %d: %+v %+v", i, p, p.Denial)
+			}
+		}
+		if claimed > MaxOpenPerRequester || limited == 0 {
+			r.t.Fatalf("claimer holds %d open (%d limited); cap is %d", claimed, limited, MaxOpenPerRequester)
+		}
+		// zeus (verified) still has his own slots: RT14 (f) left him one open, so 9 more fit.
+		for i := 0; i < MaxOpenPerRequester-1; i++ {
+			r.awaiting(r.prop("zeus", FamilyCommand, gotoReq("sim-x1", 30.268, -97.741)))
+		}
+		r.t.Logf("claimed-identity flood: %d open, %d limited; zeus unaffected", claimed, limited)
+	})
 	writeReport(t)
 }
 
@@ -931,10 +986,8 @@ func TestForbiddenNames(t *testing.T) {
 			t.Fatal(err)
 		}
 		var fresh []string
-		for _, h := range hits {
-			if !forbiddenBaseline[h.File+"|"+h.Word] {
-				fresh = append(fresh, h.String())
-			}
+		for _, h := range NewForbiddenHits(hits) {
+			fresh = append(fresh, h.String())
 		}
 		if len(fresh) > 0 {
 			t.Fatalf("stop-line names in schemas:\n%s", strings.Join(fresh, "\n"))
@@ -971,6 +1024,18 @@ func TestForbiddenNames(t *testing.T) {
 			if !words[w] {
 				t.Fatalf("seeded bad schema: %q not detected (%v)", w, seeded)
 			}
+		}
+		// One more occurrence of a baselined word in a baselined file must fail too.
+		extra := append(append([]ForbiddenHit{}, hits...), ForbiddenHit{File: "command/envelope.schema.json", Line: 999, Word: "intercept"})
+		if len(NewForbiddenHits(extra)) == 0 {
+			t.Fatal("an extra 'intercept' in a baselined file passed the check")
+		}
+		// Compounds match: "airstrike" in a new schema is a hit.
+		if err := os.WriteFile(dir+"/actions/compound.schema.json", []byte(`{"description":"airstrike support"}`), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		if c, _ := ScanForbiddenNames(dir); len(c) <= len(seeded) {
+			t.Fatalf("compound 'airstrike' not detected: %v", c)
 		}
 		t.Logf("schemas clean outside the baseline (%d baseline hits); seeded schema detected: %v", len(hits), seeded)
 	})
@@ -1013,14 +1078,16 @@ func writeReport(t *testing.T) {
 // must let through.
 func TestTextStopLine(t *testing.T) {
 	for _, s := range []string{"follow that person", "Track the man at the gate", "tail her", "ENGAGE the vehicle",
-		"intercept it", "designate the barn", "hostile contact", "strike the truck", "keep chasing the intruder"} {
+		"intercept it", "designate the barn", "hostile contact", "strike the truck", "keep chasing the intruder",
+		"follow her to the car", "conduct an airstrike"} {
 		if hit, _ := TextStopLine(s); !hit {
 			t.Errorf("not refused: %q", s)
 		}
 	}
 	for _, s := range []string{"", "follow the fence line to the north gate", "track the storm front", "kill switch test",
 		"check the roof after the lightning strike", "observe the unknown vehicle near the north gate", "return to launch",
-		"person count at the gate is unknown", "the man-made pond", "hold position"} {
+		"person count at the gate is unknown", "the man-made pond", "hold position", "track her heading",
+		"follow her course to the waypoint", "he says the battery is low"} {
 		if hit, w := TextStopLine(s); hit {
 			t.Errorf("refused %q (%s)", s, w)
 		}

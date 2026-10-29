@@ -15,7 +15,8 @@ import (
 // CoT strike prefix t-k- must not appear in omos services/schemas. TestForbiddenNames runs it
 // in CI (build-policy.yml) against the tree and against a seeded bad schema.
 
-var forbiddenNameRE = regexp.MustCompile(`(?i)\b(strike|engag|intercept|designat|hostile)[a-z]*|t-k-`)
+// No leading word boundary: compounds such as "airstrike" or "counterintercept" match too.
+var forbiddenNameRE = regexp.MustCompile(`(?i)(strike|engag|intercept|designat|hostile)[a-z]*|t-k-`)
 
 // ForbiddenHit is one occurrence.
 type ForbiddenHit struct {
@@ -29,13 +30,29 @@ func (h ForbiddenHit) String() string {
 	return fmt.Sprintf("%s:%d: %s: %s", h.File, h.Line, h.Word, strings.TrimSpace(h.Text))
 }
 
-// forbiddenBaseline lists hits that predate the check (file|word). They are owner follow-ups,
-// not accepted vocabulary: JADC2-MAP section 6 F1 (the command envelope names cmd.intercept.*
-// as a protected class) and the registry example rule 'rule.hostile-drone-critical'. A new
-// file or word fails the check.
-var forbiddenBaseline = map[string]bool{
-	"command/envelope.schema.json|intercept": true,
-	"registry/workflow.schema.json|hostile":  true,
+// forbiddenBaseline counts the hits that predate the check, per file|word. They are owner
+// follow-ups, not accepted vocabulary: JADC2-MAP section 6 F1 (the command envelope names
+// cmd.intercept.* as a protected class) and the registry example rule
+// 'rule.hostile-drone-critical'. Any extra occurrence, including in these files, fails.
+var forbiddenBaseline = map[string]int{
+	"command/envelope.schema.json|intercept": 1,
+	"registry/workflow.schema.json|hostile":  2,
+}
+
+// NewForbiddenHits returns the hits beyond the baseline count for their file|word. When a
+// file|word exceeds its count, every hit for it is returned, so the reviewer sees them all.
+func NewForbiddenHits(hits []ForbiddenHit) []ForbiddenHit {
+	n := map[string]int{}
+	for _, h := range hits {
+		n[h.File+"|"+h.Word]++
+	}
+	var fresh []ForbiddenHit
+	for _, h := range hits {
+		if k := h.File + "|" + h.Word; n[k] > forbiddenBaseline[k] {
+			fresh = append(fresh, h)
+		}
+	}
+	return fresh
 }
 
 // ScanForbiddenNames walks root for *.json files and returns every stop-line name.
