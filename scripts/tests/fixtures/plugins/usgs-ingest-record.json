@@ -1,0 +1,10 @@
+{
+  "_comment": "Data of one omos-ingest geojson record for a USGS feature: the first record of PR #553 testdata/golden/geojson-usgs.golden.json, plus properties.type, which real USGS features carry and the parser passes through unchanged. Used by test_usgs_layer_fields_match_ingest_output.",
+  "id": "us7000abcd",
+  "lat": 35.7,
+  "lon": -117.5,
+  "mag": 4.6,
+  "place": "Synthetic place A",
+  "time": 1761728400000,
+  "type": "earthquake"
+}

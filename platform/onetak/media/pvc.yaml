@@ -1,6 +1,13 @@
-# Recordings (fMP4, 60 s segments; drones/robots kept 7 days, cameras 3 days, see mediamtx.yml).
-# Retain class per omos rule 6. 20 Gi is about 11 h of one 4 Mb/s stream; size it from measured
-# bitrate before adding cameras (video-and-plugins.md "How it applies" 5). This volume is billed
+# Recordings (fMP4, 60 s segments; drones/robots kept 6 h, cameras 2 h, see mediamtx.yml).
+# Retain class per omos rule 6.
+#
+# Budget: size = sum over streams of bitrate x retention. 20 GiB holds about 11.9 stream-hours
+# at 4 Mb/s (20 x 2^30 x 8 / 4e6 s). Sized for one drone or robot at 4 Mb/s x 6 h = 10.1 GiB
+# plus two cameras at 2 Mb/s x 2 h = 3.4 GiB, 13.5 GiB in all (about 67%), leaving room for the
+# segment in flight and filesystem overhead. More or faster streams: measure the bitrate first
+# (MediaMTX /v3/paths/list bytesReceived over time), then grow this claim or cut retention.
+# prometheusrule.yaml alerts at 75% and 90%; at 100% MediaMTX stops recording every stream.
+# This volume is billed
 # once synced, so the owner approves the size with the sync. Not in VolSync on purpose: off-site
 # copies of video cost money (decision 0004 #5); add a source only if the owner wants backups.
 apiVersion: v1

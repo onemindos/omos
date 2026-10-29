@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
 )
 
 // fakeMTX serves /v3/paths/list from a mutable item list and checks the API credentials.
@@ -249,5 +250,76 @@ func TestMissingBucketFails(t *testing.T) {
 	_, err := New(context.Background(), nc, &MediaMTXClient{}, Config{Logger: slog.New(slog.NewTextHandler(io.Discard, nil))})
 	if err == nil {
 		t.Fatal("New succeeded without the bucket")
+	}
+}
+
+// blockingKV holds every Put until release is closed (a slow or stalled JetStream).
+type blockingKV struct {
+	jetstream.KeyValue
+	entered chan struct{}
+	release chan struct{}
+}
+
+func (b *blockingKV) Put(ctx context.Context, key string, value []byte) (uint64, error) {
+	select {
+	case b.entered <- struct{}{}:
+	default:
+	}
+	<-b.release
+	return b.KeyValue.Put(ctx, key, value)
+}
+
+// TestListAnswersWhileKVPutIsSlow: svc.registry.video.list must not wait for a KV Put
+// (review finding: s.mu used to be held across every Put).
+func TestListAnswersWhileKVPutIsSlow(t *testing.T) {
+	nc := startNATS(t)
+	createBucket(t, nc)
+	media, err := LoadMediaConfig(repoFile(t, mediaYML))
+	if err != nil {
+		t.Fatal(err)
+	}
+	cfg := Config{Media: media, Endpoints: Endpoints{Host: "media.example.ts.net"},
+		Logger: slog.New(slog.NewTextHandler(io.Discard, nil))}
+	ctx := context.Background()
+	svc, err := New(ctx, nc, &MediaMTXClient{}, cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	slow := &blockingKV{KeyValue: svc.kv, entered: make(chan struct{}, 1), release: make(chan struct{})}
+	svc.kv = slow
+	subs, err := svc.serveRPC()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		for _, s := range subs {
+			_ = s.Unsubscribe()
+		}
+	}()
+	done := make(chan struct{})
+	go func() { svc.Reconcile(ctx, []PathItem{live("drone/sim-x1")}, time.Now(), ""); close(done) }()
+	select {
+	case <-slow.entered:
+	case <-time.After(2 * time.Second):
+		t.Fatal("Reconcile never reached KV Put")
+	}
+	m, err := nc.Request(SubjectList, nil, 500*time.Millisecond)
+	if err != nil {
+		close(slow.release)
+		t.Fatalf("list blocked while a KV Put was in flight: %v", err)
+	}
+	var r Reply
+	if err := json.Unmarshal(m.Data, &r); err != nil || len(r.Records) != 0 {
+		t.Fatalf("list during Put = %s (%v); want no records yet", m.Data, err)
+	}
+	close(slow.release)
+	<-done
+	m, err = nc.Request(SubjectList, nil, time.Second)
+	if err != nil {
+		t.Fatal(err)
+	}
+	r = Reply{}
+	if err := json.Unmarshal(m.Data, &r); err != nil || len(r.Records) != 1 || r.Records[0].Seq == 0 {
+		t.Fatalf("list after Put = %s (%v)", m.Data, err)
 	}
 }

@@ -69,6 +69,23 @@ class Examples(unittest.TestCase):
         self.assertEqual(m["layer"]["from"], "ent.event.*.state")
 
 
+    def test_usgs_layer_fields_match_ingest_output(self):
+        # The layer must reference fields omos-ingest emits for a USGS feature (#553 geojson
+        # parser), or it renders nothing. When the #553 golden is in the tree, check it too.
+        layer = load(EXAMPLES / "usgs-quakes/onemind-plugin.yaml")["layer"]
+        records = [json.loads((FIXTURES / "usgs-ingest-record.json").read_text())]
+        golden = ROOT / "services/bridge/ingest/testdata/golden/geojson-usgs.golden.json"
+        if golden.exists():
+            records += [r["data"] for r in json.loads(golden.read_text())]
+        self.assertEqual(layer["where"], {"kind": "earthquake"})
+        self.assertEqual(records[0]["type"], layer["where"]["kind"])
+        for rec in records:
+            for key in ("sizeField", "colorField", "labelField"):
+                field = layer["render"].get(key)
+                if field:
+                    self.assertIn(field, rec, f"render.{key} {field!r} is not in the ingest record")
+
+
 class Fixtures(unittest.TestCase):
     def errors(self, name):
         return "\n".join(v.validate(load(FIXTURES / name / "onemind-plugin.yaml"), SCHEMA))
@@ -82,6 +99,27 @@ class Fixtures(unittest.TestCase):
         e = self.errors("reserved-writer")
         self.assertIn("ent.* has one writer", e)
         self.assertIn("cmd.* is published only by the policy service", e)
+
+    def test_reserved_wildcards_fail(self):
+        e = self.errors("reserved-wildcard")
+        self.assertIn("'evt.*.*.*' is reserved: evt.so.action.*", e)
+        self.assertIn("'tak.cot.>' is reserved: only the projector publishes tak.cot.inject", e)
+        self.assertNotIn("intel.hazard.example.quake", e)
+
+    def test_reserved_overlap(self):
+        why = {s: "\n".join(e for e in self._pub(s)) for s in [
+            "evt.*.*.*", "evt.so.*.x", "evt.*.action.x", "evt.so.>", "evt.>", "ent.*.*.*", "cmd.>",
+            "tak.cot.inject", "evt.mission.patrol1.completed", "evt.video.*.online", "intel.hazard.usgs.quake"]}
+        for s in ["evt.*.*.*", "evt.so.*.x", "evt.*.action.x", "evt.so.>", "evt.>", "ent.*.*.*", "cmd.>",
+                  "tak.cot.inject"]:
+            self.assertIn("is reserved", why[s], s)
+        for s in ["evt.mission.patrol1.completed", "evt.video.*.online", "intel.hazard.usgs.quake"]:
+            self.assertNotIn("is reserved", why[s], s)
+
+    def _pub(self, subject):
+        m = load(EXAMPLES / "usgs-quakes/onemind-plugin.yaml")
+        m["bus"]["publishes"] = [subject, m["source"]["subject"]]
+        return v.validate(m, SCHEMA)
 
     def test_unsafe_action_fails(self):
         e = self.errors("missing-block")

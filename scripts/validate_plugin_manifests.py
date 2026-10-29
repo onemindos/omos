@@ -34,12 +34,16 @@ FIXTURES = "scripts/tests/fixtures/"
 TOKEN = re.compile(r"^[A-Za-z0-9_-]+$")
 AGENT_VERBS = {"prompt", "hb", "status", "attachments"}
 TAK_SUBJECTS = {"tak.cot.inject", "tak.cot.out", "tak.cot.mesh.rx", "tak.cot.mesh.tx", "tak.cot.>"}
+# Reserved writers. Each entry lists sample subjects of the reserved space ("_" stands for any
+# token); a publish pattern is refused when it covers any of them, so wildcards such as
+# 'evt.*.*.*' or 'evt.so.*.x' are caught as well as literal prefixes.
 RESERVED_PUBLISH = (
-    ("ent.", "ent.* has one writer, the entity service"),
-    ("cmd.", "cmd.* is published only by the policy service after policy, audit and human confirm"),
-    ("evt.so.action.", "evt.so.action.* is the policy service's audit record"),
-    ("tak.cot.inject", "only the projector publishes tak.cot.inject"),
-    ("tak.cot.mesh.tx", "only the site projector publishes tak.cot.mesh.tx"),
+    (("ent._._.state",), "ent.* has one writer, the entity service"),
+    (("cmd._._._", "cmd.fleet._._._"),
+     "cmd.* is published only by the policy service after policy, audit and human confirm"),
+    (("evt.so.action._",), "evt.so.action.* is the policy service's audit record"),
+    (("tak.cot.inject",), "only the projector publishes tak.cot.inject"),
+    (("tak.cot.mesh.tx",), "only the site projector publishes tak.cot.mesh.tx"),
 )
 VIDEO_CLASS_TYPE = {"drone": "drone", "robot": "robot", "cam": "camera"}
 
@@ -114,6 +118,19 @@ def covers(pattern: str, subject: str) -> bool:
     return len(p) == len(s)
 
 
+def _overlaps(pattern: str, sample: str) -> bool:
+    """True if `pattern` can match a subject of the reserved space `sample` ('_' = any token)."""
+    p, r = pattern.split("."), sample.split(".")
+    for i, tok in enumerate(p):
+        if tok == ">":
+            return len(r) > i
+        if i >= len(r):
+            return False
+        if tok != "*" and r[i] != "_" and tok != r[i]:
+            return False
+    return len(p) == len(r)
+
+
 def _declared(bus: dict, keys: tuple[str, ...], subject: str) -> bool:
     return any(covers(p, subject) for k in keys for p in bus.get(k, []) or [])
 
@@ -132,8 +149,8 @@ def validate(manifest: dict, schema: dict) -> list[str]:
             if key in ("requests", "serves") and not s.startswith("svc."):
                 errors.append(f"bus.{key}: {s!r} must be a svc.* RPC subject")
     for s in bus.get("publishes", []) or []:
-        for prefix, why in RESERVED_PUBLISH:
-            if s.startswith(prefix) or (s.endswith(">") and prefix.startswith(s[:-1])):
+        for samples, why in RESERVED_PUBLISH:
+            if any(_overlaps(s, sample) for sample in samples):
                 errors.append(f"bus.publishes: {s!r} is reserved: {why}")
     kinds = set(manifest["kinds"])
     for kind in ("source", "layer", "action", "skill", "video"):

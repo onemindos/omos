@@ -27,7 +27,7 @@ import (
 // the stream to ent.drone.sim-x1.state. Skipped when mediamtx, ffmpeg or ffprobe is missing.
 //
 // Only the listen addresses, the record directory and the timings are changed from the cluster
-// file (retention 168h/72h -> 8s, segments 60s -> 2s), so the rest of the file is what runs.
+// file (retention 6h/2h -> 8s, segments 60s -> 2s), so the rest of the file is what runs.
 // Set K_EVIDENCE_DIR to keep a decoded HLS frame.
 func TestE2EMediaMTX(t *testing.T) {
 	mtxBin := lookBin(t, "MEDIAMTX_BIN", "mediamtx")
@@ -42,7 +42,7 @@ func TestE2EMediaMTX(t *testing.T) {
 		t.Fatal(err)
 	}
 	conf := strings.NewReplacer("recordSegmentDuration: 60s", "recordSegmentDuration: 2s",
-		"recordDeleteAfter: 168h", "recordDeleteAfter: 8s", "recordDeleteAfter: 72h", "recordDeleteAfter: 8s").Replace(string(src))
+		"recordDeleteAfter: 6h", "recordDeleteAfter: 8s", "recordDeleteAfter: 2h", "recordDeleteAfter: 8s").Replace(string(src))
 	confPath := filepath.Join(dir, "mediamtx.yml")
 	if err := os.WriteFile(confPath, []byte(conf), 0o600); err != nil {
 		t.Fatal(err)
@@ -206,6 +206,30 @@ func TestE2EMediaMTX(t *testing.T) {
 	} else {
 		t.Logf("PASS LL-HLS media playlist (%d EXT-X-PART lines)", strings.Count(media1, "#EXT-X-PART:"))
 	}
+	// No browser origin is allowed (hlsAllowOrigins: []): a foreign page gets no CORS grant,
+	// neither on a preflight nor on an authenticated GET.
+	for _, method := range []string{http.MethodOptions, http.MethodGet} {
+		req, _ := http.NewRequest(method, hlsURL, nil)
+		req.Header.Set("Origin", "https://evil.example")
+		if method == http.MethodOptions {
+			req.Header.Set("Access-Control-Request-Method", "GET")
+			req.Header.Set("Access-Control-Request-Headers", "Authorization")
+		} else {
+			req.SetBasicAuth("onemind-client", pass["onemind-client"])
+		}
+		resp, err := player.c.Do(req)
+		if err != nil {
+			t.Fatalf("%s %s with Origin: %v", method, hlsURL, err)
+		}
+		_, _ = io.Copy(io.Discard, resp.Body)
+		resp.Body.Close()
+		if got := resp.Header.Get("Access-Control-Allow-Origin"); got != "" {
+			t.Errorf("%s with Origin https://evil.example: Access-Control-Allow-Origin %q, want none", method, got)
+		} else {
+			t.Logf("PASS %s from a foreign Origin gets no Access-Control-Allow-Origin (HTTP %d)", method, resp.StatusCode)
+		}
+	}
+
 	frame := filepath.Join(dir, "sim-x1-hls-frame.png")
 	authed := strings.Replace(hlsURL, "http://", "http://onemind-client:"+pass["onemind-client"]+"@", 1)
 	if out, err := exec.Command(ffmpeg, "-hide_banner", "-loglevel", "error", "-y", "-i", authed, "-frames:v", "1", frame).CombinedOutput(); err != nil {

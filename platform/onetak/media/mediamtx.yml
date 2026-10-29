@@ -82,14 +82,18 @@ rtspAuthMethods: [basic]
 rtmp: false
 hls: true
 hlsAddress: :8888
-hlsAllowOrigins: ["*"]
+# CORS: no browser origin is allowed. Today only native clients (Unreal, headset, ATAK, ffmpeg,
+# Safari opening the URL directly) read HLS and WebRTC, and a same-origin page needs no CORS.
+# When the L0 web client is hosted, add exactly its origin here (for example
+# "https://l0.tail717ba0.ts.net"), never "*".
+hlsAllowOrigins: []
 hlsVariant: lowLatency
 hlsSegmentCount: 7
 hlsSegmentDuration: 1s
 hlsPartDuration: 200ms
 webrtc: true
 webrtcAddress: :8889
-webrtcAllowOrigins: ["*"]
+webrtcAllowOrigins: [] # see hlsAllowOrigins
 webrtcLocalUDPAddress: :8189
 webrtcLocalTCPAddress: ""
 srt: true
@@ -105,11 +109,13 @@ pathDefaults:
   recordFormat: fmp4
   recordPartDuration: 1s
   recordSegmentDuration: 60s
-  recordDeleteAfter: 72h
+  # Retention is sized to the 20 Gi volume (pvc.yaml "Budget"), not to a wish: when the volume
+  # fills, MediaMTX stops recording every stream. Change these only together with pvc.yaml.
+  recordDeleteAfter: 2h
 
 paths:
-  # Own drones and robots: 7 days of recordings (video-and-plugins.md "How it applies" 5).
+  # Own drones and robots: 6 hours (one sortie plus review).
   "~^(drone|robot)/sim-[a-z0-9-]+$":
-    recordDeleteAfter: 168h
-  # Owned cameras: 3 days (pathDefaults). Public cameras are not restreamed here.
+    recordDeleteAfter: 6h
+  # Owned cameras: 2 hours (pathDefaults). Public cameras are not restreamed here.
   "~^cam/[a-z0-9-]+$":

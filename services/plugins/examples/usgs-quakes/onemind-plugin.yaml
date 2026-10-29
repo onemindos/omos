@@ -3,6 +3,13 @@
 # rendered by every client from the layer service's snapshot of the entities the entity service
 # derives from intel.hazard.usgs.quake (entity_type event, kind from the record type; see
 # services/entity adapt/intel.go in PR #552).
+#
+# Layer fields follow what omos-ingest actually emits (PR #553 parser geojson, golden
+# testdata/golden/geojson-usgs.golden.json): every USGS feature property passes through
+# unchanged, plus id, lat and lon. So the kind is USGS properties.type ("earthquake"; the
+# #552 adapter takes Kind from the record type), the size is `mag`, and there is no colour
+# field: depth is only the geometry's third coordinate, which the parser does not emit.
+# scripts/tests/test_plugin_manifests.py checks these fields against that record shape.
 apiVersion: onemind.io/plugin/v1
 id: org.onemindos.layer.usgs-quakes
 name: USGS earthquakes
@@ -31,5 +38,5 @@ source:
 layer:
   id: usgs-quakes
   from: ent.event.*.state
-  where: {kind: quake}
-  render: {entity: point, sizeField: magnitude, colorField: depth_km, maxEntities: 5000, lod: on-demand}
+  where: {kind: earthquake}
+  render: {entity: point, sizeField: mag, maxEntities: 5000, lod: on-demand}

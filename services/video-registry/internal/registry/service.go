@@ -81,12 +81,13 @@ type Service struct {
 	lister PathLister
 	log    *slog.Logger
 
-	mu       sync.Mutex
-	state    map[string]Record // key -> last written record
-	seq      uint64
-	lastOK   time.Time
-	polledOK atomic.Bool
-	rejected map[string]bool // path names already logged as rejected
+	reconcileMu sync.Mutex        // serialises Reconcile; held across KV I/O
+	mu          sync.Mutex        // guards state, seq, lastOK, rejected; never held across I/O
+	state       map[string]Record // key -> last written record
+	seq         uint64
+	lastOK      time.Time
+	polledOK    atomic.Bool
+	rejected    map[string]bool // path names already logged as rejected
 
 	Stats Stats
 }
@@ -199,11 +200,42 @@ func (s *Service) PollOnce(ctx context.Context) {
 	s.polledOK.Store(true)
 }
 
+// change is one planned KV write, computed under s.mu and applied without it.
+type change struct {
+	key    string
+	rec    Record
+	event  string // "online", "offline" or "" (content update only)
+	reason string
+}
+
 // Reconcile writes new or changed live streams and marks vanished ones offline. offlineReason
 // is used for streams that vanished ("" means the publisher stopped).
+//
+// Locking: reconcileMu serialises reconciles; s.mu guards state and seq and is held only while
+// the changes are computed and while state is updated, never across a KV Put or a publish, so
+// svc.registry.video.list keeps answering while JetStream is slow.
 func (s *Service) Reconcile(ctx context.Context, items []PathItem, now time.Time, offlineReason string) {
+	s.reconcileMu.Lock()
+	defer s.reconcileMu.Unlock()
+	changes := s.plan(items, now, offlineReason)
+	for _, c := range changes {
+		if !s.put(ctx, c.key, c.rec) {
+			continue
+		}
+		s.mu.Lock()
+		s.state[c.key] = c.rec
+		s.mu.Unlock()
+		if c.event != "" {
+			s.emit(c.rec, c.event, c.reason)
+		}
+	}
+}
+
+// plan computes the writes of one reconcile under s.mu and assigns their sequence numbers.
+func (s *Service) plan(items []PathItem, now time.Time, offlineReason string) []change {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	var out []change
 	seen := map[string]bool{}
 	for _, it := range items {
 		if !it.Ready {
@@ -225,9 +257,11 @@ func (s *Service) Reconcile(ctx context.Context, items []PathItem, now time.Time
 		if had && sameContent(prev, rec) {
 			continue
 		}
-		if s.put(ctx, key, rec) && (!had || !prev.Live) {
-			s.emit(rec, "online", "")
+		c := change{key: key, rec: rec}
+		if !had || !prev.Live {
+			c.event = "online"
 		}
+		out = append(out, c)
 	}
 	keys := make([]string, 0, len(s.state))
 	for k := range s.state {
@@ -246,15 +280,17 @@ func (s *Service) Reconcile(ctx context.Context, items []PathItem, now time.Time
 			off.Reason = "publisher_stopped"
 		}
 		off.UpdatedAt = now.UTC()
-		if s.put(ctx, key, off) {
-			s.emit(off, "offline", off.Reason)
-		}
+		out = append(out, change{key: key, rec: off, event: "offline", reason: off.Reason})
 	}
+	for i := range out {
+		s.seq++
+		out[i].rec.Seq = s.seq
+	}
+	return out
 }
 
+// put writes one record; it is called without s.mu held.
 func (s *Service) put(ctx context.Context, key string, r Record) bool {
-	s.seq++
-	r.Seq = s.seq
 	b, err := json.Marshal(r)
 	if err != nil {
 		s.log.Error("marshal record", "key", key, "err", err)
@@ -264,7 +300,6 @@ func (s *Service) put(ctx context.Context, key string, r Record) bool {
 		s.log.Warn("KV put failed; retried next poll", "key", key, "err", err)
 		return false
 	}
-	s.state[key] = r
 	s.Stats.Puts.Add(1)
 	return true
 }

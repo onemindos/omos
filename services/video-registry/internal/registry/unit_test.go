@@ -110,10 +110,10 @@ func TestPermissionsAndRecording(t *testing.T) {
 	if p := c.PermissionsFor("drone/real-1"); len(p.Publish)+len(p.Read)+len(p.Playback) != 0 {
 		t.Errorf("non-sim drone must have no grants: %+v", p)
 	}
-	if r := c.RecordingFor("drone/sim-x1"); !r.Enabled || r.Retention != "168h" || r.Format != "fmp4" {
+	if r := c.RecordingFor("drone/sim-x1"); !r.Enabled || r.Retention != "6h" || r.Format != "fmp4" {
 		t.Errorf("drone recording = %+v", r)
 	}
-	if r := c.RecordingFor("cam/gate-north"); !r.Enabled || r.Retention != "72h" {
+	if r := c.RecordingFor("cam/gate-north"); !r.Enabled || r.Retention != "2h" {
 		t.Errorf("cam recording = %+v", r)
 	}
 }
