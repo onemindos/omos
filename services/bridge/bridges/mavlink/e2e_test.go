@@ -101,7 +101,7 @@ func TestE2E(t *testing.T) {
 	client := connect(t, url, "client", pw("client"), nil)
 	var mu sync.Mutex
 	telSeen := 0
-	var outcomes []map[string]any
+	var outcomes, taskReports []map[string]any
 	if _, err := client.Subscribe("tel.fleet.drone.sim-x1.>", func(m *nats.Msg) {
 		var v any
 		_ = json.Unmarshal(m.Data, &v)
@@ -116,6 +116,11 @@ func TestE2E(t *testing.T) {
 		var v map[string]any
 		_ = json.Unmarshal(m.Data, &v)
 		tr.log("evt", m.Subject, v)
+		if m.Subject == "evt.drone.sim-x1.task" {
+			mu.Lock()
+			taskReports = append(taskReports, v["data"].(map[string]any))
+			mu.Unlock()
+		}
 		if m.Subject == "evt.drone.sim-x1.command" {
 			mu.Lock()
 			outcomes = append(outcomes, v["data"].(map[string]any))
@@ -243,6 +248,35 @@ func TestE2E(t *testing.T) {
 	expect("arm (A4, two humans)", send("arm (A4, two humans)", ct.Opts{Verb: "arm"}, ""), "acknowledged", "executed")
 	expect("takeoff (A4)", send("takeoff (A4)", ct.Opts{Verb: "takeoff", Data: map[string]any{"hae_m": 60 + n0}}, ""), "acknowledged", "executed")
 	expect("goto", send("goto", ct.Opts{Verb: "goto", Data: map[string]any{"lat": 0.001, "lon": 0.001, "hae_m": 80 + n0, "speed_mps": 6.0}}, ""), "acknowledged", "executed")
+	// D2-P2: a task-bearing goto reports executing on acceptance and done_ok on arrival
+	// (within ARRIVAL_RADIUS_M 5 m / ARRIVAL_VERTICAL_M 5 m of the target).
+	expect("goto task (arrival)", send("goto task (arrival)", ct.Opts{Verb: "goto", TaskID: "tsk-e2e-arrival",
+		Data: map[string]any{"lat": 0.0013, "lon": 0.0009, "hae_m": 75 + n0}}, ""), "acknowledged", "executed")
+	arrived := func() (string, map[string]any) {
+		mu.Lock()
+		defer mu.Unlock()
+		var st []string
+		var last map[string]any
+		for _, r := range taskReports {
+			if r["task_id"] == "tsk-e2e-arrival" {
+				st, last = append(st, fmt.Sprint(r["state"])), r
+			}
+		}
+		return strings.Join(st, ","), last
+	}
+	arrivalDeadline := time.Now().Add(45 * time.Second)
+	for {
+		if st, _ := arrived(); strings.HasSuffix(st, "done_ok") || time.Now().After(arrivalDeadline) {
+			break
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
+	st, last := arrived()
+	okArr := st == "received,executing,done_ok"
+	tr.log("result", "", map[string]any{"case": "goto task arrives: done_ok from the bridge", "task_reports": st, "last": last, "pass": okArr})
+	if !okArr {
+		t.Errorf("goto task reports %q, want received,executing,done_ok", st)
+	}
 	// hold (task.abort's verb): DO_REPOSITION to the current position while airborne.
 	expect("hold", send("hold", ct.Opts{Verb: "hold"}, ""), "acknowledged", "executed")
 	expect("hold (reason abort)", send("hold (reason abort)", ct.Opts{Verb: "hold", Data: map[string]any{"reason": "abort"}}, ""), "acknowledged", "executed")

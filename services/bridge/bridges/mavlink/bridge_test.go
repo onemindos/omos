@@ -194,7 +194,7 @@ func newHarness(t *testing.T) *harness {
 		Keys: map[string]ed25519.PublicKey{"policy-test": pub}, SigRequired: true, Fence: fc,
 		MaxTTL: time.Minute, ClockSkew: 5 * time.Second, PositionInterval: 100 * time.Millisecond,
 		StatusInterval: time.Second, StaleS: 10, LinkTimeout: 3 * time.Second,
-		AckTimeout: 300 * time.Millisecond, AckRetries: 2,
+		AckTimeout: 300 * time.Millisecond, AckRetries: 2, ArrivalRadiusM: 5, ArrivalVerticalM: 5,
 	}
 	node := &gomavlib.Node{
 		Endpoints: []gomavlib.EndpointConf{gomavlib.EndpointUDPServer{Address: addr}},
@@ -731,5 +731,100 @@ func TestHoldRefusedWithoutFreshPosition(t *testing.T) {
 	}
 	if lat, lon, alt, ok := s.freshPosition(now, 10*time.Second); !ok || lat != 1e-6 || lon != 2e-6 || alt != 30 {
 		t.Fatalf("freshPosition %v %v %v %v", lat, lon, alt, ok)
+	}
+}
+
+// taskReports returns the data of evt.drone.sim-x1.task reports for taskID, in order.
+func (h *harness) taskReports(taskID string) []map[string]any {
+	h.t.Helper()
+	var out []map[string]any
+	for _, m := range h.bus.bySubject(h.b.taskSubject()) {
+		var env struct {
+			Causation string         `json:"causation"`
+			Data      map[string]any `json:"data"`
+		}
+		if err := json.Unmarshal(m.Data, &env); err != nil {
+			h.t.Fatal(err)
+		}
+		if env.Data["task_id"] == taskID {
+			env.Data["_causation"] = env.Causation
+			out = append(out, env.Data)
+		}
+	}
+	return out
+}
+
+func states(rs []map[string]any) string {
+	var s []string
+	for _, r := range rs {
+		s = append(s, fmt.Sprint(r["state"]))
+	}
+	return strings.Join(s, ",")
+}
+
+// D2-P2: a task-bearing goto reports executing when the vehicle accepts it and done_ok
+// when the vehicle reaches the target (mission-task.md §5: done_ok is set by the assignee).
+func TestGotoArrivalReportsDoneOK(t *testing.T) {
+	h := newHarness(t)
+	got := h.send(ct.Opts{Verb: "goto", TaskID: "tsk-arrive", Data: map[string]any{"lat": 0.002, "lon": 0.0015, "hae_m": 90.0}})
+	if len(got) != 2 || got[1]["outcome"] != "executed" {
+		t.Fatalf("goto: %s", outcomes(got))
+	}
+	h.veh.mu.Lock()
+	target := h.veh.ints[len(h.veh.ints)-1]
+	h.veh.mu.Unlock()
+	time.Sleep(300 * time.Millisecond) // several positions 120 m away: no arrival
+	if s := states(h.taskReports("tsk-arrive")); s != "received,executing" {
+		t.Fatalf("reports before arrival %s", s)
+	}
+	// Fly to 3 m short of the target (inside 5 m), 2 m low.
+	h.veh.mu.Lock()
+	h.veh.lat, h.veh.lon, h.veh.altMSL = float64(target.X)/1e7-3/111320.0, float64(target.Y)/1e7, float64(target.Z)-2
+	h.veh.mu.Unlock()
+	h.waitFor(func() bool { return len(h.taskReports("tsk-arrive")) == 3 }, "arrival report")
+	rs := h.taskReports("tsk-arrive")
+	done := rs[2]
+	res, _ := done["result"].(map[string]any)
+	if done["state"] != "done_ok" || done["status_version"] != 3.0 || res["arrived"] != true || res["source"] != "bridge" ||
+		res["distance_m"].(float64) > 3.5 || res["vertical_m"].(float64) > 2.5 || done["_causation"] != rs[1]["_causation"] {
+		t.Fatalf("arrival report %v (executing %v)", done, rs[1])
+	}
+	time.Sleep(200 * time.Millisecond) // reported once
+	if n := len(h.taskReports("tsk-arrive")); n != 3 {
+		t.Fatalf("arrival reported %d times in total reports", n)
+	}
+}
+
+// A later accepted command supersedes the goto: reaching the old target reports nothing.
+// A goto without task_id is never reported, and ARRIVAL_RADIUS_M=0 turns the report off.
+func TestGotoArrivalSupersededOrOff(t *testing.T) {
+	h := newHarness(t)
+	moveTo := func(x *common.MessageCommandInt) {
+		h.veh.mu.Lock()
+		h.veh.lat, h.veh.lon, h.veh.altMSL = float64(x.X)/1e7, float64(x.Y)/1e7, float64(x.Z)
+		h.veh.mu.Unlock()
+	}
+	lastInt := func() *common.MessageCommandInt {
+		h.veh.mu.Lock()
+		defer h.veh.mu.Unlock()
+		return h.veh.ints[len(h.veh.ints)-1]
+	}
+	h.send(ct.Opts{Verb: "goto", TaskID: "tsk-sup", Data: map[string]any{"lat": 0.002, "lon": 0.0015, "hae_m": 90.0}})
+	gotoTarget := lastInt()
+	if got := h.send(ct.Opts{Verb: "rtl"}); len(got) != 2 || got[1]["outcome"] != "executed" {
+		t.Fatalf("rtl: %s", outcomes(got))
+	}
+	moveTo(gotoTarget)
+	h.send(ct.Opts{Verb: "goto", Data: map[string]any{"lat": 0.0021, "lon": 0.0015, "hae_m": 90.0}}) // no task
+	moveTo(lastInt())
+	h.b.cfg.ArrivalRadiusM = 0
+	h.send(ct.Opts{Verb: "goto", TaskID: "tsk-off", Data: map[string]any{"lat": 0.0022, "lon": 0.0015, "hae_m": 90.0}})
+	moveTo(lastInt())
+	time.Sleep(400 * time.Millisecond)
+	if s := states(h.taskReports("tsk-sup")); s != "received,executing" {
+		t.Fatalf("superseded goto reports %s", s)
+	}
+	if s := states(h.taskReports("tsk-off")); s != "received,executing" {
+		t.Fatalf("arrival off: reports %s", s)
 	}
 }

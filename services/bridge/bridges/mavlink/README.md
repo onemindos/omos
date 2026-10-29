@@ -77,7 +77,19 @@ autopilot reads the `COMMAND_LONG` altitude frame is **unverified** (PX4 documen
 
 Task-bearing commands report on `evt.drone.{id}.task` with `Nats-Msg-Id`
 `{task_id}:{status_version}`; `status_version` increases by one per report across every command of
-a task for the life of the process (owner proposal P7).
+a task for the life of the process (owner proposal P7). Report states: `received` when the command
+is verified, then `executing` when the vehicle accepts it (`done_ok` at once for `arm`, `disarm`,
+`estop`; `done_not_ok`/`cancelled` for an abort hold), `done_not_ok` on a refusal or failure.
+
+**Arrival (D2-P2).** A task-bearing `goto` the vehicle accepted is reported `done_ok` once
+`GLOBAL_POSITION_INT` is within `ARRIVAL_RADIUS_M` horizontally and `ARRIVAL_VERTICAL_M`
+vertically of its target (both altitudes MSL; the HAE target was converted with the same geoid),
+with `result = {arrived: true, source: "bridge", distance_m, vertical_m}` and causation = the goto
+command id. It is reported once. Any later command the vehicle accepts (another goto, `hold`, `rtl`,
+`land`, `estop`, ...) supersedes the goto, and reaching its old target then reports nothing. A goto
+without `task_id` is never reported. `ARRIVAL_RADIUS_M=0` turns the report off. ArduPilot sends no
+"reached" message for a Guided reposition, so position against target is also how a real autopilot
+is judged; the tolerance on real hardware is an owner check (SITL).
 `estop` never waits behind another command and is not blocked by link state.
 
 | Verb | Level | MAVLink | Notes |
@@ -137,6 +149,7 @@ invalid signature is still refused. All other checks always apply.
 | `CMD_MAX_TTL`, `CLOCK_SKEW` | `60s`, `5s` | |
 | `POSITION_INTERVAL`, `STATUS_INTERVAL`, `STALE_S`, `LINK_TIMEOUT` | `200ms`, `1s`, `10`, `3s` | |
 | `ACK_TIMEOUT`, `ACK_RETRIES` | `1500ms`, `3` | |
+| `ARRIVAL_RADIUS_M`, `ARRIVAL_VERTICAL_M` | `5`, `5` | goto arrival tolerance (see Arrival); radius `0` = no arrival report |
 
 ## Run against the scripted drone
 

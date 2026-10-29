@@ -43,6 +43,13 @@ type Config struct {
 	LinkTimeout      time.Duration
 	AckTimeout       time.Duration
 	AckRetries       int
+
+	// Arrival: a task-bearing goto is reported done_ok once the vehicle is within
+	// ArrivalRadiusM horizontally and ArrivalVerticalM vertically of its target
+	// (mission-task.md §5: done_ok is set by the assignee; owner proposal D2-P2).
+	// ArrivalRadiusM 0 turns the arrival report off.
+	ArrivalRadiusM   float64
+	ArrivalVerticalM float64
 }
 
 func getenv(k, def string) string {
@@ -62,6 +69,18 @@ func durEnv(k string, def time.Duration) (time.Duration, error) {
 		return 0, fmt.Errorf("%s: invalid duration %q", k, v)
 	}
 	return d, nil
+}
+
+func floatEnv(k string, def, lo, hi float64) (float64, error) {
+	v := os.Getenv(k)
+	if v == "" {
+		return def, nil
+	}
+	f, err := strconv.ParseFloat(v, 64)
+	if err != nil || f < lo || f > hi {
+		return 0, fmt.Errorf("%s: want a number in [%g,%g], got %q", k, lo, hi, v)
+	}
+	return f, nil
 }
 
 func intEnv(k string, def, lo, hi int) (int, error) {
@@ -206,6 +225,12 @@ func loadConfig() (Config, error) {
 		return c, err
 	}
 	if c.AckRetries, err = intEnv("ACK_RETRIES", 3, 1, 10); err != nil {
+		return c, err
+	}
+	if c.ArrivalRadiusM, err = floatEnv("ARRIVAL_RADIUS_M", 5, 0, 1000); err != nil {
+		return c, err
+	}
+	if c.ArrivalVerticalM, err = floatEnv("ARRIVAL_VERTICAL_M", 5, 0.1, 1000); err != nil {
 		return c, err
 	}
 	return c, nil

@@ -11,6 +11,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/bluenviron/gomavlib/v3/pkg/dialects/ardupilotmega"
 	"github.com/bluenviron/gomavlib/v3/pkg/dialects/common"
 	"github.com/bluenviron/gomavlib/v3/pkg/message"
 
@@ -40,6 +41,16 @@ type Bridge struct {
 	taskMu  sync.Mutex
 	taskVer map[string]int // last status_version reported per task_id
 	taskIDs []string       // insertion order, to bound taskVer
+
+	arrMu   sync.Mutex
+	arrival *pendingArrival // the task-bearing goto the vehicle is flying, if any
+}
+
+// pendingArrival is the target of the last executed task-bearing goto. Any later command
+// the vehicle accepts replaces or clears it (the goto is superseded).
+type pendingArrival struct {
+	e             *command.Envelope
+	lat, lon, msl float64
 }
 
 // maxTrackedTasks bounds the per-task status_version memory.
@@ -80,6 +91,51 @@ func (b *Bridge) OnMessage(m message.Message) {
 			b.logf("[%s] publish position: %v", b.cfg.Source, err)
 		}
 	}
+	if _, ok := m.(*ardupilotmega.MessageGlobalPositionInt); ok {
+		b.checkArrival()
+	}
+}
+
+// trackArrival runs after the vehicle accepted a command: a task-bearing goto becomes the
+// pending arrival; any other accepted command (a new goto, hold, rtl, land, estop, ...)
+// supersedes it.
+func (b *Bridge) trackArrival(verb string, e *command.Envelope, req MavRequest) {
+	var a *pendingArrival
+	if verb == "goto" && e.TaskID != "" && b.cfg.ArrivalRadiusM > 0 {
+		a = &pendingArrival{e: e, lat: float64(req.X) / 1e7, lon: float64(req.Y) / 1e7, msl: float64(req.Z)}
+	}
+	b.arrMu.Lock()
+	b.arrival = a
+	b.arrMu.Unlock()
+}
+
+// checkArrival reports done_ok for the pending goto once GLOBAL_POSITION_INT is within the
+// arrival tolerance of its target. Both altitudes are MSL (the goto's HAE target was
+// converted with the same geoid model the vehicle is commanded in).
+func (b *Bridge) checkArrival() {
+	b.arrMu.Lock()
+	a := b.arrival
+	if a == nil {
+		b.arrMu.Unlock()
+		return
+	}
+	lat, lon, msl, ok := b.state.position()
+	if !ok {
+		b.arrMu.Unlock()
+		return
+	}
+	d := fence.Distance(fence.Point{Lat: lat, Lon: lon}, fence.Point{Lat: a.lat, Lon: a.lon})
+	dv := math.Abs(msl - a.msl)
+	if d > b.cfg.ArrivalRadiusM || dv > b.cfg.ArrivalVerticalM {
+		b.arrMu.Unlock()
+		return
+	}
+	b.arrival = nil
+	// Published under arrMu so a command accepted meanwhile reports after this one.
+	defer b.arrMu.Unlock()
+	b.logf("[%s] task %s: arrived %.1f m / %.1f m from the goto target of command %s", b.cfg.Source, a.e.TaskID, d, dv, a.e.ID)
+	b.publishTask(a.e, "done_ok", nil, map[string]any{"arrived": true, "source": "bridge",
+		"distance_m": round(d, 2), "vertical_m": round(dv, 2)})
 }
 
 // PublishStatus publishes tel.fleet.drone.{id}.status once.
@@ -223,12 +279,21 @@ func (b *Bridge) reportTask(e *command.Envelope, o outcome) {
 	default:
 		return
 	}
+	b.publishTask(e, state, errObj, nil)
+}
+
+// publishTask publishes one evt.drone.{id}.task report; result is omitted when nil.
+func (b *Bridge) publishTask(e *command.Envelope, state string, errObj any, result map[string]any) {
 	ver := b.nextTaskVersion(e.TaskID)
-	// Nats-Msg-Id = {task_id}:{status_version} (mission-task.md §7).
-	b.publishEvent(b.taskSubject(), "evt.drone.task", fmt.Sprintf("%s:%d", e.TaskID, ver), e, map[string]any{
+	data := map[string]any{
 		"task_id": e.TaskID, "state": state, "status_version": ver, "error": errObj,
 		"at_t": b.clock().UnixMilli(), "simulated": true,
-	})
+	}
+	if result != nil {
+		data["result"] = result
+	}
+	// Nats-Msg-Id = {task_id}:{status_version} (mission-task.md §7).
+	b.publishEvent(b.taskSubject(), "evt.drone.task", fmt.Sprintf("%s:%d", e.TaskID, ver), e, data)
 }
 
 // HandleCommand verifies one command from cmd.fleet.drone.{id}.{verb} and, if every
@@ -300,7 +365,13 @@ func (b *Bridge) HandleCommand(ctx context.Context, subject string, data []byte)
 	default:
 		mav["result"] = 0
 		abort := verbName == "hold" && res.Params.Reason != nil && *res.Params.Reason == "abort"
+		// The superseded goto stops counting before this executed report, and a new goto
+		// starts counting only after it, so a goto's executing report precedes its arrival.
+		b.arrMu.Lock()
+		b.arrival = nil
+		b.arrMu.Unlock()
 		b.report(e, outcome{Outcome: "executed", Verb: verbName, Mavlink: mav, abort: abort})
+		b.trackArrival(verbName, e, req)
 	}
 }
 
