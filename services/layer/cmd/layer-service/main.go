@@ -82,12 +82,19 @@ func main() {
 		Holder:        env("POD_NAME", host) + "-" + strconv.Itoa(os.Getpid()),
 		ReplayWindow:  envDur("REPLAY_WINDOW", 5*time.Minute),
 		ReplayMax:     envInt("REPLAY_MAX", 200000),
-		MaxWatches:    envInt("MAX_WATCHES", 1000),
+		MaxWatches:    envInt("MAX_WATCHES", layer.DefaultMaxWatches),
+		MaxSites:      envInt("MAX_SITES", 64),
 		Heartbeat:     envDur("WATCH_HEARTBEAT", 10*time.Second),
 		ManifestEvery: envDur("MANIFEST_EVERY", 30*time.Second),
 		CellsEvery:    envDur("CELLS_EVERY", 30*time.Second),
 		SiteEvery:     envDur("SITE_EVERY", 10*time.Second),
 		SiteSubject:   env("SITE_SUBJECT", "tel.fleet.node.*.status"),
+	}
+	if v, err := strconv.ParseInt(os.Getenv("WATCH_MEM_BUDGET_MB"), 10, 64); err == nil && v > 0 {
+		cfg.WatchMemBudget = v << 20
+	}
+	if v := os.Getenv("SITE_ALLOWLIST"); v != "" {
+		cfg.SiteAllow = strings.Split(v, ",")
 	}
 	if v := os.Getenv("SITE_STREAMS"); v != "" {
 		cfg.SiteStreams = strings.Split(v, ",")

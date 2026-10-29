@@ -39,7 +39,13 @@ the existing CRs `platform/nats/streams/kv-world-state.yaml` and `kv-fleet-state
   services. Cross-account callers are mapped to groups by `PRINCIPALS_FILE`; CLEAR and GREEN
   are visible to every known caller, AMBER and AMBER+STRICT need a group in `releasable_to`
   (with an empty list, the `org_group`), RED needs an explicit group. Unknown identities get
-  `forbidden`.
+  `forbidden`. A request with no header that crossed a service import (reply subject `_R_.`,
+  an import without `share: true`) is refused with `forbidden`, not trusted.
+- **Limits.** An entities-mode watch holds at most the layer `cap` (`too_many` at start or
+  renew, and a `too_many` batch that ends the watch when the view grows past it). All watches
+  together hold at most `WATCH_MEM_BUDGET_MB`; over it, the largest watch gets `resnapshot`.
+  Queued ops point at the shared entity and are rendered when the batch is built. A cells
+  watch takes a new diff only after the last one was sent.
 - **Layer membership.** Default layers follow layer-snapshot.md section 1. A `zone` belongs to
   the `tak` layer only when one of its sources has `data_type: cot`; every zone is in `zones`.
 - **Manifest `filters`.** A layer with several entity types has `filter: "ent.*.*.state"` and
@@ -56,10 +62,12 @@ the existing CRs `platform/nats/streams/kv-world-state.yaml` and `kv-fleet-state
 | `LEASE_BUCKET`, `LEASE_KEY`, `LEASE_TTL` | `world-state`, `_lease.layer-service`, `15s` | single-writer lease; `LEASE_BUCKET=none` for local runs |
 | `ENT_STREAM`, `TEL_STREAM`, `WORLD_BUCKET`, `FLEET_BUCKET` | `ENT`, `TEL`, `world-state`, `fleet-state` | names |
 | `REPLAY_WINDOW`, `REPLAY_MAX` | `5m`, `200000` | watch replay window |
-| `MAX_WATCHES` | `1000` | open watches |
+| `MAX_WATCHES` | `200` | open watches (goroutines and timers) |
+| `WATCH_MEM_BUDGET_MB` | `128` | estimated memory all watches may hold together (512Mi pod limit) |
 | `WATCH_HEARTBEAT` | `10s` | empty batch when nothing changed |
 | `MANIFEST_EVERY`, `CELLS_EVERY`, `SITE_EVERY` | `30s`, `30s`, `10s` | KV refresh |
 | `SITE_SUBJECT`, `SITE_STREAMS` | `tel.fleet.node.*.status`, all streams | site inputs |
+| `SITE_ALLOWLIST`, `MAX_SITES` | any valid site, `64` | sites accepted from `SITE_SUBJECT` (comma-separated list) |
 | `HTTP_ADDR` | `:8080` | `/healthz`, `/readyz` (lease held and caught up), `/metrics` |
 
 ## Tests

@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -295,7 +296,9 @@ func (f *Follower) Run(ctx context.Context) error {
 		f.resnapshots++
 		f.reasons = append(f.reasons, reason)
 		f.mu.Unlock()
-		if err != nil {
+		if err != nil || strings.HasPrefix(reason, "watch error") {
+			// Back off after a failure or an error reply (too_many, resnapshot, layer_down)
+			// instead of retrying in a tight loop.
 			select {
 			case <-ctx.Done():
 				return nil

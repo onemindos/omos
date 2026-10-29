@@ -84,7 +84,9 @@ messages. Not exercised with a real site leaf (no domain-sourced stream on this 
 
 Caller identity follows the policy service (PR #554): the server-set `Nats-Request-Info`
 header on a `share: true` import is the verified identity; same-account requests are trusted
-services (they may read `ENT` directly anyway). Rule: CLEAR and GREEN to every known caller;
+services (they may read `ENT` directly anyway). This fails closed: a request without the
+header whose reply subject was rewritten by a service import (`_R_.` prefix, an import
+configured without `share: true`) is refused with `forbidden` (`TestA5ImportWithoutShare`). Rule: CLEAR and GREEN to every known caller;
 AMBER and AMBER+STRICT to callers with a group in `releasable_to`, or with the `org_group` when
 the list is empty; RED only with an explicit group; unknown identities get `forbidden`. The
 entity service defaults to `AMBER` with an empty list when no source sets a marking
@@ -113,4 +115,7 @@ server source. Conservative setting: `response_threshold` of at least 2 minutes 
 | `aoi` `zone_id` | resolved from the `ent.zone.{id}.state` record's `geo.coords` (GeoJSON Polygon, or Point with `radius_m`) |
 | `zoom` omitted | entities mode (the cap still applies) |
 | `aoi` `polygon` | 3 to 1,000 points (bounds the per-entity cost); otherwise `bad_request` |
-| Watch on a large layer in entities mode | not capped; ops are paced by `max_rate_hz` and coalesced |
+| Watch in entities mode (any tier) | capped at the layer `cap`: a view over the cap at start or on a renew that changes AOI/zoom gets `too_many`; a view that grows past the cap ends the watch with a `too_many` batch. Zoom out (cells) or narrow the AOI |
+| Watch memory | all watches together hold at most `WATCH_MEM_BUDGET_MB` (128 MiB estimate, held sets plus queued ops); over it, the watch holding the most is ended with `resnapshot`. Queued entity ops point at the shared entity and are rendered at batch time |
+| Cell-mode watches | a new cell diff is taken only after the previous one was sent; watches with the same layer, cell zoom, AOI and caller share one grid per ENT change |
+| Site status from `tel.fleet.node.{site}.status` | at most `MAX_SITES` (64) distinct sites, pruned after the 30 s site timeout; `SITE_ALLOWLIST` restricts them to named sites |
