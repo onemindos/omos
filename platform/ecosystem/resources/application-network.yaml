@@ -40,6 +40,17 @@ spec:
       ports:
         - protocol: TCP
           port: 4000
+    # onemind-mcp: model list (read-only virtual key limited to /v1/models), platform/hermes/mcp.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: hermes
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: onemind-mcp
+      ports:
+        - protocol: TCP
+          port: 4000
     - from:
         - namespaceSelector:
             matchLabels:

@@ -107,3 +107,87 @@ spec:
     ports:
     - protocol: TCP
       port: 8080
+  # Owner-approved read-only apps (2026-10-29): Tempo and Grafana in monitoring.
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: tempo
+    ports:
+    - protocol: TCP
+      port: 3200
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: grafana
+    ports:
+    - protocol: TCP
+      port: 3000
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: onemind-ai
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: litellm
+          app.kubernetes.io/instance: litellm
+    ports:
+    - protocol: TCP
+      port: 4000
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: argocd
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: argocd-server
+    ports:
+    - protocol: TCP
+      port: 8080
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: backstage
+      podSelector:
+        matchLabels:
+          app: backstage
+    ports:
+    - protocol: TCP
+      port: 7007
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: onetak
+      podSelector:
+        matchLabels:
+          app: onetak-media
+    ports:
+    - protocol: TCP
+      port: 4000
+  # Prepared for n8n and Karakeep (disabled until the owner seals their API keys).
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: n8n
+      podSelector:
+        matchLabels:
+          app: n8n
+    ports:
+    - protocol: TCP
+      port: 5678
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: karakeep
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: karakeep
+          app.kubernetes.io/component: web
+    ports:
+    - protocol: TCP
+      port: 3000

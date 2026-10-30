@@ -23,8 +23,32 @@ data:
     readTimeout: 30s
     writeTimeout: 30s
 
-    # no auth — cluster-internal; ingress/LB controls outside reach
-    # (default authMethod 'internal' with zero users = open)
+    # authMethod 'internal' with the upstream defaults kept: streams are open inside the
+    # cluster (publish/read/playback for any user) and the API/metrics/pprof are localhost only.
+    # Setting authInternalUsers replaces those defaults, so the first two entries restate them.
+    # The third is the read identity of the onemind-mcp hub (platform/hermes/mcp): MediaMTX has
+    # no read-only API action, so `api` also permits config/kick writes; the credential is held
+    # only by onemind-mcp (sealed, hash only here), whose adapter issues fixed GETs.
+    authInternalUsers:
+      - user: any
+        pass:
+        ips: []
+        permissions:
+          - action: publish
+          - action: read
+          - action: playback
+      - user: any
+        pass:
+        ips: ['127.0.0.1', '::1']
+        permissions:
+          - action: api
+          - action: metrics
+          - action: pprof
+      - user: mcp-read
+        pass: sha256:WAEbA+7KepierEzWN1xTExuGRxQx+gaXLuEShiqNAyI=
+        ips: []
+        permissions:
+          - action: api
 
     api: yes
     apiAddress: :4000
@@ -78,24 +102,27 @@ spec:
     metadata:
       labels:
         app: onetak-media
+      annotations:
+        # MediaMTX reads its config at start. Bump when mediamtx.yml changes so Argo rolls the pod.
+        onemind.io/config-rev: "2026-10-29-api-user"
     spec:
       containers:
         - name: mediamtx
           image: bluenviron/mediamtx:1-ffmpeg
           ports:
-            - { containerPort: 8554, name: rtsp }
-            - { containerPort: 1935, name: rtmp }
-            - { containerPort: 8888, name: hls }
-            - { containerPort: 8889, name: webrtc }
-            - { containerPort: 8890, name: srt, protocol: UDP }
-            - { containerPort: 4000, name: api }
+            - {containerPort: 8554, name: rtsp}
+            - {containerPort: 1935, name: rtmp}
+            - {containerPort: 8888, name: hls}
+            - {containerPort: 8889, name: webrtc}
+            - {containerPort: 8890, name: srt, protocol: UDP}
+            - {containerPort: 4000, name: api}
           volumeMounts:
             - name: config
               mountPath: /config
           args: ["/config/mediamtx.yml"]
           resources:
-            requests: { cpu: 100m, memory: 128Mi }
-            limits:   { cpu: "1",  memory: 512Mi }
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: "1", memory: 512Mi}
       volumes:
         - name: config
           configMap:
@@ -109,11 +136,11 @@ metadata:
   labels:
     app: onetak-media
 spec:
-  selector: { app: onetak-media }
+  selector: {app: onetak-media}
   ports:
-    - { name: rtsp,   port: 8554, targetPort: 8554 }
-    - { name: rtmp,   port: 1935, targetPort: 1935 }
-    - { name: hls,    port: 8888, targetPort: 8888 }
-    - { name: webrtc, port: 8889, targetPort: 8889 }
-    - { name: srt,    port: 8890, targetPort: 8890, protocol: UDP }
-    - { name: api,    port: 4000, targetPort: 4000 }
+    - {name: rtsp, port: 8554, targetPort: 8554}
+    - {name: rtmp, port: 1935, targetPort: 1935}
+    - {name: hls, port: 8888, targetPort: 8888}
+    - {name: webrtc, port: 8889, targetPort: 8889}
+    - {name: srt, port: 8890, targetPort: 8890, protocol: UDP}
+    - {name: api, port: 4000, targetPort: 4000}

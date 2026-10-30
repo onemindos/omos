@@ -77,6 +77,11 @@ spec:
             secretKeyRef:
               name: backstage-mcp
               key: MCP_TOKEN
+        - name: ONEMIND_MCP_HUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: backstage-mcp
+              key: ONEMIND_MCP_HUB_TOKEN
         # Read-only Authentik token for the org sync (authentik.orgSync, off by default). Optional:
         # the owner seals backstage-authentik-catalog; until then the variable is simply absent.
         - name: AUTHENTIK_CATALOG_TOKEN

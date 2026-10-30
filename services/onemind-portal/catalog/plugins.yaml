@@ -3015,23 +3015,23 @@ kind: Component
 metadata:
   name: mcp-adapter-mediamtx
   title: 'MCP adapter: mediamtx'
-  description: Live media stream paths, readiness and traffic without camera control. Adapter implemented but disabled
-    in apps.yaml until the blocker is cleared.
+  description: Live media stream paths, readiness and traffic without camera control. Read-only adapter served by
+    onemind-mcp and reached by Hermes through the LiteLLM MCP hub.
   tags:
   - plugin
   - mcp-adapter
-  - parked
+  - live
   - cluster
   - mcp
   labels:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: parked
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/pillar: so
   annotations:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: parked
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
@@ -3044,11 +3044,9 @@ metadata:
       not probed
     onemind.io/mcp-app-id: mediamtx
     onemind.io/mcp-url-env: MEDIAMTX_URL
-    onemind.io/blocked-reason: Live preflight returned HTTP 401. Dedicated MediaMTX API-read identity and verified
-      authentication adapter required; stream source credentials must not be exposed.
 spec:
   type: mcp-adapter
-  lifecycle: parked
+  lifecycle: production
   owner: group:default/onemind-admins
   system: onemind-plugin-ecosystem
   subcomponentOf: component:default/onemind-mcp
@@ -3089,8 +3087,8 @@ metadata:
       not probed
     onemind.io/mcp-app-id: karakeep
     onemind.io/mcp-url-env: KARAKEEP_URL
-    onemind.io/blocked-reason: Dedicated Karakeep user API token, scoped network ingress and authenticated acceptance
-      required.
+    onemind.io/blocked-reason: 'Owner step: in Karakeep (Settings > API Keys) create a key named onemind-mcp and
+      seal it as KARAKEEP_API_TOKEN. Network, adapter and URL are ready; save_link stays off.'
 spec:
   type: mcp-adapter
   lifecycle: parked
@@ -3135,8 +3133,8 @@ metadata:
       not probed
     onemind.io/mcp-app-id: n8n
     onemind.io/mcp-url-env: N8N_URL
-    onemind.io/blocked-reason: Dedicated n8n API key with read scope, scoped network ingress and authenticated acceptance
-      required.
+    onemind.io/blocked-reason: 'Owner step: in n8n (Settings > n8n API) create a key named onemind-mcp with only
+      workflow:list and execution:list scopes and seal it as N8N_API_TOKEN.'
 spec:
   type: mcp-adapter
   lifecycle: parked
@@ -3198,23 +3196,23 @@ kind: Component
 metadata:
   name: mcp-adapter-grafana
   title: 'MCP adapter: grafana'
-  description: Dashboard discovery and observability navigation. Adapter implemented but disabled in apps.yaml until
-    the blocker is cleared.
+  description: Dashboard discovery and observability navigation. Read-only adapter served by onemind-mcp and reached
+    by Hermes through the LiteLLM MCP hub.
   tags:
   - plugin
   - mcp-adapter
-  - parked
+  - live
   - cluster
   - mcp
   labels:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: parked
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/pillar: so
   annotations:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: parked
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
@@ -3227,10 +3225,9 @@ metadata:
       not probed
     onemind.io/mcp-app-id: grafana
     onemind.io/mcp-url-env: GRAFANA_URL
-    onemind.io/blocked-reason: Dedicated viewer service-account token and authenticated acceptance required.
 spec:
   type: mcp-adapter
-  lifecycle: parked
+  lifecycle: production
   owner: group:default/onemind-admins
   system: onemind-plugin-ecosystem
   subcomponentOf: component:default/onemind-mcp
@@ -3243,23 +3240,23 @@ kind: Component
 metadata:
   name: mcp-adapter-tempo
   title: 'MCP adapter: tempo'
-  description: Distributed traces by trace identifier. Adapter implemented but disabled in apps.yaml until the blocker
-    is cleared.
+  description: Distributed traces by trace identifier. Read-only adapter served by onemind-mcp and reached by Hermes
+    through the LiteLLM MCP hub.
   tags:
   - plugin
   - mcp-adapter
-  - parked
+  - live
   - cluster
   - mcp
   labels:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: parked
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/pillar: so
   annotations:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: parked
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
@@ -3272,11 +3269,9 @@ metadata:
       not probed
     onemind.io/mcp-app-id: tempo
     onemind.io/mcp-url-env: TEMPO_URL
-    onemind.io/blocked-reason: Adapter implemented; confirm trace service endpoint and representative trace ID before
-      enabling.
 spec:
   type: mcp-adapter
-  lifecycle: parked
+  lifecycle: production
   owner: group:default/onemind-admins
   system: onemind-plugin-ecosystem
   subcomponentOf: component:default/onemind-mcp
@@ -3377,26 +3372,27 @@ kind: Component
 metadata:
   name: mcp-adapter-backstage
   title: 'MCP adapter: backstage'
-  description: OneMind service catalog and developer workspace. No adapter implemented yet; the entry reserves the
-    application in apps.yaml.
+  description: OneMind service catalog and developer workspace. Read-only adapter served by onemind-mcp and reached
+    by Hermes through the LiteLLM MCP hub.
   tags:
   - plugin
   - mcp-adapter
-  - planned
+  - live
   - cluster
   - mcp
   labels:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: planned
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/pillar: so
   annotations:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: planned
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
+    onemind.io/plugin-subtype: backstage
     onemind.io/connects-to: backstage,onemind-mcp,litellm
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
@@ -3404,11 +3400,10 @@ metadata:
     onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
       not probed
     onemind.io/mcp-app-id: backstage
-    onemind.io/blocked-reason: Verify existing portal MCP/API capabilities and dedicated agent identity before federation;
-      do not copy portal admin credentials.
+    onemind.io/mcp-url-env: BACKSTAGE_URL
 spec:
   type: mcp-adapter
-  lifecycle: planned
+  lifecycle: production
   owner: group:default/onemind-admins
   system: onemind-plugin-ecosystem
   subcomponentOf: component:default/onemind-mcp
@@ -3769,26 +3764,27 @@ kind: Component
 metadata:
   name: mcp-adapter-litellm
   title: 'MCP adapter: litellm'
-  description: Model gateway and available routed AI models. No adapter implemented yet; the entry reserves the
-    application in apps.yaml.
+  description: Model gateway and available routed AI models. Read-only adapter served by onemind-mcp and reached
+    by Hermes through the LiteLLM MCP hub.
   tags:
   - plugin
   - mcp-adapter
-  - planned
+  - live
   - cluster
   - mcp
   labels:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: planned
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/pillar: so
   annotations:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: planned
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
+    onemind.io/plugin-subtype: litellm
     onemind.io/connects-to: litellm,onemind-mcp,litellm
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
@@ -3796,11 +3792,10 @@ metadata:
     onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
       not probed
     onemind.io/mcp-app-id: litellm
-    onemind.io/blocked-reason: Dedicated model-list identity and reviewed adapter required; no billing changes or
-      provider-key disclosure.
+    onemind.io/mcp-url-env: LITELLM_URL
 spec:
   type: mcp-adapter
-  lifecycle: planned
+  lifecycle: production
   owner: group:default/onemind-admins
   system: onemind-plugin-ecosystem
   subcomponentOf: component:default/onemind-mcp
@@ -4031,26 +4026,27 @@ kind: Component
 metadata:
   name: mcp-adapter-argocd
   title: 'MCP adapter: argocd'
-  description: GitOps application delivery and rollout. No adapter implemented yet; the entry reserves the application
-    in apps.yaml.
+  description: GitOps application delivery and rollout. Read-only adapter served by onemind-mcp and reached by Hermes
+    through the LiteLLM MCP hub.
   tags:
   - plugin
   - mcp-adapter
-  - planned
+  - live
   - cluster
   - mcp
   labels:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: planned
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/pillar: so
   annotations:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: planned
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
+    onemind.io/plugin-subtype: argocd
     onemind.io/connects-to: argocd,onemind-mcp,litellm
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
@@ -4058,11 +4054,10 @@ metadata:
     onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
       not probed
     onemind.io/mcp-app-id: argocd
-    onemind.io/blocked-reason: Git remains deployment authority. Dedicated read identity and reviewed adapter required;
-      no unrestricted sync/delete API.
+    onemind.io/mcp-url-env: ARGOCD_URL
 spec:
   type: mcp-adapter
-  lifecycle: planned
+  lifecycle: production
   owner: group:default/onemind-admins
   system: onemind-plugin-ecosystem
   subcomponentOf: component:default/onemind-mcp
