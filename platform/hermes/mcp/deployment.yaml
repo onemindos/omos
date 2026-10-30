@@ -37,7 +37,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: mcp
-          image: ghcr.io/onemindos/onemind-mcp@sha256:9308342f592fb0b7b5dfaefa244bc2d5e8083751a4cae596bd8642b4813342b3
+          image: ghcr.io/onemindos/onemind-mcp@sha256:3b5340bda5bbe389fbe06e842bf8a0e8ec47d943e60a491cdd91f169e059a82b
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false

@@ -16,7 +16,7 @@ onemind-hermes (ns hermes)
 LiteLLM proxy  http://litellm.onemind-ai.svc.cluster.local:4000/mcp/   (ns onemind-ai, Argo app ecosystem-litellm)
    │  per-key scoping: object_permission.mcp_servers / mcp_tool_permissions
    ├──► onemind      → http://onemind-mcp.hermes.svc.cluster.local:8000/mcp   (Bearer ONEMIND_MCP_TOKEN)
-   │                   32 app adapters in apps.yaml (8 enabled, read-only)
+   │                   32 app adapters in apps.yaml (14 enabled, read-only)
    ├──► <app>        → future: an app's own MCP server (streamable HTTP)
    └──► <app>        → future: an app's OpenAPI spec, exposed as MCP tools by LiteLLM (spec_path)
 ```
