@@ -267,15 +267,20 @@ kubectl --context $CTX get replicationsources.volsync.backube,schedules.velero.i
 
 Ownership rule used above: a workload carrying `argocd.argoproj.io/tracking-id` is Argo-managed; `meta.helm.sh/release-name` without it is Helm-CLI; neither means untracked.
 
-## Nextcloud file sync — 2026-10-23
+## Nextcloud file sync — 2026-10-26
 
 Observed live: Argo Application `platform-nextcloud` is Synced/Healthy, Nextcloud
 35.0.2 reports installed without maintenance/database upgrade pending, and the
 application (2/2) and Redis (1/1) pods are healthy. The retained file PVC is bound
 at 200 GiB; the VolSync cache PVC is 1 GiB. Private HTTPS is available at
 `https://onemind-files.tail717ba0.ts.net/`. A separate database/role uses existing
-CNPG. PRs #424/#425 are merged. The Mac's full-library upload has started;
-Samsung FolderSync two-way acceptance and full-transfer completion remain pending.
+CNPG. PRs #424/#425/#426 are merged. The Mac's renamed-folder failure was repaired
+by reconnecting its preserved journal to `/Users/zeus/OneMind - 10-23-26`; real
+uploads resumed and a new Mac edit matches the server by SHA-256. Current source
+inventory is approximately 159 GiB, including a 36.67 GiB archive. A 300 GiB claim
+is proposed for chunk-assembly headroom; the observed live claim remains 200 GiB
+until cost approval, merge and verified Argo/CSI expansion. Final Samsung acceptance,
+full-transfer completion and coordinated restore remain pending.
 See [setup, cost and acceptance](../platform/nextcloud/README.md).
 
 ## OneMind application MCP — verified 2026-10-27

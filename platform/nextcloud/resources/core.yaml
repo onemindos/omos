@@ -32,7 +32,8 @@ spec:
   storageClassName: do-block-storage-retain
   resources:
     requests:
-      storage: 200Gi
+      # Full-library data plus temporary chunk assembly and version headroom.
+      storage: 300Gi
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
