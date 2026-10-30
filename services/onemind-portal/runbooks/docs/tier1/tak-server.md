@@ -24,7 +24,7 @@ kubectl --context do-nyc3-omos-cloud -n takserver logs deploy/takserver-api | gr
 
 A joined Ignite grid reports `ACTIVE` in the config tier's topology snapshot. Separate certificate or enrollment failures, message routing, database or storage problems and the NATS bridge before acting; more symptoms are in [TAK services](../tak.md). Do not disable TLS validation to make a client connect.
 
-Certificate enrollment V2 signs with `/certs-configmap/ca-signing.jks`, projected into messaging only from the SealedSecret `tak-enrollment-signer`. When that file was missing, enrollment returned HTTP 500 while existing clients kept working; the repair and its rollback are in `docs/operations/tak-enrollment-repair-2026-10-25.md`.
+Certificate enrollment V2 signs with `/certs-configmap/ca-signing.jks`, projected into messaging only from the SealedSecret `tak-ca-credentials` (since 2026-10-29; it was `tak-enrollment-signer` before the CA password rotation). When that file was missing, enrollment returned HTTP 500 while existing clients kept working; the repair and its rollback are in `docs/operations/tak-enrollment-repair-2026-10-25.md`.
 
 ## Backups and recovery
 

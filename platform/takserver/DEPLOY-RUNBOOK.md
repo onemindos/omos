@@ -29,8 +29,19 @@ first install, not as the way to change a running cluster.
 replaces `__CA_KEY_PASS__`, `__TAK_STORE_PASS__` and `__LDAP_BIND_PASS__` from Secret environment
 variables (awk with `ENVIRON`, so no secret on a command line) and fails the pod if any placeholder is left.
 `takserver-api` and `takserver-plugins` have no CoreConfig of their own; they receive the TLS
-configuration from the config service, so **restart order is config, messaging, api, plugins**
-(Argo sync waves 0, 1, 2, 3 enforce it). `/certs-configmap/` in those four pods is a projected volume:
+configuration from the cluster, so **restart order is config, messaging, api, plugins**
+(Argo sync waves 0, 1, 2, 3 enforce it).
+
+**The running cluster holds the CoreConfig in Ignite memory, and it wins over the file.** Verified on
+2026-10-29: restarting only the config pod made the config service rewrite `/opt/tak/conf/CoreConfig.xml`
+with the old (cached) passwords although the substituted file had the new ones, and messaging then failed
+in `JwtUtils.loadKeyPair` with "keystore password was incorrect". Ignite (`takserver-ignite-0`) has no
+volume, so **any change to a CoreConfig value (passwords, ports, auth) needs a full bounce**: scale
+api, plugins, messaging and config to 0, delete the `takserver-ignite-0` pod and wait for Ready, then bring
+config, messaging, api and plugins back in that order (with Argo auto-sync paused, scale them to 1 and
+let the next sync apply the spec). Expect about 8 minutes without 8089/8443/8446. Check afterwards that
+`/opt/tak/conf/CoreConfig.xml` in the config pod still holds the new values: if the passwords are back to
+the old ones, Ignite served the old cache. `/certs-configmap/` in those four pods is a projected volume:
 the `cert-migration` ConfigMap restricted to an allowlist of keys (no CA keys, no server stores) plus the
 two Secrets above. A key added to `cert-migration` is **not** mounted unless it is added to that list.
 
