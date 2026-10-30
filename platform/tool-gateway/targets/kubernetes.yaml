@@ -1,0 +1,8 @@
+# Kubernetes MCP server (containers/kubernetes-mcp-server) in tool-gateway: platform/tool-gateway/manifests/backends/kubernetes/.
+# No bearer: the server uses its own ServiceAccount and the NetworkPolicy admits only the gateway pod.
+# Tools appear as kubernetes_<tool> (Hermes: mcp_ops_kubernetes_<tool>). Classification: policy/classification/kubernetes.yaml.
+name: kubernetes
+groups: [ops]
+target:
+  mcp:
+    host: http://mcp-kubernetes.tool-gateway.svc.cluster.local:8080/mcp

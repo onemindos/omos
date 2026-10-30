@@ -1,0 +1,157 @@
+# Identity of the Kubernetes MCP server (Deployment mcp-kubernetes). This is the hard limit under the tool classification:
+# whatever the gateway lets through, the API server only does what these rules allow. Design: docs/architecture/onemind-tool-gateway.md
+# section 3 and docs/operations/tool-gateway-kubernetes.md.
+#
+# - READ: built-in `view` (namespaced workloads, ConfigMaps, pods/log, events, the CRDs that aggregate to it) plus the platform CRDs below.
+#   Secrets are not readable: `view` excludes them and nothing here grants them (the server also denies the Secret kind itself).
+# - WRITE: patch on workloads (rollout restart, image or env edits through server-side apply), scale subresources, and patch on the one
+#   ConfigMap `gateway-selftest`. No `create` anywhere: new objects come from Git through Argo CD.
+# - DESTRUCTIVE: delete on Pods only (a restart). Nothing else can be deleted. pods/exec, pods/eviction, nodes/proxy, RBAC and
+#   Secret verbs are not granted.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8s-operator
+  namespace: tool-gateway
+  labels:
+    app.kubernetes.io/name: mcp-kubernetes
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: tool-gateway-k8s-read
+  labels:
+    app.kubernetes.io/name: mcp-kubernetes
+rules:
+- apiGroups: [""]
+  resources: [nodes, persistentvolumes]
+  verbs: [get, list, watch]
+- apiGroups: [storage.k8s.io]
+  resources: [storageclasses, volumeattachments, csidrivers]
+  verbs: [get, list, watch]
+- apiGroups: [apiextensions.k8s.io]
+  resources: [customresourcedefinitions]
+  verbs: [get, list, watch]
+- apiGroups: [metrics.k8s.io]
+  resources: [pods, nodes]
+  verbs: [get, list]
+# Platform CRDs that do not aggregate to `view`. Left out on purpose because their specs carry inline credentials:
+# clickhouse.altinity.com (users.*.password), dapr.io (Component metadata). They stay reachable through their own backends.
+- apiGroups:
+  - argoproj.io
+  - postgresql.cnpg.io
+  - barmancloud.cnpg.io
+  - jetstream.nats.io
+  - gateway.networking.k8s.io
+  - monitoring.coreos.com
+  - keda.sh
+  - eventing.keda.sh
+  - velero.io
+  - volsync.backube
+  - snapshot.storage.k8s.io
+  - tailscale.com
+  - cilium.io
+  - wgpolicyk8s.io
+  - reports.kyverno.io
+  - policies.kyverno.io
+  resources: ["*"]
+  verbs: [get, list, watch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: tool-gateway-k8s-write
+  labels:
+    app.kubernetes.io/name: mcp-kubernetes
+rules:
+# resources_create_or_update is a server-side apply (PATCH): rollout restart, image bump, env edit. Existing objects only.
+- apiGroups: [apps]
+  resources: [deployments, statefulsets, daemonsets]
+  verbs: [patch]
+- apiGroups: [batch]
+  resources: [cronjobs]
+  verbs: [patch]
+# resources_scale reads and writes the scale subresource. The tool is classified destructive (execute route only).
+- apiGroups: [apps]
+  resources: [deployments/scale, statefulsets/scale, replicasets/scale]
+  verbs: [get, update, patch]
+# pods_delete. The only delete verb this identity has.
+- apiGroups: [""]
+  resources: [pods]
+  verbs: [delete]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: tool-gateway-k8s-view
+  labels:
+    app.kubernetes.io/name: mcp-kubernetes
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+- kind: ServiceAccount
+  name: k8s-operator
+  namespace: tool-gateway
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: tool-gateway-k8s-read
+  labels:
+    app.kubernetes.io/name: mcp-kubernetes
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tool-gateway-k8s-read
+subjects:
+- kind: ServiceAccount
+  name: k8s-operator
+  namespace: tool-gateway
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: tool-gateway-k8s-write
+  labels:
+    app.kubernetes.io/name: mcp-kubernetes
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tool-gateway-k8s-write
+subjects:
+- kind: ServiceAccount
+  name: k8s-operator
+  namespace: tool-gateway
+---
+# The safe-write test object (selftest.yaml) is the only ConfigMap this identity may change. A rule limited by name cannot cover
+# `create`, which is why the object lives in Git.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: tool-gateway-k8s-selftest
+  namespace: tool-gateway
+  labels:
+    app.kubernetes.io/name: mcp-kubernetes
+rules:
+- apiGroups: [""]
+  resources: [configmaps]
+  resourceNames: [gateway-selftest]
+  verbs: [patch, update]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tool-gateway-k8s-selftest
+  namespace: tool-gateway
+  labels:
+    app.kubernetes.io/name: mcp-kubernetes
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: tool-gateway-k8s-selftest
+subjects:
+- kind: ServiceAccount
+  name: k8s-operator
+  namespace: tool-gateway
