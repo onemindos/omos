@@ -37,7 +37,7 @@ Then:
   `cert/truststore.p12`) with **non-indexed** `caLocation`/`certificateLocation` in the
   `com.atakmap.app_preferences` block; `connectString0` stays indexed in `cot_streams`.
 - p12 files sit **flat at the zip root**; iTAK relocates them into its internal `cert/` dir on import.
-- p12 password is the keystore password (TAK default until step-2 rotation; see Secret tak-keystores in ns takserver) (legacy-encrypted — read with `openssl ... -legacy`).
+- p12 password is the one the package was built with (`P12_PASS` for `build-itak-datapackage.sh`, `CAPASS` for `build-datapackage.sh`; both required, no default). Legacy-encrypted — read with `openssl ... -legacy`.
 
 Verify the cert authenticates *before* handing it to the user:
 ```bash

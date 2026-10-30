@@ -30,7 +30,7 @@ spec:
       - command:
         - /bin/sh
         - -c
-        - . /setenv.sh; cp /keystores/* /certs/files/ 2>/dev/null; cp /userauth-input/UserAuthenticationFile.xml
+        - . /setenv.sh; cp /userauth-input/UserAuthenticationFile.xml
           /UserAuthenticationFile.xml 2>/dev/null; exec java -server -XX:+AlwaysPreTouch
           -XX:+UseG1GC -XX:+ScavengeBeforeFullGC -XX:+DisableExplicitGC -XX:MaxRAMPercentage=${MAX_HEAP_PERCENT}
           -Dspring.profiles.active=api,consolelog -Dkeystore.pkcs12.legacy -jar takserver.war
@@ -85,8 +85,6 @@ spec:
         volumeMounts:
         - mountPath: /certs-configmap/
           name: config
-        - mountPath: /keystores/
-          name: tak-keystores
         - mountPath: /userauth-input/UserAuthenticationFile.xml
           name: tak-userauth
           subPath: UserAuthenticationFile.xml
@@ -114,12 +112,6 @@ spec:
                 path: admin-trusted.pem
               - key: admin.csr
                 path: admin.csr
-              - key: admin.jks
-                path: admin.jks
-              - key: admin.key
-                path: admin.key
-              - key: admin.p12
-                path: admin.p12
               - key: admin.pem
                 path: admin.pem
               - key: ca-trusted.pem
@@ -142,26 +134,38 @@ spec:
                 path: takserver-trusted.pem
               - key: takserver.csr
                 path: takserver.csr
-              - key: takserver.key
-                path: takserver.key
-              - key: takserver.p12
-                path: takserver.p12
               - key: takserver.pem
                 path: takserver.pem
-              - key: truststore-root.p12
-                path: truststore-root.p12
               - key: user-trusted.pem
                 path: user-trusted.pem
               - key: user.csr
                 path: user.csr
+              - key: user.pem
+                path: user.pem
+          - secret:
+              name: tak-leaf-identities
+              items:
+              - key: admin.jks
+                path: admin.jks
+              - key: admin.key
+                path: admin.key
+                mode: 256
+              - key: admin.p12
+                path: admin.p12
+              - key: takserver.key
+                path: takserver.key
+                mode: 256
+              - key: takserver.p12
+                path: takserver.p12
+              - key: truststore-root.p12
+                path: truststore-root.p12
               - key: user.jks
                 path: user.jks
               - key: user.key
                 path: user.key
+                mode: 256
               - key: user.p12
                 path: user.p12
-              - key: user.pem
-                path: user.pem
           - secret:
               name: tak-server-stores
               items:
@@ -175,10 +179,6 @@ spec:
           defaultMode: 420
           name: tak-ignite-config
         name: tak-ignite-config
-      - name: tak-keystores
-        secret:
-          defaultMode: 420
-          secretName: tak-keystores
       - configMap:
           defaultMode: 420
           name: tak-userauth
