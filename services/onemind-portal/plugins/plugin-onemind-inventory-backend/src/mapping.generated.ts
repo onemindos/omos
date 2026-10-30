@@ -258,7 +258,7 @@ export const mapping: InventoryMapping = {
       review: 'proposed',
     },
     'hermes-legacy': {
-      title: 'Hermes (Legacy)',
+      title: 'Hermes (old Legacy instance, being retired)',
       system: 'ai-agents',
       pillar: 'so',
       review: 'proposed',
@@ -378,7 +378,7 @@ export const mapping: InventoryMapping = {
       review: 'proposed',
     },
     'onemind-hermes': {
-      title: 'OneMind Hermes',
+      title: 'Legacy (onemind-hermes)',
       system: 'ai-agents',
       pillar: 'so',
       review: 'proposed',

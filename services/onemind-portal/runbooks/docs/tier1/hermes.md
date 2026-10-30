@@ -38,4 +38,4 @@ Never put a token in a git remote URL, in this repository or in Hermes' memory. 
 
 The pod is Ready, the leaf connection shows its account, and a real prompt gets a real answer; a Ready pod is not proof of working chat.
 
-Generated workload list: [Hermes (Legacy) app runbook](../apps/hermes-legacy.md).
+Generated workload list: [Hermes (old Legacy instance, being retired) app runbook](../apps/hermes-legacy.md).

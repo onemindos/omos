@@ -223,7 +223,7 @@ kind: System
 metadata:
   name: ai-agents
   title: AI & agents
-  description: Hermes (Legacy), agent consoles, model gateways and runtimes, model
+  description: Legacy (onemind-hermes), agent consoles, model gateways and runtimes, model
     providers and workflow automation.
   labels:
     onemind.io/catalog-axis: deployment
@@ -714,8 +714,8 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: hermes-legacy
-  title: Hermes (Legacy)
-  description: Legacy AI — cloud
+  title: Hermes (old Legacy instance, being retired)
+  description: Old Legacy instance (being retired)
   tags:
     - ai-agents
   links:
@@ -7867,7 +7867,7 @@ metadata:
   name: onemind-hermes
   tags:
     - kubernetes
-  title: OneMind Hermes
+  title: Legacy (onemind-hermes)
   description: Hermes v0.22.5 instance with the single Legacy soul in the hermes
     namespace (Argo application platform-onemind-hermes); no NATS sidecar, no
     imported Legacy data.
