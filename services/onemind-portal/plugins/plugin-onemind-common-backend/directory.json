@@ -41,7 +41,7 @@
   },
   {
     "name": "hermes-legacy",
-    "title": "Hermes (Legacy)",
+    "title": "Hermes (old Legacy instance, being retired)",
     "url": "https://hermes-agent.tail717ba0.ts.net/login?next=%2F",
     "description": "Legacy AI — cloud",
     "group": "ai-agents",

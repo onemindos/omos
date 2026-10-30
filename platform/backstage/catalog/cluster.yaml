@@ -851,7 +851,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: k8s-hermes-hermes-legacy-1e93d498
-  title: Hermes (Legacy) — Core
+  title: Hermes (old Legacy instance, being retired) — Core
   description: Deployment in hermes
   annotations:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=hermes,onemind.io/agent=legacy
@@ -884,7 +884,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: k8s-hermes-onemind-hermes-2c3922bb
-  title: OneMind Hermes — Core
+  title: Legacy (onemind-hermes) — Core
   description: Deployment in hermes
   annotations:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=onemind-hermes

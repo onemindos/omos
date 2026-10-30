@@ -84,7 +84,7 @@ systems:
     domain: domain:default/onemind-so
   - name: ai-agents
     title: AI & agents
-    description: Hermes (Legacy), agent consoles, model gateways and runtimes, model providers and workflow automation.
+    description: Legacy (onemind-hermes), agent consoles, model gateways and runtimes, model providers and workflow automation.
     pillar: so
     review: proposed
     domain: domain:default/onemind-so
@@ -282,7 +282,7 @@ apps:
     system: ai-agents
     description: Model gateway.
   - name: onemind-hermes
-    title: OneMind Hermes
+    title: Legacy (onemind-hermes)
     system: ai-agents
     description: Hermes v0.22.5 instance with the single Legacy soul in the hermes namespace (Argo application platform-onemind-hermes); no NATS sidecar, no imported Legacy data.
   - name: onemind-mcp
