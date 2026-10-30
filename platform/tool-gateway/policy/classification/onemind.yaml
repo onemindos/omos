@@ -1,0 +1,28 @@
+# Tool classification for gateway target 'onemind'. Reviewed in Git; unlisted = destructive (hidden).
+# Schema and rules: scripts/gateway/classification.py. Refresh: scripts/gateway/classify_tools.py.
+target: onemind
+read:
+- alertmanager_alerts
+- apps_describe
+- apps_list
+- argocd_application
+- argocd_applications
+- backstage_entities
+- backstage_entity
+- grafana_dashboards
+- litellm_models
+- loki_query
+- mediamtx_paths
+- nats_jetstream_stats
+- nats_server_stats
+- ollama_models
+- ollama_running_models
+- opencost_allocation
+- prometheus_query
+- stac_collections
+- stac_search
+- tempo_trace
+# The onemind-mcp adapters are read only by construction (readOnlyHint true on every tool).
+write: []
+destructive: []
+physical: []

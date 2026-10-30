@@ -128,6 +128,13 @@ Deviations from this design that the spike forced (all applied in the Phase 1 PR
 8. **Hermes is not touched in Phase 1.** The Phase 1 row of section 7 adds a Hermes `ops` server next to the LiteLLM entry; by owner
    instruction that moves to Phase 5. Phase 1 only adds the Hermes egress rule to the gateway and the sealed client key, and is verified with a
    curl from the Hermes pod instead of `hermes mcp test ops`.
+9. **Phase 2: an MCP route with no live target answers `initialize` with a 500** (verified on v1.7.0 with zero targets and with a dead
+   placeholder). Groups with nothing to expose therefore borrow a live `anchor` target (`gateway.yaml`, currently `onemind`) and carry
+   `require: "false"`, so the endpoint answers with an empty tool list and every tool is hidden and denied.
+10. **Phase 2: classification is compiled to one `allow` rule per target** (`mcp.tool.target == "<t>" && (name in [...] || name.matches(...))`,
+    guards as `name == "x" && !(<when>)`); gated tools get no rule at all, so nothing relies on `deny` precedence. `/execute/mcp` is
+    deny-all and lists the targets that have gated tools; `/identity/mcp` is deferred and deny-all. Offline drift (fragment, classification,
+    generated values) is a CI step; drift against live `tools/list` is `classify_tools.py` run by an operator.
 
 ## 2. Inventory: every app we host
 

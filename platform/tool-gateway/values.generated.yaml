@@ -27,14 +27,183 @@ config:
             - key: ${GATEWAY_KEY_HERMES}
               metadata:
                 client: hermes
+          mcpAuthorization:
+            rules:
+            - allow: mcp.tool.target == "onemind" && (mcp.tool.name in ["alertmanager_alerts", "apps_describe", "apps_list",
+                "argocd_application", "argocd_applications", "backstage_entities", "backstage_entity", "grafana_dashboards",
+                "litellm_models", "loki_query", "mediamtx_paths", "nats_jetstream_stats", "nats_server_stats", "ollama_models",
+                "ollama_running_models", "opencost_allocation", "prometheus_query", "stac_collections", "stac_search", "tempo_trace"])
         backends:
         - mcp:
             prefixMode: always
             failureMode: failOpen
             targets:
             - name: onemind
-              mcp:
+              mcp: &id001
                 host: http://onemind-mcp.hermes.svc.cluster.local:8000/mcp
-              policies:
+              policies: &id002
                 backendAuth:
                   key: ${TARGET_ONEMIND_TOKEN}
+      - name: dev
+        matches:
+        - path:
+            exact: /dev/mcp
+        policies:
+          apiKey:
+            mode: strict
+            keys:
+            - key: ${GATEWAY_KEY_HERMES}
+              metadata:
+                client: hermes
+          mcpAuthorization:
+            rules:
+            - require: 'false'
+        backends:
+        - mcp:
+            prefixMode: always
+            failureMode: failOpen
+            targets:
+            - &id003
+              name: onemind
+              mcp: *id001
+              policies: *id002
+      - name: cloud
+        matches:
+        - path:
+            exact: /cloud/mcp
+        policies:
+          apiKey:
+            mode: strict
+            keys:
+            - key: ${GATEWAY_KEY_HERMES}
+              metadata:
+                client: hermes
+          mcpAuthorization:
+            rules:
+            - require: 'false'
+        backends:
+        - mcp:
+            prefixMode: always
+            failureMode: failOpen
+            targets:
+            - *id003
+      - name: data
+        matches:
+        - path:
+            exact: /data/mcp
+        policies:
+          apiKey:
+            mode: strict
+            keys:
+            - key: ${GATEWAY_KEY_HERMES}
+              metadata:
+                client: hermes
+          mcpAuthorization:
+            rules:
+            - require: 'false'
+        backends:
+        - mcp:
+            prefixMode: always
+            failureMode: failOpen
+            targets:
+            - *id003
+      - name: tak
+        matches:
+        - path:
+            exact: /tak/mcp
+        policies:
+          apiKey:
+            mode: strict
+            keys:
+            - key: ${GATEWAY_KEY_HERMES}
+              metadata:
+                client: hermes
+          mcpAuthorization:
+            rules:
+            - require: 'false'
+        backends:
+        - mcp:
+            prefixMode: always
+            failureMode: failOpen
+            targets:
+            - *id003
+      - name: home
+        matches:
+        - path:
+            exact: /home/mcp
+        policies:
+          apiKey:
+            mode: strict
+            keys:
+            - key: ${GATEWAY_KEY_HERMES}
+              metadata:
+                client: hermes
+          mcpAuthorization:
+            rules:
+            - require: 'false'
+        backends:
+        - mcp:
+            prefixMode: always
+            failureMode: failOpen
+            targets:
+            - *id003
+      - name: work
+        matches:
+        - path:
+            exact: /work/mcp
+        policies:
+          apiKey:
+            mode: strict
+            keys:
+            - key: ${GATEWAY_KEY_HERMES}
+              metadata:
+                client: hermes
+          mcpAuthorization:
+            rules:
+            - require: 'false'
+        backends:
+        - mcp:
+            prefixMode: always
+            failureMode: failOpen
+            targets:
+            - *id003
+      - name: identity
+        matches:
+        - path:
+            exact: /identity/mcp
+        policies:
+          apiKey:
+            mode: strict
+            keys:
+            - key: ${GATEWAY_KEY_HERMES}
+              metadata:
+                client: hermes
+          mcpAuthorization:
+            rules:
+            - require: 'false'
+        backends:
+        - mcp:
+            prefixMode: always
+            failureMode: failOpen
+            targets:
+            - *id003
+      - name: execute
+        matches:
+        - path:
+            exact: /execute/mcp
+        policies:
+          apiKey:
+            mode: strict
+            keys:
+            - key: ${GATEWAY_KEY_HERMES}
+              metadata:
+                client: hermes
+          mcpAuthorization:
+            rules:
+            - require: 'false'
+        backends:
+        - mcp:
+            prefixMode: always
+            failureMode: failOpen
+            targets:
+            - *id003

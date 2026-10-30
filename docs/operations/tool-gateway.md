@@ -1,8 +1,10 @@
 # Tool gateway runbook (agentgateway)
 
-Design: [`docs/architecture/onemind-tool-gateway.md`](../architecture/onemind-tool-gateway.md). State: **Phase 1 (core)**. The gateway
-serves `/ops/mcp` with one target (`onemind`, the existing `onemind-mcp` adapters). Hermes is not wired to it yet (Phase 5), and LiteLLM
-still serves the MCP hub until Phase 6.
+Design: [`docs/architecture/onemind-tool-gateway.md`](../architecture/onemind-tool-gateway.md). State: **Phase 2 (policy plane)**. The gateway
+serves nine routes (`/ops`, `/dev`, `/cloud`, `/data`, `/tak`, `/home`, `/work`, `/identity`, `/execute`, all `/<group>/mcp`) and one target
+(`onemind`, the existing `onemind-mcp` adapters, in `ops`). Only `ops` lists tools today (the 20 `onemind` reads); the other group routes
+answer with an empty tool list until a Phase 3 backend joins them; `/identity` (deferred) and `/execute` (closed until Phase 4) always do.
+Hermes is not wired to it yet (Phase 5), and LiteLLM still serves the MCP hub until Phase 6.
 
 ## What runs
 
@@ -19,24 +21,76 @@ still serves the MCP hub until Phase 6.
 
 ## How the config is built
 
-Helm replaces lists instead of merging them, so everything list-shaped (routes, targets, `extraEnv`) is generated:
+Helm replaces lists instead of merging them, so everything list-shaped (routes, targets, `extraEnv`, authorization rules) is generated:
 
 ```
-platform/tool-gateway/gateway.yaml         listener port, clients, groups      (shared; edited by the policy phase)
-platform/tool-gateway/targets/<name>.yaml  one fragment per backend target     (owned by the backend's PR)
+platform/tool-gateway/gateway.yaml                          listener port, clients, groups, anchor   (shared; policy phase)
+platform/tool-gateway/targets/<name>.yaml                   one fragment per backend target          (owned by the backend's PR)
+platform/tool-gateway/policy/classification/<name>.yaml     one reviewed classification per target   (owned by the backend's PR)
         |  python scripts/gateway/render_gateway_config.py
         v
 platform/tool-gateway/values.generated.yaml
 ```
 
-CI (`scripts/tests/test_gitops_tool_gateway.py`) fails when the committed output is stale. After merging a branch that changed
-`targets/`, re-run the renderer and commit the result.
+CI (`scripts/tests/test_gitops_tool_gateway.py` and the `Tool gateway policy drift` step in `quality.yml`) fails when the committed output is
+stale, when a classification file is invalid or has no target (or the reverse), or while a `proposed` list is unreviewed. After merging a
+branch that changed `targets/` or `policy/`, re-run the renderer and commit the result.
+
+### Policy: how tools become visible
+
+- Every target has a classification file. Each tool is `read`, `write`, `destructive` or `physical` (design section 3.1). **A tool in no list is
+  destructive: hidden and uncallable on every route.**
+- A group route (`kind: group`, the default) gets one CEL `allow` rule per target covering its `read` and `write` tools. Nothing else is
+  listed or callable (spike A1). A group with no exposed tool gets `require: "false"`, because a route with no rule lists everything.
+- `destructive` and `physical` tools belong to `/execute/mcp`. That route is rendered with `require: "false"` (deny-all) and carries every
+  target that has such tools (derived; a fragment never lists `execute`). Phase 4 adds visibility `allow` rules plus a call-only extAuthz rule
+  (a `require` on `extauthz.decision` empties `tools/list`, spike A5). `identity` (`kind: deferred`) is deny-all with no targets.
+- `anchor` (gateway.yaml) names a live target. A route with no live target answers `initialize` with a 500, so a group with nothing to
+  expose borrows the anchor: it answers with an empty tool list because its deny-all rule hides and denies every tool.
+- Every route keeps `apiKey.mode: strict`.
+
+### Classification file format
+
+```yaml
+target: grafana                 # = file name; same as the fragment name
+read: [search_dashboards, query_*]   # exact tool names (as the backend reports them, no <target>_ prefix) or globs ('*' only)
+write: [create_annotation]
+destructive: [delete_dashboard]      # execute route only
+physical: []                         # execute route only
+guards:                              # optional: a read/write tool that is destructive/physical for some arguments
+- {tool: resources_scale, class: destructive, when: 'mcp.tool.arguments.replicas == 0'}   # CEL; write '$$' for a literal '$'
+```
+
+A gated name that a read/write glob would swallow, or a name in two classes, is a render error. `proposed:` is written by the classifier and
+must be deleted by a human after review.
+
+`scripts/gateway/classify_tools.py` proposes the file. It calls `tools/list` on a backend and puts each new tool in a class by name
+(`delete`, `remove`, `scale`, `restart`, `kill` and similar are destructive; `lock`, `unlock`, `door`, `siren`, `valve` and similar are
+physical; `get`, `list`, `query` are read; `create`, `update`, `sync`, `annotate` are write; anything it does not recognise is destructive).
+Those are proposals: read every one.
+
+```bash
+# discover: port-forward the backend (a gateway route only lists tools that are already classified), then
+kubectl --context do-nyc3-omos-cloud -n <ns> port-forward svc/<backend> 18000:8000 &
+python scripts/gateway/classify_tools.py --target grafana --url http://127.0.0.1:18000/mcp --write
+#   with a credential: add --key-env GRAFANA_TOKEN (header "Authorization: Bearer <value>", read from the environment, never argv);
+#   --header-env 'X-Api-Key={}' changes the header form
+# review platform/tool-gateway/policy/classification/grafana.yaml, move tools to their real class, delete `proposed`
+
+# drift check of a live route (exit 1 on new or stale tools): --url http://127.0.0.1:18080/ops/mcp --strip-prefix grafana_ --key-env GATEWAY_KEY
+python scripts/gateway/classify_tools.py --target grafana --url ...
+
+python scripts/gateway/classify_tools.py --check      # offline, what CI runs
+```
+
+OpenAPI targets: the generated tools are named after the operations (`list_items`, `delete_item_by_id`), which the name heuristics handle;
+check each against the HTTP method in the spec (`GET/HEAD` read, `POST/PUT/PATCH` write, `DELETE` destructive) and move strays.
 
 ### Target fragment format
 
 ```yaml
 name: grafana              # [a-z][a-z0-9]*  (no "-", "." or "_"); the file must be <name>.yaml
-groups: [ops]              # group routes (keys of gateway.yaml `groups`) that expose this target
+groups: [ops]              # group routes (keys of gateway.yaml `groups`, kind group) that expose this target
 env:                       # optional; every ${VAR} used in `target` must be declared here
   TARGET_GRAFANA_TOKEN:    # must start with TARGET_<NAME>_
     secret: gateway-target-grafana   # Secret in tool-gateway (a SealedSecret under manifests/)
@@ -53,12 +107,33 @@ Rules enforced by the renderer: a literal dollar is written `$$`; any bare `$` o
 whole config text and a missing variable is a startup error). The Host header sent to a backend is the target host without its port
 (`requestHeaderModifier` cannot change it), so a backend that checks `Host` must allow the port-less name (see `ONEMIND_ALLOWED_HOSTS`).
 
-Every backend PR adds, and edits nothing shared except `values.generated.yaml` (regenerated):
+## Recipe: add a backend (one PR per backend)
 
-1. `targets/<name>.yaml`
-2. `manifests/egress-<name>.yaml` (a NetworkPolicy selecting the gateway pod, egress to the backend) and the ingress rule in the backend's own namespace
-3. `manifests/gateway-target-<name>.sealedsecret.yaml` (one Secret per target, so PRs never share a file)
-4. for a backend that runs in `tool-gateway`: its Deployment, Service and NetworkPolicy under `manifests/backends/<name>/`
+A Phase 3 PR adds only its own files and regenerates `values.generated.yaml`. It does not touch `gateway.yaml`, other targets, or the
+single-writer files (`docs/STACK.md`, `platform/hermes/mcp/coverage.yaml`, `PLATFORM-ROADMAP.md`, `platform/backstage/catalog/apps.yaml`).
+
+1. **Target fragment** `platform/tool-gateway/targets/<name>.yaml` (format above): `groups` per design section 4, `env` for each credential,
+   `target` pointing at the backend Service (or the SaaS URL with `backendTLS`).
+2. **Classification** `platform/tool-gateway/policy/classification/<name>.yaml`: run `classify_tools.py --write` against the backend, then
+   review. Put deletes, scale-to-zero, drops, session kills, user removal and anything unrecoverable in `destructive`; locks, doors,
+   garage, alarm, valves and `cmd.*` publishes in `physical`; use a `guard` when only some arguments are dangerous. Anything unsure stays
+   destructive. Give the provider token the least scope too (design section 3.1).
+3. **Sealed secret** `platform/tool-gateway/manifests/gateway-target-<name>.sealedsecret.yaml`: one Secret named `gateway-target-<name>` in
+   `tool-gateway`, namespace-wide scope, the `kubeseal` pattern in `CLAUDE.md`, value fed on stdin, never in argv. Keys must match the
+   fragment's `env`. Tell the owner which token to create (design section 3.3).
+4. **Egress** `platform/tool-gateway/manifests/egress-<name>.yaml`: a NetworkPolicy selecting the gateway pod
+   (`app.kubernetes.io/name: agentgateway`) with egress to the backend only (copy `egress-onemind.yaml`), and the matching ingress rule in
+   the backend's own namespace. For a SaaS target the rule is egress to 443 to the provider.
+5. **In-cluster backend** (only when it runs in `tool-gateway`): Deployment, Service and NetworkPolicy in
+   `platform/tool-gateway/manifests/backends/<name>/`, image pinned by digest, requests and limits, read-only root filesystem, restricted pod
+   security. A backend that checks `Host` must accept the port-less service name.
+6. **Render and test**: `python scripts/gateway/render_gateway_config.py`, then `python -m unittest discover -s scripts/tests -p 'test_gitops_tool_gateway.py'`,
+   `python scripts/gateway/classify_tools.py --check`, `python scripts/validate_changed_yaml.py`, `python scripts/validate_manifests.py --all`,
+   `python scripts/validate_helm_renders.py --all`. Commit `values.generated.yaml` with the PR; after a merge that overlaps another backend
+   PR, rebase and re-render (the file is generated, never hand-merged).
+7. **Verify live after merge** (Operate, below): the group's `tools/list` equals the read and write list of the classification; one read; one
+   safe write if one exists; one destructive tool is absent from the list and a direct call returns `unknown resource`; `/execute/mcp` still
+   lists nothing.
 
 ## Operate
 
