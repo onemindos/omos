@@ -22,6 +22,10 @@ class App(BaseModel):
     url_env: str | None = None
     auth_header: Literal["Authorization", "X-N8N-API-KEY"] = "Authorization"
     token_env: str | None = None
+    # "basic": the token variable holds `user:password` and is sent as HTTP Basic (MediaMTX internal auth).
+    auth_scheme: Literal["bearer", "basic"] = "bearer"
+    # PEM file (mounted ConfigMap) pinning a private CA or self-signed upstream certificate.
+    ca_file: str | None = Field(default=None, pattern=r"^/etc/onemind-ca/[A-Za-z0-9._-]+$")
 
     @field_validator("url_env", "token_env")
     @classmethod
