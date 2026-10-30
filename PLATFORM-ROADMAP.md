@@ -168,6 +168,7 @@ patches; Telegram remains selected. See the updated approval record below.
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | In progress | Historical acceptance #282, #318, #319; reopened for [portal stabilization](docs/operations/portal-stabilization-2026-10-20.md) before migration (#322 source, #323 release, #324 inventory, #325 composition, #326 final image); 2/2 healthy, 715 processed entities; broader acceptance gaps remain documented | none |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
+| 8a | Tool gateway for Legacy: agentgateway front door, tool groups, execute gate ([design](docs/architecture/onemind-tool-gateway.md)) | Design (PR open); rollout Not started | design PR | 6, 7 |
 
 ### Application-lane catalog preparation — 2026-10-27
 
@@ -848,6 +849,7 @@ delivered; the broader Phase 8/home-runtime work is not marked complete.
 | 2026-10-18 | Claude Code is the AI operator. Hermes is deferred to Phase 8. |
 | 2026-10-18 | Keep the custom portal as the long-term home; use the built-in console only until Phase 6. |
 | 2026-10-18 | LiteLLM stays the model gateway. The tool gateway (LiteLLM MCP or agentgateway) is decided in phase 8, when an in-cluster agent needs it. |
+| 2026-10-30 | Owner chose **agentgateway** (standalone chart, no CRDs) as Legacy's tool front door, replacing the LiteLLM MCP hub of 2026-10-29; LiteLLM returns to model routing only. Destructive and physical tools sit on a separate `execute` route behind an out-of-band `execute <id>` approval. Design: [onemind-tool-gateway.md](docs/architecture/onemind-tool-gateway.md). |
 | 2026-10-18 | Cilium Gateway API backends need a component-scoped `fromEntities: ingress` policy; keep OpenChoreo's generated policy and add an opt-in trait rather than allowing all ingress. |
 | 2026-10-18 | AI read access to the cluster uses ServiceAccount `kube/ai-operator` (built-in `view` plus platform CRDs, no Secrets) through kubernetes-mcp-server in read-only mode. No separate Argo CD MCP. |
 | 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. (KubeVela part superseded 2026-10-21, below.) |
