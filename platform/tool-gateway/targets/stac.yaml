@@ -1,0 +1,8 @@
+# Read-only STAC API through OpenAPI (design row 13). No credential: the read API is open inside the cluster.
+# The spec is trimmed in Git (platform/tool-gateway/openapi/stac.recipe.yaml) and mounted from ConfigMap gateway-openapi-stac.
+name: stac
+groups: [data]
+target:
+  openapi:
+    schema: {file: /specs/stac/openapi.yaml}
+    host: stac-api.stac.svc.cluster.local:8080

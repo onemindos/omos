@@ -1,0 +1,13 @@
+# Tool classification for gateway target 'core' (onemind-core, OpenAPI trimmed to the GET routes the read key can use).
+# Writes (POST /objects, /links, /missions, cancel) need the operator credential and are not in the spec.
+target: core
+read:
+- get_mission
+- list_agents
+- list_capabilities
+- list_links
+- list_missions
+- list_objects
+write: []
+destructive: []
+physical: []

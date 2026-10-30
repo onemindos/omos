@@ -198,8 +198,12 @@ def create_app(catalog: Catalog, clients: str | dict[str, str], allowed_hosts: l
         if not app.enabled:
             continue
 
-        def register(fn, *, read_only=True, app_id=app.id, writes=app.allow_writes):
-            if not read_only and not writes:
+        def register(fn, *, read_only=True, destructive=False, app_id=app.id, writes=app.allow_writes,
+                     destroys=app.allow_destructive):
+            if destructive:
+                if not destroys:
+                    return
+            elif not read_only and not writes:
                 return
             registered.append(f"{app_id}_{fn.__name__}")
             add(fn, app_id, read_only=read_only)

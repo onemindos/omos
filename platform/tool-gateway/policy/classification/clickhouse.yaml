@@ -1,0 +1,11 @@
+# Tool classification for gateway target 'clickhouse' (official ClickHouse MCP server, read-only instance).
+# The server has no write mode here: CLICKHOUSE_ALLOW_WRITE_ACCESS is unset and user legacy_ro has profile readonly=1,
+# so run_query cannot change data whatever SQL it is given. A chDB tool, if a future version adds one, is unlisted = hidden.
+target: clickhouse
+read:
+- list_databases
+- list_tables
+- run_query
+write: []
+destructive: []
+physical: []

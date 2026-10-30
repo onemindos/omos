@@ -1,0 +1,43 @@
+# mcp-clickhouse: ingress from the gateway only, egress to DNS and the ClickHouse HTTP port.
+# ClickHouse's own namespace has no ingress policy (it is open to the cluster), so it needs no rule there:
+# adding one would cut off its other clients (Grafana, Redpanda Connect, backups).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mcp-clickhouse
+  namespace: tool-gateway
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: mcp-clickhouse
+  policyTypes: [Ingress, Egress]
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: agentgateway-standalone
+          app.kubernetes.io/instance: agentgateway
+    ports:
+    - {protocol: TCP, port: 8000}
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - {protocol: UDP, port: 53}
+    - {protocol: TCP, port: 53}
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: clickhouse
+      podSelector:
+        matchLabels:
+          clickhouse.altinity.com/chi: onemind
+    ports:
+    - {protocol: TCP, port: 8123}

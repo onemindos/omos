@@ -13,3 +13,17 @@ regexes = [
   # Require 200+ chars so short plaintext values that happen to start with "Ag" are NOT allowlisted.
   '''["']?Ag[A-Za-z0-9+/]{200,}={0,2}["']?''',
 ]
+
+[[allowlists]]
+description = "Gateway tool names in the generated CEL allow rules: generic-api-key flags the identifier tile38_nearby. Exact tool names only."
+regexTarget = "secret"
+regexes = [
+  '''^tile38_(get|keys|nearby|scan|server|within|set_point|delete_object|drop_collection)$''',
+]
+
+[[allowlists]]
+description = "SHA-256 hash (not a credential) of the legacy_ro ClickHouse password, one specific key"
+regexTarget = "line"
+regexes = [
+  '''^\s*legacy_ro/password_sha256_hex: "[0-9a-f]{64}"$''',
+]

@@ -45,6 +45,13 @@ spec:
             matchLabels: {kubernetes.io/metadata.name: tailscale}
         - namespaceSelector:
             matchLabels: {kubernetes.io/metadata.name: hermes}
+        # Tool gateway target `stac` (read-only API; never the writer).
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: tool-gateway}
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: agentgateway-standalone
+              app.kubernetes.io/instance: agentgateway
       ports: [{protocol: TCP, port: 8080}]
   egress:
     - to:
