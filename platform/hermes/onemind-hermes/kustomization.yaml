@@ -13,3 +13,15 @@ configMapGenerator:
   - name: onemind-hermes-defaults
     files:
       - config.yaml=config.defaults.yaml
+  # Scheduled-job scripts, the declarative job list and its applier (cron/, README "Scheduled
+  # jobs"). The init container refreshes them on every start; they are Git-owned, unlike config.
+  - name: onemind-hermes-cron
+    files:
+      - legacy_common.py=cron/scripts/legacy_common.py
+      - legacy_codex_usage.py=cron/scripts/legacy_codex_usage.py
+      - legacy_brief_facts.py=cron/scripts/legacy_brief_facts.py
+      - legacy_infra_health.py=cron/scripts/legacy_infra_health.py
+      - legacy_security_scan.py=cron/scripts/legacy_security_scan.py
+      - legacy_config_export.py=cron/scripts/legacy_config_export.py
+      - jobs.yaml=cron/jobs.yaml
+      - apply_jobs.py=cron/apply_jobs.py
