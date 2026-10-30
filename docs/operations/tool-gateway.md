@@ -86,6 +86,20 @@ python scripts/gateway/classify_tools.py --check      # offline, what CI runs
 OpenAPI targets: the generated tools are named after the operations (`list_items`, `delete_item_by_id`), which the name heuristics handle;
 check each against the HTTP method in the spec (`GET/HEAD` read, `POST/PUT/PATCH` write, `DELETE` destructive) and move strays.
 
+### OpenAPI targets
+
+The gateway cannot filter the operations of an OpenAPI spec, so the spec it reads is trimmed in Git to the classified operations. Tool names
+are the `operationId`s (`mediamtx_pathsList` on the route). Per target:
+
+1. Write `policy/classification/<name>.yaml` with the `operationId`s (exact names, no globs); unlisted upstream operations stay out.
+2. Generate `manifests/openapi-<name>.configmap.yaml` (ConfigMap `gateway-openapi-<name>`, key `openapi.yaml`) with
+   `python scripts/gateway/trim_openapi.py --name <name> --source <upstream spec> --upstream "<repo vX.Y.Z path>" --server http://<svc>.<ns>.svc.cluster.local:<port> --classification platform/tool-gateway/policy/classification/<name>.yaml --out platform/tool-gateway/manifests/openapi-<name>.configmap.yaml`
+3. Add a volume and mount for it to `values.yaml` (`extraVolumes`, `extraVolumeMounts`, mount path `/specs/<name>`) and point the fragment at
+   `openapi: {schema: {file: /specs/<name>/openapi.yaml}, host: <svc>.<ns>.svc.cluster.local:<port>}`.
+4. `scripts/tests/test_gitops_tool_gateway_openapi.py` fails when the spec, classification, fragment, mount, sealed secret or egress disagree.
+
+A spec-only change does not roll the pod: `kubectl -n tool-gateway rollout restart deploy/agentgateway`.
+
 ### Target fragment format
 
 ```yaml
