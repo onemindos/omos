@@ -1,0 +1,383 @@
+# OneMind plugin ecosystem inventory: the reviewed source for platform/backstage/catalog/plugins.yaml.
+#
+# Each record in `plugins` uses the same field names as the `onemind:` block of the per-plugin
+# plugin.yaml contract (docs/architecture/hermes-connection-plugins.md; mapping in ./README.md),
+# so a future generator can read plugin.yaml files instead of this hand-written list. Render with
+#   python scripts/generate_plugin_catalog.py        (writes plugins.yaml in both catalog copies)
+#   python scripts/generate_plugin_catalog.py --check (CI: output is current, every ref resolves)
+#
+# Verified 2026-10-29: pods and Argo Applications read from do-nyc3-omos-cloud (read-only); the
+# Hermes plugin volume listed with `ls`/`cat` inside hermes-legacy. Everything marked `unverified`
+# comes from files in Git only. Status values: live (running now), parked (source or manifests in
+# Git, nothing running), planned (named in docs, no source), installed (third-party package seen
+# on a device on the date in `verified`, not re-checked).
+
+hosts:
+  - name: host-atak-android-eud
+    title: ATAK on Android (Samsung S24 Ultra)
+    description: ATAK-CIV 5.7.0.10 on the S24 Ultra EUD; connects to TAK Server over the tailnet (tak.tail717ba0.ts.net:8089). Package list read with adb on 2026-07; the device is not observable from the cluster.
+    kind: device
+    dependsOn: [component:default/tak-server]
+    source: platform/hermes/skills/devops/android-adb-management/references/s24-atak-plugin-inventory.md
+    verified: "2026-07 (adb, not re-verified)"
+  - name: host-itak-ios
+    title: iTAK on iOS
+    description: iTAK EUD. iTAK has no third-party plugin API, so no plugin runs here; it receives whatever the plugins below inject into TAK Server (data package built by build-itak-datapackage.sh).
+    kind: device
+    dependsOn: [component:default/tak-server]
+    source: infra/edge/takserver/devices/loadouts/ios-itak.md
+    verified: "unverified (Git only)"
+  - name: host-mac-edge-leaf
+    title: Mac / home-server edge node
+    description: Mac edge node running a NATS leaf that forwards to the cluster through the omos-nats Tailscale load balancer (leaf port 7422). Hosts the omos-bridge adapters (MAVLink, Home Assistant, MQTT, webhook). Offline means those bridges are down; the cloud bus keeps running.
+    kind: edge
+    dependsOn: [component:default/nats]
+    source: infra/edge/mac-leaf
+    verified: "unverified (not observable from the cluster)"
+  - name: host-hermes-plugin-volume
+    title: Hermes plugin volume (/opt/data/plugins)
+    description: Persistent volume of the hermes-legacy pod where Hermes plugins are installed by hand (a GitOps gap, see platform/hermes/agent/plugins/README.md). onemind-hermes (the successor instance) was still in Init on 2026-10-29.
+    kind: cluster
+    dependsOn: [component:default/k8s-hermes-hermes-legacy-1e93d498]
+    source: platform/hermes/agent/plugins/README.md
+    verified: "2026-10-29 (ls and cat in the hermes container)"
+
+streams:
+  - {name: COT, file: cot.yaml, subjects: "tak.cot.>"}
+  - {name: CMD, file: cmd.yaml, subjects: "cmd.>"}
+  - {name: EVT, file: evt.yaml, subjects: "evt.so.>, evt.hp.>, evt.le.>, evt.ge.>, evt.task.>, evt.cloud.>, ..."}
+  - {name: INTEL, file: intel.yaml, subjects: "intel.>"}
+  - {name: TEL, file: tel.yaml, subjects: "tel.fleet.>, tel.drone.>, tel.robot.>, tel.edge.>, tel.iot.>, ..."}
+  - {name: AGENTS, file: agents.yaml, subjects: "agents.hb.>, agents.status.>, agents.discover, agents.heartbeat"}
+  - {name: VOICE, file: voice.yaml, subjects: "voice.>"}
+
+# grammar: locked = inside the NATS Subject Grammar (CLAUDE.md, docs/NATS-DOCTRINE.md);
+# off-grammar = used by code in Git but outside the locked grammar (a migration candidate).
+subjects:
+  - {slug: tak-cot-inject, subject: "tak.cot.inject", grammar: locked, streams: [COT], description: "CoT XML to inject into TAK Server (NatsBridgePlugin input)."}
+  - {slug: tak-cot-out, subject: "tak.cot.out", grammar: locked, streams: [COT], description: "CoT XML from TAK Server (NatsBridgePlugin and cot-tap output)."}
+  - {slug: tak-cot-all, subject: "tak.cot.>", grammar: locked, streams: [COT], description: "Every CoT subject; captured by the COT stream."}
+  - {slug: ent-state, subject: "ent.>", grammar: locked, streams: [], description: "Fused entity state, ent.{type}.{id}.state (core NATS, no stream)."}
+  - {slug: tel-all, subject: "tel.>", grammar: locked, streams: [TEL], description: "Telemetry, tel.{node}.{class}.{metric}."}
+  - {slug: det-all, subject: "det.>", grammar: locked, streams: [], description: "Detections, det.{domain}.{type}.{id} (core NATS, no stream)."}
+  - {slug: evt-all, subject: "evt.>", grammar: locked, streams: [EVT], description: "Semantic events, evt.{domain}.{entity}.{event}."}
+  - {slug: cmd-all, subject: "cmd.>", grammar: locked, streams: [CMD], description: "Commands, cmd.{domain}.{entity}.{action} (includes cmd.alert.>, cmd.projector.*)."}
+  - {slug: intel-all, subject: "intel.>", grammar: locked, streams: [INTEL], description: "Intelligence, intel.{domain}.{source}.{type}."}
+  - {slug: svc-bridge, subject: "svc.bridge.>", grammar: locked, streams: [], description: "Bridge health and RPC, svc.bridge.*."}
+  - {slug: agents-prompt, subject: "agents.prompt.*.*.*", grammar: locked, streams: [], description: "Synadia Agent Protocol prompts, agents.prompt.{agent}.{owner}.{session} (nats-platform)."}
+  - {slug: agents-hb, subject: "agents.hb.>", grammar: locked, streams: [AGENTS], description: "Agent heartbeats."}
+  - {slug: ha-cmd-evt, subject: "cmd.ha.* / evt.ha.*", grammar: locked, streams: [], description: "Home Assistant commands and state events as documented by the ha-nats-bridge skill (cmd.ha.service.call, evt.ha.state_changed.{entity})."}
+  - {slug: voice-transcript, subject: "voice.transcript", grammar: off-grammar, streams: [VOICE], description: "Speech-to-text transcripts from the Murmur voice bridge. Captured by the VOICE stream but outside the locked grammar."}
+  - {slug: legacy-alert-subjects, subject: "alerts.critical, alerts.warning, infra.health.degraded, infra.health.down, legacy.voice.transcript, legacy.decision", grammar: off-grammar, streams: [], description: "Subjects the NATS-to-Matrix bridge is configured to relay. None is in the locked grammar."}
+  - {slug: omos-home, subject: "omos.home.*.telemetry|event|command", grammar: off-grammar, streams: [], description: "omos-bridge home/IoT envelopes (legacy omos.* namespace)."}
+  - {slug: omos-bridge-health, subject: "omos.bridge.*.health|errors", grammar: off-grammar, streams: [], description: "omos-bridge heartbeats and errors (legacy omos.* namespace)."}
+
+plugins:
+  # ---- TAK Server plugins and TAK-side bridges ------------------------------------------------
+  - name: tak-plugin-nats-bridge
+    title: NatsBridgePlugin
+    description: TAK Server plugin that relays CoT both ways between TAK Server and NATS. Inbound leg works (tak.cot.inject to TAK clients); the outbound leg is limited because TAK's cluster plugin manager has no receive path (see services/takserver/cot-tap/README.md).
+    type: tak-server-plugin
+    status: live
+    origin: onemind
+    version: "1.0.0"
+    source: services/takserver/plugin-src
+    build: "Gradle JAR (services/takserver/plugin/takserver-nats-plugin-1.0.0.jar) baked into ghcr.io/onemindos/takserver-base by services/takserver/docker/Dockerfile.takserver-plugins.onemind (build-takserver.yml)"
+    runsOn: {kind: cluster, location: "ns takserver / deploy takserver-plugins", host: component:default/k8s-takserver-takserver-plugins-c35ef4eb}
+    connectsTo: [tak-server, nats, tak-nats-leaf]
+    publishes: [tak-cot-out]
+    subscribes: [tak-cot-inject]
+    providesApis: [tak-cot-bridge]
+    dependsOn: [component:default/tak-server, component:default/k8s-takserver-tak-nats-leaf-366f7455]
+    subcomponentOf: component:default/tak-server
+    verified: "2026-10-29 pod takserver-plugins Running"
+  - name: bridge-cot-tap
+    title: CoT Tap
+    description: TAK client that reads the CoT stream on 8089 over mutual TLS and republishes each event to tak.cot.out. Written to cover the outbound leg the plugin cannot. The manifest sits under services/, has no Argo Application and no pod exists.
+    type: bridge
+    status: parked
+    origin: onemind
+    source: services/takserver/cot-tap
+    build: "python:3.12-slim with pip install nats-py at start (script in a ConfigMap)"
+    runsOn: {kind: cluster, location: "ns takserver (not deployed)"}
+    connectsTo: [tak-server, nats]
+    publishes: [tak-cot-out]
+    providesApis: [tak-cot-bridge]
+    dependsOn: [component:default/tak-server]
+    subcomponentOf: component:default/tak-server
+    verified: "2026-10-29 no cot-tap pod or Argo manifest"
+  - name: bridge-mumble
+    title: Mumble voice bridge
+    description: Joins Murmur, transcribes speech with faster-whisper and publishes voice.transcript. Pairs with the TAK Talk ATAK plugin, which speaks Mumble.
+    type: bridge
+    status: live
+    origin: onemind
+    source: platform/takserver/deploy/mumble-bridge.yaml
+    build: "python:3.11-slim, script in ConfigMap bridge-scripts (image not digest-pinned)"
+    runsOn: {kind: cluster, location: "ns takserver / deploy mumble-bridge", host: component:default/k8s-takserver-mumble-bridge-327c692e}
+    connectsTo: [murmur, nats]
+    publishes: [voice-transcript]
+    dependsOn: [component:default/k8s-takserver-murmur-29fe28aa]
+    subcomponentOf: component:default/tak-server
+    verified: "2026-10-29 pod mumble-bridge Running"
+  - name: bridge-tak-projector
+    title: TAK projector
+    description: Turns NATS entity state and intel into CoT and injects it into TAK Server (NATS to CoT to CloudTAK). Can be paused with cmd.projector.disable.
+    type: bridge
+    status: live
+    origin: onemind
+    source: platform/omos/tak-projector.yaml
+    build: "python:3.12-alpine, script in ConfigMap"
+    runsOn: {kind: cluster, location: "ns omos / deploy omos-tak-projector", host: component:default/k8s-omos-omos-tak-projector-ac850041}
+    connectsTo: [nats, tak-server]
+    publishes: [tak-cot-inject]
+    subscribes: [ent-state, intel-all, cmd-all]
+    dependsOn: [component:default/nats]
+    subcomponentOf: component:default/tak-server
+    verified: "2026-10-29 pod omos-tak-projector Running"
+  - name: bridge-nodered-tak
+    title: Node-RED TAK converter
+    description: "Pinned Node-RED image with the node-red-contrib-tak converter. An image source only: not published, no manifest, not a live integration."
+    type: bridge
+    status: planned
+    origin: upstream
+    source: services/nodered-tak
+    build: "build-nodered-tak.yml; proposed ghcr.io/onemindos/nodered-tak:5.0.9-tak4.2.2-r1"
+    runsOn: {kind: cluster, location: "none yet"}
+    connectsTo: [tak-server]
+    dependsOn: [component:default/tak-server]
+    verified: "2026-10-29 no pod"
+  - name: bridge-nats-matrix
+    title: NATS to Matrix bridge
+    description: Relays selected NATS subjects (alerts, health, TAK mission and emergency CoT, Legacy voice and decisions) to Matrix rooms. Manifests exist in platform/matrix/base but the platform-matrix overlay (platform/matrix/argo) does not include them and no pod runs.
+    type: bridge
+    status: parked
+    origin: onemind
+    source: platform/matrix/base/nats-matrix-bridge
+    build: "python:3.11-slim, script platform/matrix/nats-matrix-bridge.py"
+    runsOn: {kind: cluster, location: "ns matrix (not deployed)"}
+    connectsTo: [nats, matrix-synapse]
+    subscribes: [tak-cot-all, legacy-alert-subjects]
+    dependsOn: [component:default/k8s-matrix-synapse-c02538fc]
+    verified: "2026-10-29 no pod, base not in Argo overlay"
+
+  # ---- omos-bridge protocol adapters (services/bridge) -----------------------------------------
+  - name: bridge-homeassistant
+    title: Home Assistant bridge
+    description: Subscribes to Home Assistant state_changed events and forwards NATS commands as service calls. The Go adapter in services/bridge uses the legacy omos.home.* subjects, while the ha-nats-bridge skill documents cmd.ha.* and evt.ha.*; reconcile before deploying. Not deployed in the cluster.
+    type: bridge
+    status: parked
+    origin: onemind
+    source: services/bridge/bridges/homeassistant
+    build: "Go module, runtime native (no image published)"
+    runsOn: {kind: edge, location: "Mac / home server next to Home Assistant", host: resource:default/host-mac-edge-leaf}
+    connectsTo: [home-assistant, nats]
+    publishes: [omos-home, omos-bridge-health, ha-cmd-evt]
+    subscribes: [omos-home, ha-cmd-evt]
+    dependsOn: [component:default/home-assistant]
+    verified: "unverified (edge not observable)"
+  - name: bridge-mavlink
+    title: MAVLink bridge
+    description: Connects a MAVLink drone (UDP) to NATS as telemetry. Legacy omos.* subjects.
+    type: bridge
+    status: parked
+    origin: onemind
+    source: services/bridge/bridges/mavlink
+    build: "Go module, runtime native (no image published)"
+    runsOn: {kind: edge, location: "Mac / edge node near the drone", host: resource:default/host-mac-edge-leaf}
+    connectsTo: [mavlink-drone, nats]
+    publishes: [omos-bridge-health]
+    verified: "unverified (edge not observable)"
+  - name: bridge-mqtt
+    title: MQTT bridge
+    description: Bidirectional MQTT to NATS adapter for sensors and devices. Legacy omos.* subjects.
+    type: bridge
+    status: parked
+    origin: onemind
+    source: services/bridge/bridges/mqtt
+    build: "Go module (no image published)"
+    runsOn: {kind: edge, location: "edge node beside the MQTT broker", host: resource:default/host-mac-edge-leaf}
+    connectsTo: [mqtt-broker, nats]
+    publishes: [omos-home]
+    subscribes: [omos-home]
+    verified: "unverified (edge not observable)"
+  - name: bridge-tak-omos
+    title: omos TAK bridge (Go)
+    description: Earlier standalone TAK bridge (TCP 8087 to NATS) from the omos-bridge repo. Superseded in the cluster by NatsBridgePlugin plus tak-projector; kept as source.
+    type: bridge
+    status: parked
+    origin: onemind
+    source: services/bridge/bridges/tak
+    build: "Go module (no image published)"
+    runsOn: {kind: edge, location: "not deployed", host: resource:default/host-mac-edge-leaf}
+    connectsTo: [tak-server, nats]
+    publishes: [omos-bridge-health]
+    verified: "unverified (not deployed)"
+  - name: bridge-webhook
+    title: Webhook bridge
+    description: HTTP webhook receiver that wraps inbound requests in a OneMind envelope on NATS (HMAC-SHA256 optional).
+    type: bridge
+    status: parked
+    origin: onemind
+    source: services/bridge/bridges/webhook
+    build: "Go module (no image published)"
+    runsOn: {kind: edge, location: "not deployed", host: resource:default/host-mac-edge-leaf}
+    connectsTo: [nats]
+    publishes: [omos-home, omos-bridge-health]
+    verified: "unverified (not deployed)"
+
+  # ---- Hermes agent plugins (/opt/data/plugins in hermes-legacy) ------------------------------
+  - name: hermes-plugin-nats-platform
+    title: nats-platform
+    description: Synadia Agent Protocol gateway adapter (upstream synadia-ai/hermes-nats-gateway 0.1.2, Apache-2.0). Registers an AgentService on agents.prompt.{agent}.{owner}.{session} and routes prompts into the gateway. Patched by the init container (nats-platform-patch-cm.yaml).
+    type: hermes-plugin
+    subtype: platform
+    status: live
+    origin: upstream
+    version: "0.1.2"
+    source: platform/hermes/agent/nats-platform-patch-cm.yaml
+    build: "Upstream package installed by hand on the volume; patch applied at pod start"
+    runsOn: {kind: cluster, location: "ns hermes / pod hermes-legacy (container hermes)", host: resource:default/host-hermes-plugin-volume}
+    connectsTo: [nats, hermes]
+    subscribes: [agents-prompt]
+    consumesApis: [nats-agent-protocol]
+    dependsOn: [component:default/hermes-legacy]
+    subcomponentOf: component:default/hermes-legacy
+    verified: "2026-10-29 plugin.yaml read in the pod"
+  - name: hermes-plugin-nats-context
+    title: nats-context
+    description: Gives Hermes a live operational picture. Subscribes to the OneMind subject families, prepends a LIVE OPERATIONAL PICTURE block on every LLM call (pre_llm_call) and exposes 9 NATS tools (publish, request, peek, JetStream fetch, KV get/put/list, server info, list streams). Source is not in this repo (probably onemindos/hermes-plugin-nats-context).
+    type: hermes-plugin
+    subtype: standalone
+    status: live
+    origin: onemind
+    version: "1.0.0"
+    source: null
+    build: "Installed by hand on the plugin volume; source repo unconfirmed"
+    runsOn: {kind: cluster, location: "ns hermes / pod hermes-legacy (container hermes)", host: resource:default/host-hermes-plugin-volume}
+    connectsTo: [nats, hermes]
+    publishes: [cmd-all]
+    subscribes: [tak-cot-all, ent-state, tel-all, det-all, evt-all, intel-all, cmd-all, svc-bridge, agents-hb]
+    consumesApis: [nats-events, nats-telemetry, nats-intel, nats-commands]
+    dependsOn: [component:default/hermes-legacy]
+    subcomponentOf: component:default/hermes-legacy
+    verified: "2026-10-29 plugin.yaml read in the pod"
+  - name: hermes-plugin-tak-platform
+    title: tak-platform
+    description: TAK gateway adapter. Reads GeoChat CoT from tak.cot.out, routes it through the Hermes message pipeline and injects replies on tak.cot.inject so Legacy appears as a TAK contact (callsign Legacy). Lives under /opt/data/plugins/platforms/. Source is not in this repo (probably onemindos/hermes-plugin-tak).
+    type: hermes-plugin
+    subtype: platform
+    status: live
+    origin: onemind
+    version: "0.1.0"
+    source: null
+    build: "Installed by hand on the plugin volume; source repo unconfirmed"
+    runsOn: {kind: cluster, location: "ns hermes / pod hermes-legacy (container hermes)", host: resource:default/host-hermes-plugin-volume}
+    connectsTo: [nats, tak-server, hermes]
+    publishes: [tak-cot-inject]
+    subscribes: [tak-cot-out]
+    consumesApis: [tak-cot-bridge]
+    dependsOn: [component:default/hermes-legacy, component:default/tak-server]
+    subcomponentOf: component:default/hermes-legacy
+    verified: "2026-10-29 plugin.yaml read in the pod"
+  - name: hermes-plugin-onemind-vision
+    title: onemind-vision
+    description: "Sovereign intelligence fusion for Legacy: vision query, anomaly detection, SITREP generation and course-of-action tools. Formerly onemind-maven (renamed, tools maven_* became vision_*)."
+    type: hermes-plugin
+    subtype: standalone
+    status: live
+    origin: onemind
+    version: "1.0.0"
+    source: platform/hermes/agent/plugins/onemind-vision
+    build: "Copied by hand to the plugin volume; the Git copy is byte-identical to the live one (README in the same directory)"
+    runsOn: {kind: cluster, location: "ns hermes / pod hermes-legacy (container hermes)", host: resource:default/host-hermes-plugin-volume}
+    connectsTo: [hermes, nats]
+    dependsOn: [component:default/hermes-legacy]
+    subcomponentOf: component:default/hermes-legacy
+    verified: "2026-10-29 plugin.yaml read in the pod"
+  - name: hermes-plugin-memory-wiki
+    title: memory-wiki
+    description: "Dashboard-only plugin (upstream NousResearch/hermes-memory-wiki, MIT): browsable subject pages and daily logs from session history plus a read-only audit of persistent memory. Registers no tools or hooks."
+    type: hermes-plugin
+    subtype: dashboard
+    status: live
+    origin: upstream
+    version: "1.0.0"
+    source: null
+    build: "Upstream, installed by hand on the plugin volume"
+    runsOn: {kind: cluster, location: "ns hermes / pod hermes-legacy (Hermes dashboard)", host: resource:default/host-hermes-plugin-volume}
+    connectsTo: [hermes]
+    dependsOn: [component:default/hermes-legacy]
+    subcomponentOf: component:default/hermes-legacy
+    verified: "2026-10-29 plugin.yaml read in the pod"
+  - name: hermes-plugin-project-stewardship
+    title: hermes-project-stewardship
+    description: Durable project ownership for Hermes agent fleets (upstream Sahil-SS9/hermes-project-stewardship 0.5.3, Apache-2.0). Tools steward_status, steward_run_cycle, steward_propose_initiative. Found on the volume but missing from platform/hermes/agent/plugins/README.md.
+    type: hermes-plugin
+    subtype: standalone
+    status: live
+    origin: upstream
+    version: "0.5.3"
+    source: null
+    build: "Upstream, installed by hand on the plugin volume"
+    runsOn: {kind: cluster, location: "ns hermes / pod hermes-legacy (container hermes)", host: resource:default/host-hermes-plugin-volume}
+    connectsTo: [hermes]
+    dependsOn: [component:default/hermes-legacy]
+    subcomponentOf: component:default/hermes-legacy
+    verified: "2026-10-29 plugin.yaml read in the pod"
+
+# Third-party ATAK plugins read from the S24 Ultra (adb pm list packages, July 2026). OneMind does
+# not build these; they are catalogued because they are the ATAK-side surface of the platform.
+# Row: [package, name, category, note]. Category decides the default connects-to (atak_connects).
+atak_connects:
+  camera: [rtsp-video, tak-server]
+  voice: [tak-server]
+  communications: [tak-server]
+  drone: [mavlink-drone, tak-server]
+  situational-awareness: [tak-server]
+  planning: [tak-server]
+  suspicious: [tak-server]
+atak_overrides:
+  com.atakmap.android.taktalk.plugin:
+    connectsTo: [murmur, tak-server]
+    dependsOn: [component:default/k8s-takserver-murmur-29fe28aa]
+    publishes: []
+  com.atakmap.android.takchat.plugin:
+    publishes: [tak-cot-inject]
+    subscribes: [tak-cot-out]
+    note: "GeoChat; Legacy answers through the tak-platform Hermes plugin."
+  com.atakmap.android.uastool.plugin:
+    note: "MAVLink drone operations; pairs with the MAVLink bridge for NATS telemetry."
+atak_third_party:
+  - [com.atakmap.android.geocam.plugin, GeoCam, camera, ATAK camera streaming plugin]
+  - [com.partech.geocamera, PAR GeoCam, camera, GeoCam engine - streams RTSP to VCM]
+  - [com.atakmap.android.arvideooverlay.plugin, AR Video Overlay, camera, 'Overlays COP onto camera (screen only, no external API)']
+  - [com.atakmap.android.viscacam.plugin, VISCA Cam, camera, PTZ camera control]
+  - [com.atakmap.android.videocollections.plugin, Video Collections, camera, VCM video feed manager]
+  - [com.atakmap.android.vns.plugin, VNS, camera, Video/network streaming]
+  - [com.atakmap.android.vans.plugin, VANS, camera, Video/audio network service]
+  - [com.par.imagemarkup, PAR Image Markup, camera, Image annotation tool]
+  - [com.atakmap.android.taktalk.plugin, TAK Talk, voice, Native ATAK PTT via Mumble protocol - PRIMARY for Legacy PTT]
+  - [com.atakmap.android.wave.plugin, WAVE, voice, Motorola WAVE PTT (requires WAVE subscription)]
+  - [com.beartooth.beartoothtakplugin, Beartooth, voice, Off-grid mesh radio PTT]
+  - [com.atakmap.android.takchat.plugin, TAK Chat, communications, GeoChat - wire to Legacy via NATS]
+  - [com.atakmap.android.icet.plugin, ICET, communications, Interoperability comms tool]
+  - [com.atakmap.android.uastool.plugin, UAS Tool, drone, Full MAVLink drone ops]
+  - [com.atakmap.android.uastool.groundsdk8, UAS Tool (GroundSDK8), drone, Parrot/Anafi SDK]
+  - [com.atakmap.android.uastool.autelmavsdk, UAS Tool (Autel), drone, Autel MAVLink]
+  - [com.atakmap.android.atakgo.dji, ATAKGo v4 (DJI), drone, DJI integration]
+  - [com.atakmap.android.atakgov5.dji, ATAKGo v5 (DJI), drone, DJI v5]
+  - [com.atakmap.android.dronehone.plugin, Drone Hone, drone, RF drone detection]
+  - [com.atakmap.android.wasp.plugin, WASP, drone, Wide-area surveillance planning]
+  - [com.atakmap.android.adsbdirect.plugin, ADS-B Direct, situational-awareness, Live aircraft on map]
+  - [com.atakmap.android.winddata.plugin, Wind Data, situational-awareness, Wind/weather overlay]
+  - [com.atakmap.android.compassnav.plugin, Compass Nav, situational-awareness, Navigation overlay]
+  - [gov.tak.taktracker, TakTracker, situational-awareness, Lightweight blue force tracking]
+  - [com.somewearlabs.swtak.plugin, SomewearTAK, situational-awareness, Satellite comms bridge]
+  - [com.atakmap.android.reports.plugin, Reports, planning, '9-line, SALUTE, SPOT forms']
+  - [com.atakmap.android.grgbuilder.plugin, GRG Builder, planning, Range cards / sector sketches]
+  - [com.atakmap.android.blockgenerator.plugin, Block Generator, planning, Tactical shape generator]
+  - [com.atakmap.android.firesurvey.plugin, Fire Survey, planning, Fire area mapping]
+  - [com.atakmap.android.datasync.plugin, Data Sync, planning, Enterprise sync]
+  - [com.atakmap.android.cot_utility.plugin, CoT Utility, planning, Raw CoT manipulation]
+  - [com.atak.nightvision, Night Vision (unverified), suspicious, Non-standard package namespace; signing not inspectable on Android 14 without root. Flagged for monitoring.]

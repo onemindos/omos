@@ -136,6 +136,9 @@ spec:
         - name: catalog
           mountPath: /app/catalog
           readOnly: true
+        - name: catalog-plugins
+          mountPath: /app/catalog-plugins
+          readOnly: true
         - name: cluster-config
           mountPath: /app/app-config.cluster.yaml
           subPath: app-config.cluster.yaml
@@ -154,6 +157,9 @@ spec:
       - name: catalog
         configMap:
           name: backstage-catalog
+      - name: catalog-plugins
+        configMap:
+          name: backstage-catalog-plugins
       - name: cluster-config
         configMap:
           name: backstage-cluster-config
