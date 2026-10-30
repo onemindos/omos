@@ -82,6 +82,27 @@ skills:
 
 plugins:
   enabled: []
+
+# Chat channels, moved from Legacy (same bot identities). The Telegram bot token and
+# the Matrix access token are NOT here: they come from the onemind-hermes-runtime
+# SealedSecret (TELEGRAM_BOT_TOKEN, MATRIX_ACCESS_TOKEN), and their presence enables
+# each platform. Top-level scalars below are exported by Hermes to the matching env
+# vars when the container env does not already set them (gateway/run.py
+# _bridge_config_to_env). Unknown senders get nothing: the allowlists are the only
+# way in, and the pairing flow is suppressed when an allowlist is set.
+# Only one instance may poll a Telegram bot (a second one gets 409 Conflict), so
+# Legacy has telegram and matrix disabled.
+GATEWAY_ALLOW_ALL_USERS: 'false'
+TELEGRAM_ALLOW_ALL_USERS: 'false'
+TELEGRAM_ALLOWED_USERS: '8297858681'      # Zeus only
+TELEGRAM_HOME_CHANNEL: '8297858681'       # Zeus's DM
+MATRIX_ALLOW_ALL_USERS: 'false'
+MATRIX_ALLOWED_USERS: '@zeus:onemindos.dev'   # Zeus only; invites from others are refused
+# In-cluster Synapse Service, not the public hostname (matrix.onemindos.dev is going
+# tailnet-only). NetworkPolicy egress: network.yaml. E2EE stays off, as on Legacy.
+MATRIX_HOMESERVER: http://synapse.matrix.svc.cluster.local:8008
+MATRIX_USER_ID: '@legacy:onemindos.dev'
+# MATRIX_REQUIRE_MENTION keeps its default (true): rooms need an @-mention, DMs do not.
 # One MCP endpoint for all OneMind apps: the LiteLLM gateway (platform/hermes/mcp/HUB.md).
 # ONEMIND_LITELLM_MCP_KEY is a LiteLLM virtual key scoped to the `onemind` server; it is
 # added to the onemind-hermes-runtime SealedSecret after merge. Until then this server

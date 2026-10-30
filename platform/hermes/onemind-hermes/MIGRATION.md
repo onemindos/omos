@@ -117,10 +117,29 @@ Each step ends with an observed check on onemind-hermes. Legacy keeps running un
    owner approval, remove the Legacy Deployment and Application. Rotate the
    credential files listed above.
 
+## Chat channels (Telegram and Matrix), moved 2026-10-29
+
+Same bot identities, switched from Legacy to onemind-hermes. Only one instance may poll a
+Telegram bot (a second gets 409 Conflict), so Legacy has `telegram` and `matrix` disabled
+(live `config.yaml` only, because Legacy's channel config was never committed) and keeps
+`nats` and `tak`.
+
+| Item | Where |
+|---|---|
+| `TELEGRAM_BOT_TOKEN`, `MATRIX_ACCESS_TOKEN` | `onemind-hermes-runtime` SealedSecret, copied from Legacy's `/opt/data/.env` and `config.yaml` (neither was in a Kubernetes Secret) |
+| Telegram allowlist and home channel | `config.defaults.yaml`: only `8297858681` (Zeus) |
+| Matrix allowlist | `config.defaults.yaml`: only `@zeus:onemindos.dev`; the bot is `@legacy:onemindos.dev` |
+| Matrix homeserver | in-cluster `http://synapse.matrix.svc.cluster.local:8008`; egress in `network.yaml`; the `matrix` namespace has no NetworkPolicy that blocks ingress |
+| Approvals | unchanged: `manual`, and the SOUL rule that deletes and physical actions need Zeus to type `execute` or `override` |
+
+Legacy's `GATEWAY_ALLOW_ALL_USERS=true` (in `hermes-env`) is not carried over: onemind-hermes
+pins it `false`. E2EE is off, as on Legacy. `config.defaults.yaml` is copied only once into an
+empty PVC, so edit the live `/opt/data/config.yaml` as well.
+
 ## Open decisions for the owner
 
 - Which of the 10 paused cron jobs come back, if any.
-- Whether Telegram and Matrix stay as Hermes channels.
+- ~~Whether Telegram and Matrix stay as Hermes channels.~~ Decided 2026-10-29: they stay, moved to onemind-hermes (see "Chat channels" above).
 - Which personal/ops skills (Mac, S24, Windows, WordPress, credit dispute) belong
   on the cloud agent at all.
 - Whether `miro`, `cloudflare` and `raindrop` MCP are still wanted.
