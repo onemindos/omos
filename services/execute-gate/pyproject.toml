@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "execute-gate"
+version = "0.1.0"
+description = "AuthZEN decision point for the OneMind tool gateway /execute route with Matrix owner approval"
+requires-python = ">=3.12"
+dependencies = ["nats-py==2.16.0", "PyYAML==6.0.3"]
+
+[tool.setuptools.packages.find]
+include = ["execute_gate*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
