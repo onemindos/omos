@@ -18,7 +18,7 @@ Rules used for curation:
   kept files were that large; the largest candidate trees were dropped).
 - Personal data (family, home address, personal accounts) is not committed.
 
-## Shipped here (11 skills)
+## Shipped here (21 skills)
 
 | Skill | Path | Built from | Note |
 |---|---|---|---|
@@ -33,10 +33,20 @@ Rules used for curation:
 | composio | `devops/composio` | composio, composio-mcp-patterns | Rewritten without the consumer key or account ids. |
 | hermes-plugin-pattern | `software-development/hermes-plugin-pattern` | hermes-plugin-pattern | Copied as is (clean). |
 | hermes-deployment-topology | `autonomous-ai-agents/hermes-deployment-topology` | hermes-deployment-topology | Copied as is; one example password replaced by a placeholder. |
+| credit-bureau-dispute | `devops/credit-bureau-dispute` | credit-bureau-dispute | Imported 2026-10-29 at the owner's request. Procedure only: bureau addresses, SSH key path and the FTC statement text removed; no personal data. |
+| android-adb-management | `devops/android-adb-management` | android-adb-management | Imported. Passwords, certificate passphrases, tailnet and LAN addresses, device serial and a personal account name removed; mutating scripts refuse to run without `ZEUS_APPROVED=1`. |
+| s24-app-control | `devops/s24-app-control` | s24-app-control | Imported. Rewritten for the cloud-over-Tailscale model with the execute/override rule. |
+| s24-termux-ssh | `devops/s24-termux-ssh` | s24-termux-ssh | Imported. Fallback password, key fragments and addresses removed. |
+| mac-disk-hygiene | `devops/mac-disk-hygiene` | mac-disk-hygiene | Imported. Deletions now need execute/override. |
+| mac-repo-hygiene | `devops/mac-repo-hygiene` | mac-repo-hygiene | Imported. Trimmed to method; Composio account id, noreply e-mail and stale inventories removed. |
+| find-zeus | `devops/find-zeus` | find-zeus | Imported. Retired public TAK address, database login and cert paths removed; injects over NATS. |
+| session-librarian | `productivity/session-librarian` | session-librarian | Imported; delete/prune gated by execute/override. |
+| matrix-doks-ops | `devops/matrix-doks-ops` | matrix-doks-ops | Imported. GitOps-first rewrite for `onemindos.dev`; tailnet-only direction; credentials and room id removed. |
+| onemind-architecture | `devops/onemind-architecture` | notion-onemind-architecture | Renamed; every Notion part (database ids, API calls, sync steps) removed; keeps the taxonomy. A knowledge platform will be chosen later. Cross-referenced with `onemind-domains`. |
 
 ## Decision table
 
-Counts (69 candidates): KEEP 20 (nine role skills merged into one, forge into
+Counts (69 candidates, as first reviewed; ten NEEDS-OWNER items were later imported, see above): KEEP 20 (nine role skills merged into one, forge into
 another, ten platform skills shipped or folded), DROP 26, NEEDS-OWNER 23. The 38 skills under `.archive/` were not individually
 reviewed and stay behind.
 
@@ -91,23 +101,19 @@ reviewed and stay behind.
 | onemind-xr-platform, onemind-product-strategy | Speculative product material. |
 | merge-reconciler, hermes-mobile-desktop-sync | Speculative or already stale (inventory list). |
 
-### NEEDS-OWNER (not copied; owner decides)
+### NEEDS-OWNER (not copied; owner decides; later owner picks are listed under "Shipped here")
 
 Personal or machine-specific. Listed with the owner's call needed.
 
 | Candidate | Why it needs a decision |
 |---|---|
-| credit-bureau-dispute | Personal legal/financial letters. |
 | windows-network-drop, windows-zeus-access | Owner's Windows laptops; remote access. |
-| s24-app-control, s24-termux-ssh, android-adb-management | Owner's phone; adb/SSH from the pod. |
-| mac-cloud-sync, mac-disk-hygiene, mac-repo-hygiene, mac-storage-ops | Owner's Mac housekeeping; not a cloud-agent job. |
-| find-zeus | Personal location/contact lookup. |
+| mac-cloud-sync, mac-storage-ops | Owner's Mac housekeeping; not imported (mac-disk-hygiene and mac-repo-hygiene were, 2026-10-29). |
 | wordpress-legacy, wordpress-on-digitalocean, zeus-site | Personal site; held a WordPress app password and a CMS database credential (rotate). |
 | onepassword-legacy | 1Password on the old pod; secrets here are SealedSecrets. |
-| notion-workspace, notion-onemind-architecture | Notion routing; Notion migration status unknown; one file held a token (rotate). |
-| vault-dedup-audit, external-drive-cloud-sync, session-librarian | Personal vault/drive utilities. |
+| notion-workspace | Notion routing; the owner does not use Notion now; one file held a token (rotate). `notion-onemind-architecture` was imported as `onemind-architecture` without the Notion parts. |
+| vault-dedup-audit, external-drive-cloud-sync | Personal vault/drive utilities. (`session-librarian` was imported 2026-10-29.) |
 | modesty-ai-daily-briefing, grounddata-ai-daily-news | Daily-news jobs; the grounddata scripts embed secrets and are 248 KB. |
-| matrix-doks-ops | Technically current, but whether Matrix stays a Hermes channel is an open owner decision; the template held a credential. |
 
 ## Secrets found in candidates (paths only, values not reproduced)
 
@@ -127,7 +133,7 @@ Treat each as exposed on that volume and rotate on retirement of Legacy.
 
 ## How they are installed into `onemind-hermes`
 
-Verified on the predecessor `hermes-fresh` (same image) (Hermes v0.22.5):
+Verified on the predecessor (same image, Hermes v0.22.5):
 
 - `/opt/hermes/cli-config.yaml.example` documents `skills.external_dirs`: extra
   directories whose skills are loaded without copying them into `~/.hermes/skills/`.
@@ -158,6 +164,25 @@ Recommended mechanism: `external_dirs`.
 Copying directly into `/opt/data/skills` also works (user-added directories are
 left alone) but drifts from Git and is hand-maintained, which is what the migration
 plan wants to avoid.
+
+### Live pod (as installed 2026-10-29)
+
+`onemind-hermes` already has `skills.external_dirs: [/opt/data/onemind-skills]` in
+its config, and the tree is copied into `/opt/data/onemind-skills/` by hand until
+the init-container/git-sync step exists. To add or refresh skills, from the repo root:
+
+```bash
+POD=$(kubectl --context do-nyc3-omos-cloud -n hermes get pod \
+  -l app.kubernetes.io/name=onemind-hermes -o jsonpath='{.items[0].metadata.name}')
+tar cf - -C platform/hermes/skills devops productivity | \
+  kubectl --context do-nyc3-omos-cloud -n hermes exec -i "$POD" -c hermes -- \
+  tar xf - -C /opt/data/onemind-skills
+kubectl --context do-nyc3-omos-cloud -n hermes exec "$POD" -c hermes -- hermes skills list
+```
+
+`tar` extraction adds and overwrites files and removes nothing. Memory seeds
+(`platform/hermes/seed/onemind-hermes/`) go to `/opt/data/memories/`; back the old
+file up with a dated suffix first.
 
 ## Bundled skills proposed for disabling on the new instance
 

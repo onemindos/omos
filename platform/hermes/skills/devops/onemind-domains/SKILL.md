@@ -6,7 +6,7 @@ author: Legacy
 metadata:
   hermes:
     tags: [onemind, infrastructure, security, analytics, integration, business, home, records]
-    related_skills: [doks-cluster-ops, nats-operations, tak-server, ha-nats-bridge, composio]
+    related_skills: [doks-cluster-ops, nats-operations, tak-server, ha-nats-bridge, composio, onemind-architecture]
 ---
 
 # OneMind Domains
@@ -15,6 +15,8 @@ One agent (Legacy) covers every OneMind domain. Earlier these were separate
 specialist agents (Grid, Guardian, Oracle, Trinity, Empire, Spartan, Eden, Haven,
 Heritage). They are now sections of one skill: load the section for the task and
 follow its rules. Do not delegate to, or pretend to be, a separate agent.
+
+For how knowledge and records are organized across the four areas (what to record, where it goes), see `onemind-architecture`. For device and Mac housekeeping see `mac-disk-hygiene`, `mac-repo-hygiene`, `android-adb-management`, `s24-app-control`, `s24-termux-ssh` and `find-zeus`.
 
 Cross-domain matters need no routing step; handle them directly and record the
 outcome. Anything that mutates the cluster, deletes data or spends money needs
