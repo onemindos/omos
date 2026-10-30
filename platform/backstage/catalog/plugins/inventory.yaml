@@ -15,7 +15,8 @@
 hosts:
   - name: host-atak-android-eud
     title: ATAK on Android (Samsung S24 Ultra)
-    description: ATAK-CIV 5.7.0.10 on the S24 Ultra EUD; connects to TAK Server over the tailnet (tak.tail717ba0.ts.net:8089). Package list read with adb on 2026-07; the device is not observable from the cluster.
+    description: ATAK-CIV 5.7.0.10 on the S24 Ultra EUD; connects to TAK Server over the tailnet (tak.tail717ba0.ts.net:8089). Package list read with adb on 2026-07; the
+        device is not observable from the cluster.
     kind: device
     dependsOn: [component:default/tak-server]
     source: platform/hermes/skills/devops/android-adb-management/references/s24-atak-plugin-inventory.md
@@ -29,14 +30,16 @@ hosts:
     verified: "unverified (Git only)"
   - name: host-mac-edge-leaf
     title: Mac / home-server edge node
-    description: Mac edge node running a NATS leaf that forwards to the cluster through the omos-nats Tailscale load balancer (leaf port 7422). Hosts the omos-bridge adapters (MAVLink, Home Assistant, MQTT, webhook). Offline means those bridges are down; the cloud bus keeps running.
+    description: Mac edge node running a NATS leaf that forwards to the cluster through the omos-nats Tailscale load balancer (leaf port 7422). Hosts the omos-bridge
+        adapters (MAVLink, Home Assistant, MQTT, webhook). Offline means those bridges are down; the cloud bus keeps running.
     kind: edge
     dependsOn: [component:default/nats]
     source: infra/edge/mac-leaf
     verified: "unverified (not observable from the cluster)"
   - name: host-hermes-plugin-volume
     title: Hermes plugin volume (/opt/data/plugins)
-    description: Persistent volume of the hermes-legacy pod where Hermes plugins are installed by hand (a GitOps gap, see platform/hermes/agent/plugins/README.md). onemind-hermes (the successor instance) was still in Init on 2026-10-29.
+    description: Persistent volume of the hermes-legacy pod where Hermes plugins are installed by hand (a GitOps gap, see platform/hermes/agent/plugins/README.md).
+        onemind-hermes (the successor instance) was still in Init on 2026-10-29.
     kind: cluster
     dependsOn: [component:default/k8s-hermes-hermes-legacy-1e93d498]
     source: platform/hermes/agent/plugins/README.md
@@ -66,9 +69,12 @@ subjects:
   - {slug: svc-bridge, subject: "svc.bridge.>", grammar: locked, streams: [], description: "Bridge health and RPC, svc.bridge.*."}
   - {slug: agents-prompt, subject: "agents.prompt.*.*.*", grammar: locked, streams: [], description: "Synadia Agent Protocol prompts, agents.prompt.{agent}.{owner}.{session} (nats-platform)."}
   - {slug: agents-hb, subject: "agents.hb.>", grammar: locked, streams: [AGENTS], description: "Agent heartbeats."}
-  - {slug: ha-cmd-evt, subject: "cmd.ha.* / evt.ha.*", grammar: locked, streams: [], description: "Home Assistant commands and state events as documented by the ha-nats-bridge skill (cmd.ha.service.call, evt.ha.state_changed.{entity})."}
-  - {slug: voice-transcript, subject: "voice.transcript", grammar: off-grammar, streams: [VOICE], description: "Speech-to-text transcripts from the Murmur voice bridge. Captured by the VOICE stream but outside the locked grammar."}
-  - {slug: legacy-alert-subjects, subject: "alerts.critical, alerts.warning, infra.health.degraded, infra.health.down, legacy.voice.transcript, legacy.decision", grammar: off-grammar, streams: [], description: "Subjects the NATS-to-Matrix bridge is configured to relay. None is in the locked grammar."}
+  - {slug: ha-cmd-evt, subject: "cmd.ha.* / evt.ha.*", grammar: locked, streams: [], description: "Home Assistant commands and state events as documented by the
+      ha-nats-bridge skill (cmd.ha.service.call, evt.ha.state_changed.{entity})."}
+  - {slug: voice-transcript, subject: "voice.transcript", grammar: off-grammar, streams: [VOICE], description: "Speech-to-text transcripts from the Murmur voice bridge.
+      Captured by the VOICE stream but outside the locked grammar."}
+  - {slug: legacy-alert-subjects, subject: "alerts.critical, alerts.warning, infra.health.degraded, infra.health.down, legacy.voice.transcript, legacy.decision",
+     grammar: off-grammar, streams: [], description: "Subjects the NATS-to-Matrix bridge is configured to relay. None is in the locked grammar."}
   - {slug: omos-home, subject: "omos.home.*.telemetry|event|command", grammar: off-grammar, streams: [], description: "omos-bridge home/IoT envelopes (legacy omos.* namespace)."}
   - {slug: omos-bridge-health, subject: "omos.bridge.*.health|errors", grammar: off-grammar, streams: [], description: "omos-bridge heartbeats and errors (legacy omos.* namespace)."}
 
@@ -76,13 +82,15 @@ plugins:
   # ---- TAK Server plugins and TAK-side bridges ------------------------------------------------
   - name: tak-plugin-nats-bridge
     title: NatsBridgePlugin
-    description: TAK Server plugin that relays CoT both ways between TAK Server and NATS. Inbound leg works (tak.cot.inject to TAK clients); the outbound leg is limited because TAK's cluster plugin manager has no receive path (see services/takserver/cot-tap/README.md).
+    description: TAK Server plugin that relays CoT both ways between TAK Server and NATS. Inbound leg works (tak.cot.inject to TAK clients); the outbound leg is limited
+        because TAK's cluster plugin manager has no receive path (see services/takserver/cot-tap/README.md).
     type: tak-server-plugin
     status: live
     origin: onemind
     version: "1.0.0"
     source: services/takserver/plugin-src
-    build: "Gradle JAR (services/takserver/plugin/takserver-nats-plugin-1.0.0.jar) baked into ghcr.io/onemindos/takserver-base by services/takserver/docker/Dockerfile.takserver-plugins.onemind (build-takserver.yml)"
+    build: "Gradle JAR (services/takserver/plugin/takserver-nats-plugin-1.0.0.jar) baked into ghcr.io/onemindos/takserver-base by
+        services/takserver/docker/Dockerfile.takserver-plugins.onemind (build-takserver.yml)"
     runsOn: {kind: cluster, location: "ns takserver / deploy takserver-plugins", host: component:default/k8s-takserver-takserver-plugins-c35ef4eb}
     connectsTo: [tak-server, nats, tak-nats-leaf]
     publishes: [tak-cot-out]
@@ -93,7 +101,8 @@ plugins:
     verified: "2026-10-29 pod takserver-plugins Running"
   - name: bridge-cot-tap
     title: CoT Tap
-    description: TAK client that reads the CoT stream on 8089 over mutual TLS and republishes each event to tak.cot.out. Written to cover the outbound leg the plugin cannot. The manifest sits under services/, has no Argo Application and no pod exists.
+    description: TAK client that reads the CoT stream on 8089 over mutual TLS and republishes each event to tak.cot.out. Written to cover the outbound leg the plugin
+        cannot. The manifest sits under services/, has no Argo Application and no pod exists.
     type: bridge
     status: parked
     origin: onemind
@@ -149,7 +158,8 @@ plugins:
     verified: "2026-10-29 no pod"
   - name: bridge-nats-matrix
     title: NATS to Matrix bridge
-    description: Relays selected NATS subjects (alerts, health, TAK mission and emergency CoT, Legacy voice and decisions) to Matrix rooms. Manifests exist in platform/matrix/base but the platform-matrix overlay (platform/matrix/argo) does not include them and no pod runs.
+    description: Relays selected NATS subjects (alerts, health, TAK mission and emergency CoT, Legacy voice and decisions) to Matrix rooms. Manifests exist in
+        platform/matrix/base but the platform-matrix overlay (platform/matrix/argo) does not include them and no pod runs.
     type: bridge
     status: parked
     origin: onemind
@@ -164,7 +174,8 @@ plugins:
   # ---- omos-bridge protocol adapters (services/bridge) -----------------------------------------
   - name: bridge-homeassistant
     title: Home Assistant bridge
-    description: Subscribes to Home Assistant state_changed events and forwards NATS commands as service calls. The Go adapter in services/bridge uses the legacy omos.home.* subjects, while the ha-nats-bridge skill documents cmd.ha.* and evt.ha.*; reconcile before deploying. Not deployed in the cluster.
+    description: Subscribes to Home Assistant state_changed events and forwards NATS commands as service calls. The Go adapter in services/bridge uses the legacy
+        omos.home.* subjects, while the ha-nats-bridge skill documents cmd.ha.* and evt.ha.*; reconcile before deploying. Not deployed in the cluster.
     type: bridge
     status: parked
     origin: onemind
@@ -229,7 +240,8 @@ plugins:
   # ---- Hermes agent plugins (/opt/data/plugins in hermes-legacy) ------------------------------
   - name: hermes-plugin-nats-platform
     title: nats-platform
-    description: Synadia Agent Protocol gateway adapter (upstream synadia-ai/hermes-nats-gateway 0.1.2, Apache-2.0). Registers an AgentService on agents.prompt.{agent}.{owner}.{session} and routes prompts into the gateway. Patched by the init container (nats-platform-patch-cm.yaml).
+    description: Synadia Agent Protocol gateway adapter (upstream synadia-ai/hermes-nats-gateway 0.1.2, Apache-2.0). Registers an AgentService on
+        agents.prompt.{agent}.{owner}.{session} and routes prompts into the gateway. Patched by the init container (nats-platform-patch-cm.yaml).
     type: hermes-plugin
     subtype: platform
     status: live
@@ -246,7 +258,9 @@ plugins:
     verified: "2026-10-29 plugin.yaml read in the pod"
   - name: hermes-plugin-nats-context
     title: nats-context
-    description: Gives Hermes a live operational picture. Subscribes to the OneMind subject families, prepends a LIVE OPERATIONAL PICTURE block on every LLM call (pre_llm_call) and exposes 9 NATS tools (publish, request, peek, JetStream fetch, KV get/put/list, server info, list streams). Source is not in this repo (probably onemindos/hermes-plugin-nats-context).
+    description: Gives Hermes a live operational picture. Subscribes to the OneMind subject families, prepends a LIVE OPERATIONAL PICTURE block on every LLM call
+        (pre_llm_call) and exposes 9 NATS tools (publish, request, peek, JetStream fetch, KV get/put/list, server info, list streams). Source is not in this repo
+        (probably onemindos/hermes-plugin-nats-context).
     type: hermes-plugin
     subtype: standalone
     status: live
@@ -264,7 +278,8 @@ plugins:
     verified: "2026-10-29 plugin.yaml read in the pod"
   - name: hermes-plugin-tak-platform
     title: tak-platform
-    description: TAK gateway adapter. Reads GeoChat CoT from tak.cot.out, routes it through the Hermes message pipeline and injects replies on tak.cot.inject so Legacy appears as a TAK contact (callsign Legacy). Lives under /opt/data/plugins/platforms/. Source is not in this repo (probably onemindos/hermes-plugin-tak).
+    description: TAK gateway adapter. Reads GeoChat CoT from tak.cot.out, routes it through the Hermes message pipeline and injects replies on tak.cot.inject so Legacy
+        appears as a TAK contact (callsign Legacy). Lives under /opt/data/plugins/platforms/. Source is not in this repo (probably onemindos/hermes-plugin-tak).
     type: hermes-plugin
     subtype: platform
     status: live
@@ -282,7 +297,8 @@ plugins:
     verified: "2026-10-29 plugin.yaml read in the pod"
   - name: hermes-plugin-onemind-vision
     title: onemind-vision
-    description: "Sovereign intelligence fusion for Legacy: vision query, anomaly detection, SITREP generation and course-of-action tools. Formerly onemind-maven (renamed, tools maven_* became vision_*)."
+    description: "Sovereign intelligence fusion for Legacy: vision query, anomaly detection, SITREP generation and course-of-action tools. Formerly onemind-maven
+        (renamed, tools maven_* became vision_*)."
     type: hermes-plugin
     subtype: standalone
     status: live
@@ -297,7 +313,8 @@ plugins:
     verified: "2026-10-29 plugin.yaml read in the pod"
   - name: hermes-plugin-memory-wiki
     title: memory-wiki
-    description: "Dashboard-only plugin (upstream NousResearch/hermes-memory-wiki, MIT): browsable subject pages and daily logs from session history plus a read-only audit of persistent memory. Registers no tools or hooks."
+    description: "Dashboard-only plugin (upstream NousResearch/hermes-memory-wiki, MIT): browsable subject pages and daily logs from session history plus a read-only
+        audit of persistent memory. Registers no tools or hooks."
     type: hermes-plugin
     subtype: dashboard
     status: live
@@ -312,7 +329,8 @@ plugins:
     verified: "2026-10-29 plugin.yaml read in the pod"
   - name: hermes-plugin-project-stewardship
     title: hermes-project-stewardship
-    description: Durable project ownership for Hermes agent fleets (upstream Sahil-SS9/hermes-project-stewardship 0.5.3, Apache-2.0). Tools steward_status, steward_run_cycle, steward_propose_initiative. Found on the volume but missing from platform/hermes/agent/plugins/README.md.
+    description: Durable project ownership for Hermes agent fleets (upstream Sahil-SS9/hermes-project-stewardship 0.5.3, Apache-2.0). Tools steward_status,
+        steward_run_cycle, steward_propose_initiative. Found on the volume but missing from platform/hermes/agent/plugins/README.md.
     type: hermes-plugin
     subtype: standalone
     status: live
