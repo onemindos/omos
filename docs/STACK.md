@@ -106,7 +106,6 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `ecosystem-velero` | velero | Velero (chart 12.2.1) and the `velero-onemind-platform` schedule | backups in Spaces | n/a | internal | Argo |
 | `platform-legacy` | hermes | Hermes "Legacy" agent (`nousresearch/hermes-agent`, NATS leaf sidecar) and bridge secrets | 25 GiB PVC (agent home, state.db) | `VolSync` | `hermes-agent` dashboard tailnet | Argo |
 | `platform-onemind-hermes` | hermes | `onemind-hermes`: new Hermes v0.22.5 instance (persona Legacy, single soul), replaces the `hermes-fresh` launch; runtime acceptance in deployment PR. The `hermes-fresh` resources were removed on 2026-10-29 except the PVC `hermes-fresh-data`, kept pending owner approval (`platform/hermes/onemind-hermes/README.md`) | New 25 GiB `onemind-hermes-data` (`do-block-storage-retain`); no Legacy import | `VolSync` to its own Restic prefix; restore acceptance pending | `onemind-hermes` dashboard tailnet | Argo |
-| `platform-tool-gateway` | tool-gateway | Legacy's tool front door: agentgateway v1.7.0 standalone chart (`agentgateway-standalone`, no controller, no CRDs) on the ecosystem pool, one MCP endpoint per tool group (`/ops/mcp` first, backend `onemind-mcp`). Design: [`onemind-tool-gateway.md`](architecture/onemind-tool-gateway.md); runbook: [`tool-gateway.md`](operations/tool-gateway.md). **Phase 1 (core) only: Hermes is not wired to it yet** | none (config is in the repo; sessions are in memory) | repo only (SealedSecrets `gateway-clients`, `gateway-target-onemind`) | internal: ClusterIP `agentgateway:8080`, ingress only from `onemind-hermes` | Argo (tier 2) |
 
 ### Helm-CLI releases (tier 1)
 
@@ -139,6 +138,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-kube` | kube | Headlamp | none | Git | tailnet | Argo |
 | `platform-ecosystem-applications` | argocd | Generates the `ecosystem-*` Applications (11) from `platform/ecosystem/applications` | none | Git | internal | Argo |
 | `platform-ecosystem-foundation` | argocd | Generates the foundation `ecosystem-*` Applications (10) | none | Git | internal | Argo |
+| `platform-tool-gateway` | tool-gateway | Legacy's tool front door: agentgateway v1.7.0 standalone chart (`agentgateway-standalone`, no controller, no CRDs) on the ecosystem pool. Nine MCP routes (`/ops`, `/dev`, `/cloud`, `/data`, `/tak`, `/home`, `/work`, `/identity`, `/execute`) and six live targets: `onemind` and `kubernetes` (ops), `stac`, `core` and `clickhouse` (data), `mediamtx` (tak); [backends below](#tool-gateway-backends-tier-2). Per-target classification is the policy plane: destructive tools are hidden on every route and `/execute/mcp` is deny-all until Phase 4. **Hermes is not cut over to it yet** (Phase 5); LiteLLM still serves the MCP hub. Design: [`onemind-tool-gateway.md`](architecture/onemind-tool-gateway.md); runbook: [`tool-gateway.md`](operations/tool-gateway.md). Verified live 2026-10-30 (read-only): Synced and Healthy, 1/1 Ready | none (config is in the repo; sessions are in memory) | Git (SealedSecrets `gateway-clients`, `gateway-target-onemind`, `-core`, `-mediamtx`, `-clickhouse`) | internal: ClusterIP `agentgateway:8080`, ingress only from `onemind-hermes` | Argo |
 | `platform-ecosystem-resources` | argocd | Ecosystem SealedSecrets, namespaces and shared resources | sealed credentials | Git | internal | Argo. **OutOfSync** (`SharedResourceWarning`: `SealedSecret auth/ghcr` is also owned by `platform-backups`) |
 
 ### Argo CD Applications, ecosystem layer
@@ -158,6 +158,21 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 | `ecosystem-kyverno` | kyverno | kyverno 3.9.1 | Policy engine | none | Git | internal |
 | `ecosystem-falco` | falco | falco 9.2.0 | Runtime security | none | Git | internal |
 | `ecosystem-opencost` | opencost | opencost 2.5.32 | Cost metrics. Duplicates kube-state-metrics series (M2) | none | Git | internal |
+
+### Tool gateway backends (tier 2)
+
+Reached only through `platform-tool-gateway` (namespace `tool-gateway` unless stated); the backend rows share its Argo Application, so they have no Application of their own. All stateless, backed up by Git, `internal` exposure, GitOps `Argo`. "Live" below was checked read-only against `do-nyc3-omos-cloud` on 2026-10-30; tool counts are from the reviewed classification files in `platform/tool-gateway/policy/classification/`. Details: [`tool-gateway-kubernetes.md`](operations/tool-gateway-kubernetes.md), [`tool-gateway-data.md`](operations/tool-gateway-data.md).
+
+| Backend | Where it runs | Tier | Route and tools | Live check |
+|---------|---------------|------|-----------------|------------|
+| `agentgateway` | Deployment in `tool-gateway`, 1 replica | 2 | all nine routes | Deployment 1/1; image `agentgateway:v1.7.0` by digest |
+| `mcp-kubernetes` | Deployment and Service in `tool-gateway` (`containers/kubernetes-mcp-server` v0.1.1, ServiceAccount `k8s-operator`, no Secrets in its RBAC) | 2 | `kubernetes` target, `ops`: 10 read, 1 write (`resources_create_or_update`); `pods_delete`, `resources_delete`, `resources_scale` held for `/execute` | Deployment 1/1; target in the rendered config |
+| `mcp-clickhouse` | Deployment and Service in `tool-gateway` (`ClickHouse/mcp-clickhouse` 0.7.0), talks to ClickHouse as the user `legacy_ro` | 2 | `clickhouse` target, `data`: 3 read (`list_databases`, `list_tables`, `run_query`) | Deployment 1/1; sealed `mcp-clickhouse-credentials` and `gateway-target-clickhouse` present |
+| ClickHouse user `legacy_ro` | declared in the Altinity CHI `onemind` (namespace `clickhouse`, Application `platform-observability`), `readonly=1`, 30 s, 1 GB, 100,000 rows, network `10.0.0.0/8`, password stored as a SHA-256 hash | 2 | used by `mcp-clickhouse` only | CHI `Completed`; `legacy_ro` users and profile settings present in the live spec |
+| MediaMTX target | OpenAPI target `mediamtx` onto the Control API of `onetak-media` (namespace `onetak`, port 4000), spec trimmed in Git | 2 | `tak`: 25 read; 8 destructive operations hidden | Service `onetak-media` and its pod Running; ConfigMap `gateway-openapi-mediamtx` |
+| STAC target | OpenAPI target `stac` onto `stac-api` (namespace `stac`, 8080), spec trimmed to GET in Git; the `stac-api-writer` Service is not a target | 2 | `data`: 5 read | Service `stac-api`; ConfigMap `gateway-openapi-stac` |
+| onemind-core target | OpenAPI target `core` onto `onemind-core` (namespace `onemind-core`, 8080), hand-written read subset | 2 | `data`: 6 read | Service `onemind-core`; ConfigMap `gateway-openapi-core` |
+| Tile38 adapter | `tile38` adapter inside `onemind-mcp` (`hermes`), served by the `onemind` target in `ops`; reaches `tile38.onetak:9851` | 2 | 6 read, 1 write (`tile38_set_point`); `tile38_delete_object` and `tile38_drop_collection` are not registered (`allow_destructive` off) | `onemind-mcp` 1/1 ready; `TILE38_URL` set and the app `tile38` has `allow_writes: true` in the live apps ConfigMap; Deployment `tile38` 1/1 |
 
 ### Helm-CLI releases (tier 2)
 
@@ -286,7 +301,7 @@ Stateless private app tools for Legacy: NATS node/JetStream stats and Prometheus
 instant queries, with a discoverable app catalog. One available replica, 100m CPU /
 128Mi memory requests; no database/PVC. Git source/catalog and SealedSecrets are
 recovery artifacts. A dedicated image-pull credential keeps unrelated registry
-credentials unchanged. No Kubernetes API privileges or write tools are granted.
+credentials unchanged. No Kubernetes API privileges are granted. Update 2026-10-30: since the tool-gateway work it also serves the Ollama, OpenCost and Tile38 adapters, and the Tile38 adapter has one write tool (`tile38_set_point`; its two destructive tools are not registered). It is the `onemind` target of `platform-tool-gateway` (see [Tool gateway backends](#tool-gateway-backends-tier-2)).
 
 [Live acceptance](operations/onemind-mcp-acceptance-2026-10-27.json), 04:00 EDT:
 all four tools and resource reads pass from Legacy, anonymous access is rejected,

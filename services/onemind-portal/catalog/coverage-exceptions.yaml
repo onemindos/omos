@@ -168,3 +168,21 @@ exceptions:
       Deployed from platform/hermes/mcp by the Argo application platform-legacy (one source of that multi-source
       application), which the reviewed workload map attributes to the hermes-legacy app (one Argo application maps to
       one app). It has no Argo application of its own.
+  - app: component:default/agentgateway
+    capability: kubernetes
+    reason: >-
+      The tool-gateway namespace is live (Argo application platform-tool-gateway, Deployments agentgateway, mcp-kubernetes and
+      mcp-clickhouse) but the committed cluster inventory snapshot predates it, so no workload entry yet generates this
+      annotation. Remove this exception when the inventory is next refreshed from the cluster.
+  - app: component:default/agentgateway
+    capability: grafana-alerts
+    reason: >-
+      The tool-gateway namespace is live (Argo application platform-tool-gateway, Deployments agentgateway, mcp-kubernetes and
+      mcp-clickhouse) but the committed cluster inventory snapshot predates it, so no workload entry yet generates this
+      annotation. Remove this exception when the inventory is next refreshed from the cluster.
+  - app: component:default/agentgateway
+    capability: logs
+    reason: >-
+      The tool-gateway namespace is live (Argo application platform-tool-gateway, Deployments agentgateway, mcp-kubernetes and
+      mcp-clickhouse) but the committed cluster inventory snapshot predates it, so no workload entry yet generates this
+      annotation. Remove this exception when the inventory is next refreshed from the cluster.

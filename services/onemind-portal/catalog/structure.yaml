@@ -288,7 +288,19 @@ apps:
   - name: onemind-mcp
     title: OneMind internal app MCP
     system: ai-agents
-    description: Read-only MCP server giving Hermes typed tools for in-cluster apps (NATS monitoring, Prometheus); manifests in platform/hermes/mcp (Argo application platform-legacy).
+    description: MCP server giving Hermes typed tools for in-cluster apps (NATS monitoring, Prometheus, Ollama, OpenCost, and the Tile38 adapter with one write, tile38_set_point); it is the onemind target behind the tool gateway; manifests in platform/hermes/mcp (Argo application platform-legacy).
+  - name: agentgateway
+    title: Tool gateway (agentgateway)
+    system: ai-agents
+    description: The tool gateway in front of Legacy's tools, agentgateway v1.7.0, serving one MCP endpoint per tool group (ops, dev, cloud, data, tak, home, work, identity, execute); Argo application platform-tool-gateway in namespace tool-gateway. Hermes is not cut over yet.
+  - name: mcp-kubernetes
+    title: Tool gateway Kubernetes backend (mcp-kubernetes)
+    system: ai-agents
+    description: containers/kubernetes-mcp-server v0.1.1 behind the tool gateway (target kubernetes, group ops) with 10 read tools, 1 write, 3 destructive tools held back for the execute route; no Secrets in its RBAC.
+  - name: mcp-clickhouse
+    title: Tool gateway ClickHouse backend (mcp-clickhouse)
+    system: ai-agents
+    description: ClickHouse/mcp-clickhouse 0.7.0 behind the tool gateway (target clickhouse, group data) with three read tools as the readonly ClickHouse user legacy_ro.
   - name: paperclip
     title: Paperclip
     system: ai-agents

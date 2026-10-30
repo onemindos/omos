@@ -131,6 +131,9 @@ workloads:
   tailscale/ts-onemind-preview-shtd7: component:default/tailscale-operator
   tailscale/ts-opencost-rqpmq: component:default/tailscale-operator
   tailscale/ts-tak-tailnet-jtgn4: component:default/tailscale-operator
+  tool-gateway/agentgateway: component:default/agentgateway
+  tool-gateway/mcp-clickhouse: component:default/mcp-clickhouse
+  tool-gateway/mcp-kubernetes: component:default/mcp-kubernetes
   takml/takml-db: component:default/takml
   takml/takml-server: component:default/takml
   takml/takml-vision-worker: component:default/takml
@@ -211,6 +214,7 @@ argoApplications:
   platform-stac-validation: component:default/stac
   platform-takml: component:default/takml
   platform-takserver: component:default/tak-server
+  platform-tool-gateway: component:default/agentgateway
   platform-vaultwarden: component:default/vaultwarden
   platform-volsync: component:default/volsync
   platform-volume-backups: component:default/platform-backup-recovery

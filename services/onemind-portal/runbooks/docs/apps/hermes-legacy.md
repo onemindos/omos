@@ -2,7 +2,7 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Legacy AI — cloud
+Old Legacy instance (being retired)
 
 ## Where it runs
 

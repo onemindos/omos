@@ -169,6 +169,9 @@ export const mapping: InventoryMapping = {
     'takserver/takserver-nats-box': 'component:default/tak-server',
     'takserver/takserver-plugins': 'component:default/tak-server',
     'takserver/takserver-postgresql': 'component:default/tak-server',
+    'tool-gateway/agentgateway': 'component:default/agentgateway',
+    'tool-gateway/mcp-clickhouse': 'component:default/mcp-clickhouse',
+    'tool-gateway/mcp-kubernetes': 'component:default/mcp-kubernetes',
     'vaultwarden/vaultwarden': 'component:default/vaultwarden',
     'velero/velero': 'component:default/velero',
   },
@@ -181,6 +184,12 @@ export const mapping: InventoryMapping = {
     },
     'agent-web-ui': {
       title: 'Agent Web UI',
+      system: 'ai-agents',
+      pillar: 'so',
+      review: 'proposed',
+    },
+    agentgateway: {
+      title: 'Tool gateway (agentgateway)',
       system: 'ai-agents',
       pillar: 'so',
       review: 'proposed',
@@ -322,6 +331,18 @@ export const mapping: InventoryMapping = {
       system: 'communication',
       pillar: 'so',
       review: 'approved',
+    },
+    'mcp-clickhouse': {
+      title: 'Tool gateway ClickHouse backend (mcp-clickhouse)',
+      system: 'ai-agents',
+      pillar: 'so',
+      review: 'proposed',
+    },
+    'mcp-kubernetes': {
+      title: 'Tool gateway Kubernetes backend (mcp-kubernetes)',
+      system: 'ai-agents',
+      pillar: 'so',
+      review: 'proposed',
     },
     n8n: {
       title: 'n8n',

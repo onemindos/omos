@@ -132,7 +132,7 @@ Deviations from this design that the spike forced (all applied in the Phase 1 PR
    placeholder). Groups with nothing to expose therefore borrow a live `anchor` target (`gateway.yaml`, currently `onemind`) and carry
    `require: "false"`, so the endpoint answers with an empty tool list and every tool is hidden and denied.
 10. **Phase 2: classification is compiled to one `allow` rule per target** (`mcp.tool.target == "<t>" && (name in [...] || name.matches(...))`,
-    guards as `name == "x" && !(<when>)`); gated tools get no rule at all, so nothing relies on `deny` precedence. `/execute/mcp` is
+    argument guards were dropped: `mcp.tool.arguments.*` predicates do not fire in v1.7.0 and `guards:` is now rejected); gated tools get no rule at all, so nothing relies on `deny` precedence. `/execute/mcp` is
     deny-all and lists the targets that have gated tools; `/identity/mcp` is deferred and deny-all. Offline drift (fragment, classification,
     generated values) is a CI step; drift against live `tools/list` is `classify_tools.py` run by an operator.
 

@@ -7,9 +7,11 @@ One reviewed file per target: platform/tool-gateway/policy/classification/<targe
     write: [create_annotation]
     destructive: [delete_dashboard]           # execute route only (typed `execute <id>`)
     physical: []                              # execute route only (typed `override <id>`)
-    guards:                                   # optional: a listed tool that becomes destructive for some arguments
-    - {tool: resources_scale, class: destructive, when: 'mcp.tool.arguments.replicas == 0'}
     proposed: []                              # written by classify_tools.py; CI fails until a human empties it
+
+There is no `guards:` key: argument predicates (`mcp.tool.arguments.*`) do not fire in agentgateway v1.7.0, so a
+tool that is dangerous only for some arguments is classified by its worst case, and the argument rule belongs to the
+Phase 4 execute gate. `guards:` is rejected so nobody relies on it.
 
 A tool that appears in no list is treated as destructive: it is not exposed on any group route and the
 classification check reports it as drift. Design: docs/architecture/onemind-tool-gateway.md section 3.1.
@@ -84,24 +86,10 @@ def parse(path: Path) -> dict:
             if "*" not in exposed and matches(exposed, gated):
                 raise PolicyError(f"{where}: {exposed!r} is exposed but matches the destructive/physical glob {gated!r}")
 
-    guards = raw.get("guards") or []
-    if not isinstance(guards, list):
-        raise PolicyError(f"{where}: 'guards' must be a list")
-    norm_guards = []
-    for g in guards:
-        if not isinstance(g, dict) or set(g) != {"tool", "class", "when"}:
-            raise PolicyError(f"{where}: each guard needs exactly tool, class and when")
-        if g["class"] not in GATED:
-            raise PolicyError(f"{where}: guard class must be one of {GATED}")
-        if seen.get(g["tool"]) not in EXPOSED or "*" in g["tool"]:
-            raise PolicyError(f"{where}: guard tool {g['tool']!r} must be an exact name listed under read or write")
-        if not isinstance(g["when"], str) or not g["when"].strip():
-            raise PolicyError(f"{where}: guard 'when' must be a CEL string")
-        stripped = g["when"].replace("$$", "")
-        if "$" in stripped:
-            raise PolicyError(f"{where}: bare '$' in guard {g['when']!r}; write '$$'")
-        norm_guards.append({"tool": g["tool"], "class": g["class"], "when": g["when"].strip()})
-    out["guards"] = sorted(norm_guards, key=lambda g: g["tool"])
+    if raw.get("guards"):
+        raise PolicyError(f"{where}: 'guards' do not work in agentgateway v1.7.0 (argument predicates never fire, so a guarded "
+                          "tool would be exposed with no protection); classify the whole tool by its worst case "
+                          "(destructive if any argument can destroy) and put the argument rule in the Phase 4 execute gate")
 
     proposed = raw.get("proposed") or []
     if proposed:
@@ -132,18 +120,14 @@ def _name_term(patterns: list[str]) -> list[str]:
 
 def allow_expr(c: dict) -> str | None:
     """CEL for the tools of this target that a group route may expose, or None when there are none."""
-    guarded = {g["tool"]: g["when"] for g in c["guards"]}
-    patterns = [n for cls in EXPOSED for n in c[cls] if n not in guarded]
-    terms = _name_term(patterns)
-    for tool, when in sorted(guarded.items()):
-        terms.append('(mcp.tool.name == "%s" && !(%s))' % (tool, when))
+    terms = _name_term([n for cls in EXPOSED for n in c[cls]])
     if not terms:
         return None
     return 'mcp.tool.target == "%s" && (%s)' % (c["target"], " || ".join(terms))
 
 
 def has_gated(c: dict) -> bool:
-    return bool(c["destructive"] or c["physical"] or c["guards"])
+    return bool(c["destructive"] or c["physical"])
 
 
 def classify_name(name: str, c: dict) -> str:

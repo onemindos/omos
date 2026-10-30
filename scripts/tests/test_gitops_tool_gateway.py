@@ -29,7 +29,7 @@ GW = {
 
 
 def klass(target="grafana", **kw):
-    base = {"target": target, "read": [], "write": [], "destructive": [], "physical": [], "guards": [], "proposed": []}
+    base = {"target": target, "read": [], "write": [], "destructive": [], "physical": [], "proposed": []}
     base.update(kw)
     return base
 
@@ -167,11 +167,6 @@ class Renderer(unittest.TestCase):
             with self.assertRaises(render.RenderError):
                 render.render(GW, [frag(groups=[g])], {"grafana": klass()})
 
-    def test_guard_hides_the_dangerous_arguments(self):
-        c = klass(write=["scale"], guards=[{"tool": "scale", "class": "destructive", "when": "mcp.tool.arguments.replicas == 0"}])
-        expr = routes_of(render.render(GW, [frag()], {"grafana": c}))["ops"]["policies"]["mcpAuthorization"]["rules"][0]["allow"]
-        self.assertIn('mcp.tool.name == "scale" && !(mcp.tool.arguments.replicas == 0)', expr)
-
 
 class Classification(unittest.TestCase):
     def parse(self, text, name="t.yaml"):
@@ -203,6 +198,16 @@ class Classification(unittest.TestCase):
         for text in bad:
             with self.subTest(text=text), self.assertRaises(cl.PolicyError):
                 self.parse(text.replace("\\n", "\n"))
+
+    def test_guards_are_rejected_because_argument_predicates_do_not_fire(self):
+        # agentgateway v1.7.0 never evaluates mcp.tool.arguments.* in an allow rule, so a guarded tool would be
+        # exposed unprotected. A guard must fail loudly instead of looking like a control.
+        text = "target: t\nwrite: [scale]\nguards:\n- {tool: scale, class: destructive, when: 'mcp.tool.arguments.replicas == 0'}\n"
+        with self.assertRaisesRegex(cl.PolicyError, "guards.*do not work"):
+            self.parse(text)
+        # An empty list is not a guard, and the compiled rule never mentions arguments.
+        c = self.parse("target: t\nwrite: [scale]\nguards: []\n")
+        self.assertNotIn("mcp.tool.arguments", cl.allow_expr(c))
 
     def test_unlisted_is_destructive(self):
         c = klass(read=["get_*"], write=["set_x"])

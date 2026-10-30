@@ -125,8 +125,6 @@ def render_file(c: dict, proposed: list[str]) -> str:
     out = {"target": c["target"]}
     for k in cl.CLASSES:
         out[k] = sorted(c[k])
-    if c["guards"]:
-        out["guards"] = c["guards"]
     if proposed:
         out["proposed"] = sorted(proposed)
     head = (f"# Tool classification for gateway target '{c['target']}'. Reviewed in Git; unlisted = destructive (hidden).\n"
@@ -178,7 +176,7 @@ def main(argv: list[str]) -> int:
 
     path = DIR / f"{a.target}.yaml"
     existing = cl.parse(path) if path.is_file() else {
-        "target": a.target, **{k: [] for k in cl.CLASSES}, "guards": [], "proposed": []}
+        "target": a.target, **{k: [] for k in cl.CLASSES}, "proposed": []}
     tools = list_tools(a.url, headers)
     live = {}
     for t in tools:

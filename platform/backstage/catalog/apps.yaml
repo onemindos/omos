@@ -7903,9 +7903,10 @@ metadata:
   tags:
     - kubernetes
   title: OneMind internal app MCP
-  description: Read-only MCP server giving Hermes typed tools for in-cluster apps
-    (NATS monitoring, Prometheus); manifests in platform/hermes/mcp (Argo
-    application platform-legacy).
+  description: MCP server giving Hermes typed tools for in-cluster apps (NATS
+    monitoring, Prometheus, Ollama, OpenCost, and the Tile38 adapter with one
+    write, tile38_set_point); it is the onemind target behind the tool gateway;
+    manifests in platform/hermes/mcp (Argo application platform-legacy).
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
@@ -7945,6 +7946,81 @@ spec:
     - component:default/prometheus
   dependencyOf:
     - component:default/hermes-legacy
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: agentgateway
+  tags:
+    - kubernetes
+  title: Tool gateway (agentgateway)
+  description: The tool gateway in front of Legacy's tools, agentgateway v1.7.0,
+    serving one MCP endpoint per tool group (ops, dev, cloud, data, tak, home,
+    work, identity, execute); Argo application platform-tool-gateway in
+    namespace tool-gateway. Hermes is not cut over yet.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-tool-gateway
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/agentgateway/
+    github.com/project-slug: onemindos/omos
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: mcp-kubernetes
+  tags:
+    - kubernetes
+  title: Tool gateway Kubernetes backend (mcp-kubernetes)
+  description: containers/kubernetes-mcp-server v0.1.1 behind the tool gateway
+    (target kubernetes, group ops) with 10 read tools, 1 write, 3 destructive
+    tools held back for the execute route; no Secrets in its RBAC.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: mcp-clickhouse
+  tags:
+    - kubernetes
+  title: Tool gateway ClickHouse backend (mcp-clickhouse)
+  description: ClickHouse/mcp-clickhouse 0.7.0 behind the tool gateway (target
+    clickhouse, group data) with three read tools as the readonly ClickHouse
+    user legacy_ro.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
