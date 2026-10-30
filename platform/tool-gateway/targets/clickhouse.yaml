@@ -1,0 +1,12 @@
+# ClickHouse "Time Machine" through the official ClickHouse MCP server (design row 8), read-only instance:
+# Deployment mcp-clickhouse (manifests/backends/clickhouse/) connects as user legacy_ro (profile readonly=1).
+name: clickhouse
+groups: [data]
+env:
+  TARGET_CLICKHOUSE_TOKEN: {secret: gateway-target-clickhouse, key: token}
+target:
+  mcp:
+    host: http://mcp-clickhouse.tool-gateway.svc.cluster.local:8000/mcp
+  policies:
+    backendAuth:
+      key: "${TARGET_CLICKHOUSE_TOKEN}"

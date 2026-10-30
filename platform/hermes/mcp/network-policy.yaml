@@ -94,6 +94,17 @@ spec:
     ports:
     - protocol: TCP
       port: 11434
+  # Tile38 command API (adapter tile38; reads, plus SET when allow_writes).
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: onetak
+      podSelector:
+        matchLabels:
+          app: tile38
+    ports:
+    - protocol: TCP
+      port: 9851
   - to:
     - namespaceSelector:
         matchLabels:

@@ -22,7 +22,18 @@ read:
 - stac_collections
 - stac_search
 - tempo_trace
-# The onemind-mcp adapters are read only by construction (readOnlyHint true on every tool).
-write: []
-destructive: []
+- tile38_get
+- tile38_keys
+- tile38_nearby
+- tile38_scan
+- tile38_server
+- tile38_within
+# Read only by construction, except tile38 (adapter services/onemind-mcp/onemind_mcp/adapters/tile38.py).
+# tile38_set_point is registered only when the app has allow_writes; the two destructive tools only with allow_destructive,
+# which stays off until the execute gate (Phase 4) exists.
+write:
+- tile38_set_point
+destructive:
+- tile38_delete_object
+- tile38_drop_collection
 physical: []

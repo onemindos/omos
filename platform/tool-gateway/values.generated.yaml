@@ -6,6 +6,16 @@ extraEnv:
     secretKeyRef:
       name: gateway-clients
       key: hermes
+- name: TARGET_CLICKHOUSE_TOKEN
+  valueFrom:
+    secretKeyRef:
+      name: gateway-target-clickhouse
+      key: token
+- name: TARGET_CORE_TOKEN
+  valueFrom:
+    secretKeyRef:
+      name: gateway-target-core
+      key: token
 - name: TARGET_MEDIAMTX_BASIC
   valueFrom:
     secretKeyRef:
@@ -40,7 +50,8 @@ config:
             - allow: mcp.tool.target == "onemind" && (mcp.tool.name in ["alertmanager_alerts", "apps_describe", "apps_list",
                 "argocd_application", "argocd_applications", "backstage_entities", "backstage_entity", "grafana_dashboards",
                 "litellm_models", "loki_query", "mediamtx_paths", "nats_jetstream_stats", "nats_server_stats", "ollama_models",
-                "ollama_running_models", "opencost_allocation", "prometheus_query", "stac_collections", "stac_search", "tempo_trace"])
+                "ollama_running_models", "opencost_allocation", "prometheus_query", "stac_collections", "stac_search", "tempo_trace",
+                "tile38_get", "tile38_keys", "tile38_nearby", "tile38_scan", "tile38_server", "tile38_set_point", "tile38_within"])
         backends:
         - mcp:
             prefixMode: always
@@ -111,13 +122,35 @@ config:
                 client: hermes
           mcpAuthorization:
             rules:
-            - require: 'false'
+            - allow: mcp.tool.target == "clickhouse" && (mcp.tool.name in ["list_databases", "list_tables", "run_query"])
+            - allow: mcp.tool.target == "core" && (mcp.tool.name in ["get_mission", "list_agents", "list_capabilities", "list_links",
+                "list_missions", "list_objects"])
+            - allow: mcp.tool.target == "stac" && (mcp.tool.name in ["get_collection", "get_item", "list_collections", "list_items",
+                "search"])
         backends:
         - mcp:
             prefixMode: always
             failureMode: failOpen
             targets:
-            - *id003
+            - name: clickhouse
+              mcp:
+                host: http://mcp-clickhouse.tool-gateway.svc.cluster.local:8000/mcp
+              policies:
+                backendAuth:
+                  key: ${TARGET_CLICKHOUSE_TOKEN}
+            - name: core
+              openapi:
+                schema:
+                  file: /etc/gateway/openapi/core/openapi.json
+                host: onemind-core.onemind-core.svc.cluster.local:8080
+              policies:
+                backendAuth:
+                  key: ${TARGET_CORE_TOKEN}
+            - name: stac
+              openapi:
+                schema:
+                  file: /etc/gateway/openapi/stac/openapi.json
+                host: stac-api.stac.svc.cluster.local:8080
       - name: tak
         matches:
         - path:
@@ -234,3 +267,6 @@ config:
             - name: mediamtx
               openapi: *id005
               policies: *id006
+            - name: onemind
+              mcp: *id001
+              policies: *id002

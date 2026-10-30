@@ -18,6 +18,8 @@ class App(BaseModel):
     enabled: bool = True
     blocked_reason: str | None = Field(default=None, max_length=500)
     allow_writes: bool = False
+    # Destructive tools (delete, drop) register only when this is set; the gateway offers them on its execute route only.
+    allow_destructive: bool = False
     description: str = Field(min_length=1, max_length=300)
     url_env: str | None = None
     auth_header: Literal["Authorization", "X-N8N-API-KEY"] = "Authorization"

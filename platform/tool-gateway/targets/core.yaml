@@ -1,0 +1,13 @@
+# onemind-core through OpenAPI (design row 16): the read-only subset with the existing READ_API_KEY
+# (resealed from onemind-core/core-runtime). Writes need the operator credential and are not exposed.
+name: core
+groups: [data]
+env:
+  TARGET_CORE_TOKEN: {secret: gateway-target-core, key: token}
+target:
+  openapi:
+    schema: {file: /etc/gateway/openapi/core/openapi.json}
+    host: onemind-core.onemind-core.svc.cluster.local:8080
+  policies:
+    backendAuth:
+      key: "${TARGET_CORE_TOKEN}"

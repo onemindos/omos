@@ -17,6 +17,21 @@ spec:
       onemind/networks/ip: "::/0"
       onemind/profile: default
       onemind/quota: default
+      # Tool gateway (platform/tool-gateway, target `clickhouse`): read-only by profile, password from the sealed Secret.
+      legacy_ro/password:
+        valueFrom:
+          secretKeyRef:
+            name: clickhouse-legacy-ro
+            key: password
+      legacy_ro/networks/ip: "10.0.0.0/8"
+      legacy_ro/profile: legacy_ro
+      legacy_ro/quota: default
+    profiles:
+      legacy_ro/readonly: 1
+      legacy_ro/max_execution_time: 30
+      legacy_ro/max_memory_usage: 1000000000
+      legacy_ro/max_result_rows: 100000
+      legacy_ro/result_overflow_mode: break
     settings:
       max_connections: 100
       keep_alive_timeout: 3

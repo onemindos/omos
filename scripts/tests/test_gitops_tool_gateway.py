@@ -184,9 +184,11 @@ class Classification(unittest.TestCase):
     def test_committed_files_are_valid_and_onemind_is_read_only(self):
         classes = cl.load_all(render.CLASSIFICATION)
         self.assertIn("onemind", classes)
-        self.assertEqual(len(classes["onemind"]["read"]), 20)
-        for cls in ("write", "destructive", "physical"):
-            self.assertEqual(classes["onemind"][cls], [])
+        # Every onemind-mcp tool is read only except the tile38 adapter's gated write and destructive tools.
+        self.assertEqual(len(classes["onemind"]["read"]), 26)
+        self.assertEqual(classes["onemind"]["write"], ["tile38_set_point"])
+        self.assertEqual(classes["onemind"]["destructive"], ["tile38_delete_object", "tile38_drop_collection"])
+        self.assertEqual(classes["onemind"]["physical"], [])
 
     def test_rejects_bad_files(self):
         bad = [

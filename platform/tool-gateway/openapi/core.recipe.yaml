@@ -1,0 +1,8 @@
+source: core.source.yaml
+keep:
+- {method: get, path: /capabilities, id: list_capabilities}
+- {method: get, path: /objects, id: list_objects}
+- {method: get, path: /links, id: list_links}
+- {method: get, path: /agents, id: list_agents}
+- {method: get, path: /missions, id: list_missions}
+- {method: get, path: "/missions/{mid}", id: get_mission}
