@@ -1,0 +1,70 @@
+# Default deny for the whole namespace, then the gateway pod's base policy (ingress from Hermes and
+# Prometheus, DNS and trace egress). NetworkPolicies are additive: each backend adds its own
+# egress-<target>.yaml next to this file, so backend PRs never edit a shared file.
+# Egress ports are destination pod ports, after Service targetPort translation.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: tool-gateway
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: agentgateway
+  namespace: tool-gateway
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: agentgateway-standalone
+      app.kubernetes.io/instance: agentgateway
+  policyTypes: [Ingress, Egress]
+  ingress:
+  # Only Hermes may call the gateway (hermes-legacy is not a client).
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: hermes
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: onemind-hermes
+    ports:
+    - {protocol: TCP, port: 8080}
+  # Prometheus scrapes the PodMonitor endpoint.
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: prometheus
+    ports:
+    - {protocol: TCP, port: 15020}
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - {protocol: UDP, port: 53}
+    - {protocol: TCP, port: 53}
+  # Traces: Tempo OTLP/gRPC.
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: tempo
+    ports:
+    - {protocol: TCP, port: 4317}

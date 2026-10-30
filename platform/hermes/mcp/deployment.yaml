@@ -51,7 +51,7 @@ spec:
             - name: ONEMIND_APPS_FILE
               value: /etc/onemind/apps.yaml
             - name: ONEMIND_ALLOWED_HOSTS
-              value: onemind-mcp.hermes.svc.cluster.local:8000,onemind-mcp.hermes.svc:8000,127.0.0.1:8000
+              value: onemind-mcp.hermes.svc.cluster.local:8000,onemind-mcp.hermes.svc:8000,127.0.0.1:8000,onemind-mcp.hermes.svc.cluster.local,onemind-mcp.hermes.svc
             - name: ONEMIND_MCP_TOKEN
               valueFrom:
                 secretKeyRef:

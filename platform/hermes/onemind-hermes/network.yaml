@@ -38,6 +38,19 @@ spec:
               app.kubernetes.io/instance: litellm
       ports:
         - {protocol: TCP, port: 4000}
+    # Tool gateway (agentgateway, platform/tool-gateway): the one tool front door (Phase 1 adds the
+    # rule next to the LiteLLM one; Phase 6 removes LiteLLM). Matching ingress rule is in
+    # platform/tool-gateway/manifests/network.yaml.
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tool-gateway
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: agentgateway-standalone
+              app.kubernetes.io/instance: agentgateway
+      ports:
+        - {protocol: TCP, port: 8080}
     # Matrix: in-cluster Synapse client API (the homeserver URL in config.yaml).
     - to:
         - namespaceSelector:

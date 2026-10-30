@@ -8,6 +8,8 @@ resources:
   - network.yaml
   - backup.yaml
   - runtime.sealedsecret.yaml
+  # Client key for the tool gateway (Phase 1); Hermes is wired to it in Phase 5, not here.
+  - gateway-client.sealedsecret.yaml
   - backup.sealedsecret.yaml
 configMapGenerator:
   - name: onemind-hermes-defaults

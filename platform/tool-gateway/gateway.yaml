@@ -1,0 +1,16 @@
+# Inputs of scripts/gateway/render_gateway_config.py (output: values.generated.yaml).
+# Design: docs/architecture/onemind-tool-gateway.md. Runbook: docs/operations/tool-gateway.md.
+port: 8080
+# One entry per client. The key itself lives in Secret `secret` (SealedSecret in manifests/).
+clients:
+  hermes:
+    env: GATEWAY_KEY_HERMES
+    secret: gateway-clients
+    key: hermes
+# One MCP endpoint per group. Phase 2 adds dev, cloud, data, tak, home, work and the execute route.
+groups:
+  ops:
+    path: /ops/mcp
+    clients: [hermes]
+    prefixMode: always # tools appear as <target>_<tool>
+    failureMode: failOpen # a dead target must not fail initialize for the whole group
