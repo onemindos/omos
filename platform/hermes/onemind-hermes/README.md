@@ -1,6 +1,6 @@
 # onemind-hermes
 
-The new OneMind Hermes instance, running beside the current `hermes-legacy`
+Legacy (`onemind-hermes`): the new OneMind Hermes instance, running beside the current `hermes-legacy`
 Deployment. It replaces the `hermes-fresh` launch of October 26, 2026 (same
 image, same design, new names and new storage). It does not import any existing
 agent data.
@@ -157,3 +157,13 @@ Still pending:
 - Remove the `hermes-fresh` device from the tailnet admin console.
 - The `hermes-fresh` Restic prefix in the `onemind-backups` bucket, after the
   above.
+
+## Agent name
+
+The agent is called **Legacy** everywhere she is shown. `onemind-hermes` is only the
+instance and infrastructure name. Hermes v0.22.5 has no agent-name config key, so the
+name is set in three places: `SOUL.md` (identity), `API_SERVER_MODEL_NAME: Legacy` in
+`config.yaml` (the id on `/v1/models`) and the Matrix display name of
+`@legacy:onemindos.dev` (set once through the Synapse profile API). The Telegram bot
+(`omos_hermes_bot`, first name `omos-hermes`) can only be renamed in BotFather. The old
+`hermes-legacy` Deployment is the old Legacy instance, being retired.

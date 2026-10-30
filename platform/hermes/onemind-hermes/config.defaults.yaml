@@ -3,6 +3,11 @@
 # Hermes win. No Legacy state, custom plugins, jobs or connectors.
 # Every key below was checked against Hermes v0.22.5 (/opt/hermes); see README.md.
 # Select/authenticate the model from the instance before using chat.
+# The agent's name is Legacy. Hermes has no agent-name key: the persona is SOUL.md
+# (seed/onemind-hermes/), and the id advertised on the API server's /v1/models comes
+# from API_SERVER_MODEL_NAME below (a top-level scalar, bridged to the env at startup).
+API_SERVER_MODEL_NAME: Legacy
+
 model:
   provider: openai-codex
   default: gpt-6.1-sol
