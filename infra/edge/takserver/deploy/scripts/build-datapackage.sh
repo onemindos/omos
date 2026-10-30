@@ -17,7 +17,7 @@ STACK_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 EXPORTS="$STACK_DIR/exports"
 CERT_P12="$EXPORTS/$CN.p12"
 CA_PEM="$EXPORTS/ca.pem"
-CAPASS="${CAPASS:-atakatak}"
+CAPASS="${CAPASS:?set CAPASS (the password of the device .p12)}"
 HOST="${TAK_HOST:-100.74.182.117}"   # Tailscale IP (server cert SAN covers it)
 PORT="${TAK_PORT:-8089}"
 
@@ -85,6 +85,6 @@ chmod 600 "$OUT"
 rm -rf "$WORK"
 
 echo "Built data package: $OUT"
-echo "  server:  $HOST:$PORT (ssl)    cert: $CN.p12    pass: $CAPASS"
+echo "  server:  $HOST:$PORT (ssl)    cert: $CN.p12"
 echo "  iOS:     AirDrop the .zip -> Open in iTAK -> it auto-adds the server."
 echo "  Android: adb push '$OUT' /sdcard/atak/tools/datapackage/ ; import in ATAK (Import Manager)."

@@ -87,7 +87,7 @@ Done. On the device, open ATAK and:
     Server:   192.168.1.183   (LAN)   or   100.74.182.117 (Tailscale)
     Port:     8089
     Protocol: SSL/TLS
-    Client cert:  /sdcard/atak/cert/$CERT_NAME.p12   (pass: atakatak unless changed)
+    Client cert:  /sdcard/atak/cert/$CERT_NAME.p12   (pass: the CAPASS you issued it with)
     CA cert:      /sdcard/atak/cert/ca.pem
 Register this device in devices/registry.md.
 EOF
