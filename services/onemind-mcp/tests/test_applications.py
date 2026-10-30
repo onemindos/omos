@@ -168,7 +168,7 @@ def test_production_catalog_boots_and_does_not_expose_blocked_apps(monkeypatch):
                 monkeypatch.setenv(app.token_env, 'user:' + secrets.token_urlsafe(24))
     with TestClient(build(cat, lambda _: pytest.fail('Discovery must not probe apps'))) as client:
         tools = rpc(client, 'tools/list')['result']['tools']
-        assert len(tools) == 20
+        assert len(tools) == 27  # 20 read adapters + 6 tile38 reads + tile38_set_point
         assert all(t['annotations']['readOnlyHint'] for t in tools)
         blocked = [app.id + '_' for app in cat.apps if not app.enabled]
         assert all(not any(t['name'].startswith(prefix) for prefix in blocked) for t in tools)
