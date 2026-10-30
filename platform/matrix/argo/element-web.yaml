@@ -1,4 +1,4 @@
-# Element Web, mirrored from the live matrix/element-web objects (2026-10-10, moved to onemindos.dev 2026-10-12). Live wins over the old base.
+# Element Web, mirrored from the live matrix/element-web objects (2026-10-10, moved to onemindos.dev 2026-10-12, tailnet-only, no identity server 2026-10-30). Live wins over the old base.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -11,11 +11,9 @@ data:
         "m.homeserver": {
           "base_url": "https://matrix.tail717ba0.ts.net",
           "server_name": "onemindos.dev"
-        },
-        "m.identity_server": {
-          "base_url": "https://vector.im"
         }
       },
+      "disable_identity_server": true,
       "disable_custom_urls": false,
       "disable_guests": true,
       "disable_3pid_login": true,
@@ -61,6 +59,10 @@ spec:
     metadata:
       labels:
         app: element-web
+      annotations:
+        # config.json is a subPath mount, which never refreshes in a running pod. Bump this value
+        # whenever the ConfigMap above changes so the pods roll and pick it up.
+        onemind.os/config-revision: "2026-10-30-tailnet-no-identity-server"
     spec:
       containers:
         - name: element-web
