@@ -1,7 +1,7 @@
 ---
 name: ha-nats-bridge
 description: "Use to control or observe Home Assistant through the OneMind NATS bus (cmd.ha.*, evt.ha.*) and to check the bridge's health."
-version: 2.0.0
+version: 3.0.0
 triggers:
   - "HA bridge"
   - "home assistant NATS"
@@ -55,6 +55,39 @@ timeout 20 nats sub 'evt.ha.cmd.result.<entity_id>' --count 1
 - Bridge behavior to expect: infinite NATS reconnect, a 30 s Home Assistant
   WebSocket heartbeat with exponential backoff (2 s to 60 s), a 10 s timeout on
   service calls and a 5 s timeout on state reads.
+
+## Leaf troubleshooting (edge side; owner-led)
+
+The edge leaf connects to the hub through the `omos-nats` Tailscale load balancer
+on port 7422 (TLS). Error taxonomy from past sessions, so you can tell the owner
+what to check:
+
+| Symptom on the edge leaf | Meaning and fix |
+|---|---|
+| `first record does not look like a TLS handshake` | Plain NATS sent to a TLS port (or the reverse). Use a `tls://` URL; if the hub certificate cannot be verified, `tls { insecure: true }` goes at the `leafnodes` block level, not inside the remote entry. Prefer trusting the NATS CA over `insecure`. |
+| `cannot find local account "..." specified in leafnode remote` | Do not set `account:` in the remote unless that local account is defined; the hub assigns the account from the credentials. |
+| `Authorization Violation` after the TLS handshake | Credentials rejected or mapped to an account that does not exist on the hub. Compare with the current hub config in `platform/nats/`; do not paste the password anywhere. |
+| leaf connects but lands in `$G` | It connected without credentials; events will not route to the agents. |
+| `dial tcp 10.x.x.x:7422: i/o timeout` after a hub pod restart | The hub advertised its in-cluster IP to the leaf. `no_advertise: true` in the hub's leafnode block (already in `platform/nats/values.template.yaml`) stops this. |
+| Home Assistant add-on container cannot resolve tailnet names | Its DNS is Home Assistant's own; use the load balancer's tailnet IP in the leaf URL instead of the MagicDNS name. |
+
+To diagnose from the hub, the NATS monitoring endpoint (`leafz`, `accountz`) is
+reachable from inside the `nats` namespace, not from this agent's pod.
+
+On the Home Assistant OS host (reached only by the owner): processes started
+over SSH die when the session closes unless started with `setsid`; `/data` is
+root-writable only (use the web terminal); the `ha` CLI works only in the web
+terminal because it needs the Supervisor token; and a watchdog should restart
+the bridge, because `/tmp` is wiped when the add-on restarts.
+
+## Entities
+
+Do not rely on a remembered entity list. At last check the controllable devices
+were Wi-Fi smart plugs (`switch.*`) and the readable ones included a thermometer
+and hygrometer, a phone tracker and router WAN status; there were no `light.*`
+entities. The Home Assistant box has also been offline for long periods
+(`platform/hermes/agent/egress.yaml` notes September 2026), so silence may just
+mean the host is down.
 
 ## Credentials
 

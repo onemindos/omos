@@ -18,7 +18,7 @@ Rules used for curation:
   kept files were that large; the largest candidate trees were dropped).
 - Personal data (family, home address, personal accounts) is not committed.
 
-## Shipped here (21 skills)
+## Shipped here (30 skills)
 
 | Skill | Path | Built from | Note |
 |---|---|---|---|
@@ -42,11 +42,20 @@ Rules used for curation:
 | find-zeus | `devops/find-zeus` | find-zeus | Imported. Retired public TAK address, database login and cert paths removed; injects over NATS. |
 | session-librarian | `productivity/session-librarian` | session-librarian | Imported; delete/prune gated by execute/override. |
 | matrix-doks-ops | `devops/matrix-doks-ops` | matrix-doks-ops | Imported. GitOps-first rewrite for `onemindos.dev`; tailnet-only direction; credentials and room id removed. |
+| tailscale-pod-access | `devops/tailscale-pod-access` | tailscale-pod-access | Imported 2026-10-29 at the owner's request. Rewritten for the real model: no `tailscaled` in the pod, access only through operator egress Services, and the pod's NetworkPolicy blocks them until the owner adds a rule. Pinned key, userspace-tailscaled hacks, device addresses removed. |
+| omos-legacy-genome | `devops/omos-legacy-genome` | omos-legacy-genome | Imported. Repointed from the archived `omos-legacy` repo to `platform/hermes/` in `onemindos/omos`; token-in-remote-URL push recipe removed. Keeps `references/dev-infra-audit-checklist.md`. |
+| legacy-self-awareness | `devops/legacy-self-awareness` | legacy-self-awareness | Imported as a short corrected rewrite (52 KB to about 7 KB): identity as `onemind-hermes`, what the pod can and cannot reach, current platform map, Argo habits. The July snapshot, bot and bus credentials, ORP/LiveKit/Authentik-removed text, Bedrock era and sub-agent table are gone. |
+| tak-mission-ops | `devops/tak-mission-ops` | tak-mission-ops | Imported and rewritten: bus-only CoT (`tak.cot.inject` in, `tak.cot.out` read), tailnet-only TAK 5.8, no admin login or passphrases, no device specs. Keeps the mission API, signal protocol, templates, client matrix, degraded comms, MEDEVAC. Two references kept. |
+| tak-mission-runner | `devops/tak-mission-runner` | tak-mission-runner | Imported and rewritten: phase words kept; the real errand location, personal device UID, pod scripts, database login and raw TLS inject removed; objective now comes from the owner per mission. |
+| mission-replay | `devops/mission-replay` | mission-replay | Imported and rewritten: reads history from the JetStream `COT` stream and replays as `REPLAY-*` on `tak.cot.inject`; no database login, certificate or personal UID. |
+| onemind-stack | `devops/onemind-stack` | onemind-stack | Imported as method: routing law and the platform evaluation procedure kept, six references kept. The historical tool map, WordPress credential, cutover IPs, Notion steps and personal drive layout removed. |
+| hermes-desktop-plugins | `productivity/hermes-desktop-plugins` | hermes-desktop-plugins | Upstream-style skill. Not in the v0.22.5 hub or bundled set (`hermes skills inspect` finds nothing), so copied from Legacy unchanged except a note that this pod has no desktop app. |
+| plan | `software-development/plan` | plan | Upstream Hermes plan-mode skill (MIT). Same: not available from the hub in v0.22.5, copied unchanged. |
 | onemind-architecture | `devops/onemind-architecture` | notion-onemind-architecture | Renamed; every Notion part (database ids, API calls, sync steps) removed; keeps the taxonomy. A knowledge platform will be chosen later. Cross-referenced with `onemind-domains`. |
 
 ## Decision table
 
-Counts (69 candidates, as first reviewed; ten NEEDS-OWNER items were later imported, see above): KEEP 20 (nine role skills merged into one, forge into
+Counts (69 candidates, as first reviewed; ten NEEDS-OWNER items and, on 2026-10-29, seven former DROP items, two upstream skills and merges, now listed under "Shipped here" were later imported): KEEP 20 (nine role skills merged into one, forge into
 another, ten platform skills shipped or folded), DROP 26, NEEDS-OWNER 23. The 38 skills under `.archive/` were not individually
 reviewed and stay behind.
 
@@ -77,24 +86,19 @@ reviewed and stay behind.
 
 ### DROP
 
+(Rows for skills later imported at the owner's request were removed from this table; see "Shipped here".)
+
 | Candidate | Reason |
 |---|---|
-| onemind-stack | Historical stack decision log (Dropbox/ClickUp/Zoho/Circle); contains a WordPress app password. |
 | onemind-fabric-deployment | Multi-agent profile scaffolding (5 profiles, pillar models); superseded by one soul. |
 | onemind-inter-agent-protocol | Mother-to-pillar delegation between sibling agents; no siblings now. |
-| tak-mission-ops | July 2026 public-TAK material, default passphrases, Mac/WinTAK/ADB flows; superseded by `tak-server` and the runbook. |
-| tak-mission-runner | One-off "Gas Station Run" live protocol with a real location and device UID. |
-| mission-replay | Depends on a pod script with embedded database credentials and the retired public TAK address. |
 | omos-ui-build-deploy | Describes `:latest`, a Cloudflare tunnel and creating a pull secret from a personal token. |
 | legacy-integrations | Zoho/GHL key-in-URL setup; contains keys; per-integration setup belongs in SealedSecrets. |
 | legacy-model-config | ESO plus 1Password key flow (retired); contains a key pattern. Sealed secrets own `hermes-env`. |
 | cloudflare-access-patterns | Global-key fallback and personal e-mail; upstream Cloudflare skills cover this. |
-| tailscale-pod-access | SSH from the pod to the Mac, Windows and phone, with a pinned key; wrong model for a cloud agent. |
 | tailscale-continuous-mesh-access | Userspace tailscaled lifecycle hacks. |
 | composio-clickup, composio-github, composio-gmail, composio-google | Personal account ids baked in; re-derive from `COMPOSIO_SEARCH_TOOLS`. |
 | omos-cortex-neurolinked | NeuroLinked simulator on the Mac; speculative. |
-| omos-legacy-genome | Superseded by `platform/hermes/agent/` in Git. |
-| legacy-self-awareness | Large (26 files) snapshot of a retired Legacy deployment (CloudTAK, ESO, argocd-operations); contains credentials. |
 | openclaw-k8s-deploy | OpenClaw is retired. |
 | repo-absorption | One-time repo consolidation. |
 | resume-session-on-pod | Mac-terminal helper for the old pod. |
@@ -174,7 +178,7 @@ the init-container/git-sync step exists. To add or refresh skills, from the repo
 ```bash
 POD=$(kubectl --context do-nyc3-omos-cloud -n hermes get pod \
   -l app.kubernetes.io/name=onemind-hermes -o jsonpath='{.items[0].metadata.name}')
-tar cf - -C platform/hermes/skills devops productivity | \
+tar cf - -C platform/hermes/skills autonomous-ai-agents devops productivity software-development | \
   kubectl --context do-nyc3-omos-cloud -n hermes exec -i "$POD" -c hermes -- \
   tar xf - -C /opt/data/onemind-skills
 kubectl --context do-nyc3-omos-cloud -n hermes exec "$POD" -c hermes -- hermes skills list
