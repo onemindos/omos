@@ -37,14 +37,14 @@ apps:
 - id: karakeep
   description: Bookmarks, saved links and knowledge search
   enabled: false
-  blocked_reason: 'Owner step: in Karakeep (Settings > API Keys) create a key named onemind-mcp, then seal it as KARAKEEP_API_TOKEN (docs/operations/onemind-mcp.md). Network, adapter and URL are ready; save_link stays off (allow_writes false).'
+  blocked_reason: 'Owner step: in Karakeep (Settings > API Keys) create a key named onemind-mcp and seal it as KARAKEEP_API_TOKEN. Network, adapter and URL are ready; save_link stays off.'
   adapter: karakeep
   url_env: KARAKEEP_URL
   token_env: KARAKEEP_API_TOKEN
 - id: n8n
   description: Workflow inventory and execution summaries
   enabled: false
-  blocked_reason: 'Owner step: in n8n (Settings > n8n API) create an API key named onemind-mcp with only workflow:list and execution:list scopes, then seal it as N8N_API_TOKEN (docs/operations/onemind-mcp.md). Network, adapter and URL are ready.'
+  blocked_reason: 'Owner step: in n8n (Settings > n8n API) create a key named onemind-mcp with only workflow:list and execution:list scopes and seal it as N8N_API_TOKEN.'
   adapter: n8n
   url_env: N8N_URL
   token_env: N8N_API_TOKEN

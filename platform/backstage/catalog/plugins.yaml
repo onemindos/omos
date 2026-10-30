@@ -3087,9 +3087,8 @@ metadata:
       not probed
     onemind.io/mcp-app-id: karakeep
     onemind.io/mcp-url-env: KARAKEEP_URL
-    onemind.io/blocked-reason: 'Owner step: in Karakeep (Settings > API Keys) create a key named onemind-mcp, then
-      seal it as KARAKEEP_API_TOKEN (docs/operations/onemind-mcp.md). Network, adapter and URL are ready; save_link
-      stays off (allow_writes false).'
+    onemind.io/blocked-reason: 'Owner step: in Karakeep (Settings > API Keys) create a key named onemind-mcp and
+      seal it as KARAKEEP_API_TOKEN. Network, adapter and URL are ready; save_link stays off.'
 spec:
   type: mcp-adapter
   lifecycle: parked
@@ -3134,9 +3133,8 @@ metadata:
       not probed
     onemind.io/mcp-app-id: n8n
     onemind.io/mcp-url-env: N8N_URL
-    onemind.io/blocked-reason: 'Owner step: in n8n (Settings > n8n API) create an API key named onemind-mcp with
-      only workflow:list and execution:list scopes, then seal it as N8N_API_TOKEN (docs/operations/onemind-mcp.md).
-      Network, adapter and URL are ready.'
+    onemind.io/blocked-reason: 'Owner step: in n8n (Settings > n8n API) create a key named onemind-mcp with only
+      workflow:list and execution:list scopes and seal it as N8N_API_TOKEN.'
 spec:
   type: mcp-adapter
   lifecycle: parked

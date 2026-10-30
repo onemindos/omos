@@ -110,19 +110,19 @@ spec:
         - name: mediamtx
           image: bluenviron/mediamtx:1-ffmpeg
           ports:
-            - { containerPort: 8554, name: rtsp }
-            - { containerPort: 1935, name: rtmp }
-            - { containerPort: 8888, name: hls }
-            - { containerPort: 8889, name: webrtc }
-            - { containerPort: 8890, name: srt, protocol: UDP }
-            - { containerPort: 4000, name: api }
+            - {containerPort: 8554, name: rtsp}
+            - {containerPort: 1935, name: rtmp}
+            - {containerPort: 8888, name: hls}
+            - {containerPort: 8889, name: webrtc}
+            - {containerPort: 8890, name: srt, protocol: UDP}
+            - {containerPort: 4000, name: api}
           volumeMounts:
             - name: config
               mountPath: /config
           args: ["/config/mediamtx.yml"]
           resources:
-            requests: { cpu: 100m, memory: 128Mi }
-            limits:   { cpu: "1",  memory: 512Mi }
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: "1", memory: 512Mi}
       volumes:
         - name: config
           configMap:
@@ -136,11 +136,11 @@ metadata:
   labels:
     app: onetak-media
 spec:
-  selector: { app: onetak-media }
+  selector: {app: onetak-media}
   ports:
-    - { name: rtsp,   port: 8554, targetPort: 8554 }
-    - { name: rtmp,   port: 1935, targetPort: 1935 }
-    - { name: hls,    port: 8888, targetPort: 8888 }
-    - { name: webrtc, port: 8889, targetPort: 8889 }
-    - { name: srt,    port: 8890, targetPort: 8890, protocol: UDP }
-    - { name: api,    port: 4000, targetPort: 4000 }
+    - {name: rtsp, port: 8554, targetPort: 8554}
+    - {name: rtmp, port: 1935, targetPort: 1935}
+    - {name: hls, port: 8888, targetPort: 8888}
+    - {name: webrtc, port: 8889, targetPort: 8889}
+    - {name: srt, port: 8890, targetPort: 8890, protocol: UDP}
+    - {name: api, port: 4000, targetPort: 4000}
