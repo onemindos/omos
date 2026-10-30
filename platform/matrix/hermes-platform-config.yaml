@@ -6,7 +6,7 @@ platforms:
   
   matrix:
     enabled: true
-    homeserver: "https://matrix.onemindos.dev"
+    homeserver: "https://matrix.tail717ba0.ts.net"
     user_id: "@hermes:onemindos.dev"
     # access_token: Set via MATRIX_ACCESS_TOKEN env var or hermes config set
     # device_id: Optional, auto-generated if not set

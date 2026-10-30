@@ -174,7 +174,7 @@ These run live and are not owned by any Application. Manifests for some of them 
 | Namespace | Workloads | Manifests in Git | Tier | Backup | Exposure |
 |-----------|-----------|------------------|------|--------|----------|
 | `nats` (UIs) | `heynats`, `nats-dashboard`, `nats-ui` (digest-pinned 2026-10-23); the agent tools moved to namespace `agent-fabric` (Agent Console, agent-tap, digest-pinned) on 2026-10-17 | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
-| `matrix` | Synapse, Element Web, PostgreSQL, Redis | `platform/matrix/argo/`, Application `platform-matrix` (**manual sync** until `Secret/synapse-homeserver` is sealed, see `platform/matrix/SECRETS-TODO.md`; the older `base/` and `overlays/` are not deployed and not synced) | 2 | `PG dump` (05:40 UTC), `VolSync` x3 (80 GiB) | `matrix.onemindos.com`, `element.onemindos.com` **public (open)** |
+| `matrix` | Synapse, Element Web, PostgreSQL, Redis | `platform/matrix/argo/`, Application `platform-matrix` (**manual sync** until `Secret/synapse-homeserver` is sealed, see `platform/matrix/SECRETS-TODO.md`; the older `base/` and `overlays/` are not deployed and not synced) | 2 | `PG dump` (05:40 UTC), `VolSync` x3 (80 GiB) | `matrix.tail717ba0.ts.net`, `element.tail717ba0.ts.net` **tailnet** (public hosts retired 2026-10-29; federation off) |
 | `tailscale` | about 24 operator-generated proxy StatefulSets | generated | n/a | none | tailnet |
 | `kube-system` | Cilium, CoreDNS, Hubble, metrics-server, DO CSI and agents | DOKS-managed | n/a | none | `hubble` tailnet |
 
@@ -211,9 +211,8 @@ Gaps beyond the eleven releases:
 | Path | What is behind it |
 |------|-------------------|
 | Public, Cloudflare ranges only (nginx) | `auth.onemindos.dev`, `ws.onemindos.dev` (NATS WebSocket), `onemindos.dev` (tak-portal) |
-| Public, **no source restriction** (nginx) | `matrix.onemindos.com`, `element.onemindos.com` |
 | Public, control plane | Kubernetes API endpoint, no control-plane firewall (review finding H3) |
-| Tailnet only | TAK (`tak`: 8089, 8443, 8446, 64738), TAK Portal (`enroll`), FedHub (`fedhub`), Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
+| Tailnet only | Matrix (`matrix`, `element`), TAK (`tak`: 8089, 8443, 8446, 64738), TAK Portal (`enroll`), FedHub (`fedhub`), Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
 
 ## Mutable image tags
 

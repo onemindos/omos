@@ -1,60 +1,41 @@
-# Matrix ingress, mirrored from the live matrix/matrix-ingress object (2026-10-12).
-# Adopt the existing .dev routes without changing their live behavior.
-# Moved from onemindos.com to onemindos.dev. server_name is "onemindos.dev" (user IDs look like @zeus:onemindos.dev);
-# the homeserver itself lives at matrix.onemindos.dev. Both hosts are Cloudflare-proxied A records to the ingress LB.
-# No origin cert, same as every other onemindos.dev ingress: Cloudflare terminates TLS (zone SSL mode "full").
-# cert-manager's Cloudflare token (letsencrypt-dns) has no access to the onemindos.dev zone, so it cannot issue here.
+# Matrix is tailnet-only (2026-10-29). Replaces the public nginx Ingresses matrix-ingress and matrix-wellknown
+# (matrix.onemindos.dev, element.onemindos.dev, onemindos.dev/.well-known/matrix). Federation is off, no remote
+# server was ever in the DB, and there is no well-known delegation: clients are pointed at the tailnet URL directly.
+# Tailscale operator Ingresses (same pattern as vaultwarden/n8n): matrix.tail717ba0.ts.net and element.tail717ba0.ts.net.
+# server_name stays "onemindos.dev" (user IDs @user:onemindos.dev); only the URL clients reach it at changes.
+# In-cluster clients (Hermes) keep using the ClusterIP Service synapse.matrix.svc.cluster.local:8008.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: matrix-ingress
+  name: synapse-tailnet
   namespace: matrix
   annotations:
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: 50m
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    tailscale.com/hostname: matrix
 spec:
-  ingressClassName: nginx
-  rules:
-    - host: matrix.onemindos.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: synapse
-                port:
-                  number: 8008
-    - host: element.onemindos.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: element-web
-                port:
-                  number: 80
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: synapse
+      port:
+        number: 8008
+  tls:
+    - hosts:
+        - matrix
 ---
-# Delegation for server_name "onemindos.dev": Synapse answers /.well-known/matrix/{client,server} itself
-# (public_baseurl + serve_server_wellknown in homeserver.yaml). The rest of onemindos.dev is onetak-ingress.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: matrix-wellknown
+  name: element-tailnet
   namespace: matrix
+  annotations:
+    tailscale.com/hostname: element
 spec:
-  ingressClassName: nginx
-  rules:
-    - host: onemindos.dev
-      http:
-        paths:
-          - path: /.well-known/matrix
-            pathType: Prefix
-            backend:
-              service:
-                name: synapse
-                port:
-                  number: 8008
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: element-web
+      port:
+        number: 80
+  tls:
+    - hosts:
+        - element
