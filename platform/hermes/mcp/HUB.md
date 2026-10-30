@@ -1,5 +1,11 @@
 # OneMind MCP hub (LiteLLM)
 
+> **Superseded 2026-10-30 (design, not yet implemented).** The owner replaced LiteLLM-as-MCP-hub with
+> **agentgateway** as Legacy's single tool front door; LiteLLM returns to model routing only. See
+> [`docs/architecture/onemind-tool-gateway.md`](../../../docs/architecture/onemind-tool-gateway.md) for the design, inventory,
+> execute gate and rollout. This file still describes what is **live today** (LiteLLM `mcp_servers`, key
+> `onemind-hermes-mcp`) and stays accurate until Phase 6 of that rollout retires it; do not extend it with new apps.
+
 Status: **intent, in Git; not live until merged and synced.** Verified against the running
 LiteLLM `v1.104.2` image (`ghcr.io/berriai/litellm`, digest `sha256:3d88bd75…`) on
 2026-10-29, read-only.
@@ -31,7 +37,7 @@ LiteLLM proxy  http://litellm.onemind-ai.svc.cluster.local:4000/mcp/   (ns onemi
   admitted by `platform/hermes/mcp/network-policy.yaml`. LiteLLM's own egress is unrestricted.
   `onemind-hermes` pod egress to `litellm:4000` lives in `platform/hermes/onemind-hermes/network.yaml`.
 
-### Why LiteLLM and not agentgateway
+### Why LiteLLM and not agentgateway (historical, 2026-10-29; reversed 2026-10-30)
 
 - Already deployed and Argo-managed (`ecosystem-litellm`), already the model gateway Hermes uses,
   with its Postgres (`onemind-data`) and virtual-key system in place. No new layer, chart,
