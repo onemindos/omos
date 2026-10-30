@@ -18,7 +18,7 @@ Rules used for curation:
   kept files were that large; the largest candidate trees were dropped).
 - Personal data (family, home address, personal accounts) is not committed.
 
-## Shipped here (30 skills)
+## Shipped here (35 skills)
 
 | Skill | Path | Built from | Note |
 |---|---|---|---|
@@ -52,6 +52,11 @@ Rules used for curation:
 | hermes-desktop-plugins | `productivity/hermes-desktop-plugins` | hermes-desktop-plugins | Upstream-style skill. Not in the v0.22.5 hub or bundled set (`hermes skills inspect` finds nothing), so copied from Legacy unchanged except a note that this pod has no desktop app. |
 | plan | `software-development/plan` | plan | Upstream Hermes plan-mode skill (MIT). Same: not available from the hub in v0.22.5, copied unchanged. |
 | onemind-architecture | `devops/onemind-architecture` | notion-onemind-architecture | Renamed; every Notion part (database ids, API calls, sync steps) removed; keeps the taxonomy. A knowledge platform will be chosen later. Cross-referenced with `onemind-domains`. |
+| tailscale-continuous-mesh-access | `devops/tailscale-continuous-mesh-access` | tailscale-continuous-mesh-access | Imported 2026-10-30 at the owner's request. Rewritten as a tailnet and egress health guide plus a stdlib helper (`scripts/mesh-health.py`: TCP probe of the egress Services, summary of `tailscale status --json`). The userspace-`tailscaled` lifecycle, REST wrapper, snapshots and device addresses are gone; the pod has no `tailscaled` and its NetworkPolicy blocks the egress Services until the owner opens them. |
+| onemind-inter-agent-protocol | `devops/onemind-inter-agent-protocol` | onemind-inter-agent-protocol | Imported 2026-10-30. Rewritten: one agent, four hats; who actually exists on the bus; the real `agents.{verb}.{agent}.{owner}.{session}` protocol and discovery; severity words for reports to the owner. The Mother/pillar map, the invented `agents.escalate/broadcast/heartbeat` subjects, Notion board ids and the cron table are removed. |
+| onemind-fabric-deployment | `devops/onemind-fabric-deployment` | onemind-fabric-deployment | Imported 2026-10-30. Rewritten as a decision table and GitOps procedures for adding a skill, cron job, config change, MCP tool or bus agent. The five-profile model, servant oath/SOUL template, Composio account matrix, Notion and Mac-delivery recipes and all seven references are removed. |
+| ocr-and-documents | `productivity/ocr-and-documents` | upstream Hermes (merged into bundled `pdf` in v0.22.5) | Imported 2026-10-30. Current upstream text and both scripts, plus a verified list of what the image lacks (no pymupdf, marker, poppler, tesseract, ocrmypdf, pip or uv). |
+| nano-pdf | `productivity/nano-pdf` | upstream Hermes (merged into bundled `pdf` in v0.22.5) | Imported 2026-10-30. Current upstream usage, plus the gaps: CLI not installed and no model key provisioned; data-leaving and edit-a-copy rules added. |
 
 ## Decision table
 
@@ -86,17 +91,14 @@ reviewed and stay behind.
 
 ### DROP
 
-(Rows for skills later imported at the owner's request were removed from this table; see "Shipped here".)
+(Rows for skills later imported at the owner's request were removed from this table; see "Shipped here". Round 3, 2026-10-30, imported `onemind-fabric-deployment`, `onemind-inter-agent-protocol` and `tailscale-continuous-mesh-access` from this table, rewritten.)
 
 | Candidate | Reason |
 |---|---|
-| onemind-fabric-deployment | Multi-agent profile scaffolding (5 profiles, pillar models); superseded by one soul. |
-| onemind-inter-agent-protocol | Mother-to-pillar delegation between sibling agents; no siblings now. |
 | omos-ui-build-deploy | Describes `:latest`, a Cloudflare tunnel and creating a pull secret from a personal token. |
 | legacy-integrations | Zoho/GHL key-in-URL setup; contains keys; per-integration setup belongs in SealedSecrets. |
 | legacy-model-config | ESO plus 1Password key flow (retired); contains a key pattern. Sealed secrets own `hermes-env`. |
 | cloudflare-access-patterns | Global-key fallback and personal e-mail; upstream Cloudflare skills cover this. |
-| tailscale-continuous-mesh-access | Userspace tailscaled lifecycle hacks. |
 | composio-clickup, composio-github, composio-gmail, composio-google | Personal account ids baked in; re-derive from `COMPOSIO_SEARCH_TOOLS`. |
 | omos-cortex-neurolinked | NeuroLinked simulator on the Mac; speculative. |
 | openclaw-k8s-deploy | OpenClaw is retired. |
