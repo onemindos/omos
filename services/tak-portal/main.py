@@ -22,8 +22,9 @@ CA_CERT_PATH = os.getenv("CA_CERT_PATH", "/certs/ca.pem")
 CA_KEY_PATH = os.getenv("CA_KEY_PATH", "/certs/ca.key")
 _raw_pass = os.getenv("CA_KEY_PASS", "")
 CA_KEY_PASS = _raw_pass.encode() if _raw_pass else None
-# TODO(step-2, PR tak-ca-password-rotation-step1): replace the stock keystore password with a Secret reference; see docs/operations/tak-ca-password-rotation-step1-2026-10-29.md
-# (device-facing p12/truststore password; the CA key password is CA_KEY_PASS above)
+# Device-facing p12/truststore password that goes into the data package (certPassword). It is independent of
+# TAK Server's server-store password rotated in step 2 (2026-10-29), and of the CA key password (CA_KEY_PASS above).
+# Changing it changes what operators/devices type or import, so rotate it as its own change.
 CERT_PASS = b"atakatak"
 
 app = FastAPI(title="OneMind TAK Portal")
