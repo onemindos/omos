@@ -220,6 +220,12 @@ applications:
     apps:
     - tak
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-tool-gateway:
+    apps:
+    - litellm
+    reason: >-
+      Legacy's tool front door (agentgateway) replaces LiteLLM as the MCP hub; it adds no app of its own
+      to apps.yaml. Each backend is classified when its Phase 3 PR lands (docs/architecture/onemind-tool-gateway.md).
   platform-vaultwarden:
     apps:
     - vaultwarden

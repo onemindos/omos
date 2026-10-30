@@ -34,6 +34,18 @@ spec:
     ports:
     - protocol: TCP
       port: 8000
+  # Tool gateway (platform/tool-gateway), target `onemind`; replaces the LiteLLM rule in Phase 6.
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: tool-gateway
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: agentgateway-standalone
+          app.kubernetes.io/instance: agentgateway
+    ports:
+    - protocol: TCP
+      port: 8000
   egress:
   - to:
     - namespaceSelector:

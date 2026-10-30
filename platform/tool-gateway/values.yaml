@@ -1,0 +1,37 @@
+# Hand-written Helm values for agentgateway-standalone (platform/argocd/platform-tool-gateway.yaml).
+# Lists (routes, targets, env) are generated into values.generated.yaml: Helm replaces lists, so do
+# not add `extraEnv` or `config.binds` here. Design: docs/architecture/onemind-tool-gateway.md.
+fullnameOverride: agentgateway
+replicaCount: 1
+image:
+  # v1.7.0 multi-arch index digest, resolved 2026-10-30.
+  tag: v1.7.0@sha256:60216aafb03d37f94e952ff3d51d2f630a65b10ecaebdc0a864882f92610c45b
+  pullPolicy: IfNotPresent
+resources:
+  # Idle footprint measured in Phase 0: ~17 MiB, 0.2% CPU. Re-measure after the Phase 3 backends land.
+  requests: {cpu: 50m, memory: 64Mi}
+  limits: {cpu: "1", memory: 256Mi}
+nodeSelector:
+  onemind.io/compute-role: ecosystem
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  seccompProfile: {type: RuntimeDefault}
+gateway:
+  service:
+    type: ClusterIP
+    ports:
+    - {name: mcp, port: 8080, targetPort: 8080, protocol: TCP}
+monitoring:
+  enabled: true
+  extraLabels:
+    release: monitoring # kube-prometheus-stack selects PodMonitors by this label
+config:
+  config:
+    logging:
+      format: json # access log on stdout -> Loki; argument values are not logged
+  frontendPolicies:
+    tracing:
+      host: tempo.monitoring.svc.cluster.local:4317
+      randomSampling: true

@@ -1,0 +1,11 @@
+# First backend: the existing onemind-mcp adapters (services/onemind-mcp, platform/hermes/mcp).
+name: onemind
+groups: [ops]
+env:
+  TARGET_ONEMIND_TOKEN: {secret: gateway-target-onemind, key: token}
+target:
+  mcp:
+    host: http://onemind-mcp.hermes.svc.cluster.local:8000/mcp
+  policies:
+    backendAuth:
+      key: "${TARGET_ONEMIND_TOKEN}" # sent as "Authorization: Bearer <value>"

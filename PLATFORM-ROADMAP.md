@@ -168,7 +168,7 @@ patches; Telegram remains selected. See the updated approval record below.
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | In progress | Historical acceptance #282, #318, #319; reopened for [portal stabilization](docs/operations/portal-stabilization-2026-10-20.md) before migration (#322 source, #323 release, #324 inventory, #325 composition, #326 final image); 2/2 healthy, 715 processed entities; broader acceptance gaps remain documented | none |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
-| 8a | Tool gateway for Legacy: agentgateway front door, tool groups, execute gate ([design](docs/architecture/onemind-tool-gateway.md)) | Design (PR open); rollout Not started | design PR | 6, 7 |
+| 8a | Tool gateway for Legacy: agentgateway front door, tool groups, execute gate ([design](docs/architecture/onemind-tool-gateway.md)) | Design merged; Phase 0 spike and Phase 1 gateway core in PR (not deployed until merged); Phases 2 to 6 not started | design PR, Phase 0 and 1 PR | 6, 7 |
 
 ### Application-lane catalog preparation — 2026-10-27
 

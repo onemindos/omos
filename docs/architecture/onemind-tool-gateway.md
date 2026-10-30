@@ -81,6 +81,54 @@ A2 `backendAuth.key` header form and `requestHeaderModifier.set` literals; A3 `p
 (`mcp_<server>_<target>_<tool>`, hyphens become underscores); A4 `$` escaping in CEL inside the env-expanded config; A5 `extAuthz` fail-closed
 when the PDP is unreachable; A6 a failing target with `failOpen` does not break `tools/list` for the rest.
 
+### 1.1 Phase 0 spike results (2026-10-30)
+
+Run locally against the pinned image `cr.agentgateway.dev/agentgateway:v1.7.0@sha256:60216aafb03d37f94e952ff3d51d2f630a65b10ecaebdc0a864882f92610c45b`
+(`linux/arm64` layer of the index) in Docker, with three mock MCP/OpenAPI backends (a ~60-line streamable-HTTP server) on a user network. The
+config was the same shape as production: route per group, `${ENV}` expansion, read-only root filesystem, UID 65532, config mounted read-only.
+The Phase 1 chart output (`helm template`, ConfigMap `config.yaml`) was also run through `--validate-only` and served end to end.
+
+| # | Question | Result |
+|---|---|---|
+| A1 | Do `allow` rules filter `tools/list`, and are unlisted tools uncallable? | **Yes.** With two `allow` rules (per target, name `in [...]`) only the listed tools appear; an unlisted tool called directly returns JSON-RPC `-32602 unknown resource`. A route with **no** `mcpAuthorization` lists every tool. A single `require: "false"` rule gives an empty list (the deny-all `/execute` route works as designed). |
+| A2 | Header forms | **`backendAuth: {key: "<string>"}` sends `Authorization: Bearer <string>`** (accepted by the schema as a plain string). `requestHeaderModifier.set` sends literals as written (`x-api-key: <value>`). The client's own `Authorization` header is **not** forwarded to the backend (the key is consumed by the `apiKey` policy). **The `Host` header sent to a backend is the target host without its port** and cannot be overridden with `requestHeaderModifier` (`host` is ignored); see deviation 3. |
+| A3 | Tool-name format | **`<target>_<tool>`** with `prefixMode: always` (`m1_echo`). Hermes adds `mcp_<server>_`, so `onemind` in group `ops` becomes `mcp_ops_onemind_<tool>`. |
+| A4 | `$` escaping | **`$$` becomes a literal `$`** in CEL rules and in `requestHeaderModifier` values (`lit$$eral` is sent as `lit$eral`; `matches("^(a\|b)$$")` works). A lone `$` is a config error, which the renderer rejects ahead of time. An unset `${VAR}` is a startup error (`environment variable not found`), so the env of the pod must be complete. |
+| A5 | `extAuthz` (AuthZEN) failure mode | **Fail-closed.** A reachable PDP answering `{"decision": false}` blocks the call; an unreachable PDP blocks it too (`403 authorization failed`). `conditional: has(mcp.tool)` skips the PDP for `initialize` and `tools/list`. **Caveat for Phase 4:** a route that uses `require: '!has(mcp.tool) \|\| extauthz.decision == true'` evaluates the rule per tool during `tools/list` as well, where no decision exists, so the **list comes back empty** while an allowed call still works. Keep tool visibility in separate `allow` rules and use the PDP rule only to gate calls. |
+| A6 | Dead target with `failOpen` | **Works.** `initialize` and `tools/list` succeed with the live target's tools; with `failClosed` (the default) `initialize` returns `500 failed to send message`. |
+| A7 (new) | Does a route with `apiKey` reject a request with no key? | **No, not by default.** With `keys` only, a request with **no** `Authorization` header is served; only a wrong key is rejected with 401. **`apiKey.mode: strict` is required** to get 401 on a missing key. See deviation 1. |
+| A8 (new) | OpenAPI target | **Works.** `openapi: {schema: {file}, host: "oa:9000"}` produced one tool per operation (`list_items`, `create_item`, `delete_item_by_id`) and executed a GET with the injected `x-api-key`. `host` takes `host:port`; setting `port` or `path` requires both (`Error: if port or path is set, both must be set`). The spec file path must exist in the pod (mount it from a ConfigMap). |
+| A9 (new) | Session key and a read-only config | With a **writable** config file the gateway writes its generated session key into that file (a `config.session.key` entry). With the ConfigMap's read-only mount it starts normally and keeps the key in memory, so sessions do not survive a restart. Acceptable for one replica; set `session.secretName` before a second one. |
+| A10 (new) | Footprint | Idle, three targets and about a dozen requests: **14 to 18 MiB RSS, 0.2% CPU**. `/healthz/ready` on `:15021` answers 200; 53 `agentgateway_*` series on `:15020/metrics`, including `agentgateway_requests_total` and `agentgateway_mcp_requests_total` by route and method. |
+| H1 | Home Assistant `/api/mcp` with a long-lived token | **Not run:** needs the owner's Home Assistant. Stays open for Phase 3g. |
+
+Deviations from this design that the spike forced (all applied in the Phase 1 PR):
+
+1. **`apiKey.mode: strict` on every route** (the section 6 excerpt had `apiKey: {keys: [...]}` only, which would have accepted anonymous
+   callers). The renderer emits it and a unit test fails if it is missing.
+2. **Fragments, not one values file.** Helm replaces lists, so routes, targets and `extraEnv` come from `values.generated.yaml`, rendered by
+   `scripts/gateway/render_gateway_config.py` from `platform/tool-gateway/gateway.yaml` and `targets/<name>.yaml` (format in
+   [`docs/operations/tool-gateway.md`](../operations/tool-gateway.md)). Phase 2 extends the same renderer with classification instead of
+   introducing a second mechanism. The `extraEnv` list in the section 6 excerpt therefore lives only in the generated file.
+3. **One Secret per target** (`gateway-target-<name>`, SealedSecret beside the target) instead of the shared `gateway-cloud-credentials`,
+   so the parallel Phase 3 PRs never edit the same sealed file. `gateway-clients` is unchanged. The Hermes copy of the client key is
+   the separate SealedSecret `hermes/onemind-gateway-client` (key `ONEMIND_GATEWAY_KEY`), because `onemind-hermes-runtime` is a single
+   sealed object and was not to be touched; Phase 5 can point Hermes' env at either.
+4. **The backend must accept a port-less `Host`.** `onemind-mcp` checks `Host` against `ONEMIND_ALLOWED_HOSTS`; the gateway sends
+   `onemind-mcp.hermes.svc.cluster.local` without `:8000`, so the port-less names were added to that list (Phase 1 PR, one env value on the
+   existing Deployment). Every Phase 3 backend that validates `Host` needs the same.
+5. **Resources:** requests `50m` / `64Mi`, limits `1` CPU / `256Mi` (measured idle 14 to 18 MiB), instead of `100m` / `128Mi` and
+   `512Mi`. Re-measure once the Phase 3 targets exist.
+6. **No Backstage Component in Phase 1.** Section 7.1 does not assign `platform/backstage/catalog/apps.yaml` to Phase 1 and the file is a
+   paired, generated-runbook catalog; the Component and runbook page land with the catalog PR for the phase that follows. The `docs/STACK.md`
+   row and the `coverage.yaml` disposition are in Phase 1.
+7. **Egress policies per backend.** Each backend adds a `manifests/egress-<target>.yaml` NetworkPolicy (policies are additive) instead of
+   editing one gateway policy, for the same parallelism reason. The Argo Application has a third, recursed `path` source for these plain
+   manifests.
+8. **Hermes is not touched in Phase 1.** The Phase 1 row of section 7 adds a Hermes `ops` server next to the LiteLLM entry; by owner
+   instruction that moves to Phase 5. Phase 1 only adds the Hermes egress rule to the gateway and the sealed client key, and is verified with a
+   curl from the Hermes pod instead of `hermes mcp test ops`.
+
 ## 2. Inventory: every app we host
 
 Sources: `docs/STACK.md` (a 2026-10-09 snapshot, partly stale, see its addenda), `kubectl get deploy,sts,svc,ingress -A` on 2026-10-30 (read-only),
