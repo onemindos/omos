@@ -23,6 +23,8 @@ data:
 
     const CA_CERT_PATH = '/home/etl/tak-ca/ca.pem';
     const CA_KEY_PATH  = '/home/etl/tak-ca/ca.key';
+    // TODO(step-2, PR tak-ca-password-rotation-step1): replace the stock keystore password with a Secret reference; see docs/operations/tak-ca-password-rotation-step1-2026-10-29.md
+    // (dormant: this ConfigMap is not mounted by any workload today)
     const CA_PASSPHRASE = 'atakatak';
 
     function generateTAKCert(username) {

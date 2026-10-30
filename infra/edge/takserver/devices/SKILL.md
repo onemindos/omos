@@ -46,15 +46,15 @@ verified with iTAK 5.x. The build script encodes all of this — prefer the scri
   `cert/truststore.p12`), as **non-indexed** `caLocation`/`certificateLocation` in the
   `com.atakmap.app_preferences` block. `connectString0` stays indexed in `cot_streams`.
 - p12 files sit **flat at the zip root**; iTAK relocates them into its internal `cert/` dir on import.
-- p12 password = TAK default `atakatak`, **legacy-encrypted** → read with `openssl ... -legacy`.
+- p12 password = the keystore password (TAK default until step-2 rotation), **legacy-encrypted** → read with `openssl ... -legacy`.
 
 ## Verify BEFORE handing a package to the user
 ```bash
 # 1) does the client cert authenticate to the server over real mTLS? (expect: Verify return code: 0)
 d=$(mktemp -d); P=$CERTS/omos-iphone17.p12
-openssl pkcs12 -in "$P" -passin pass:atakatak -legacy -nokeys -clcerts -out $d/c.pem 2>/dev/null
-openssl pkcs12 -in "$P" -passin pass:atakatak -legacy -nocerts -nodes -out $d/k.pem 2>/dev/null
-openssl pkcs12 -in "$CERTS/truststore-root.p12" -passin pass:atakatak -legacy -nokeys -cacerts -out $d/ca.pem 2>/dev/null
+openssl pkcs12 -in "$P" -passin env:CAPASS -legacy -nokeys -clcerts -out $d/c.pem 2>/dev/null
+openssl pkcs12 -in "$P" -passin env:CAPASS -legacy -nocerts -nodes -out $d/k.pem 2>/dev/null
+openssl pkcs12 -in "$CERTS/truststore-root.p12" -passin env:CAPASS -legacy -nokeys -cacerts -out $d/ca.pem 2>/dev/null
 echo | openssl s_client -connect 100.74.182.117:8089 -cert $d/c.pem -key $d/k.pem -CAfile $d/ca.pem 2>/dev/null | grep "Verify return code"
 ```
 ```bash
@@ -67,10 +67,10 @@ docker exec takserver bash -lc 'grep -iE "Set client for subscription" /opt/tak/
 ## Server facts (OneMind TAK)
 - Host: `100.74.182.117` (Tailscale) / `192.168.1.183` (LAN). Container: `takserver`.
 - Ports: **8089** CoT / client mTLS · **8446** cert enrollment (HTTPS) · **8450** WebTAK.
-- CA: `TAK-CA`, truststore `truststore-root.p12`, all p12 passwords `atakatak`.
+- CA: `TAK-CA`, truststore `truststore-root.p12`, all p12 passwords are the keystore password (default until step-2 rotation).
 - Server cert SANs include both `100.74.182.117` and `192.168.1.183` (+ `localhost`, DNS `takserver`).
 - Credential-enrollment users (fallback only): `omos-iphone17` / `omos-ipad`, password
-  `OneMind-TAK-2026`, group Red. Users persist in bind-mounted `UserAuthenticationFile.xml`.
+  set per device; never commit, group Red. Users persist in bind-mounted `UserAuthenticationFile.xml`.
 
 ## Device registry
 | Device | cert CN / user | package | callsign | team |
