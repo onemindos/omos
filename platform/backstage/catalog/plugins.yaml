@@ -3590,26 +3590,27 @@ kind: Component
 metadata:
   name: mcp-adapter-tile38
   title: 'MCP adapter: tile38'
-  description: Live geospatial entities and geofences. No adapter implemented yet; the entry reserves the application
-    in apps.yaml.
+  description: Live geospatial entities and geofences (fixed reviewed commands; no command passthrough). Read-only
+    adapter served by onemind-mcp and reached by Hermes through the LiteLLM MCP hub.
   tags:
   - plugin
   - mcp-adapter
-  - planned
+  - live
   - cluster
   - mcp
   labels:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: planned
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/pillar: so
   annotations:
     onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: planned
+    onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
+    onemind.io/plugin-subtype: tile38
     onemind.io/connects-to: tile38,onemind-mcp,litellm
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
@@ -3617,11 +3618,10 @@ metadata:
     onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
       not probed
     onemind.io/mcp-app-id: tile38
-    onemind.io/blocked-reason: Reviewed read-command adapter and scoped Tile38 identity required; no arbitrary command
-      proxy.
+    onemind.io/mcp-url-env: TILE38_URL
 spec:
   type: mcp-adapter
-  lifecycle: planned
+  lifecycle: production
   owner: group:default/onemind-admins
   system: onemind-plugin-ecosystem
   subcomponentOf: component:default/onemind-mcp
