@@ -1,0 +1,16 @@
+# MediaMTX Control API v3 (namespace onetak) as an OpenAPI target. The spec is trimmed to the classified operations
+# (manifests/openapi-mediamtx.configmap.yaml, mounted at /specs/mediamtx by values.yaml); no /v3/config/* is exposed.
+# Credential: the same read identity onemind-mcp uses (user `mcp-read`, permission `api` only in onetak-media-config),
+# resealed from hermes/onemind-mcp-auth key MEDIAMTX_API_CREDENTIALS as base64("user:pass") for a Basic header.
+name: mediamtx
+groups: [tak]
+env:
+  TARGET_MEDIAMTX_BASIC: {secret: gateway-target-mediamtx, key: basic}
+target:
+  openapi:
+    schema: {file: /specs/mediamtx/openapi.yaml}
+    host: onetak-media.onetak.svc.cluster.local:4000
+  policies:
+    requestHeaderModifier:
+      set:
+        authorization: "Basic ${TARGET_MEDIAMTX_BASIC}"

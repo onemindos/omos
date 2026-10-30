@@ -6,6 +6,11 @@ extraEnv:
     secretKeyRef:
       name: gateway-clients
       key: hermes
+- name: TARGET_MEDIAMTX_BASIC
+  valueFrom:
+    secretKeyRef:
+      name: gateway-target-mediamtx
+      key: basic
 - name: TARGET_ONEMIND_TOKEN
   valueFrom:
     secretKeyRef:
@@ -120,13 +125,25 @@ config:
                 client: hermes
           mcpAuthorization:
             rules:
-            - require: 'false'
+            - allow: mcp.tool.target == "mediamtx" && (mcp.tool.name in ["hlsMuxersGet", "hlsMuxersList", "hlssessionsGet",
+                "hlssessionsList", "info", "pathsGet", "pathsList", "recordingsGet", "recordingsList", "rtmpConnectionsGet",
+                "rtmpConnsList", "rtmpsConnectionsGet", "rtmpsConnsList", "rtspConnsGet", "rtspConnsList", "rtspSessionsGet",
+                "rtspSessionsList", "rtspsConnsGet", "rtspsConnsList", "rtspsSessionsGet", "rtspsSessionsList", "srtConnsGet",
+                "srtConnsList", "webrtcSessionsGet", "webrtcSessionsList"])
         backends:
         - mcp:
             prefixMode: always
             failureMode: failOpen
             targets:
-            - *id003
+            - name: mediamtx
+              openapi: &id004
+                schema:
+                  file: /specs/mediamtx/openapi.yaml
+                host: onetak-media.onetak.svc.cluster.local:4000
+              policies: &id005
+                requestHeaderModifier:
+                  set:
+                    authorization: Basic ${TARGET_MEDIAMTX_BASIC}
       - name: home
         matches:
         - path:
@@ -206,4 +223,6 @@ config:
             prefixMode: always
             failureMode: failOpen
             targets:
-            - *id003
+            - name: mediamtx
+              openapi: *id004
+              policies: *id005
