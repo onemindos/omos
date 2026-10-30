@@ -37,7 +37,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: mcp
-          image: ghcr.io/onemindos/onemind-mcp@sha256:3b5340bda5bbe389fbe06e842bf8a0e8ec47d943e60a491cdd91f169e059a82b
+          image: ghcr.io/onemindos/onemind-mcp@sha256:aa455196cf03aab0f6cc478cede40c2bed78192cee85e381bff6d1bdb12cc66b
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
@@ -66,6 +66,8 @@ spec:
                 http://nats-0.nats-headless.nats.svc.cluster.local:8222,http://nats-1.nats-headless.nats.svc.cluster.local:8222,http://nats-2.nats-headless.nats.svc.cluster.local:8222
             - name: PROMETHEUS_URL
               value: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+            - name: TILE38_URL
+              value: http://tile38.onetak.svc.cluster.local:9851
             - name: STAC_URL
               value: http://stac-api.stac.svc.cluster.local:8080
             - name: OLLAMA_URL

@@ -99,9 +99,10 @@ apps:
   enabled: false
   blocked_reason: Read tile metadata adapter and live endpoint verification required; imagery search is available through stac.
 - id: tile38
-  description: Live geospatial entities and geofences
-  enabled: false
-  blocked_reason: Reviewed read-command adapter and scoped Tile38 identity required; no arbitrary command proxy.
+  description: Live geospatial entities and geofences (fixed reviewed commands; no command passthrough)
+  adapter: tile38
+  url_env: TILE38_URL
+  allow_writes: true # SET of point objects; the two destructive tools stay unregistered (allow_destructive off) until the execute gate
 - id: cloudtak
   description: CloudTAK application API
   enabled: false
