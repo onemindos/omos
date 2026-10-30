@@ -3,6 +3,8 @@
 Inputs (platform/tool-gateway/):
   gateway.yaml        listener port, client keys, and the group routes
   targets/<name>.yaml one fragment per backend target (see docs/operations/tool-gateway.md)
+  policy/classification/<name>.yaml
+                      one reviewed tool classification per target (read | write | destructive | physical)
 
 Output:
   values.generated.yaml  Helm values (`extraEnv` and `config.binds`) for the agentgateway-standalone
@@ -20,9 +22,14 @@ from pathlib import Path
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import classification  # noqa: E402  (sibling module)
+
 ROOT = Path(__file__).resolve().parents[2]
 BASE = ROOT / "platform/tool-gateway"
 OUT = BASE / "values.generated.yaml"
+CLASSIFICATION = BASE / "policy/classification"
+KINDS = ("group", "deferred", "execute")
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9]*$")  # no "-", "." or "_": Hermes rewrites them in tool names
 ENV_RE = re.compile(r"^[A-Z][A-Z0-9_]*$")
@@ -32,7 +39,7 @@ HEADER = (
 )
 
 
-class RenderError(Exception):
+class RenderError(classification.PolicyError):
     pass
 
 
@@ -61,7 +68,7 @@ def _check_dollars(where: str, target: dict, declared: set[str]) -> None:
                 raise RenderError(f"{where}: ${{{var}}} is not declared under 'env'")
 
 
-def load() -> tuple[dict, list[dict]]:
+def load() -> tuple[dict, list[dict], dict[str, dict]]:
     gw = yaml.safe_load((BASE / "gateway.yaml").read_text())
     targets = []
     for path in sorted((BASE / "targets").glob("*.yaml")):
@@ -70,10 +77,15 @@ def load() -> tuple[dict, list[dict]]:
             raise RenderError(f"{path.name}: expected a mapping")
         frag["_file"] = path.name
         targets.append(frag)
-    return gw, targets
+    return gw, targets, classification.load_all(CLASSIFICATION)
 
 
-def render(gw: dict, targets: list[dict]) -> dict:
+def _deny_all() -> dict:
+    # A route with no mcpAuthorization lists every tool (spike A1), so "nothing" must be written down.
+    return {"rules": [{"require": "false"}]}
+
+
+def render(gw: dict, targets: list[dict], classes: dict[str, dict]) -> dict:
     clients = gw["clients"]
     groups = gw["groups"]
     env: dict[str, dict] = {}
@@ -82,7 +94,18 @@ def render(gw: dict, targets: list[dict]) -> dict:
             raise RenderError(f"client {cname}: bad name or env (must start with GATEWAY_KEY_)")
         env[c["env"]] = {"secret": c["secret"], "key": c["key"]}
 
+    for gname, g in groups.items():
+        if not NAME_RE.match(gname) or g.get("kind", "group") not in KINDS:
+            raise RenderError(f"group {gname}: bad name or kind (one of {KINDS})")
+        if not g.get("clients") or any(c not in clients for c in g["clients"]):
+            raise RenderError(f"group {gname}: 'clients' must be a non-empty list of known clients")
+    kinds = {n: g.get("kind", "group") for n, g in groups.items()}
+    if sum(k == "execute" for k in kinds.values()) > 1:
+        raise RenderError("at most one group may have kind: execute")
+
+    anchor = gw.get("anchor")
     by_group: dict[str, list[dict]] = {g: [] for g in groups}
+    gated_targets: list[dict] = []
     seen: set[str] = set()
     for t in targets:
         f = t["_file"]
@@ -112,24 +135,64 @@ def render(gw: dict, targets: list[dict]) -> dict:
                 raise RenderError(f"{f}: env {var} needs exactly secret and key")
             env[var] = ref
         _check_dollars(f, t["target"], set(t_env) | {c["env"] for c in clients.values()})
+        if name not in classes:
+            raise RenderError(f"{f}: no policy/classification/{name}.yaml; an unclassified target exposes nothing "
+                              "and is rejected")
         for g in t["groups"]:
             if g not in groups:
                 raise RenderError(f"{f}: unknown group {g}")
+            if kinds[g] != "group":
+                raise RenderError(f"{f}: group {g} is {kinds[g]}; its targets are derived, do not list it")
             by_group[g].append({"name": name, **t["target"]})
+        if classification.has_gated(classes[name]):
+            gated_targets.append({"name": name, **t["target"]})
+    anchor_target = None
+    if anchor is not None:
+        anchor_target = next(({"name": t["name"], **t["target"]} for t in targets if t["name"] == anchor), None)
+        if anchor_target is None:
+            raise RenderError(f"gateway.yaml: anchor {anchor!r} is not a target")
+    orphans = sorted(set(classes) - seen)
+    if orphans:
+        raise RenderError(f"classification without a target fragment: {orphans}")
+
+    for gname, kind in kinds.items():
+        if kind == "execute":
+            by_group[gname] = gated_targets
 
     routes = []
     for gname, g in groups.items():
+        kind = kinds[gname]
         if not by_group[gname]:
-            continue
+            # An MCP route with no live target answers initialize with a 500 (verified against v1.7.0, also with a
+            # dead placeholder target). The anchor target keeps the endpoint answering with an empty tool list: the
+            # route's require-false rule hides and denies every one of its tools.
+            if anchor_target is None:
+                raise RenderError(f"group {gname} has no target and gateway.yaml sets no 'anchor'")
+            by_group[gname] = [anchor_target]
+            anchored = True
+        else:
+            anchored = False
         keys = [
             {"key": "${%s}" % clients[c]["env"], "metadata": {"client": c}} for c in g["clients"]
         ]
+        if kind == "group" and not anchored:
+            allows = [e for e in (classification.allow_expr(classes[t["name"]]) for t in by_group[gname]) if e]
+            # Visibility comes only from allow rules: unlisted, destructive and physical tools are not listed and
+            # not callable. No allow rule at all must still mean "nothing", never "everything".
+            authz = {"rules": [{"allow": e} for e in allows]} if allows else _deny_all()
+        else:
+            # execute: closed until Phase 4 wires extAuthz (visibility allow rules + a call-only PDP rule, A5);
+            # deferred (identity): off until asked for.
+            authz = _deny_all()
+        for rule in authz["rules"]:
+            _check_dollars(f"group {gname}", rule, {c["env"] for c in clients.values()})
         routes.append({
             "name": gname,
             "matches": [{"path": {"exact": g["path"]}}],
             "policies": {
                 # strict: the default mode lets requests without a key through (spike A2/A7).
                 "apiKey": {"mode": "strict", "keys": keys},
+                "mcpAuthorization": authz,
             },
             "backends": [{
                 "mcp": {
@@ -156,7 +219,7 @@ def dump(values: dict) -> str:
 def main(argv: list[str]) -> int:
     try:
         text = dump(render(*load()))
-    except RenderError as e:
+    except classification.PolicyError as e:
         print(f"render error: {e}", file=sys.stderr)
         return 1
     if "--check" in argv:
