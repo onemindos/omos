@@ -60,8 +60,9 @@ class ClickHouse(unittest.TestCase):
         users, profiles = chi["users"], chi["profiles"]
         self.assertEqual(users["legacy_ro/profile"], "legacy_ro")
         self.assertEqual(profiles["legacy_ro/readonly"], 1)
-        self.assertIsInstance(users["legacy_ro/password"], dict)  # valueFrom secretKeyRef, never a literal
-        self.assertEqual(users["legacy_ro/password"]["valueFrom"]["secretKeyRef"]["name"], "clickhouse-legacy-ro")
+        self.assertNotIn("legacy_ro/password", users)  # never a literal
+        # A hash, not valueFrom.secretKeyRef: a secret ref adds a container env var and the operator restarts ClickHouse.
+        self.assertRegex(users["legacy_ro/password_sha256_hex"], r"^[0-9a-f]{64}$")
 
     def test_backend_is_pinned_read_only_and_authenticated(self):
         dep = list(yaml.safe_load_all((BASE / "manifests/backends/clickhouse/deployment.yaml").read_text()))[0]
