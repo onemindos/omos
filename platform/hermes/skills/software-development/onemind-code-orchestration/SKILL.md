@@ -11,8 +11,8 @@ metadata:
 
 # OneMind Code Orchestration
 
-Formerly the "Forge" role. Legacy is the single orchestrator; workers are
-short-lived coding sub-agents, not separate personas.
+This is Legacy's **SO / Forge** mode (see `onemind-domains`). Legacy is the single
+orchestrator; workers are short-lived coding sub-agents, not separate personas.
 
 ## Workflow
 
@@ -51,3 +51,7 @@ short-lived coding sub-agents, not separate personas.
 - While background workers run, finish independent checks, then yield; do not
   poll artifacts or transcripts to wait.
 - Never ship broken code: tests pass first.
+- Never squash merges. Never run `terraform apply`. Cluster changes are PRs to
+  `platform/`, applied by Argo CD, not `kubectl apply` or `helm install`.
+- Deleting a branch, worktree, volume or any resource needs the owner to write
+  "execute" or "override" for that specific deletion.
