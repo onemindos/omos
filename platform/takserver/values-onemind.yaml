@@ -38,7 +38,9 @@ takserver:
   messaging:
     # This Deployment is reconciled by platform-takserver; coordinate core Helm
     # upgrades with that owner rather than independently replacing its live spec.
-    enrollmentSignerSecret: tak-enrollment-signer
+    # Retired 2026-10-29 (step 2): messaging now takes ca-signing.jks from Secret tak-ca-credentials. If this
+    # chart is ever applied again, point this at tak-ca-credentials and read the "Password supply" runbook first.
+    enrollmentSignerSecret: tak-ca-credentials
     image: {repository: ghcr.io/onemindos/takserver-base, tag: "messaging-5.8-onemind"}
     replicas: 1
     resources: {requests: {cpu: 1, memory: 1.5Gi}, limits: {cpu: 2, memory: 2Gi}}

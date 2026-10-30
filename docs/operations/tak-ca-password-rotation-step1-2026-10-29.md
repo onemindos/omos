@@ -97,12 +97,57 @@ PEM; `takserver.p12`, `admin.p12`, `user.p12`, `admin.jks`, `user.jks`, `trustst
 stock password). Rotating those means re-issuing or re-wrapping the server/admin identities and is left as
 step 3.
 
+### Rollout record (2026-10-29, UTC)
+
+1. 02:41 PR #577 merged. Argo rolled config (ok) then messaging, which crash-looped:
+   `JwtUtils.loadKeyPair` "keystore password was incorrect". Cause: the config service restores the CoreConfig
+   held in Ignite memory and rewrote the new file back to the old passwords (see the runbook).
+2. 02:46 rollback by `kubectl rollout undo` of config and messaging with Argo auto-sync paused (Argo,
+   including app-of-apps selfHeal, re-applied the new specs twice until both were paused). Old pods Ready
+   about 02:50; fingerprints and connections matched the preflight. Outage of 8089: about 8 minutes.
+3. 02:52 full bounce: api, plugins, messaging, config scaled to 0, `takserver-ignite-0` deleted and Ready,
+   Argo auto-sync restored. config, messaging, api and plugins came up on the new specs in that order;
+   all Ready by 02:59 (second outage about 7 minutes).
+
+### Verification (after the second roll)
+
+- All TAK Server pods Ready, 0 restarts; config pod `CoreConfig.xml` holds the new passwords.
+- Server certificate SHA-256 on 8089, 8443, 8444, 8446 identical to the preflight
+  (`B7:2E:4F:01:...:D3:61`). `GET /Marti/api/version` with the admin client certificate returned 200.
+- Established connections on 8089: 1 before, 1 after (the one peer is the hermes-legacy pod, 10.109.3.95, which dials 8089 every 30 s
+  without a client certificate and logs `PEER_DID_NOT_RETURN_A_CERTIFICATE` on the server; unrelated to the
+  keystores, and not an EUD, so the EUD count could not be separately confirmed).
+- Plugin manager: `pluginCoreConfigApi available: true`. FedHub, tak-ldap, the NATS leaf, CloudTAK and
+  TAK-ML: no keystore/SSL errors, no restarts caused by the change. The LDAP `ou=Group` lookup error 32 is
+  older than this change (first seen 2026-10-29 22:01 UTC); binds as `cn=ldapadm` succeed.
+- Not tested end to end: a certificate signing request through TAK Server (the admin client certificate
+  gets 403 on `/Marti/api/tls/*`, and no user password was used). The new CA password was verified to open
+  `ca-signing.jks` in the running messaging image with the exact Secret value, and the messaging pod started
+  with the substituted `keystorePass`. Run one CloudTAK enrollment as in
+  `tak-enrollment-repair-2026-10-25.md` at the next opportunity.
+- No lasting objects were created by the checks.
+
+### Cleanup done after verification
+
+- Live `cert-migration` ConfigMap: removed `ca-do-not-share.key`, `root-ca-do-not-share.key`,
+  `takserver.jks`, `truststore-root.jks`, `fed-truststore.jks` (checked byte for byte against
+  `tak-ca-backup-20261029` and `tak-step2-backup-20261029` first). The projected volumes never mounted them.
+- Live `core-config` ConfigMap deleted (it held the stock passwords and the LDAP bind password); its content is
+  in `tak-step2-backup-20261029`. A live-only `core-config` mount on `takserver-plugins` (not in Git, unused)
+  was removed.
+- SealedSecret `tak-enrollment-signer` retired from Git (Argo prunes the Secret); nothing mounts it.
+- Reverting #577 alone is no longer a complete rollback: restore `core-config` and the removed
+  `cert-migration` keys from `tak-step2-backup-20261029` first, and bounce Ignite as described in the runbook.
+- Remaining: delete `tak-step2-backup-20261029` and `tak-ca-backup-20261029` after the soak period;
+  retire the unused `tak-keystores` Secret and its mounts; step 3 (unencrypted `takserver.key`, `admin.key`,
+  `user.key` and the stock-password `*.p12`/`admin.jks`/`user.jks` in `cert-migration`, plus FedHub, TAK-ML
+  and portal device passwords).
+
 ### Rollback
 
 Cluster backup: Secret `tak-step2-backup-20261029` (`takserver`): `tak-keystores`,
 `tak-enrollment-signer`, the old `core-config` and `cert-migration` contents, and the previous Deployment
-specs. Revert the step-2 PR (Argo re-rolls config, messaging, api, plugins to the old mounts; the old
-`core-config` ConfigMap and `tak-enrollment-signer` Secret are still in the cluster until the follow-up).
+specs. Before the cleanup above: revert the step-2 PR (Argo re-rolls config, messaging, api, plugins to the old mounts) and bounce Ignite so the cluster drops the new cached CoreConfig.
 Delete `tak-step2-backup-20261029` and `tak-ca-backup-20261029` once the follow-up is done.
 
 ## Reading the new password
