@@ -223,9 +223,23 @@ applications:
   platform-tool-gateway:
     apps:
     - litellm
+    - kubernetes
+    - stac
+    - onemind_core
+    - mediamtx
+    - tile38
     reason: >-
-      Legacy's tool front door (agentgateway) replaces LiteLLM as the MCP hub; it adds no app of its own
-      to apps.yaml. Each backend is classified when its Phase 3 PR lands (docs/architecture/onemind-tool-gateway.md).
+      Legacy's tool front door (agentgateway) replaces LiteLLM as the MCP hub and adds no app of its own to
+      apps.yaml. Its backends are served by gateway targets and routes, not by apps.yaml entries, and Hermes is not
+      cut over yet (Phase 5), so Legacy still reaches these apps through onemind-mcp and LiteLLM. kubernetes:
+      target kubernetes (Deployment mcp-kubernetes, 10 read and 1 write tool on /ops, three destructive tools held for
+      /execute, no Secrets in its RBAC); the kubernetes app in apps.yaml stays disabled until the cutover. stac:
+      OpenAPI target stac, 5 read tools on /data. onemind_core: OpenAPI target core, 6 read tools on /data, using
+      the read API key only. mediamtx: OpenAPI target mediamtx, 25 read operations on /tak, no config paths.
+      tile38: the tile38 adapter of onemind-mcp (target onemind, /ops): 6 read, 1 write, delete and drop unregistered.
+      Deployment mcp-clickhouse (target clickhouse, 3 read tools on /data, ClickHouse user legacy_ro with readonly=1)
+      has no app id; the ClickHouse data is owned by platform-observability (data_backups). Source of truth:
+      platform/tool-gateway/targets and policy/classification, docs/architecture/onemind-tool-gateway.md.
   platform-vaultwarden:
     apps:
     - vaultwarden

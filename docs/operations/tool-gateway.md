@@ -1,10 +1,12 @@
 # Tool gateway runbook (agentgateway)
 
-Design: [`docs/architecture/onemind-tool-gateway.md`](../architecture/onemind-tool-gateway.md). State: **Phase 2 (policy plane)**. The gateway
-serves nine routes (`/ops`, `/dev`, `/cloud`, `/data`, `/tak`, `/home`, `/work`, `/identity`, `/execute`, all `/<group>/mcp`) and one target
-(`onemind`, the existing `onemind-mcp` adapters, in `ops`). Only `ops` lists tools today (the 20 `onemind` reads); the other group routes
-answer with an empty tool list until a Phase 3 backend joins them; `/identity` (deferred) and `/execute` (closed until Phase 4) always do.
-Hermes is not wired to it yet (Phase 5), and LiteLLM still serves the MCP hub until Phase 6.
+Design: [`docs/architecture/onemind-tool-gateway.md`](../architecture/onemind-tool-gateway.md). State (verified live 2026-10-30):
+**Phases 1 to 3d are live** (core, policy plane, Kubernetes, data, MediaMTX); the Phase 4 execute gate is merged as code but not deployed.
+The gateway serves nine routes (`/ops`, `/dev`, `/cloud`, `/data`, `/tak`, `/home`, `/work`, `/identity`, `/execute`, all `/<group>/mcp`) and
+six targets: `onemind` and `kubernetes` (`ops`), `stac`, `core` and `clickhouse` (`data`), `mediamtx` (`tak`). Per-backend runbooks:
+[`tool-gateway-kubernetes.md`](tool-gateway-kubernetes.md), [`tool-gateway-data.md`](tool-gateway-data.md). `dev`, `cloud`, `home` and `work`
+answer with an empty tool list until their backends join (they wait on owner credentials); `/identity` (deferred) and `/execute` (closed
+until Phase 4 is deployed) always do. Hermes is not wired to it yet (Phase 5), and LiteLLM still serves the MCP hub until Phase 6.
 
 ## What runs
 
@@ -57,9 +59,13 @@ read: [search_dashboards, query_*]   # exact tool names (as the backend reports 
 write: [create_annotation]
 destructive: [delete_dashboard]      # execute route only
 physical: []                         # execute route only
-guards:                              # optional: a read/write tool that is destructive/physical for some arguments
-- {tool: resources_scale, class: destructive, when: 'mcp.tool.arguments.replicas == 0'}   # CEL; write '$$' for a literal '$'
 ```
+
+**There are no argument guards.** In agentgateway v1.7.0 a CEL predicate on `mcp.tool.arguments.*` inside an `allow` rule never fires
+(verified against the pinned image by the Kubernetes backend work; details in [`tool-gateway-kubernetes.md`](tool-gateway-kubernetes.md)), so
+a "destructive when `replicas == 0`" rule would expose the tool with no protection at all. The `guards:` key is therefore rejected: the
+parser raises a `PolicyError` and CI fails. Classify a tool that is dangerous for some arguments by its worst case (destructive if any
+argument can destroy), and put the argument-level rule in the Phase 4 execute gate, which sees the arguments.
 
 A gated name that a read/write glob would swallow, or a name in two classes, is a render error. `proposed:` is written by the classifier and
 must be deleted by a human after review.
@@ -130,8 +136,8 @@ single-writer files (`docs/STACK.md`, `platform/hermes/mcp/coverage.yaml`, `PLAT
    `target` pointing at the backend Service (or the SaaS URL with `backendTLS`).
 2. **Classification** `platform/tool-gateway/policy/classification/<name>.yaml`: run `classify_tools.py --write` against the backend, then
    review. Put deletes, scale-to-zero, drops, session kills, user removal and anything unrecoverable in `destructive`; locks, doors,
-   garage, alarm, valves and `cmd.*` publishes in `physical`; use a `guard` when only some arguments are dangerous. Anything unsure stays
-   destructive. Give the provider token the least scope too (design section 3.1).
+   garage, alarm, valves and `cmd.*` publishes in `physical`. A tool that is dangerous for only some arguments takes its worst-case class
+   (guards do not work in v1.7.0 and are rejected). Anything unsure stays destructive. Give the provider token the least scope too (design section 3.1).
 3. **Sealed secret** `platform/tool-gateway/manifests/gateway-target-<name>.sealedsecret.yaml`: one Secret named `gateway-target-<name>` in
    `tool-gateway`, namespace-wide scope, the `kubeseal` pattern in `CLAUDE.md`, value fed on stdin, never in argv. Keys must match the
    fragment's `env`. Tell the owner which token to create (design section 3.3).
