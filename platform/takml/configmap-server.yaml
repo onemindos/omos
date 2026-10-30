@@ -22,7 +22,9 @@ data:
     tak.addr=takserver-api-service.takserver.svc.cluster.local
     tak.port=8443
     tak.client_store=/certs/takserver.jks
-    # TODO(step-2, PR tak-ca-password-rotation-step1): replace the stock keystore password with a Secret reference; see docs/operations/tak-ca-password-rotation-step1-2026-10-29.md
+    # Step 2 (2026-10-29) rotated TAK Server's own stores only. TAK-ML keeps its own copy of the client
+    # store (Secret tak-keystores-copy) with the stock password, so this file is unchanged. Rotate it
+    # together with that client identity. See docs/operations/tak-ca-password-rotation-step1-2026-10-29.md
     tak.client_store.password=atakatak
     tak.trust_store=/certs/truststore-root.jks
     tak.trust_store.password=atakatak

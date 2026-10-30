@@ -1,0 +1,132 @@
+# CoreConfig template for TAK Server (messaging and config tiers), v2.
+#
+# Replaces the hand-made ConfigMap `core-config`. It holds NO passwords: the `copy-coreconfig`
+# init container of takserver-config and takserver-messaging replaces the three placeholders
+# below from Secret environment variables and writes the result to an emptyDir at
+# /opt/tak/conf/CoreConfig.xml. A placeholder left in the output fails the init container.
+#
+#   __CA_KEY_PASS__     Secret tak-ca-credentials, key ca-key-password  (CA signing key)
+#   __TAK_STORE_PASS__  Secret tak-server-stores,  key keystore-password (takserver/truststore stores)
+#   __LDAP_BIND_PASS__  Secret tak-ldap-creds,     key LDAP_ADMIN_PASSWORD (LDAP service account)
+#
+# Edit CoreConfig through this file (Argo applies it) and restart config then messaging; TAK's
+# own UI saves only change the running pod's copy. See platform/takserver/DEPLOY-RUNBOOK.md.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: core-config-v2
+  namespace: takserver
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+data:
+  CoreConfig.xml: |
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <Configuration xmlns="http://bbn.com/marti/xml/config">
+        <network multicastTTL="5" serverId="203e9bf3a333477bb3bd6bb77fce2ec9" esyncEnableCache="1" version="5.8-RELEASE-69-HEAD" tomcatMaxPool="300">
+            <input _name="stdssl" protocol="tls" port="8089" coreVersion="2"/>
+            <connector port="8443" _name="https"/>
+            <connector port="8444" useFederationTruststore="true" _name="fed_https"/>
+            <connector port="8446" clientAuth="false" _name="cert_https"/>
+            <announce/>
+        </network>
+        <auth default="ldap">
+            <ldap url="ldap://tak-ldap:389"
+                  userstring="uid={username},ou=People,dc=onemindos,dc=dev"
+                  style="DS"
+                  serviceAccountDN="cn=ldapadm,dc=onemindos,dc=dev"
+                  serviceAccountCredential="__LDAP_BIND_PASS__"
+                  callsignAttribute="takCallSign"
+                  colorAttribute="takColor"
+                  roleAttribute="takRole"
+                  updateinterval="60000" />
+            <File location="UserAuthenticationFile.xml"/>
+        </auth>
+        <submission ignoreStaleMessages="false" validateXml="false"/>
+        <subscription reloadPersistent="false"/>
+        <repository enable="true" numDbConnections="16" primaryKeyBatchSize="500" insertionBatchSize="500">
+            <connection url="jdbc:postgresql://takserver-postgresql:5432/cot" username="postgres" password="postgres"/>
+        </repository>
+        <repeater>
+            <repeatableType initiate-test="/event/detail/emergency[@type=&apos;911 Alert&apos;]"         cancel-test="/event/detail/emergency[@cancel=&apos;true&apos;]" _name="911"/>
+            <repeatableType initiate-test="/event/detail/emergency[@type=&apos;Ring The Bell&apos;]"      cancel-test="/event/detail/emergency[@cancel=&apos;true&apos;]" _name="RingTheBell"/>
+            <repeatableType initiate-test="/event/detail/emergency[@type=&apos;Geo-fence Breached&apos;]" cancel-test="/event/detail/emergency[@cancel=&apos;true&apos;]" _name="GeoFenceBreach"/>
+            <repeatableType initiate-test="/event/detail/emergency[@type=&apos;Troops In Contact&apos;]"  cancel-test="/event/detail/emergency[@cancel=&apos;true&apos;]" _name="TroopsInContact"/>
+        </repeater>
+        <filter>
+            <thumbnail/>
+            <urladd host="http://172.28.0.3:8080"/>
+            <flowtag enable="false" text=""/>
+            <streamingbroker enable="true"/>
+            <scrubber enable="false" action="overwrite"/>
+            <qos>
+                <deliveryRateLimiter enabled="true">
+                    <rateLimitRule clientThresholdCount="500"   reportingRateLimitSeconds="200"/>
+                    <rateLimitRule clientThresholdCount="1000"  reportingRateLimitSeconds="300"/>
+                    <rateLimitRule clientThresholdCount="2000"  reportingRateLimitSeconds="400"/>
+                    <rateLimitRule clientThresholdCount="5000"  reportingRateLimitSeconds="800"/>
+                    <rateLimitRule clientThresholdCount="10000" reportingRateLimitSeconds="1200"/>
+                </deliveryRateLimiter>
+                <readRateLimiter enabled="false">
+                    <rateLimitRule clientThresholdCount="500"   reportingRateLimitSeconds="200"/>
+                    <rateLimitRule clientThresholdCount="1000"  reportingRateLimitSeconds="300"/>
+                    <rateLimitRule clientThresholdCount="2000"  reportingRateLimitSeconds="400"/>
+                    <rateLimitRule clientThresholdCount="5000"  reportingRateLimitSeconds="800"/>
+                    <rateLimitRule clientThresholdCount="10000" reportingRateLimitSeconds="1200"/>
+                </readRateLimiter>
+                <dosRateLimiter enabled="false" intervalSeconds="60">
+                    <dosLimitRule clientThresholdCount="1" messageLimitPerInterval="60"/>
+                </dosRateLimiter>
+            </qos>
+        </filter>
+        <buffer>
+            <queue>
+                <priority/>
+            </queue>
+            <latestSA enable="true"/>
+        </buffer>
+        <dissemination smartRetry="false"/>
+        <certificateSigning CA="TAKServer">
+            <certificateConfig>
+                <nameEntries>
+                    <nameEntry name="O" value="TAK"/>
+                    <nameEntry name="OU" value="TAK-OPS"/>
+                </nameEntries>
+            </certificateConfig>
+            <TAKServerCAConfig
+                keystore="JKS"
+                keystoreFile="/certs-configmap/ca-signing.jks"
+                keystorePass="__CA_KEY_PASS__"
+                validityDays="365"
+                signatureAlg="SHA256WithRSA"
+                CAkey="/certs-configmap/ca-plain.key"
+                CAcertificate="/certs-configmap/ca.pem"/>
+        </certificateSigning>
+        <security>
+            <tls keystore="JKS"
+                 keystoreFile="/certs-configmap/takserver.jks"
+                 keystorePass="__TAK_STORE_PASS__"
+                 truststore="JKS"
+                 truststoreFile="/certs-configmap/truststore-root.jks"
+                 truststorePass="__TAK_STORE_PASS__"
+                 context="TLSv1.2"
+                 keymanager="SunX509"/>
+        </security>
+        <federation missionFederationDisruptionToleranceRecencySeconds="43200">
+            <federation-server webBaseUrl="https://172.28.0.3:8443/Marti">
+                <tls keystore="JKS"
+                     keystoreFile="/certs-configmap/takserver.jks"
+                     keystorePass="__TAK_STORE_PASS__"
+                     truststore="JKS"
+                     truststoreFile="/certs-configmap/fed-truststore.jks"
+                     truststorePass="__TAK_STORE_PASS__"
+                     keymanager="SunX509"/>
+                <v1Tls tlsVersion="TLSv1.2"/>
+                <v1Tls tlsVersion="TLSv1.3"/>
+                <federation-token-authentication enabled="false" tls="true" port="9002"/>
+            </federation-server>
+            <fileFilter><fileExtension>pref</fileExtension></fileFilter>
+        </federation>
+        <plugins/>
+        <cluster enabled="true" natsURL="nats://takserver-nats:4222" kubernetes="true"/>
+        <vbm/>
+    </Configuration>

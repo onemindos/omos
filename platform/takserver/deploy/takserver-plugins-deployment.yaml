@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: takserver-plugins
   namespace: takserver
+  annotations:
+    argocd.argoproj.io/sync-wave: '3'
 spec:
   selector:
     matchLabels:
@@ -63,8 +65,73 @@ spec:
           failureThreshold: 3
       volumes:
       - name: config
-        configMap:
-          name: cert-migration
+        projected:
+          defaultMode: 420
+          sources:
+          - configMap:
+              name: cert-migration
+              items:
+              - key: admin-trusted.pem
+                path: admin-trusted.pem
+              - key: admin.csr
+                path: admin.csr
+              - key: admin.jks
+                path: admin.jks
+              - key: admin.key
+                path: admin.key
+              - key: admin.p12
+                path: admin.p12
+              - key: admin.pem
+                path: admin.pem
+              - key: ca-trusted.pem
+                path: ca-trusted.pem
+              - key: ca.crl
+                path: ca.crl
+              - key: ca.pem
+                path: ca.pem
+              - key: config-takserver.cfg
+                path: config-takserver.cfg
+              - key: crl_index.txt
+                path: crl_index.txt
+              - key: crl_index.txt.attr
+                path: crl_index.txt.attr
+              - key: root-ca-trusted.pem
+                path: root-ca-trusted.pem
+              - key: root-ca.pem
+                path: root-ca.pem
+              - key: takserver-trusted.pem
+                path: takserver-trusted.pem
+              - key: takserver.csr
+                path: takserver.csr
+              - key: takserver.key
+                path: takserver.key
+              - key: takserver.p12
+                path: takserver.p12
+              - key: takserver.pem
+                path: takserver.pem
+              - key: truststore-root.p12
+                path: truststore-root.p12
+              - key: user-trusted.pem
+                path: user-trusted.pem
+              - key: user.csr
+                path: user.csr
+              - key: user.jks
+                path: user.jks
+              - key: user.key
+                path: user.key
+              - key: user.p12
+                path: user.p12
+              - key: user.pem
+                path: user.pem
+          - secret:
+              name: tak-server-stores
+              items:
+              - key: takserver.jks
+                path: takserver.jks
+              - key: truststore-root.jks
+                path: truststore-root.jks
+              - key: fed-truststore.jks
+                path: fed-truststore.jks
       - name: tak-ignite-config
         configMap:
           name: tak-ignite-config

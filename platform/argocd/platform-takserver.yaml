@@ -16,8 +16,8 @@
 #   tak.cot.inject  ← inbound CoT to inject into TAK (from tak-projector)
 #   tak.cot.>       → outbound CoT from TAK EUDs (to NATS bus)
 #
-# Raw config files (CoreConfig.xml, TAKIgniteConfig.xml) are excluded —
-# ArgoCD would try to apply them as K8s objects. Mounted via ConfigMap.
+# The raw TAKIgniteConfig.xml is excluded (a non-manifest file); CoreConfig lives in configmap-core-config-v2.yaml,
+# a password-free template whose placeholders the init containers fill from Secrets.
 # ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -36,7 +36,7 @@ spec:
     path: platform/takserver/deploy
     directory:
       recurse: false
-      exclude: "CoreConfig.xml,TAKIgniteConfig.xml"
+      exclude: "TAKIgniteConfig.xml"
   destination:
     server: https://kubernetes.default.svc
     namespace: takserver

@@ -133,6 +133,8 @@ kubectl --context do-nyc3-omos-cloud get nodes
 
 TAK Server 5.8 on OneMind hardened images (`ghcr.io/onemindos/takserver-base:*-5.8-onemind`). The core (API, messaging, config, plugins, Ignite, PostgreSQL) is the **Helm release `takserver`** from `platform/takserver/chart` with `platform/takserver/values-onemind.yaml`, applied by hand (revision 34 on 2026-09-29). The `platform-takserver` Application manages only the overlay in `platform/takserver/deploy` (LB proxy, NATS leaf, Mumble, LDAP, secrets) and `platform-fedhub` manages `platform/takserver/fedhub`. Both fedhub and tak-ldap are running. TAK is reachable only over the tailnet: the Tailscale Service `tak-tailnet` (node `tak`, `tak.tail717ba0.ts.net`) exposes 8089, 8443, 8446 and 64738/TCP. The public LB `tak-external` was removed on 2026-10-23, and federation ports 9101/9102 are not exposed.
 
+Since 2026-10-29 the CA-key, server-keystore and LDAP bind passwords are Secrets (`tak-ca-credentials`, `tak-server-stores`, `tak-ldap-creds`); `CoreConfig.xml` is the password-free template `platform/takserver/deploy/configmap-core-config-v2.yaml` and the config/messaging init containers fill it in (Helm stayed at revision 34; see `platform/takserver/DEPLOY-RUNBOOK.md`, "Password supply").
+
 The NatsBridgePlugin (`services/takserver/plugin-src/`, JAR in `services/takserver/plugin/`) is the CoT-to-NATS wire (`tak.cot.inject` in, `tak.cot.>` out). Images are built by `.github/workflows/build-takserver.yml` on the self-hosted runner. Deploy runbook: `platform/takserver/DEPLOY-RUNBOOK.md`.
 
 ## CI (`.github/workflows/quality.yml`)
