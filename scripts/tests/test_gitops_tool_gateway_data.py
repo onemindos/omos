@@ -25,7 +25,7 @@ class OpenApiTargets(unittest.TestCase):
 
     def test_every_exposed_operation_is_a_get_with_a_generic_response(self):
         for path in trim.build():
-            doc = json.loads(yaml.safe_load(path.read_text())["data"]["openapi.json"])
+            doc = json.loads(yaml.safe_load(path.read_text())["data"]["openapi.yaml"])
             self.assertTrue(doc["openapi"].startswith("3.0"), path.name)  # the gateway parser rejects 3.1 constructs
             self.assertNotIn("components", doc)
             for p, methods in doc["paths"].items():
@@ -33,14 +33,14 @@ class OpenApiTargets(unittest.TestCase):
 
     def test_tools_match_classification(self):
         for name in ("stac", "core"):
-            doc = json.loads(yaml.safe_load((BASE / f"manifests/openapi-{name}.configmap.yaml").read_text())["data"]["openapi.json"])
+            doc = json.loads(yaml.safe_load((BASE / f"manifests/openapi-{name}.configmap.yaml").read_text())["data"]["openapi.yaml"])
             tools = {m["get"]["operationId"] for m in doc["paths"].values()}
             self.assertEqual(tools, set(read(f"platform/tool-gateway/policy/classification/{name}.yaml")["read"]), name)
 
     def test_core_spec_only_names_get_routes_of_the_service(self):
         api = (ROOT / "services/onemind-core/onemind/api.py").read_text()
         routes = set(re.findall(r'@app\.get\("([^"]+)"', api))
-        doc = json.loads(yaml.safe_load((BASE / "manifests/openapi-core.configmap.yaml").read_text())["data"]["openapi.json"])
+        doc = json.loads(yaml.safe_load((BASE / "manifests/openapi-core.configmap.yaml").read_text())["data"]["openapi.yaml"])
         for p in doc["paths"]:
             self.assertIn(p, routes)
 
@@ -50,8 +50,8 @@ class OpenApiTargets(unittest.TestCase):
         volumes = {v["name"]: v["configMap"]["name"] for v in values["extraVolumes"]}
         for name in ("stac", "core"):
             target = read(f"platform/tool-gateway/targets/{name}.yaml")["target"]["openapi"]
-            self.assertEqual(Path(target["schema"]["file"]).parent.as_posix(), f"/etc/gateway/openapi/{name}")
-            self.assertEqual(volumes[mounts[f"/etc/gateway/openapi/{name}"]], f"gateway-openapi-{name}")
+            self.assertEqual(Path(target["schema"]["file"]).parent.as_posix(), f"/specs/{name}")
+            self.assertEqual(volumes[mounts[f"/specs/{name}"]], f"gateway-openapi-{name}")
 
 
 class ClickHouse(unittest.TestCase):

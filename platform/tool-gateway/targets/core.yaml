@@ -6,7 +6,7 @@ env:
   TARGET_CORE_TOKEN: {secret: gateway-target-core, key: token}
 target:
   openapi:
-    schema: {file: /etc/gateway/openapi/core/openapi.json}
+    schema: {file: /specs/core/openapi.yaml}
     host: onemind-core.onemind-core.svc.cluster.local:8080
   policies:
     backendAuth:

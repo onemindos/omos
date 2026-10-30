@@ -6,7 +6,7 @@ metadata:
   name: gateway-openapi-core
   namespace: tool-gateway
 data:
-  openapi.json: |
+  openapi.yaml: |
     {
      "info": {
       "title": "OneMind operational core (read-only subset)",
@@ -112,5 +112,10 @@ data:
         "summary": "List core objects (entities projected from sources and app-owned), newest data first."
        }
       }
-     }
+     },
+     "servers": [
+      {
+       "url": "http://onemind-core.onemind-core.svc.cluster.local:8080"
+      }
+     ]
     }

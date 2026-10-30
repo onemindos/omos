@@ -32,6 +32,6 @@ named it. After this PR merges, CI pushes `ghcr.io/onemindos/onemind-mcp:sha-<co
 ## OpenAPI specs
 
 `scripts/gateway/trim_openapi_get.py` turns `platform/tool-gateway/openapi/<name>.recipe.yaml` plus its source spec into ConfigMap
-`gateway-openapi-<name>` (`manifests/openapi-<name>.configmap.yaml`), mounted by `values.yaml` at `/etc/gateway/openapi/<name>/`. The
+`gateway-openapi-<name>` (`manifests/openapi-<name>.configmap.yaml`), mounted by `values.yaml` at `/specs/<name>/`. The
 gateway's parser accepts OpenAPI 3.0 only (it rejects the 3.1 `exclusiveMinimum` numbers of the STAC spec), so the script emits plain 3.0
 parameter schemas and a generic response. A test fails when the committed ConfigMaps are stale.

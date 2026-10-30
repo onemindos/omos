@@ -47,5 +47,5 @@ extraVolumes:
   configMap: {name: gateway-openapi-core}
 extraVolumeMounts:
 - {name: openapi-mediamtx, mountPath: /specs/mediamtx, readOnly: true}
-- {name: openapi-stac, mountPath: /etc/gateway/openapi/stac, readOnly: true}
-- {name: openapi-core, mountPath: /etc/gateway/openapi/core, readOnly: true}
+- {name: openapi-stac, mountPath: /specs/stac, readOnly: true}
+- {name: openapi-core, mountPath: /specs/core, readOnly: true}

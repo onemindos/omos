@@ -141,7 +141,7 @@ config:
             - name: core
               openapi:
                 schema:
-                  file: /etc/gateway/openapi/core/openapi.json
+                  file: /specs/core/openapi.yaml
                 host: onemind-core.onemind-core.svc.cluster.local:8080
               policies:
                 backendAuth:
@@ -149,7 +149,7 @@ config:
             - name: stac
               openapi:
                 schema:
-                  file: /etc/gateway/openapi/stac/openapi.json
+                  file: /specs/stac/openapi.yaml
                 host: stac-api.stac.svc.cluster.local:8080
       - name: tak
         matches:

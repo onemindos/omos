@@ -4,5 +4,5 @@ name: stac
 groups: [data]
 target:
   openapi:
-    schema: {file: /etc/gateway/openapi/stac/openapi.json}
+    schema: {file: /specs/stac/openapi.yaml}
     host: stac-api.stac.svc.cluster.local:8080

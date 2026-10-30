@@ -1,4 +1,5 @@
 source: core.source.yaml
+server: http://onemind-core.onemind-core.svc.cluster.local:8080
 keep:
 - {method: get, path: /capabilities, id: list_capabilities}
 - {method: get, path: /objects, id: list_objects}
