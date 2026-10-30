@@ -1,0 +1,22 @@
+# Gateway egress to target `kubernetes` (Deployment mcp-kubernetes in this namespace; its ingress rule is in
+# backends/kubernetes/network.yaml). Egress ports are destination pod ports.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: agentgateway-egress-kubernetes
+  namespace: tool-gateway
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: agentgateway-standalone
+      app.kubernetes.io/instance: agentgateway
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: mcp-kubernetes
+    ports:
+    - {protocol: TCP, port: 8080}

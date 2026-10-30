@@ -1,0 +1,51 @@
+# Network for mcp-kubernetes inside the default-deny namespace (../../network.yaml). Ingress: the gateway pod only, on the MCP port.
+# Egress: DNS and the Kubernetes API server. NetworkPolicies are additive. Egress ports are destination pod ports.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mcp-kubernetes
+  namespace: tool-gateway
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: mcp-kubernetes
+  policyTypes: [Ingress, Egress]
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: agentgateway-standalone
+          app.kubernetes.io/instance: agentgateway
+    ports:
+    - {protocol: TCP, port: 8080}
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - {protocol: UDP, port: 53}
+    - {protocol: TCP, port: 53}
+---
+# The API server is not a pod, so a plain NetworkPolicy cannot name it. Cilium's kube-apiserver entity does (same pattern as
+# platform/core/github-runner-hermes.yaml and platform/backups/cluster-recovery-network.yaml).
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: mcp-kubernetes-apiserver
+  namespace: tool-gateway
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: mcp-kubernetes
+  egress:
+  - toEntities:
+    - kube-apiserver
+    toPorts:
+    - ports:
+      - {port: '443', protocol: TCP}

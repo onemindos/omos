@@ -34,6 +34,9 @@ config:
                 client: hermes
           mcpAuthorization:
             rules:
+            - allow: mcp.tool.target == "kubernetes" && (mcp.tool.name in ["events_list", "namespaces_list", "nodes_top",
+                "pods_get", "pods_list", "pods_list_in_namespace", "pods_log", "pods_top", "resources_create_or_update", "resources_get",
+                "resources_list"])
             - allow: mcp.tool.target == "onemind" && (mcp.tool.name in ["alertmanager_alerts", "apps_describe", "apps_list",
                 "argocd_application", "argocd_applications", "backstage_entities", "backstage_entity", "grafana_dashboards",
                 "litellm_models", "loki_query", "mediamtx_paths", "nats_jetstream_stats", "nats_server_stats", "ollama_models",
@@ -43,6 +46,9 @@ config:
             prefixMode: always
             failureMode: failOpen
             targets:
+            - name: kubernetes
+              mcp: &id004
+                host: http://mcp-kubernetes.tool-gateway.svc.cluster.local:8080/mcp
             - name: onemind
               mcp: &id001
                 host: http://onemind-mcp.hermes.svc.cluster.local:8000/mcp
@@ -136,11 +142,11 @@ config:
             failureMode: failOpen
             targets:
             - name: mediamtx
-              openapi: &id004
+              openapi: &id005
                 schema:
                   file: /specs/mediamtx/openapi.yaml
                 host: onetak-media.onetak.svc.cluster.local:4000
-              policies: &id005
+              policies: &id006
                 requestHeaderModifier:
                   set:
                     authorization: Basic ${TARGET_MEDIAMTX_BASIC}
@@ -223,6 +229,8 @@ config:
             prefixMode: always
             failureMode: failOpen
             targets:
+            - name: kubernetes
+              mcp: *id004
             - name: mediamtx
-              openapi: *id004
-              policies: *id005
+              openapi: *id005
+              policies: *id006

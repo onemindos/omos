@@ -1,0 +1,28 @@
+# containers/kubernetes-mcp-server v0.1.1 configuration (docs/configuration.md of that release). Unknown keys fail the load.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mcp-kubernetes-config
+  namespace: tool-gateway
+  labels:
+    app.kubernetes.io/name: mcp-kubernetes
+data:
+  config.toml: |
+    port = "8080"
+    metrics_port = "9090"
+    stateless = true
+    list_output = "yaml"
+    # Use the pod's ServiceAccount (k8s-operator) only; never forward a caller's Authorization header to the API server.
+    cluster_provider_strategy = "in-cluster"
+    cluster_auth_mode = "kubeconfig"
+    # Core only: pods, events, namespaces, generic resources. The config toolset (kubeconfig views) means nothing in a pod.
+    toolsets = ["core"]
+    # Off because their RBAC is not granted (exec, run, nodes/proxy) or they do not apply (OpenShift). To offer pods_exec later, grant
+    # pods/exec in rbac.yaml, remove it here and list it under destructive in policy/classification/kubernetes.yaml.
+    disabled_tools = ["pods_exec", "pods_run", "nodes_log", "nodes_stats_summary", "projects_list"]
+
+    # Second line behind RBAC: Secrets are not addressable through the generic resource tools.
+    [[denied_resources]]
+    group = ""
+    version = "v1"
+    kind = "Secret"
