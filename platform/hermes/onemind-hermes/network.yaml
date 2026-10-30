@@ -38,6 +38,17 @@ spec:
               app.kubernetes.io/instance: litellm
       ports:
         - {protocol: TCP, port: 4000}
+    # Matrix: in-cluster Synapse client API (the homeserver URL in config.yaml).
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: matrix
+          podSelector:
+            matchLabels:
+              app: synapse
+      ports:
+        - {protocol: TCP, port: 8008}
+    # Telegram (api.telegram.org:443) and other HTTPS: the public rule below.
     - to:
         - ipBlock:
             cidr: 0.0.0.0/0
