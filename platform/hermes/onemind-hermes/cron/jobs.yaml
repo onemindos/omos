@@ -1,0 +1,88 @@
+# Declarative cron jobs for onemind-hermes (agent persona: Legacy). Applied, never edited live:
+#   platform/hermes/onemind-hermes/cron/apply.sh [--dry-run]
+# apply_jobs.py creates a missing job, updates only the fields that drifted, and makes the
+# paused/running state match `paused`. Jobs not listed here are left alone. Details: README.md
+# ("Scheduled jobs").
+#
+# Times are UTC (the pod has no TZ and Hermes has no timezone set, same as the old instance).
+# Every job delivers to Zeus on Telegram (8297858681). Model-backed jobs use the already-paid
+# Ollama Cloud subscription (the `ollama-pro` credential in the pool) at low reasoning effort,
+# so they never spend Codex quota. Scripts live in cron/scripts/ and reach ~/.hermes/scripts/
+# through the init container.
+
+jobs:
+  # One short brief a day. The script gathers the facts (cluster, alerts, backups, cost, bus,
+  # Codex usage per credential) so the model only writes.
+  - name: legacy-sovereign-brief
+    schedule: "0 7 * * *"
+    deliver: telegram:8297858681
+    script: legacy_brief_facts.py
+    skills: [onemind-domains]
+    provider: ollama-cloud
+    model: glm-5.3
+    reasoning_effort: low
+    prompt: |
+      Write the owner's daily sovereign brief as Legacy, from the facts the script printed above.
+      Rules: under 180 words, plain text for Telegram, no tables, no preamble.
+      Order: (1) one line of overall status (green, amber or red) and why; (2) what needs a
+      decision or action today, most urgent first, naming the alert, workload or app, using the
+      SO Grid and Guardian modes of the onemind-domains skill to judge severity; (3) one line of
+      what quietly went well or changed in the last 24 hours; (4) the Codex usage line for each
+      credential (codex-1, codex-2): used percent of the 5h and weekly windows, and say if one is
+      close to a limit. Mention cost only if it looks unusual.
+      Use only the facts given. If a section says "none", say nothing about it. If "Probe
+      problems" lists missing data, say which part of the brief is blind. Never invent numbers,
+      and do not run commands: the facts are already collected.
+
+  # Cheap watchdog: the monitor script runs every 15 minutes with no model. Healthy or
+  # unchanged output is silent; only a change wakes the model.
+  - name: infra-health
+    schedule: "every 15m"
+    deliver: telegram:8297858681
+    monitor_script: legacy_infra_health.py
+    skills: [doks-cluster-ops]
+    provider: ollama-cloud
+    model: glm-5.3
+    reasoning_effort: low
+    prompt: |
+      The infra-health monitor changed. The diff and new output are above. The output is `OK`
+      or one line per problem (node, pod, deployment, volume, critical alert, NATS node, or the
+      monitoring gateway itself).
+      If the new output is exactly `OK` and the previous output was also `OK` or there is no
+      previous output, reply with exactly [SILENT].
+      If it went from problems to `OK`, send one line: what recovered.
+      Otherwise send at most five short lines: what is broken, new versus still broken, the most
+      likely cause from the name alone, and the single next read-only check or Git change.
+      Do not run commands, do not change anything, and do not repeat unchanged problems at length.
+
+  # Daily security posture. Same contract as infra-health.
+  - name: security-scan
+    schedule: "30 6 * * *"
+    deliver: telegram:8297858681
+    monitor_script: legacy_security_scan.py
+    skills: [onemind-domains]
+    provider: ollama-cloud
+    model: glm-5.3
+    reasoning_effort: low
+    prompt: |
+      The daily security scan changed. The diff and new output are above. The output is `OK` or
+      one finding per line: alert, policy-fail, latest-tag, argocd-drift.
+      If the new output is exactly `OK` and the previous output was also `OK` or there is no
+      previous output, reply with exactly [SILENT].
+      Otherwise act in Guardian mode of the onemind-domains skill: for each new finding give a
+      severity (low, medium, high) and one sentence on the risk and the fix (usually a Git
+      change, never a live edit). If findings were resolved, say so in one line. Keep it under
+      120 words. Do not run commands or change anything.
+
+  # Nightly password-free snapshot of Legacy's config, soul, memory, skills and job list into
+  # Git. No model. Paused until the owner provides a Git write credential (README.md).
+  - name: config-export
+    schedule: "30 2 * * *"
+    deliver: telegram:8297858681
+    script: legacy_config_export.py
+    no_agent: true
+    paused: true
+    paused_reason: >-
+      Needs a Git write credential: create the Secret onemind-hermes-export (deploy key
+      ssh-privatekey plus repo) per platform/hermes/onemind-hermes/README.md, then set
+      paused to false and run cron/apply.sh.

@@ -49,6 +49,30 @@ spec:
                   with target.open('xb') as handle:
                       os.chmod(target, 0o600)
                       handle.write(source.read_bytes())
+
+              # Cron assets are Git-owned, so unlike config.yaml they are refreshed on every
+              # start: job scripts go to $HERMES_HOME/scripts (the only place the cron runner
+              # accepts them), the job list and its applier to cron-defs/.
+              import pwd
+              try:
+                  owner = pwd.getpwnam('hermes')
+              except KeyError:
+                  owner = None
+              for name in sorted(os.listdir('/cron')):
+                  if name.startswith('.'):
+                      continue
+                  folder = Path('/opt/data/cron-defs' if name in ('jobs.yaml', 'apply_jobs.py') else '/opt/data/scripts')
+                  folder.mkdir(parents=True, exist_ok=True)
+                  staged = folder / ('.' + name + '.new')
+                  staged.write_bytes((Path('/cron') / name).read_bytes())
+                  os.chmod(staged, 0o644)
+                  os.replace(staged, folder / name)
+                  if owner:
+                      try:
+                          os.chown(folder / name, owner.pw_uid, owner.pw_gid)
+                          os.chown(folder, owner.pw_uid, owner.pw_gid)
+                      except OSError:
+                          pass  # not root: the files stay world-readable, which is enough
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -60,6 +84,9 @@ spec:
               mountPath: /opt/data
             - name: defaults
               mountPath: /defaults
+              readOnly: true
+            - name: cron
+              mountPath: /cron
               readOnly: true
       containers:
         - name: hermes
@@ -113,6 +140,11 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /opt/data
+            # Deploy key + repository for the nightly config-export job. The Secret does not
+            # exist until the owner creates it (README "Scheduled jobs"), so it is optional.
+            - name: export
+              mountPath: /var/run/legacy-export
+              readOnly: true
       volumes:
         - name: data
           persistentVolumeClaim:
@@ -120,3 +152,11 @@ spec:
         - name: defaults
           configMap:
             name: onemind-hermes-defaults
+        - name: cron
+          configMap:
+            name: onemind-hermes-cron
+        - name: export
+          secret:
+            secretName: onemind-hermes-export
+            optional: true
+            defaultMode: 292   # 0444; the script copies the key to a 0600 file before ssh uses it

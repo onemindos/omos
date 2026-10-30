@@ -126,12 +126,132 @@ Add selected memory, skill packages and integrations incrementally, following
 `MIGRATION.md`. Inspect credential-bearing assets before importing them. Keep
 Legacy running until the owner chooses the final cutover.
 
+## Scheduled jobs
+
+Four cron jobs run the daily brief, two cheap watchdogs and the nightly config snapshot.
+Everything is in Git under `cron/` and applied by one idempotent script. Nothing is created
+by hand in the pod.
+
+| Job | Schedule (UTC) | Mechanism | Model |
+|---|---|---|---|
+| `legacy-sovereign-brief` | daily 07:00 | script gathers facts, model writes <180 words | `ollama-cloud` / `glm-5.3`, low effort |
+| `infra-health` | every 15m | `--monitor-script`: silent unless the output changes | same, only on a change |
+| `security-scan` | daily 06:30 | `--monitor-script`, same contract | same, only on a change |
+| `config-export` | nightly 02:30 | `--no-agent`: the script is the job | none. **Paused**, see below |
+
+All deliver to Telegram `8297858681`. The model jobs use the already-paid Ollama Cloud
+subscription (the `ollama-pro` credential in the pool; verified with a one-token call), not
+Codex, and never spend Codex quota. The old `so-infra-health` job (every 30 minutes, full model
+run) hit `429 tokens_per_day`; here a healthy cluster costs zero tokens: the monitor script's
+output is `OK`, its hash is unchanged, and Hermes skips the model. A problem changes the output,
+wakes the model once, and stays silent until the output changes again (a new problem, or
+recovery). The very first run after creation also counts as a change; the prompts answer
+`[SILENT]` when everything is already `OK`.
+
+Files:
+
+| Path | Role |
+|---|---|
+| `cron/jobs.yaml` | Declarative job list: schedule, prompt, skills, model, delivery, `paused` |
+| `cron/apply_jobs.py` | Applier, runs in the pod as `hermes`, through Hermes' own `cron.jobs` API |
+| `cron/apply.sh` | Host wrapper: `cron/apply.sh [--dry-run]`. `--install-local` first copies this checkout's scripts into the pod, for testing before merge |
+| `cron/scripts/legacy_common.py` | MCP client and Prometheus/Alertmanager/Argo helpers (stdlib only) |
+| `cron/scripts/legacy_brief_facts.py` | Facts for the brief: nodes, bad workloads, volumes, alerts now and in 24h, Argo drift, cost, NATS, Codex usage |
+| `cron/scripts/legacy_codex_usage.py` | Codex usage per credential (below) |
+| `cron/scripts/legacy_infra_health.py`, `legacy_security_scan.py` | Monitor sources, print `OK` or one stable line per problem |
+| `cron/scripts/legacy_config_export.py` | Snapshot, secret scan, commit and push |
+
+How they reach the pod: `kustomization.yaml` builds the ConfigMap `onemind-hermes-cron` from
+these files, and the `initial-config` init container copies them on **every** start (unlike
+`config.yaml` they are Git-owned): scripts to `/opt/data/scripts` (the only directory the cron
+runner accepts, symlinks out of it are refused) and `jobs.yaml` plus `apply_jobs.py` to
+`/opt/data/cron-defs`. Changing a script therefore rolls the pod once. Jobs themselves live in
+`/opt/data/cron/jobs.json` on the PVC (so VolSync backs them up) and are created only by
+`cron/apply.sh`. A second apply prints `unchanged` for every job; fields that drifted are
+updated, and `paused` in `jobs.yaml` is enforced both ways. Jobs not in the file are left alone.
+
+Data sources and network: the pod has no Kubernetes token and egress only to DNS, LiteLLM
+(`onemind-ai`, TCP 4000), Synapse and public 443. So the scripts call the read-only `onemind`
+MCP tools through the LiteLLM gateway with `ONEMIND_LITELLM_MCP_KEY`
+(`onemind-prometheus_query`, `-alertmanager_alerts`, `-argocd_applications`,
+`-nats_*`, `-opencost_allocation`). Verified: Hermes' script runner passes that variable to
+scripts. No `network.yaml` change was needed; the export's SSH goes to `ssh.github.com:443`,
+which the public 443 rule already allows. Prometheus has no cert-manager or Falco metrics, so
+the security scan reads Falco and certificate findings from Alertmanager only.
+
+Approvals: `approvals.cron_mode: deny` governs commands an agent runs through its terminal tool.
+The scripts run in the cron runner, not through that path, and the job prompts tell the model not
+to run commands (the facts are already in the prompt), so nothing in these jobs can need a flagged
+command. A flagged command would be denied, not asked.
+
+### Codex usage per credential
+
+`hermes usage --json` only reports the active credential. In Hermes v0.22.5
+`agent/account_usage.fetch_account_usage(provider, base_url=, api_key=, read_only=)` queries
+the ChatGPT usage endpoint for an explicit token, and `hermes_cli.auth.read_credential_pool()`
+lists the pool entries (`codex-1`, `codex-2`). `legacy_codex_usage.py` calls the first for each
+entry with `read_only=True`, the variant the model picker uses: a 401 is reported, never
+repaired, and nothing is refreshed, rotated or written. Tokens are never printed. Output:
+
+```
+codex-1 (Plus): Session 0% (resets 2026-10-30 19:11 UTC), Weekly 31% (resets 2026-11-04 10:04 UTC)
+codex-2 (Plus): Session 0% (resets 2026-10-30 19:45 UTC), Weekly 3% (resets 2026-11-04 15:00 UTC)
+```
+
+`--json` prints the full per-credential record. The brief script embeds it.
+
+### config-export and the Git credential it needs
+
+`legacy_config_export.py` writes an explicit allowlist, not `hermes profile export` (a 12 MB
+tarball of the whole home, with sessions, hub caches and bundled skills): `config.yaml` with
+secret-looking keys blanked and `${ENV}` references kept, `SOUL.md`, `memories/MEMORY.md` and
+`USER.md`, `skills/index.json` (name, category, origin: bundled, user or external), the contents
+of user-created skills, and the job definitions without run history. The whole snapshot is then
+scanned: token shapes, private-key headers, credential assignments, and every secret value this
+pod holds (environment and `auth.json`) verbatim. One hit aborts the run, names the file and rule
+(never the value) and commits nothing. Tested here with a fake key and token (aborted) and
+against a local bare repository (first run commits, second run is silent).
+
+onemind-hermes has **no Git write credential** (no token variable, no SSH key, nothing under
+`HOME`), so `config-export` is created **paused** with that reason, and the pod mounts an
+optional Secret for it. Owner steps to enable it:
+
+1. Create a private repository for the snapshots, for example `onemindos/legacy-snapshots`.
+   (Keeping agent commits out of `onemindos/omos` is deliberate; the snapshot contains memory
+   text, so it must be private.)
+2. Create a **deploy key with write access on that one repository** (preferred over a token:
+   it cannot touch any other repository). Generate it locally,
+   `ssh-keygen -t ed25519 -N '' -C legacy-config-export -f ./legacy-export-key`, add the `.pub`
+   under the repository's Settings, Deploy keys, "Allow write access". Restrict the branch with a
+   ruleset if wanted (default branch `main`).
+3. Seal it, namespace-wide like the other onemind-hermes secrets, into
+   `platform/hermes/onemind-hermes/export.sealedsecret.yaml`:
+
+   ```bash
+   kubeseal --fetch-cert --controller-name=sealed-secrets-controller \
+     --controller-namespace=kube-system > /tmp/pub-cert.pem
+   kubectl create secret generic onemind-hermes-export -n hermes \
+     --from-file=ssh-privatekey=./legacy-export-key \
+     --from-literal=repo=ssh://git@ssh.github.com:443/onemindos/legacy-snapshots.git \
+     --dry-run=client -o json \
+     | kubeseal --cert /tmp/pub-cert.pem --format yaml --scope namespace-wide \
+     > platform/hermes/onemind-hermes/export.sealedsecret.yaml
+   ```
+
+   Add the file to `kustomization.yaml`, then delete the local key. An optional `branch` key
+   (default `main`) can be added with `--from-literal=branch=...`. A fine-grained token over
+   HTTPS would also work but needs the script changed; the deploy key needs no code change.
+4. After Argo syncs (secret volumes are read at pod start, so the pod restarts once if it was
+   already running), set `paused: false` for `config-export` in `cron/jobs.yaml`, merge, and
+   run `cron/apply.sh`.
+
+Until then the job stays paused; if it is ever run without the Secret it fails loudly rather
+than silently skipping a backup.
+
 ## TODO
 
 - Ollama Cloud fallback: seal `OLLAMA_API_KEY` into `onemind-hermes-runtime` (or
   a new namespace-wide SealedSecret) before relying on the fallback.
-- LiteLLM ingress: add the `onemind-hermes` rule to `litellm-clients` in
-  `onemind-ai`.
 
 ## Cleanup after cutover
 
