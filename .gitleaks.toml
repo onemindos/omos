@@ -13,3 +13,7 @@ regexes = [
   # Require 200+ chars so short plaintext values that happen to start with "Ag" are NOT allowlisted.
   '''["']?Ag[A-Za-z0-9+/]{200,}={0,2}["']?''',
 ]
+
+[[allowlists]]
+description = "Generated gateway allow rules list tool names (identifiers, not credentials)"
+paths = ['''^platform/tool-gateway/values\.generated\.yaml$''']
