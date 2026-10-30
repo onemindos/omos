@@ -86,6 +86,19 @@ def test_fixed_read_endpoints_and_array_results(monkeypatch, adapter, name, path
         assert not result['result'].get('isError')
 
 
+def test_basic_auth_scheme_sends_user_and_password(monkeypatch):
+    import base64
+    monkeypatch.setenv('APP_KEY', 'mcp-read:s3cret-value')
+    cat = catalog(monkeypatch, 'mediamtx')
+    cat.apps[0].token_env = 'APP_KEY'
+    cat.apps[0].auth_scheme = 'basic'
+    def handler(request):
+        assert request.headers['Authorization'] == 'Basic ' + base64.b64encode(b'mcp-read:s3cret-value').decode()
+        return httpx.Response(200, json={'items': []})
+    with TestClient(build(cat, handler)) as client:
+        assert not rpc(client, 'tools/call', {'name': 'app_paths', 'arguments': {}})['result'].get('isError')
+
+
 def test_litellm_lists_only_model_ids(monkeypatch):
     data = {'data': [{'id': 'hermes-agent', 'owned_by': 'secret-org', 'litellm_params': {'api_key': 'sk-x'}}]}
     def handler(request):

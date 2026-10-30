@@ -1,4 +1,5 @@
 """Bounded HTTP transport shared by adapters. No agent-controlled destinations."""
+import base64
 import json
 
 import httpx
@@ -11,6 +12,7 @@ class Upstream:
         self.base_url = base_url
         self.token = token
         self.auth_header = "Authorization"
+        self.auth_scheme = "bearer"
         self.verify: str | bool = True
         self.transport = transport
 
@@ -24,8 +26,14 @@ class Upstream:
         # Paths are constants in reviewed adapters, never caller input.
         if not path.startswith("/") or path.startswith("//"):
             raise ToolError("Invalid adapter endpoint")
-        headers = ({self.auth_header: (f"Bearer {self.token}" if self.auth_header == "Authorization" else self.token)}
-                   if self.token else {})
+        headers = {}
+        if self.token:
+            if self.auth_header != "Authorization":
+                headers[self.auth_header] = self.token
+            elif self.auth_scheme == "basic":
+                headers[self.auth_header] = "Basic " + base64.b64encode(self.token.encode()).decode()
+            else:
+                headers[self.auth_header] = f"Bearer {self.token}"
         try:
             async with httpx.AsyncClient(
                 timeout=httpx.Timeout(10, connect=3), follow_redirects=False,
