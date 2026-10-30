@@ -207,6 +207,8 @@ def create_app(catalog: Catalog, clients: str | dict[str, str], allowed_hosts: l
         upstreams = [upstream_factory(*connection) for connection in connections[app.id]]
         for upstream in upstreams:
             upstream.auth_header = app.auth_header
+            if app.ca_file:
+                upstream.verify = app.ca_file
         ADAPTERS[app.adapter](register, upstreams if app.adapter in MULTI_NODE else upstreams[0])
     add(apps_list)
     add(apps_describe)

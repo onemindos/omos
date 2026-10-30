@@ -11,6 +11,7 @@ class Upstream:
         self.base_url = base_url
         self.token = token
         self.auth_header = "Authorization"
+        self.verify: str | bool = True
         self.transport = transport
 
     async def get(self, path: str, params: dict | None = None):
@@ -28,7 +29,7 @@ class Upstream:
         try:
             async with httpx.AsyncClient(
                 timeout=httpx.Timeout(10, connect=3), follow_redirects=False,
-                trust_env=False, transport=self.transport, headers=headers,
+                trust_env=False, transport=self.transport, headers=headers, verify=self.verify,
             ) as client:
                 async with client.stream(method, self.base_url + path, params=params, json=body) as response:
                     if response.status_code not in {200, 201}:

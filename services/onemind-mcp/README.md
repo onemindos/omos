@@ -11,6 +11,8 @@ replace app APIs, operate Kubernetes, or grant access to every app automatically
 - `apps_list` searches all access domains; `apps_describe` explains available operations and blockers.
 - STAC imagery, Ollama model inventory, Alertmanager alerts, Loki logs and OpenCost estimates.
 - Credential-gated adapters for bookmarks, workflows, Paperclip, Grafana, Tempo and MediaMTX.
+- Read-only adapters for the LiteLLM model list, Argo CD application status and the Backstage catalog.
+  A catalog entry may set `ca_file` (a PEM under `/etc/onemind-ca/`) to pin a private or self-signed CA.
 - `onemind://apps` exposes the same catalog as a resource.
 - NATS: `nats_server_stats`, `nats_jetstream_stats`. Each reports one node, not a
   cluster aggregate, and names it in `node`. Set `NATS_MONITOR_URLS` (comma-separated,
