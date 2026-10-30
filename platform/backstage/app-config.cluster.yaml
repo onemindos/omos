@@ -45,6 +45,14 @@ backend:
           - plugin: mcp-actions
           - plugin: catalog
           - plugin: onemind
+      # onemind-mcp hub (platform/hermes/mcp): its own token so the audit trail and revocation are
+      # separate from the MCP actions token above. Catalog reads only.
+      - type: static
+        options:
+          token: ${ONEMIND_MCP_HUB_TOKEN}
+          subject: onemind-mcp-hub
+        accessRestrictions:
+          - plugin: catalog
 
 catalog:
   # Arrays replace the image defaults. Domain admits the OneMind / SO / LE / HP / GE Domains

@@ -23,8 +23,32 @@ data:
     readTimeout: 30s
     writeTimeout: 30s
 
-    # no auth — cluster-internal; ingress/LB controls outside reach
-    # (default authMethod 'internal' with zero users = open)
+    # authMethod 'internal' with the upstream defaults kept: streams are open inside the
+    # cluster (publish/read/playback for any user) and the API/metrics/pprof are localhost only.
+    # Setting authInternalUsers replaces those defaults, so the first two entries restate them.
+    # The third is the read identity of the onemind-mcp hub (platform/hermes/mcp): MediaMTX has
+    # no read-only API action, so `api` also permits config/kick writes; the credential is held
+    # only by onemind-mcp (sealed, hash only here), whose adapter issues fixed GETs.
+    authInternalUsers:
+      - user: any
+        pass:
+        ips: []
+        permissions:
+          - action: publish
+          - action: read
+          - action: playback
+      - user: any
+        pass:
+        ips: ['127.0.0.1', '::1']
+        permissions:
+          - action: api
+          - action: metrics
+          - action: pprof
+      - user: mcp-read
+        pass: sha256:WAEbA+7KepierEzWN1xTExuGRxQx+gaXLuEShiqNAyI=
+        ips: []
+        permissions:
+          - action: api
 
     api: yes
     apiAddress: :4000
@@ -78,6 +102,9 @@ spec:
     metadata:
       labels:
         app: onetak-media
+      annotations:
+        # MediaMTX reads its config at start. Bump when mediamtx.yml changes so Argo rolls the pod.
+        onemind.io/config-rev: "2026-10-29-api-user"
     spec:
       containers:
         - name: mediamtx

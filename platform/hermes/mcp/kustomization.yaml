@@ -15,4 +15,9 @@ configMapGenerator:
   - name: onemind-mcp-apps
     files:
       - apps.yaml
+  # Public certificate of the Argo CD server (self-signed, expires 2027-07-04; renew this file when
+  # argocd-secret tls.crt is regenerated), pinned by the argocd app's ca_file.
+  - name: onemind-mcp-ca
+    files:
+      - argocd-server.pem
 # Copy this directory into your GitOps repo; pin an immutable image before sync.

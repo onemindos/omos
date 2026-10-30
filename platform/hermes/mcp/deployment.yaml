@@ -76,6 +76,45 @@ spec:
               value: http://loki-gateway.monitoring.svc.cluster.local
             - name: OPENCOST_URL
               value: http://opencost.opencost.svc.cluster.local:9003
+            - name: TEMPO_URL
+              value: http://tempo.monitoring.svc.cluster.local:3200
+            - name: GRAFANA_URL
+              value: http://monitoring-grafana.monitoring.svc.cluster.local
+            - name: GRAFANA_API_TOKEN
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: GRAFANA_API_TOKEN}
+            - name: LITELLM_URL
+              value: http://litellm.onemind-ai.svc.cluster.local:4000
+            - name: LITELLM_API_KEY
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: LITELLM_API_KEY}
+            - name: BACKSTAGE_URL
+              value: http://backstage.backstage.svc.cluster.local:7007
+            - name: BACKSTAGE_API_TOKEN
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: BACKSTAGE_API_TOKEN}
+            - name: ARGOCD_URL
+              value: https://argocd-server.argocd.svc.cluster.local
+            - name: ARGOCD_API_TOKEN
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: ARGOCD_API_TOKEN}
+            - name: MEDIAMTX_URL
+              value: http://onetak-media.onetak.svc.cluster.local:4000
+            - name: MEDIAMTX_API_CREDENTIALS
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: MEDIAMTX_API_CREDENTIALS}
+            # n8n and Karakeep stay disabled in apps.yaml until the owner seals their keys; the
+            # references are optional so sealing the key and flipping `enabled` is the whole change.
+            - name: N8N_URL
+              value: http://n8n.n8n.svc.cluster.local:5678
+            - name: N8N_API_TOKEN
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: N8N_API_TOKEN, optional: true}
+            - name: KARAKEEP_URL
+              value: http://web.karakeep.svc.cluster.local:3000
+            - name: KARAKEEP_API_TOKEN
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: KARAKEEP_API_TOKEN, optional: true}
           resources:
             # Observed 2026-10-27: peak 5m CPU / 45Mi working set since deploy (incl. #541 image).
             requests:
@@ -104,7 +143,13 @@ spec:
             - name: apps
               mountPath: /etc/onemind
               readOnly: true
+            - name: ca
+              mountPath: /etc/onemind-ca
+              readOnly: true
       volumes:
         - name: apps
           configMap:
             name: onemind-mcp-apps
+        - name: ca
+          configMap:
+            name: onemind-mcp-ca
