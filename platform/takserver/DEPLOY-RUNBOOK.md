@@ -68,7 +68,7 @@ docker rm -f tak-ca-setup 2>/dev/null
 docker run --name tak-ca-setup \
   --env CA_NAME=onemind-tak --env STATE=FL --env CITY=Tampa --env ORGANIZATIONAL_UNIT=OneMind \
   takserver-ca-setup:5.8-onemind
-docker cp tak-ca-setup:/files ./certs-out    # ~31 files, storepass = atakatak
+docker cp tak-ca-setup:/files ./certs-out    # ~31 files, storepass = the keystore password (default until step-2 rotation; see Secret tak-keystores in ns takserver)
 ```
 Required outputs (verify present): `takserver.jks`, `truststore-root.jks`, `fed-truststore.jks`, `admin.pem`.
 `takserver.jks` = single PrivateKeyEntry, alias **`takserver`** (JwtUtils uses the keystore's first alias).

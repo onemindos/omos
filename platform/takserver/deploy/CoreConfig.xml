@@ -61,6 +61,8 @@
                 <nameEntry name="OU" value="TAK-OPS"/>
             </nameEntries>
         </certificateConfig>
+        <!-- TODO(step-2, PR tak-ca-password-rotation-step1): replace the stock keystore password with a Secret reference; see docs/operations/tak-ca-password-rotation-step1-2026-10-29.md.
+             CA signing keystorePass below moves to Secret tak-ca-credentials (key ca-key-password) in the maintenance window; messaging reads CoreConfig only at start. -->
         <TAKServerCAConfig
             keystore="JKS"
             keystoreFile="/certs-configmap/ca-signing.jks"

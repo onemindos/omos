@@ -14,6 +14,7 @@ POD=$(kubectl get pod -n takserver -l app=takserver-api --context "$CONTEXT" \
 
 echo "Using pod: $POD"
 
+# TODO(step-2, PR tak-ca-password-rotation-step1): replace the stock keystore password with a Secret reference; see docs/operations/tak-ca-password-rotation-step1-2026-10-29.md
 kubectl exec -n takserver "$POD" --context "$CONTEXT" -- sh -c '
   openssl pkcs12 -legacy -in /certs-configmap/admin.p12 -passin pass:atakatak \
     -nokeys -clcerts -out /tmp/admin.crt 2>/dev/null

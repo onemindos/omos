@@ -19,7 +19,7 @@ procedure (and the dead-ends to avoid). Build/regenerate with
 [scripts/build-itak-datapackage.sh](scripts/build-itak-datapackage.sh).
 
 Ready-to-AirDrop packages (gitignored) in `deploy/exports/`: `OneMind-iPhone17.zip`, `OneMind-iPad.zip`,
-`OneMind-Tablet.zip` — each bundles the device client cert + CA truststore (pass `atakatak`). Raw
+`OneMind-Tablet.zip` — each bundles the device client cert + CA truststore (pass: the keystore password, default until step-2 rotation). Raw
 `*.p12` + `ca.pem` also staged there. All registered as cert users in group **Red**.
 
 Statuses: `planned` → `cert-pending` → `cert-issued` → `provisioned` → `live` → `retired`.
