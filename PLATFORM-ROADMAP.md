@@ -20,6 +20,12 @@ does not mark the broader agent migration or Phase 8 complete. See
 persona Legacy as a single soul) with new retain-class storage and hardened
 initial config; the `hermes-fresh` resources were removed the same day except the PVC `hermes-fresh-data`, kept pending owner approval.
 
+2026-10-31: Legacy's "How you work" doctrine (one soul, four modes, delegate when big or parallel, checker gate)
+and five Codex worker roles (`ops-cluster`, `tak-mission`, `builder`, `researcher`, `checker`) prepared as a
+`legacy-roles` delegation backend plus kanban-swarm profiles; applied to the live pod by
+`platform/hermes/onemind-hermes/roles/apply.sh` after merge, live verification recorded in the PR.
+See the [README section](platform/hermes/onemind-hermes/README.md#how-legacy-works-doctrine-and-worker-roles).
+
 2026-10-24 sprint: prepared a dedicated read-only Hermes cluster observer identity
 and sanitized readiness collector for the owner's Paperclip status-report task.
 Argo activation, RBAC acceptance and the agent-written report remain unverified.
