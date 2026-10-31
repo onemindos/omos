@@ -108,13 +108,26 @@ MATRIX_ALLOWED_USERS: '@zeus:onemindos.dev'   # Zeus only; invites from others a
 MATRIX_HOMESERVER: http://synapse.matrix.svc.cluster.local:8008
 MATRIX_USER_ID: '@legacy:onemindos.dev'
 # MATRIX_REQUIRE_MENTION keeps its default (true): rooms need an @-mention, DMs do not.
-# One MCP endpoint for all OneMind apps: the LiteLLM gateway (platform/hermes/mcp/HUB.md).
-# ONEMIND_LITELLM_MCP_KEY is a LiteLLM virtual key scoped to the `onemind` server; it is
-# added to the onemind-hermes-runtime SealedSecret after merge. Until then this server
-# answers 401 and Hermes runs without OneMind tools. Keep gateway.multiplex_profiles off:
-# with it on, ${VAR} in headers is not filled from container env (Legacy's 401).
+# OneMind tools come from the agentgateway tool gateway (platform/tool-gateway, design
+# docs/architecture/onemind-tool-gateway.md): one MCP server per route, tools named
+# <target>_<tool>. Each route lists only the classified read and write tools; destructive
+# and physical tools are on /execute, which is not deployed, so it is not listed here.
+# ONEMIND_GATEWAY_KEY comes from the onemind-gateway-client SealedSecret (deployment.yaml).
+# Every route runs apiKey.mode strict: without the Authorization header it answers 401.
+# Keep gateway.multiplex_profiles off: with it on, ${VAR} in headers is not filled from
+# container env (Legacy's 401). Keys checked against v0.22.5 tools/mcp_tool_*.py: url,
+# headers (${VAR} rendered from env), lazy, trust, timeout, connect_timeout. Unset: lazy
+# (connect at start, so tool counts are known) and trust (default full).
 mcp_servers:
-  onemind:
-    url: http://litellm.onemind-ai.svc.cluster.local:4000/mcp/
+  ops:
+    url: http://agentgateway.tool-gateway.svc.cluster.local:8080/ops/mcp
     headers:
-      x-litellm-api-key: Bearer ${ONEMIND_LITELLM_MCP_KEY}
+      Authorization: Bearer ${ONEMIND_GATEWAY_KEY}
+  data:
+    url: http://agentgateway.tool-gateway.svc.cluster.local:8080/data/mcp
+    headers:
+      Authorization: Bearer ${ONEMIND_GATEWAY_KEY}
+  tak:
+    url: http://agentgateway.tool-gateway.svc.cluster.local:8080/tak/mcp
+    headers:
+      Authorization: Bearer ${ONEMIND_GATEWAY_KEY}

@@ -38,9 +38,8 @@ spec:
               app.kubernetes.io/instance: litellm
       ports:
         - {protocol: TCP, port: 4000}
-    # Tool gateway (agentgateway, platform/tool-gateway): the one tool front door (Phase 1 adds the
-    # rule next to the LiteLLM one; Phase 6 removes LiteLLM). Matching ingress rule is in
-    # platform/tool-gateway/manifests/network.yaml.
+    # Tool gateway (agentgateway, platform/tool-gateway): the one tool front door (/ops, /data,
+    # /tak). Matching ingress rule is in platform/tool-gateway/manifests/network.yaml.
     - to:
         - namespaceSelector:
             matchLabels:

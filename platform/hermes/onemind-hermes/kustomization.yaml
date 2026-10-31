@@ -8,7 +8,7 @@ resources:
   - network.yaml
   - backup.yaml
   - runtime.sealedsecret.yaml
-  # Client key for the tool gateway (Phase 1); Hermes is wired to it in Phase 5, not here.
+  # Client key for the tool gateway; deployment.yaml exposes it as ONEMIND_GATEWAY_KEY (Phase 5).
   - gateway-client.sealedsecret.yaml
   - backup.sealedsecret.yaml
 configMapGenerator:
