@@ -6,7 +6,7 @@ The gateway serves nine routes (`/ops`, `/dev`, `/cloud`, `/data`, `/tak`, `/hom
 six targets: `onemind` and `kubernetes` (`ops`), `stac`, `core` and `clickhouse` (`data`), `mediamtx` (`tak`). Per-backend runbooks:
 [`tool-gateway-kubernetes.md`](tool-gateway-kubernetes.md), [`tool-gateway-data.md`](tool-gateway-data.md). `dev`, `cloud`, `home` and `work`
 answer with an empty tool list until their backends join (they wait on owner credentials); `/identity` (deferred) and `/execute` (closed
-until Phase 4 is deployed) always do. Hermes `onemind-hermes` uses `ops`, `data` and `tak` (Phase 5, config in `platform/hermes/onemind-hermes/`, live config updated with `mcp/apply.sh`); `/execute` is not wired until Phase 4 is deployed. LiteLLM still serves the cron scripts' MCP client until Phase 6.
+until Phase 4 is deployed) always do. Hermes `onemind-hermes` uses `ops`, `data` and `tak` (Phase 5, config in `platform/hermes/onemind-hermes/`, live config updated with `mcp/apply.sh`); `/execute` is not wired until Phase 4 is deployed. The Hermes cron scripts call `/ops` too; LiteLLM no longer serves MCP (Phase 6).
 
 ## What runs
 

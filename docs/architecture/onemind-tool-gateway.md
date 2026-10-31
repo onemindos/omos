@@ -546,7 +546,7 @@ Stdio-only servers (Karakeep, Nextcloud's stdio mode) get an `mcp-proxy` contain
 | `gateway-cloud-credentials` | `tool-gateway` | `github`, `digitalocean`, `cloudflare`, `n8n-mcp`, `n8n-api`, `backstage`, `argocd`, `cloudtak`, `tak-portal`, `core-read`, `mediamtx` | gateway (injected into requests it forwards) |
 | `mcp-<backend>-credentials` | `tool-gateway` | per backend (`grafana`, `clickhouse`, `karakeep`, `nextcloud`, `homeassistant`) | that backend only |
 | `execute-gate` | `tool-gateway` | `matrix-token`, `owner-mxid` (not secret), `nats-creds` | gate only |
-| `onemind-hermes-runtime` (existing) | `hermes` | add `ONEMIND_GATEWAY_KEY`; remove `ONEMIND_LITELLM_MCP_KEY` in Phase 6 | Hermes |
+| `onemind-hermes-runtime` (existing) | `hermes` | add `ONEMIND_GATEWAY_KEY`; `ONEMIND_LITELLM_MCP_KEY` is no longer referenced (Phase 6); the sealed value stays until the next reseal | Hermes |
 
 The Hermes `${ONEMIND_GATEWAY_KEY}` equals the `hermes` entry of `gateway-clients`, sealed twice from one generated value (never printed).
 
