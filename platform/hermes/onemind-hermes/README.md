@@ -248,6 +248,85 @@ optional Secret for it. Owner steps to enable it:
 Until then the job stays paused; if it is ever run without the Secret it fails loudly rather
 than silently skipping a backup.
 
+## How Legacy works: doctrine and worker roles
+
+One agent, one soul. GE, HP, LE and SO are modes of Legacy, not profiles. When work is big or parallel she
+dispatches five worker roles on Codex and a `checker` verifies their output before she reports it. The doctrine
+is the "How you work" section of `platform/hermes/seed/onemind-hermes/SOUL.md` (read every turn, about 400 more
+tokens than before); the role definitions are `roles/roles.yaml`.
+
+| Role | Model (`openai-codex`) | Toolsets | Job |
+|---|---|---|---|
+| `ops-cluster` | `gpt-6.1-sol` | terminal, file, web, skills, todo, session_search | cluster, Argo, K8s, NATS, Tailscale ops |
+| `tak-mission` | `gpt-6.1-sol` | same | TAK, missions, CoT, video |
+| `builder` | `gpt-6.1-sol` | + code_execution | code, manifests, branches, PRs (never merges) |
+| `researcher` | `gpt-6.1-terra` | web, file, skills, todo, session_search | web and docs research |
+| `checker` | `gpt-6.1-terra` | terminal, file, web, skills, todo, session_search | verifies other workers' output |
+
+Models are those `provider_models_cache.json` lists for `openai-codex` in the pod. `terra` is the cheaper tier
+(about half of `sol` per token in the models.dev cache); `luna` is cheaper still but too weak for review.
+
+### What Hermes v0.22.5 actually supports (read from `/opt/hermes`)
+
+- **`delegate_task` has no named roles.** The bundled `default` backend gives every child one route: the
+  `delegation.provider` / `delegation.model` section or the parent's own (`plugins/delegation/default/__init__.py`
+  `route_task`). `provider`, `model`, `role` and `toolsets` are reserved task names and not model-facing
+  (`agent/delegation_provider.py` `RESERVED_TASK_PARAMETERS`; `role` is ignored, capability is depth-derived,
+  `tools/delegate_tool.py:242`). A pluggable backend can add an enum parameter and answer with a route, including
+  `profile` = run the child as that Hermes profile (`tools/delegate_tool_routes.py` `_profile_route`: the
+  profile's own config, model, SOUL and toolsets). So a per-role model needs a backend plugin, and this PR ships
+  one: `roles/plugin/legacy-roles/` adds `worker` (enum of the five) to every task; no `worker` = the default
+  route. It is a user plugin (`$HERMES_HOME/plugins/`, `kind: backend`, gated by `plugins.enabled`,
+  `hermes_cli/plugins_discovery.py` `gate_manifest`), selected by `delegation.backend: legacy-roles`.
+- **`hermes kanban swarm` roles are profiles.** `--worker PROFILE:TITLE[:SKILL,..]`, `--verifier PROFILE`,
+  `--synthesizer PROFILE` (`hermes_cli/kanban_parser.py:222`, `kanban_swarm.py`); the card's assignee must satisfy
+  `profile_exists` or the dispatcher will not spawn it (`kanban_db_dispatch.py:2077`, `2329`). The worker runs
+  `hermes -p <profile>` with that profile's `HERMES_HOME`, model and `platform_toolsets.cli`
+  (`_default_spawn`, `_resolve_worker_cli_toolsets`). The dispatcher is embedded in the gateway (60 s tick; gateway
+  log "kanban dispatcher: embedded in gateway"). `kanban swarm` is CLI-only (no tool), so Legacy runs it through
+  her terminal tool.
+- **Profiles share the Codex pool; no second sign-in.** `read_credential_pool` returns the default profile's
+  `credential_pool` whenever the profile has zero entries for that provider (`hermes_cli/auth.py:948`, global-root
+  `auth.json` read-only fallback `:507`); `_load_provider_state` does the same for OAuth state (`:836`), and a
+  refresh that rotates the grant writes it back to the root store (`agent/credential_pool.py:724`). So role
+  profiles carry no `auth.json`, and `credential_pool_strategies: {openai-codex: least_used}` in their own
+  config spreads turns across both accounts. (`hermes profile create --clone` would copy the grant and fork it;
+  `strip_cloned_single_use_oauth_grants` exists to undo that. The applier never clones.)
+- **Where the soul comes from.** `/opt/data/SOUL.md`, a plain file. It is identical to
+  `platform/hermes/seed/onemind-hermes/SOUL.md` (checked before this change); the init container does not seed it,
+  `config.defaults.yaml` only seeds `config.yaml`, and `MIGRATION.md` step 2 copied it by hand. A role profile's
+  `SOUL.md` is its whole brief (`roles.yaml`), so a role has no identity of its own.
+- **Skills** are shared read-only: each role sets `skills.external_dirs` to `/opt/data/skills` and
+  `/opt/data/onemind-skills`, so swarm cards that name a skill (`requesting-code-review`, `humanizer`) resolve
+  without copying 56 MB per role.
+
+### Applying it (idempotent)
+
+`config.defaults.yaml` only seeds an empty volume, so a running instance gets this with one script:
+
+```bash
+platform/hermes/onemind-hermes/roles/apply.sh --dry-run   # shows create/update/unchanged
+platform/hermes/onemind-hermes/roles/apply.sh
+```
+
+It pushes `roles/` and the repository `SOUL.md` to `/opt/data/roles-defs`, then runs `apply_roles.py` as `hermes`:
+installs `SOUL.md` and the `legacy-roles` plugin; creates the five profiles (`--no-alias --no-skills`, no
+credentials) with their model, `credential_pool_strategies`, `platform_toolsets.cli`, `skills.external_dirs`, and
+the default profile's `approvals`, `security`, `agent.disabled_toolsets` and `mcp_servers` (copied raw, `${VAR}`
+unexpanded, so it follows whatever the default profile has); sets `delegation.backend: legacy-roles` and adds
+`legacy-roles` to `plugins.enabled`. Anything it overwrites is copied first to
+`/opt/data/backups/legacy-roles-<UTC stamp>/`; a second run prints `unchanged` for everything. It never reads or
+writes `auth.json` or any `.env`.
+
+The `delegation` and `plugins` keys are deliberately **not** in `config.defaults.yaml`: on a fresh volume the
+backend would be selected before its plugin exists, and an unavailable backend fails `delegate_task` closed.
+After applying, the plugin loads at the next gateway start, and a new session (`/new`) is needed for the new soul
+and tool schema. Rollback: `hermes config set delegation.backend default`, and restore `SOUL.md` from the backup
+directory.
+
+Workers run with `approvals.mode: manual`, which has no human in a worker session: a flagged command times out
+and is denied, which is the safe direction. Workers get no authority Legacy lacks.
+
 ## TODO
 
 - Ollama Cloud fallback: seal `OLLAMA_API_KEY` into `onemind-hermes-runtime` (or
