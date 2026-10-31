@@ -1,10 +1,10 @@
 /**
  * Hermes desktop plugin template. Save as:
  *   <hermes home>/desktop-plugins/<id>/plugin.js   (folder name == id)
- * where <hermes home> is ~/.hermes by default, or ~/.hermes/profiles/<name>
- * when running a named profile (`hermes -p <name>`). Run `hermes doctor` (or
- * check the app's Settings → Plugins folder path) if unsure which is active.
- * Then run "Reload desktop plugins" from ⌘K in the desktop app.
+ * where <hermes home> is ~/.hermes by default (one app-level root for all
+ * profiles). Capabilities → Plugins → "Open Desktop plugins folder" in the app
+ * shows the exact path. The app hot-reloads on save; if the plugin does not
+ * appear, run "Reload desktop plugins" from ⌘K.
  *
  * Plain ESM, loaded uncompiled — UI is jsx() calls, not JSX syntax.
  * Only these imports resolve: @hermes/plugin-sdk, react, react/jsx-runtime.

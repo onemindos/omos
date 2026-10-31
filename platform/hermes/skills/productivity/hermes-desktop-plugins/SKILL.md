@@ -20,7 +20,11 @@ changes. A plugin can also talk to its own Python backend namespace
 system (`~/.hermes/plugins/`) is otherwise documented separately.
 
 Full human reference (every export, area payloads, backend, security):
-`website/docs/developer-guide/desktop-plugin-sdk.md`.
+`website/docs/developer-guide/desktop-plugin-sdk.md` in the hermes-agent repo.
+Upstream also ships this contract as
+`skills/autonomous-ai-agents/hermes-agent/references/desktop-plugins.md`
+(in the pod at `/opt/hermes/skills/...`); if the two disagree, upstream wins.
+Checked against Hermes Desktop (app.asar built 2026-09-24) and Hermes v0.22.5.
 
 ## When to Use
 
@@ -35,14 +39,16 @@ Full human reference (every export, area payloads, backend, security):
   file, then hand it to the owner to drop into their own
   `~/.hermes/desktop-plugins/<name>/` on the machine that runs the app.
 - Write access to `$HERMES_HOME/desktop-plugins/` (usually
-  `~/.hermes/desktop-plugins/`).
+  `~/.hermes/desktop-plugins/`). This is one app-level root for every profile
+  and gateway; there is no per-profile plugin directory.
 
 ## How to Run
 
 1. Create `$HERMES_HOME/desktop-plugins/<name>/plugin.js` from
-   `templates/plugin.js` (relative to this skill directory) — that's
-   `~/.hermes/...` by default, or `~/.hermes/profiles/<profile>/...` under a
-   named profile. Keep `<name>` equal to the plugin `id`.
+   `templates/plugin.js` (relative to this skill directory). Keep `<name>`
+   equal to the plugin `id`. (A plugin that also ships a Python half can instead
+   live at `$HERMES_HOME/plugins/<id>/desktop/plugin.js`; the app copies it into
+   `desktop-plugins/<id>/`, and that half is OFF until the user enables it.)
 2. The desktop app watches that directory: the plugin loads within a few
    seconds of the file landing, and every later save hot-reloads it in
    place. No reload step. (Fallback if it doesn't appear: ⌘K →
@@ -110,10 +116,14 @@ The ONLY import surface is `@hermes/plugin-sdk` (plus `react` /
   permanent contributions.
 - `defaultEnabled: false` on the default export ships an opt-in plugin: it
   inventories in Capabilities → Plugins, off until the user flips it on.
-- Users manage plugins in **Capabilities → Plugins** in the desktop app
-  (enable/disable live, reveal folder) — NOT 'Settings → Plugins'; there is no
-  Plugins item under Settings. A disabled plugin stays disabled across
-  restarts — don't fight it; the user turned you off.
+- Users manage plugins in **Capabilities → Plugins** (enable/disable live,
+  rescan, reveal folder). **Settings → Plugins** is different: it holds a
+  plugin's own preference pages, added with `ctx.registerSettingsPage`. A
+  disabled plugin stays disabled across restarts — don't fight it.
+- Cleanup: use `ctx.setTimeout`, `ctx.setInterval`, `ctx.addEventListener`
+  and `ctx.onDispose(fn)`. Bare `window.setInterval` or injected DOM survives
+  disable and hot reload and stacks copies. Module top level has a 10 s load
+  deadline: do any waiting inside `register()`.
 - UI: the app's design language, importable directly — `Button`, `Input`,
   `Textarea`, `Select*`, `Switch`, `Checkbox`, `SegmentedControl`, `Tabs*`,
   `Dialog*`, `ConfirmDialog`, `DropdownMenu*`, `ContextMenu*`, `Popover*`,
