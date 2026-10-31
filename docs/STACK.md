@@ -310,7 +310,8 @@ rollback: [runbook](operations/onemind-mcp.md).
 
 ## Prepared Beeper deployment — 2026-10-31
 
-**Source prepared, not live:** Tier 2, namespace `beeper-bridges`, Argo Application
+**[Draft PR #605](https://github.com/onemindos/omos/pull/605), source prepared, not live:**
+Tier 2, namespace `beeper-bridges`, Argo Application
 `platform-beeper-bridges` (manual sync). Five single-replica connectors for
 WhatsApp, Telegram, Google Messages, Instagram and X use retained per-bridge
 state, version/checksum-locked binaries and a pinned manager image. The existing

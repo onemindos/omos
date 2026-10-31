@@ -64,3 +64,10 @@ The existing DigitalOcean cluster is an on-grid deployment. The user's future of
 ## Validation
 
 Required local checks include `make validate`, scoped changed-YAML lint, `kubectl kustomize platform/beeper-bridges`, manifest schema validation, script ShellCheck and the Beeper GitOps contracts. Existing whole-repository validation debt must be reported separately from new-file results. No Terraform apply, Helm install or imperative workload apply is part of validation.
+
+Source validation on October 31: 7 offline runtime tests and the repository's
+218 GitOps tests passed (6 existing skips), with changed-file YAML lint,
+ShellCheck, Kustomize/schema validation, installed VolSync schema validation,
+MCP coverage, paired catalog generation, Terraform validation and secret scan.
+`make validate` stops on existing unrelated YAML formatting debt; the scoped
+new-file checks pass. GitHub CI runs on [PR #605](https://github.com/onemindos/omos/pull/605).

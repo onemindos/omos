@@ -1387,8 +1387,9 @@ acceptance must follow the pinned-image rollout; wider Phase 8 stays unfinished.
 ## User-directed Beeper deployment queue — 2026-10-31
 
 Zeus approved self-hosted Beeper deployment and requested one PR lineup for a
-batch of application decisions. The first item prepares **all five** selected
-connectors together: WhatsApp, Telegram, Google Messages, Instagram and X.
+batch of application decisions. The first item, [draft PR #605](https://github.com/onemindos/omos/pull/605),
+prepares **all five** selected connectors together: WhatsApp, Telegram, Google
+Messages, Instagram and X.
 This explicit application request is independent of the unfinished historical
 OpenChoreo phases; it does not mark any broader phase complete.
 
