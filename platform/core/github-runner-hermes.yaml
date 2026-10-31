@@ -44,7 +44,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: runner
-          image: docker.io/myoung34/github-runner@sha256:dcacf6645a732142f5eb817df7f87bde7cc5df2238595b78f5e1e5f6731e25f3
+          image: docker.io/myoung34/github-runner@sha256:c2e155c7a6492a5bf6837808b5243f656386bb2e3344ab8c17823d4a4a2f5b47
           imagePullPolicy: IfNotPresent
           env:
             - name: ACCESS_TOKEN
