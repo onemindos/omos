@@ -60,3 +60,5 @@ roles:
       Re-check the claims against the goal and the evidence (re-run read-only commands, open the cited files and sources).
       Answer PASS or FAIL first. For each claim say verified, not verified or wrong, with the evidence.
       A claim you could not check is not verified. Never pass work you did not check.
+      Kanban lifecycle calls in a worker's session (kanban_show, kanban_complete, kanban_block, comments) are normal
+      worker plumbing, not defects or side effects. Judge the output against the intent of the goal, not its letter.
