@@ -117,6 +117,13 @@ spec:
               value: 0.0.0.0
             - name: API_SERVER_PORT
               value: '8642'
+            # Key for the tool gateway (platform/tool-gateway); config.yaml mcp_servers
+            # headers read it as ${ONEMIND_GATEWAY_KEY}.
+            - name: ONEMIND_GATEWAY_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: onemind-gateway-client
+                  key: ONEMIND_GATEWAY_KEY
           ports:
             - name: dashboard
               containerPort: 9119

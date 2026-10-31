@@ -25,6 +25,20 @@ separate agents here.
   MCP servers, channels, schedules, Legacy memory or conversation history are
   copied. `MIGRATION.md` lists what moves over and in which order.
 
+## Tool gateway (MCP)
+
+Legacy gets its tools from the agentgateway tool gateway (`platform/tool-gateway`, runbook
+[`docs/operations/tool-gateway.md`](../../../docs/operations/tool-gateway.md)): servers `ops`, `data` and `tak`,
+tools named `<target>_<tool>`. The Deployment passes `ONEMIND_GATEWAY_KEY` from Secret `onemind-gateway-client`;
+`config.defaults.yaml` references it as `${ONEMIND_GATEWAY_KEY}` in the `Authorization` header. Keep
+`gateway.multiplex_profiles` off, or `${VAR}` in headers is not filled.
+
+`config.defaults.yaml` only seeds an empty volume. To change the live `/opt/data/config.yaml` run
+`mcp/apply.sh` (add `--dry-run` first): it sets `ops`, `data` and `tak` exactly as in the defaults, removes the
+old LiteLLM `onemind` entry, writes `config.yaml.bak-mcp-<timestamp>` before changing anything and touches no other
+key. A second run prints only `unchanged`. Hermes reads `mcp_servers` at start, so restart the pod afterwards.
+Check with `hermes mcp test ops|data|tak` inside the pod.
+
 ## Labels and selectors
 
 `app.kubernetes.io/name: onemind-hermes` is the selector for the Deployment,
@@ -52,7 +66,8 @@ checked against the v0.22.5 code in the image and passed its
 | `approvals.mode` | `manual` | Dangerous commands wait for a human instead of the LLM judge (`smart` default) |
 | `approvals.cron_mode`, `single_query_mode`, `unattended_mode` | `deny` | Cron, one-shot and API-server sessions never run flagged commands (matches the default; pinned) |
 | `security.redact_secrets` / `allow_private_urls` | `true` / `false` | Defaults, pinned |
-| `plugins.enabled` / `mcp_servers` | `[]` / `{}` | MCP is added later, through LiteLLM |
+| `plugins.enabled` | `[]` | No custom plugins |
+| `mcp_servers` | `ops`, `data`, `tak` | The tool gateway routes (`http://agentgateway.tool-gateway.svc.cluster.local:8080/<group>/mcp`), key `Authorization: Bearer ${ONEMIND_GATEWAY_KEY}`. Eager connect (`lazy` unset), `trust` default. `/execute` is not added until the execute gate is deployed |
 
 `agent.disabled_toolsets` is applied last and per tool. It lists `yuanbao` (the
 Yuanbao platform tools) rather than `hermes-yuanbao`: the latter is the whole
@@ -71,11 +86,11 @@ credential or Paperclip credential. The NetworkPolicy allows:
 
 - ingress on 9119 (dashboard) from the `tailscale` namespace;
 - egress to cluster DNS;
-- egress on TCP 4000 to the LiteLLM pods in `onemind-ai`
-  (`app.kubernetes.io/name: litellm`), the planned MCP hub. LiteLLM's own
-  `litellm-clients` ingress policy does not admit this pod yet; it needs a rule
-  for `app.kubernetes.io/name: onemind-hermes` in namespace `hermes` before
-  traffic flows;
+- egress on TCP 8080 to the tool gateway pod in `tool-gateway`
+  (`app.kubernetes.io/name: agentgateway-standalone`), the MCP front door; its own
+  NetworkPolicy admits this pod;
+- egress on TCP 4000 to the LiteLLM pods in `onemind-ai`, still used by the cron
+  scripts' MCP client (see "Scheduled jobs"); Phase 6 removes it;
 - egress on 443 to public addresses, with private, cluster and tailnet ranges
   excluded.
 
