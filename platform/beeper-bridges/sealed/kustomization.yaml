@@ -1,0 +1,4 @@
+# Populated by scripts/prepare_beeper_secrets.py after owner account login.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources: []

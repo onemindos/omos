@@ -1383,3 +1383,19 @@ Git-declared Applications. Credential-gated and unimplemented app integrations
 remain blocked and visible; broad coverage is not claimed complete. No cluster
 administration, vault-content permission or physical actuation is added. Runtime
 acceptance must follow the pinned-image rollout; wider Phase 8 stays unfinished.
+
+## User-directed Beeper deployment queue — 2026-10-31
+
+Zeus approved self-hosted Beeper deployment and requested one PR lineup for a
+batch of application decisions. The first item prepares **all five** selected
+connectors together: WhatsApp, Telegram, Google Messages, Instagram and X.
+This explicit application request is independent of the unfinished historical
+OpenChoreo phases; it does not mark any broader phase complete.
+
+Source is prepared under [`platform/beeper-bridges`](platform/beeper-bridges/README.md),
+owned by the manual-sync `platform-beeper-bridges` Argo Application. It includes
+separate retained state, pinned connector artifacts, backup resources and a
+credential-sealing procedure. Account authorization, sealed credentials, batch
+activation and real Android/Mac acceptance remain pending. No live deployment
+is claimed. Docker app removal/centralization decisions are a subsequent queue;
+this change does not remove any application or volume.

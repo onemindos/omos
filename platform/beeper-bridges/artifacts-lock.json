@@ -1,0 +1,42 @@
+{
+  "whatsapp": {
+    "type": "whatsapp",
+    "binary": "mautrix-whatsapp",
+    "url": "https://mau.dev/mautrix/whatsapp/-/jobs/120047/artifacts/raw/mautrix-whatsapp",
+    "sha256": "889fb4eebf00cf78e46374f52dd82530b0371f3a5f7f76c66b3913ac7c096e85",
+    "version": "git-9f8224606920ae9d3aa5bbfc067e1cfe5d8b7475",
+    "commit": "9f8224606920ae9d3aa5bbfc067e1cfe5d8b7475"
+  },
+  "telegram": {
+    "type": "telegram",
+    "binary": "mautrix-telegram",
+    "url": "https://mau.dev/mautrix/telegram/-/jobs/119833/artifacts/raw/mautrix-telegram",
+    "sha256": "29ff0c33829f2761c5642aa6e9f79a215c0005e30d309424c050aeaa67c59ebf",
+    "version": "git-83d7e6bd610e7d17447a68d30fcaeed6b066845f",
+    "commit": "83d7e6bd610e7d17447a68d30fcaeed6b066845f"
+  },
+  "gmessages": {
+    "type": "gmessages",
+    "binary": "mautrix-gmessages",
+    "url": "https://mau.dev/mautrix/gmessages/-/jobs/118680/artifacts/raw/mautrix-gmessages",
+    "sha256": "fbbdd362219ad4d73db7297d5a4c3d02201dde4d665ba1f55a1b0ad5b698540d",
+    "version": "git-34e04906fced8ac9da1de7bc139c3e7647d8ebf5",
+    "commit": "34e04906fced8ac9da1de7bc139c3e7647d8ebf5"
+  },
+  "instagram": {
+    "type": "instagram",
+    "binary": "mautrix-instagram",
+    "url": "https://mau.dev/mautrix/meta/-/jobs/119927/artifacts/raw/mautrix-instagram",
+    "sha256": "72ab485e8d3dbbaf2e1937d7093e912804b6841c4cd7c5b0052960e277461cb8",
+    "version": "git-4a7ebd929a549d8dcb4d6c12cd5a94fde66fc42d",
+    "commit": "4a7ebd929a549d8dcb4d6c12cd5a94fde66fc42d"
+  },
+  "twitter": {
+    "type": "twitter",
+    "binary": "mautrix-twitter",
+    "url": "https://mau.dev/mautrix/twitter/-/jobs/119848/artifacts/raw/mautrix-twitter",
+    "sha256": "d0981441c1442866f68a232286fccee2a502e6760c62878ed572d3f44c1949bc",
+    "version": "git-95cfd6f32d845d922cb84b0cbea54957c6aba79c",
+    "commit": "95cfd6f32d845d922cb84b0cbea54957c6aba79c"
+  }
+}
