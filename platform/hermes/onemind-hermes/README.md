@@ -89,8 +89,6 @@ credential or Paperclip credential. The NetworkPolicy allows:
 - egress on TCP 8080 to the tool gateway pod in `tool-gateway`
   (`app.kubernetes.io/name: agentgateway-standalone`), the MCP front door; its own
   NetworkPolicy admits this pod;
-- egress on TCP 4000 to the LiteLLM pods in `onemind-ai`, still used by the cron
-  scripts' MCP client (see "Scheduled jobs"); Phase 6 removes it;
 - egress on 443 to public addresses, with private, cluster and tailnet ranges
   excluded.
 
@@ -185,12 +183,14 @@ runner accepts, symlinks out of it are refused) and `jobs.yaml` plus `apply_jobs
 `cron/apply.sh`. A second apply prints `unchanged` for every job; fields that drifted are
 updated, and `paused` in `jobs.yaml` is enforced both ways. Jobs not in the file are left alone.
 
-Data sources and network: the pod has no Kubernetes token and egress only to DNS, LiteLLM
-(`onemind-ai`, TCP 4000), Synapse and public 443. So the scripts call the read-only `onemind`
-MCP tools through the LiteLLM gateway with `ONEMIND_LITELLM_MCP_KEY`
-(`onemind-prometheus_query`, `-alertmanager_alerts`, `-argocd_applications`,
-`-nats_*`, `-opencost_allocation`). Verified: Hermes' script runner passes that variable to
-scripts. No `network.yaml` change was needed; the export's SSH goes to `ssh.github.com:443`,
+Data sources and network: the pod has no Kubernetes token and egress only to DNS, the tool gateway
+(`tool-gateway`, TCP 8080), Synapse and public 443. So the scripts call the read-only `onemind`
+tools on the gateway's `/ops` route with `ONEMIND_GATEWAY_KEY` (`onemind_prometheus_query`,
+`onemind_alertmanager_alerts`, `onemind_argocd_applications`, `onemind_nats_*`,
+`onemind_opencost_allocation`; the gateway is stateful, so `legacy_common.py` runs
+initialize and notifications/initialized before each call). Verified: Hermes' script runner passes that
+variable to scripts (`build_subprocess_env`). The export's SSH goes to `ssh.github.com:443`,
+which the public 443 rule already allows; the export's SSH goes to `ssh.github.com:443`,
 which the public 443 rule already allows. Prometheus has no cert-manager or Falco metrics, so
 the security scan reads Falco and certificate findings from Alertmanager only.
 

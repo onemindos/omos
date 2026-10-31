@@ -26,18 +26,6 @@ spec:
       ports:
         - {protocol: UDP, port: 53}
         - {protocol: TCP, port: 53}
-    # LiteLLM in onemind-ai is the planned MCP hub (and model gateway). The
-    # destination also needs a matching ingress rule in its litellm-clients policy.
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: onemind-ai
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: litellm
-              app.kubernetes.io/instance: litellm
-      ports:
-        - {protocol: TCP, port: 4000}
     # Tool gateway (agentgateway, platform/tool-gateway): the one tool front door (/ops, /data,
     # /tak). Matching ingress rule is in platform/tool-gateway/manifests/network.yaml.
     - to:

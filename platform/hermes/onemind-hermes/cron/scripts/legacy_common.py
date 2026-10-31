@@ -1,11 +1,12 @@
 """Shared helpers for the Legacy cron scripts (platform/hermes/onemind-hermes/cron/).
 
 Standard library only. Runs inside the onemind-hermes pod under Hermes' cron runner, which
-passes ONEMIND_LITELLM_MCP_KEY (verified: not scrubbed) and has no Kubernetes token.
+passes ONEMIND_GATEWAY_KEY (not scrubbed) and has no Kubernetes token.
 
-The pod's NetworkPolicy only reaches LiteLLM in onemind-ai on TCP 4000, so every cluster
-fact comes from the read-only onemind MCP tools behind LiteLLM (Prometheus, Alertmanager,
-Argo CD, NATS, OpenCost). Nothing here writes anything.
+The pod's NetworkPolicy reaches the tool gateway (agentgateway, namespace tool-gateway, TCP 8080),
+so every cluster fact comes from the read-only onemind tools on its /ops route (Prometheus,
+Alertmanager, Argo CD, NATS, OpenCost). Tools are named <target>_<tool>, e.g. onemind_prometheus_query.
+Nothing here writes anything.
 """
 
 import json
@@ -14,7 +15,8 @@ import sys
 import urllib.error
 import urllib.request
 
-MCP_URL = os.environ.get("ONEMIND_MCP_URL", "http://litellm.onemind-ai.svc.cluster.local:4000/mcp/")
+MCP_URL = os.environ.get("ONEMIND_MCP_URL", "http://agentgateway.tool-gateway.svc.cluster.local:8080/ops/mcp")
+_JSON = {"Content-Type": "application/json", "Accept": "application/json, text/event-stream"}
 
 
 class McpError(RuntimeError):
@@ -32,25 +34,39 @@ def _parse_body(raw):
     raise McpError("unparseable MCP reply")
 
 
+def _post(payload, headers, timeout):
+    req = urllib.request.Request(MCP_URL, data=json.dumps(payload).encode(), method="POST", headers=headers)
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return resp.headers.get("mcp-session-id"), resp.read().decode("utf-8", "replace")
+
+
+def _open_session(key, timeout):
+    """initialize + notifications/initialized; return the headers for later calls (the gateway is stateful)."""
+    headers = dict(_JSON, Authorization="Bearer " + key)
+    sid, raw = _post({"jsonrpc": "2.0", "id": 0, "method": "initialize", "params": {
+        "protocolVersion": "2025-06-18", "capabilities": {},
+        "clientInfo": {"name": "legacy-cron", "version": "1"}}}, headers, timeout)
+    if "error" in _parse_body(raw):
+        raise McpError("MCP initialize failed")
+    if sid:
+        headers["mcp-session-id"] = sid
+    _post({"jsonrpc": "2.0", "method": "notifications/initialized"}, headers, timeout)
+    return headers
+
+
 def call(tool, arguments=None, timeout=25):
-    """Call one onemind MCP tool through LiteLLM; return the list of text content items."""
-    key = os.environ.get("ONEMIND_LITELLM_MCP_KEY", "")
+    """Call one onemind tool through the tool gateway; return the list of text content items."""
+    key = os.environ.get("ONEMIND_GATEWAY_KEY", "")
     if not key:
-        raise McpError("ONEMIND_LITELLM_MCP_KEY is not set")
-    body = json.dumps({
-        "jsonrpc": "2.0", "id": 1, "method": "tools/call",
-        "params": {"name": tool, "arguments": arguments or {}},
-    }).encode()
-    req = urllib.request.Request(MCP_URL, data=body, method="POST", headers={
-        "x-litellm-api-key": "Bearer " + key,
-        "Content-Type": "application/json",
-        "Accept": "application/json, text/event-stream",
-    })
+        raise McpError("ONEMIND_GATEWAY_KEY is not set")
+    payload = {"jsonrpc": "2.0", "id": 1, "method": "tools/call",
+               "params": {"name": tool, "arguments": arguments or {}}}
     last = None
     for _ in range(2):  # one retry for a transient gateway blip
         try:
-            with urllib.request.urlopen(req, timeout=timeout) as resp:
-                reply = _parse_body(resp.read().decode("utf-8", "replace"))
+            headers = _open_session(key, timeout)
+            _, raw = _post(payload, headers, timeout)
+            reply = _parse_body(raw)
             break
         except urllib.error.HTTPError as exc:
             last = "HTTP %s" % exc.code
@@ -75,7 +91,7 @@ def call_json(tool, arguments=None, timeout=25):
 
 def prom(query):
     """Instant PromQL; returns [(labels_dict, float_value), ...]."""
-    data = call_json("onemind-prometheus_query", {"query": query})
+    data = call_json("onemind_prometheus_query", {"query": query})
     if not isinstance(data, dict) or data.get("status") != "success":
         raise McpError("prometheus query failed")
     out = []
@@ -89,7 +105,7 @@ def prom(query):
 
 def alerts():
     """Active Alertmanager alerts as dicts (Watchdog and InfoInhibitor dropped)."""
-    data = call_json("onemind-alertmanager_alerts")
+    data = call_json("onemind_alertmanager_alerts")
     if isinstance(data, dict):
         data = [data]
     out = []
@@ -117,7 +133,7 @@ def alert_ns(labels):
 
 
 def argo_apps():
-    data = call_json("onemind-argocd_applications", {"limit": 100})
+    data = call_json("onemind_argocd_applications", {"limit": 100})
     return data.get("applications", []) if isinstance(data, dict) else []
 
 

@@ -48,7 +48,7 @@ def main():
 
     for node in ("nats-0", "nats-1", "nats-2"):
         try:
-            lc.call_json("onemind-nats_server_stats", {"node": node})
+            lc.call_json("onemind_nats_server_stats", {"node": node})
         except lc.McpError:
             lines.append("nats node %s unreachable" % node)
 

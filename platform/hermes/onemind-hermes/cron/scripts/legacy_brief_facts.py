@@ -85,7 +85,7 @@ def backups():
 
 
 def cost():
-    data = lc.call_json("onemind-opencost_allocation", {"window": "24h"})
+    data = lc.call_json("onemind_opencost_allocation", {"window": "24h"})
     total, top = 0.0, []
 
     def walk(node):
@@ -108,12 +108,12 @@ def cost():
 
 def bus():
     out = []
-    js = lc.call_json("onemind-nats_jetstream_stats")
+    js = lc.call_json("onemind_nats_jetstream_stats")
     if isinstance(js, dict):
         out.append("JetStream: %s streams, %s consumers, %.1f GB stored" % (js.get("streams"), js.get("consumers"), float(js.get("bytes", 0)) / 1e9))
     for node in ("nats-0", "nats-1", "nats-2"):
         try:
-            st = lc.call_json("onemind-nats_server_stats", {"node": node})
+            st = lc.call_json("onemind_nats_server_stats", {"node": node})
             slow = st.get("slow_consumers", 0) if isinstance(st, dict) else 0
             if slow:
                 out.append("%s: %s slow consumer(s)" % (node, slow))

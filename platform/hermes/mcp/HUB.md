@@ -1,12 +1,18 @@
-# OneMind MCP hub (LiteLLM)
+# OneMind MCP hub
 
-> **Superseded 2026-10-30 (design, not yet implemented).** The owner replaced LiteLLM-as-MCP-hub with
-> **agentgateway** as Legacy's single tool front door; LiteLLM returns to model routing only. See
-> [`docs/architecture/onemind-tool-gateway.md`](../../../docs/architecture/onemind-tool-gateway.md) for the design, inventory,
-> execute gate and rollout. This file still describes what is **live today** (LiteLLM `mcp_servers`, key
-> `onemind-hermes-mcp`) and stays accurate until Phase 6 of that rollout retires it; do not extend it with new apps.
+> **The hub is the tool gateway (agentgateway), since Phase 6 on 2026-10-31.** LiteLLM no longer serves MCP:
+> its `mcp_servers` registration, the `litellm-mcp-upstreams` env reference and the `onemind-hermes`
+> egress/ingress rules to port 4000 are gone; LiteLLM remains the model gateway only. Legacy
+> (`onemind-hermes`) and its cron scripts reach tools at
+> `http://agentgateway.tool-gateway.svc.cluster.local:8080/<group>/mcp` with `ONEMIND_GATEWAY_KEY`.
+> See [`docs/architecture/onemind-tool-gateway.md`](../../../docs/architecture/onemind-tool-gateway.md) (design),
+> [`docs/operations/tool-gateway.md`](../../../docs/operations/tool-gateway.md) (runbook) and
+> `platform/tool-gateway/`. `hermes-legacy` is unaffected: it talks to `onemind-mcp` directly.
+>
+> `onemind-mcp` (this directory: `apps.yaml`, `coverage.yaml`, Deployment, NetworkPolicy) still runs as the gateway's
+> `onemind` target and as `hermes-legacy`'s MCP server. The text below is the historical LiteLLM design.
 
-Status: **intent, in Git; not live until merged and synced.** Verified against the running
+Historical status (2026-10-29): Verified against the running
 LiteLLM `v1.104.2` image (`ghcr.io/berriai/litellm`, digest `sha256:3d88bd75…`) on
 2026-10-29, read-only.
 
