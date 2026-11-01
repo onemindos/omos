@@ -317,3 +317,12 @@ a completed fresh volume snapshot plus private database/config exports.
 Provider deletion and recovery verification must be recorded from live evidence;
 this source change alone does not certify either. Preserve device originals and
 existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
+
+## Prepared LiveKit pilot — November1,2026 (not live inventory)
+
+Tier3 experimental `platform-livekit` / namespace `livekit` is prepared for manual
+Argo activation: stateless single SFU, private signaling and direct RTC connectivity.
+No rollout is claimed. Credentials, node firewall/media verification and client
+acceptance are pending. No Redis, recordings, PVC or Hermes plugin is installed.
+Git plus independently protected API/SealedSecrets recovery material cover recovery;
+active sessions are ephemeral. [Runbook](../platform/livekit/README.md).

@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: livekit
+  annotations:
+    tailscale.com/hostname: livekit
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: livekit
+      port:
+        number: 7880
+  tls:
+    - hosts:
+        - livekit
