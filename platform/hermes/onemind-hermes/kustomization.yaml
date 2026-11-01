@@ -21,6 +21,10 @@ resources:
   - mcp/zoho/zoho-workdrive.sealedsecret.yaml
   - mcp/zoho/zoho-mail-calendar.sealedsecret.yaml
 configMapGenerator:
+  - name: onemind-hermes-whop
+    files:
+      - reconcile.py=mcp/whop/reconcile.py
+      - server.json=mcp/whop/server.json
   - name: onemind-hermes-zoho
     files:
       - reconcile.py=mcp/zoho/reconcile.py

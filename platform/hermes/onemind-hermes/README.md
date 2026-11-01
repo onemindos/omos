@@ -53,6 +53,16 @@ as clean volumes, preserving other integrations. Initial exposure is an explicit
 read-only allowlist, not all upstream actions. See [Zoho setup, verification and
 recovery](mcp/zoho/README.md). Source preparation and live acceptance are separate.
 
+## Permanent hosted Whop MCP
+
+The existing hosted Whop MCP definition reconciles through the supported Hermes
+config CLI on every start, scoped only to `mcp_servers.whop`. Private OAuth state
+remains on the existing data PVC; its encrypted backups, not Git token snapshots,
+are the authentication recovery path. No standalone Whop CLI install, startup
+configuration or login is included. See [Whop MCP startup and recovery](mcp/whop/README.md).
+Source tests do not establish live backup/restore success or authorize financial
+actions.
+
 ## Labels and selectors
 
 `app.kubernetes.io/name: onemind-hermes` is the selector for the Deployment,
