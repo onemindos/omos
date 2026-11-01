@@ -55,7 +55,7 @@ the objects never leave `platform-legacy`'s desired state until the new owner ho
    SealedSecrets: only `metadata.annotations` of the SealedSecret changes; `spec.encryptedData` and the
    template are untouched, so the controller re-unseals the identical Secret in place (no delete).
 
-**Phase 2 (separate small change, after the verification below passes).** Remove the two
+**Phase 2 (separate small change, after the verification below passes; branch `hermes-app-ownership-phase2`).** Remove the two
 transfer-only sources from `platform/argocd/platform-legacy.yaml`. Because every object is then
 tracked by its new owner, and also carries `Prune=false`, `platform-legacy` has nothing it will prune.
 (Belt and braces: either condition alone prevents the delete.)
