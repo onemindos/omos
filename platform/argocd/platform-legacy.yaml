@@ -7,14 +7,9 @@
 #   platform/hermes/agent/  — Hermes/Legacy AI agent (kustomization.yaml)
 #   platform/hermes/bridge/ — legacy-only sealed secrets (hermes-env, hermes-leaf-conf, ghcr, cloudtak-agent-token)
 #
-# OWNERSHIP TRANSFER IN PROGRESS (2026-11-01, retirement of hermes-legacy):
-#   platform/hermes/mcp/  moves to Application platform-onemind-mcp
-#   platform/hermes/base/ moves to Application platform-hermes-base (Namespace hermes, egress
-#                         Services, Secrets that onemind-hermes mounts)
-# Both paths are listed below ONLY so that this Application keeps rendering the same objects while
-# the new Applications adopt them (the objects are in this Application's desired state throughout,
-# so nothing is pruned). They are removed from `sources` in a second change once every object's
-# argocd.argoproj.io/tracking-id names its new owner. Plan: platform/hermes/base/README.md.
+# platform/hermes/mcp/ (Application platform-onemind-mcp) and platform/hermes/base/ (Application
+# platform-hermes-base: Namespace hermes, egress Services, Secrets onemind-hermes mounts) were
+# transferred out of this Application on 2026-11-01. Plan: platform/hermes/base/README.md.
 #
 # Integration with CloudTAK:
 #   - Hermes publishes GeoChat via tak.cot.inject → appears in TAK comms panel
@@ -37,16 +32,6 @@ metadata:
 spec:
   project: default
   sources:
-    # TRANSFER-ONLY (see header): also owned by platform-onemind-mcp. Remove in phase 2.
-    - repoURL: https://github.com/onemindos/omos.git
-      targetRevision: main
-      path: platform/hermes/mcp
-    # TRANSFER-ONLY (see header): also owned by platform-hermes-base. Remove in phase 2.
-    - repoURL: https://github.com/onemindos/omos.git
-      targetRevision: main
-      path: platform/hermes/base
-      directory:
-        recurse: false
     - repoURL: https://github.com/onemindos/omos.git
       targetRevision: main
       path: platform/hermes/agent
@@ -62,10 +47,13 @@ spec:
     namespace: hermes
   syncPolicy:
     automated:
-      prune: true
+      # Retirement in progress (2026-11-01): nothing may be pruned by this Application any more.
+      # The shared objects moved to platform-hermes-base / platform-onemind-mcp; the unguarded
+      # ConfigMaps (onemind-mcp-apps-*, onemind-mcp-ca-*) carry no Prune=false, so this stops
+      # dropping the transfer-only sources from pruning them. Finalizer unchanged for now.
+      prune: false
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true
       - RespectIgnoreDifferences=true
   ignoreDifferences:
     - group: apps
