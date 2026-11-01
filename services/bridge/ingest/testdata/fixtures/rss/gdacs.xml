@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
+  <channel>
+    <title>Synthetic GDACS-style feed (test fixture)</title>
+    <item>
+      <title>Green alert for tropical cyclone SIM-1</title>
+      <guid isPermaLink="false">TC1000001</guid>
+      <link>https://example.org/tc/1000001</link>
+      <description>Synthetic test item.</description>
+      <pubDate>Thu, 29 Oct 2026 09:00:00 +0000</pubDate>
+      <geo:lat>14.5</geo:lat>
+      <geo:long>-61.25</geo:long>
+    </item>
+    <item>
+      <title>Orange alert for flood SIM-2</title>
+      <guid isPermaLink="false">FL1000002</guid>
+      <pubDate>Thu, 29 Oct 2026 09:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Item without any identifier</title>
+    </item>
+  </channel>
+</rss>
