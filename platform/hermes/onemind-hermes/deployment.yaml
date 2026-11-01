@@ -50,6 +50,18 @@ spec:
                       os.chmod(target, 0o600)
                       handle.write(source.read_bytes())
 
+              # This command overrides image stage2. Repair only the home/config
+              # ownership before the CLI shim drops root to the hermes user.
+              # Never recurse through user data or change other profiles.
+              import pwd
+              try:
+                  owner = pwd.getpwnam('hermes')
+              except KeyError:
+                  owner = None
+              if owner and os.geteuid() == 0:
+                  os.chown(target.parent, owner.pw_uid, owner.pw_gid)
+                  os.chown(target, owner.pw_uid, owner.pw_gid)
+
               # Reconcile Git-owned Zoho entries on BOTH existing and clean PVCs.
               # The manifest holds ${ENV} references only; credentials enter the main
               # container from SealedSecrets, never the config or init container.

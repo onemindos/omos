@@ -82,6 +82,41 @@ class ReconcileTests(unittest.TestCase):
         self.assertEqual(mount['mountPath'], '/zoho')
         self.assertTrue(mount['readOnly'])
 
+    def test_root_fresh_volume_ownership_precedes_privilege_drop(self):
+        from unittest.mock import patch
+        scratch_root = Path(os.environ.get('TMPDIR') or os.environ.get('RUNNER_TEMP')
+                            or Path.home() / '.cache/hermes/scratch')
+        scratch_root.mkdir(parents=True, exist_ok=True)
+        stage = Path(tempfile.mkdtemp(prefix='zoho-init-contract-', dir=scratch_root))
+        for folder in ('data', 'defaults', 'cron', 'zoho'):
+            (stage / folder).mkdir()
+        (stage / 'defaults/config.yaml').write_text('mcp_servers: {}\n')
+        spec = yaml.safe_load((BASE / 'deployment.yaml').read_text())['spec']['template']['spec']
+        script = next(c for c in spec['initContainers'] if c['name'] == 'initial-config')['command'][-1]
+        import re
+        substitutions = {'/opt/data': stage / 'data', '/defaults': stage / 'defaults',
+                         '/zoho': stage / 'zoho', '/cron': stage / 'cron'}
+        script = re.sub(r'/opt/data|/defaults|/zoho|/cron',
+                        lambda match: str(substitutions[match.group(0)]), script)
+        ownership = []
+        from types import SimpleNamespace
+        owner = SimpleNamespace(pw_uid=10000, pw_gid=10000)
+        def chown(path, uid, gid):
+            ownership.append((Path(path), uid, gid))
+        def run(argv, **kwargs):
+            self.assertEqual(ownership[:2], [
+                (stage / 'data', owner.pw_uid, owner.pw_gid),
+                (stage / 'data/config.yaml', owner.pw_uid, owner.pw_gid)])
+            self.assertEqual((stage / 'data/config.yaml').stat().st_mode & 0o777, 0o600)
+            return subprocess.CompletedProcess(argv, 0)
+        # This models the root init branch; the review environment is UID 10000
+        # and cannot create a genuinely root-owned fixture without elevation.
+        with patch('os.geteuid', return_value=0), patch('os.chown', side_effect=chown), \
+                patch('pwd.getpwnam', return_value=owner), \
+                patch('subprocess.run', side_effect=run):
+            exec(compile(script, '<fresh-root-init-contract>', 'exec'), {})
+        # Keep test artifacts; cleanup/deletion is not authorized by this suite.
+
     def test_read_only_explicit_policy(self):
         for settings in MANIFEST.values():
             self.assertFalse(settings['sampling']['enabled'])
