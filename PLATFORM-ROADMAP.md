@@ -1393,3 +1393,15 @@ a completed fresh volume snapshot plus private database/config exports.
 Provider deletion and recovery verification must be recorded from live evidence;
 this source change alone does not certify either. Preserve device originals and
 existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
+
+## User-directed independent Git recovery — 2026-11-01
+
+- [x] Prepare private Forgejo15LTS, retained single-volume SQLite/Git/LFS storage, restricted bootstrap and manual-sync Argo source.
+- [x] Prepare a scoped coordinator that quiesces the writer, exports an encrypted dated VolSync/Restic backup, then restores its prior replica count.
+- [ ] Supply strict SealedSecrets, review current capacity/storage/backup window and activate through Argo.
+- [ ] Enroll owner, pilot one GitHub pull mirror and verify Git/LFS/wiki plus independent restore before expanding.
+- [ ] Inventory/export GitHub PR/issues/releases and required GHCR images separately; automatic discovery and metadata backup are not implemented.
+
+GitHub stays primary. No origin, Actions, Argo source URL or registry cutover.
+Source preparation does not claim live deployment, mirror enrollment or recovery acceptance.
+See [Forgejo runbook](platform/forgejo/README.md).

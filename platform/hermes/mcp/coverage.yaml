@@ -248,3 +248,7 @@ applications:
     apps:
     - data_backups
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-forgejo:
+    apps:
+    - forgejo
+    reason: Private secondary forge owns Git mirrors and recovery state. Agent API remains disabled until authenticated read-only enrollment is reviewed.
