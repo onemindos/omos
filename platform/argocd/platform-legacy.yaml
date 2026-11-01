@@ -47,7 +47,11 @@ spec:
     namespace: hermes
   syncPolicy:
     automated:
-      prune: true
+      # Retirement in progress (2026-11-01): nothing may be pruned by this Application any more.
+      # The shared objects moved to platform-hermes-base / platform-onemind-mcp; the unguarded
+      # ConfigMaps (onemind-mcp-apps-*, onemind-mcp-ca-*) carry no Prune=false, so this stops
+      # dropping the transfer-only sources from pruning them. Finalizer unchanged for now.
+      prune: false
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
