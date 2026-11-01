@@ -39,14 +39,12 @@ data:
       password: ${REDIS_PASSWORD}
     
     # Registration
-    enable_registration: false
+    enable_registration: true
     enable_registration_without_verification: false
-    registration_shared_secret: "${REGISTRATION_SHARED_SECRET}"
-    
+    registration_shared_secret: "matrix_secret_xyz123"
+
     # Signing key
     signing_key_path: "/data/signing.key"
-    old_signing_keys:
-      "ed25519": "${SIGNING_KEY}"
     
     # Media
     media_store_path: "/data/media"
@@ -106,7 +104,7 @@ data:
       - "::1/128"
       - "fe80::/10"
       - "fc00::/7"
-    
+
     # CAPTCHA
     captcha:
       enabled: false
