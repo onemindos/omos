@@ -124,6 +124,23 @@ spec:
             summary: "NATS server {{ $labels.server_name }} has {{ $value }} cluster routes (expected 8)"
             description: "The 3-node cluster mesh is incomplete: a peer is unreachable or a route is flapping. JetStream replication and Raft quorum depend on these routes."
 
+        # CMD uses discard: old with maxBytes 512 MiB (platform/nats/streams/cmd.yaml), so a
+        # full stream deletes its oldest command records. Under discard: new it would refuse to
+        # store new ones, yet core subscribers still receive them (A22-P2). 429496729 = 80% of
+        # 536870912. Keep this number in step with cmd.yaml. Baseline 2026-10-29: 166 bytes.
+        - alert: NATSCmdStreamNearFull
+          expr: max(nats_stream_total_bytes{job="nats-surveyor", stream="CMD"}) > 429496729
+          for: 5m
+          labels:
+            severity: warning
+            service: nats
+          annotations:
+            summary: "CMD stream is above 80% of its 512 MiB cap"
+            description: >-
+              CMD holds {{ $value | humanize1024 }}B. At 512 MiB it deletes the oldest command records
+              (discard: old); a full stream never stops commands being delivered. Raise maxBytes in
+              cmd.yaml or archive the audit trail before records older than 365 days are lost.
+
     # ─── AI Brain ────────────────────────────────────────────────────────────
     - name: onemind.hermes
       interval: 30s

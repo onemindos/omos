@@ -14,5 +14,6 @@ spec:
   retention: limits
   discard: old
   maxAge: 2160h
-  duplicateWindow: 2m
+  maxBytes: 1073741824
+  duplicateWindow: 1h
   preventDelete: true

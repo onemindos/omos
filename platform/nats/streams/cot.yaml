@@ -13,6 +13,10 @@ spec:
   replicas: 3
   retention: limits
   discard: old
-  maxAge: 720h
+  # 720h -> 72h REMOVES DATA on sync: live COT held 4.95 GB / 9.53 M messages back to
+  # 2026-09-29 (jsz, 2026-10-29), about 165 MB/day; 72h keeps about 0.5 GB. No JetStream
+  # consumer reads COT. Owner proposal A22-P1, docs/proposals/2026-10-29-stream-caps.md.
+  maxAge: 72h
+  maxBytes: 3221225472
   duplicateWindow: 2m
   preventDelete: true

@@ -15,10 +15,15 @@ spec:
     - "tel.iot.>"
     - "tel.industrial.>"
     - "tel.sat.>"
+    # Feed freshness heartbeats (tel.feed.{source}.status; BUS-DESIGN BUS-P1, omos-ingest).
+    - "tel.feed.>"
   storage: file
   replicas: 3
   retention: limits
   discard: old
-  maxAge: 168h
+  maxAge: 72h
+  maxBytes: 4294967296
+  maxMsgsPerSubject: 2000
+  allowDirect: true
   duplicateWindow: 2m
   preventDelete: true
