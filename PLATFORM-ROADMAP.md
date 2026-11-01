@@ -1383,3 +1383,13 @@ Git-declared Applications. Credential-gated and unimplemented app integrations
 remain blocked and visible; broad coverage is not claimed complete. No cluster
 administration, vault-content permission or physical actuation is added. Runtime
 acceptance must follow the pinned-image rollout; wider Phase 8 stays unfinished.
+
+## Nextcloud retirement — 2026-11-01
+
+Zeus authorized retiring Nextcloud and its 200 GiB file/1 GiB cache volumes
+to use Dropbox. Deployment manifests are archived under
+`platform/parked/nextcloud`; the Argo Application is removed. Execution requires
+a completed fresh volume snapshot plus private database/config exports.
+Provider deletion and recovery verification must be recorded from live evidence;
+this source change alone does not certify either. Preserve device originals and
+existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.

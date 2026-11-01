@@ -241,10 +241,6 @@ apps:
     title: Velero
     system: data-storage
     description: Cluster backup and restore.
-  - name: nextcloud
-    title: Nextcloud
-    system: data-storage
-    description: Private file and vault sync for the Mac and Android (Nextcloud, its Redis and the files volume).
   - name: volsync
     title: VolSync
     system: data-storage
