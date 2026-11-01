@@ -12,6 +12,10 @@ resources:
   - gateway-client.sealedsecret.yaml
   - backup.sealedsecret.yaml
 configMapGenerator:
+  # Hash-pinned Python packages for the NATS gateway platform (install-gateway-deps init container).
+  - name: onemind-hermes-gateway-deps
+    files:
+      - gateway-deps.txt=nats/gateway-deps.txt
   - name: onemind-hermes-defaults
     files:
       - config.yaml=config.defaults.yaml

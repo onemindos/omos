@@ -1,0 +1,9 @@
+# Python packages the NATS gateway platform needs and the Hermes v0.22.5 image lacks. Installed with
+# `uv pip install --no-deps --require-hashes` by the install-gateway-deps init container (deployment.yaml),
+# so pydantic and pynacl from the image's venv are used, not replaced. Same versions hermes-legacy runs.
+# nkeys has only an sdist on PyPI (pure Python, built at install).
+# To bump: take the sha256 from https://pypi.org/pypi/<name>/<version>/json and edit both lines.
+nats-py==2.16.0 --hash=sha256:aeb1ff123966c05833d26c7df7e1d54c1c6d32b612428b21677a2e921f1fecae
+nkeys==0.2.1 --hash=sha256:3a201dcd203d8bb05ba2884d441b2c92918b2a537a10d324e73738887dde9da3
+synadia-ai-agents==0.8.1 --hash=sha256:214a6ff4faa52c04b20f8719f9aecd70d3b4a72180cb9abe49eaf75559a03024
+synadia-ai-agent-service==0.5.0 --hash=sha256:2f860f065c6e623e79896fc0e1ddbdcae5ab908e8de71de181c574944fba24f0

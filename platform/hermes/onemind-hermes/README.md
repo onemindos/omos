@@ -66,7 +66,7 @@ checked against the v0.22.5 code in the image and passed its
 | `approvals.mode` | `manual` | Dangerous commands wait for a human instead of the LLM judge (`smart` default) |
 | `approvals.cron_mode`, `single_query_mode`, `unattended_mode` | `deny` | Cron, one-shot and API-server sessions never run flagged commands (matches the default; pinned) |
 | `security.redact_secrets` / `allow_private_urls` | `true` / `false` | Defaults, pinned |
-| `plugins.enabled` | `[]` | No custom plugins |
+| `plugins.enabled` | `[]` | No custom plugins in the seed. The apply scripts add `legacy-roles` (`roles/apply.sh`) and, at the NATS cutover, `nats-platform` (`nats/apply.sh`) |
 | `mcp_servers` | `ops`, `data`, `tak` | The tool gateway routes (`http://agentgateway.tool-gateway.svc.cluster.local:8080/<group>/mcp`), key `Authorization: Bearer ${ONEMIND_GATEWAY_KEY}`. Eager connect (`lazy` unset), `trust` default. `/execute` is not added until the execute gate is deployed |
 
 `agent.disabled_toolsets` is applied last and per tool. It lists `yuanbao` (the
@@ -89,6 +89,9 @@ credential or Paperclip credential. The NetworkPolicy allows:
 - egress on TCP 8080 to the tool gateway pod in `tool-gateway`
   (`app.kubernetes.io/name: agentgateway-standalone`), the MCP front door; its own
   NetworkPolicy admits this pod;
+- egress on TCP 4222 to the NATS pods in `nats` (a direct client of the bus, see
+  [NATS](#nats-legacys-bus-presence)); the `nats-clients` policy in
+  `platform/nats/network-policy.yaml` admits this pod;
 - egress on 443 to public addresses, with private, cluster and tailnet ranges
   excluded.
 
@@ -341,6 +344,35 @@ directory.
 
 Workers run with `approvals.mode: manual`, which has no human in a worker session: a flagged command times out
 and is denied, which is the safe direction. Workers get no authority Legacy lacks.
+
+## NATS: Legacy's bus presence
+
+Legacy is a **direct client of the cluster bus**, like every other cloud workload: no leaf sidecar (the
+`hermes-legacy` sidecar is the one documented exception, `CLAUDE.md` "Bus Authority"; do not copy it).
+Inventory of what Legacy does on NATS, what was ported and the switch order are in
+[`MIGRATION.md`](MIGRATION.md#nats-inventory-and-cutover-step-7). Summary:
+
+- Identity `agents.{prompt,status,hb}.hermes.zeus.legacy` through the Synadia agent protocol plugin
+  `nats-platform` (vendored in `platform/hermes/agent/plugins/nats-platform/`; no start-up hot-patch, because
+  Hermes v0.22.5 has no native NATS platform and the one line the patch fixed is now in the vendored file).
+- Connection settings are in `deployment.yaml` (URL `tls://nats.nats.svc.cluster.local:4222`, user and password from
+  Secret `omos-nats-creds`, CA from Secret `hermes-nats-ca`, identity, `HERMES_NATS_REFUSE_DUPLICATE=true`). They are
+  inert until the plugin is listed in `plugins.enabled`.
+- Python packages come from the `install-gateway-deps` init container (hash-pinned in `nats/gateway-deps.txt`,
+  installed once to `/opt/data/.local/gateway-deps`).
+- **Applying** (idempotent, backs up what it overwrites, restarts only the gateway process on request):
+
+  ```sh
+  platform/hermes/onemind-hermes/nats/apply.sh --status
+  platform/hermes/onemind-hermes/nats/apply.sh --dry-run
+  platform/hermes/onemind-hermes/nats/apply.sh --restart          # nats-platform only
+  platform/hermes/onemind-hermes/nats/apply.sh --with-context     # also nats-context (off by default)
+  platform/hermes/onemind-hermes/nats/apply.sh --disable --restart   # rollback switch
+  ```
+
+- While `hermes-legacy` still holds the identity, onemind-hermes connects, sees it, and waits instead of
+  registering; it takes the identity over by itself once Legacy lets go. That makes enabling it first safe.
+- `tak-platform` is not ported; PR #585 replaces it with a TAK-native client.
 
 ## TODO
 
