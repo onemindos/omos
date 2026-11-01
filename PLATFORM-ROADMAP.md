@@ -1399,3 +1399,12 @@ a completed fresh volume snapshot plus private database/config exports.
 Provider deletion and recovery verification must be recorded from live evidence;
 this source change alone does not certify either. Preserve device originals and
 existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
+
+## Deferred Mattermost + TAK evaluation — 2026-11-01
+
+Zeus requested a detailed future plan and explicitly deferred deployment. The
+[research, edition boundaries, proposed integration and acceptance gates](docs/roadmap/mattermost-tak-future-integration.md)
+are recorded for serious reconsideration. No Application, plugin, secret, bus
+contract or live setting is added. TAK artifact availability/rights and actual
+free-versus-commercial requirements remain unresolved. Implementation/adoption
+needs a later decision; this entry changes no phase completion or deployment state.
