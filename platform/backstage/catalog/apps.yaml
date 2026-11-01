@@ -423,6 +423,69 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: district47
+  title: District47
+  description: >-
+    External reference for ATAK plugins and KMZ data packages, radios, mesh and
+    power hardware, and field training. No OneMind affiliation or integration
+    implied.
+  tags:
+    - tak-ecosystem
+    - reference
+  links:
+    - url: https://district47.us
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://district47.us
+    onemind.io/launcher-category: TAK Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: xmpp-for-tak
+  title: XMPP for TAK
+  description: >-
+    Self-hosted messaging for ATAK’s TAK Chat plugin and standard desktop/mobile
+    XMPP clients, with persistent rooms, direct messages and a future Hermes
+    bridge. Deferred; plugin compatibility and integration remain untested.
+  tags:
+    - tak-ecosystem
+    - planned
+  links:
+    - url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/xmpp-for-tak
+      title: Planning card
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/xmpp-for-tak
+    onemind.io/launcher-category: TAK Ecosystem
+    onemind.io/documented-status: Planned — deferred, not deployed; plugin
+      compatibility and integration untested
+    onemind.io/hosting: planned-not-deployed
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: argocd
   title: ArgoCD
   description: GitOps CD
