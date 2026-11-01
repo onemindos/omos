@@ -93,8 +93,6 @@ export const mapping: InventoryMapping = {
     'nats/nats-metrics-scrape': 'component:default/nats',
     'nats/nats-surveyor': 'component:default/nats-surveyor',
     'nats/nats-ui': 'component:default/nats-ui',
-    'nextcloud/nextcloud': 'component:default/nextcloud',
-    'nextcloud/nextcloud-redis': 'component:default/nextcloud',
     'omos/feed-intel': 'component:default/omos-data-pipeline',
     'omos/feed-satellites': 'component:default/omos-data-pipeline',
     'omos/omos-mission-engine': 'component:default/omos-data-pipeline',
@@ -371,12 +369,6 @@ export const mapping: InventoryMapping = {
     'nats-ui': {
       title: 'NATS UI',
       system: 'messaging-nats',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    nextcloud: {
-      title: 'Nextcloud',
-      system: 'data-storage',
       pillar: 'so',
       review: 'proposed',
     },

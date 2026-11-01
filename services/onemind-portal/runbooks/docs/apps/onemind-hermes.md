@@ -7,7 +7,7 @@ Hermes v0.22.5 instance with the single Legacy soul in the hermes namespace (Arg
 ## Where it runs
 
 - Catalog entity: `component:default/onemind-hermes` in System `ai-agents`
-- Argo CD application: `platform-onemind-hermes`
+- Argo CD applications: `platform-hermes-base`, `platform-onemind-hermes`
 - Namespace: `hermes`
 
 ## Workloads

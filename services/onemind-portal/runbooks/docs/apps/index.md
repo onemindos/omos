@@ -40,7 +40,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [NATS Dashboard](nats-dashboard.md) | messaging-nats |
 | [NATS Surveyor](nats-surveyor.md) | messaging-nats |
 | [NATS UI](nats-ui.md) | messaging-nats |
-| [Nextcloud](nextcloud.md) | data-storage |
 | [Ollama](ollama.md) | ai-agents |
 | [OMOS data pipeline](omos-data-pipeline.md) | messaging-nats |
 | [OneMind core services](onemind-core.md) | infrastructure |

@@ -8289,6 +8289,7 @@ metadata:
     grafana/alert-label-selector: namespace=hermes
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=onemind-hermes
     onemind.io/logs-query: '{k8s_namespace_name="hermes", k8s_pod_name=~"(onemind-hermes)-.*"}'
+    onemind.io/argocd-apps: platform-hermes-base,platform-onemind-hermes
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8663,6 +8664,35 @@ spec:
   system: gitops-delivery
   dependencyOf:
     - component:default/argocd
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-hermes-base
+  title: Argo CD application platform-hermes-base
+  description: Argo CD application platform-hermes-base, one of the applications
+    that deploy Legacy (onemind-hermes) (component:default/onemind-hermes, whose
+    primary application is platform-onemind-hermes).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-hermes-base
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-hermes-base
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: ai-agents
+  dependencyOf:
+    - component:default/onemind-hermes
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
