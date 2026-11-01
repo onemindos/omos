@@ -51,7 +51,8 @@ the app catalog, NATS, LiteLLM or Backstage's existing MCP.
    Legacy consume this **same** namespaced Secret, avoiding cross-namespace copies.
    This task authorizes the new integration credential; unrelated credentials must
    not be read or rotated.
-5. Add a third source to `platform/argocd/platform-legacy.yaml`, path
+5. (Historical: since 2026-11-01 `platform/hermes/mcp` is its own Application,
+   `platform-onemind-mcp`; see `platform/hermes/base/README.md`.) Add a third source to `platform/argocd/platform-legacy.yaml`, path
    `platform/hermes/mcp`, targetRevision `main`. Keep its existing sources and sync
    policy. Set the new SealedSecret's sync wave to -2 and MCP Deployment's to -1
    so the authenticated MCP is ready before Legacy's default wave. Argo owns all

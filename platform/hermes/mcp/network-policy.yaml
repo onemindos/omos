@@ -3,6 +3,8 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: onemind-mcp
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
 spec:
   podSelector:
     matchLabels:

@@ -10,6 +10,7 @@ metadata:
   labels:
     tailscale.com/proxy-group: egress
   annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
     tailscale.com/tailnet-ip: 100.74.182.117   # Zeus's MacBook Pro: SSH
 spec:
   type: ExternalName
@@ -28,6 +29,7 @@ metadata:
   labels:
     tailscale.com/proxy-group: egress
   annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
     tailscale.com/tailnet-ip: 100.121.191.94   # S24 Ultra: Termux SSH
 spec:
   type: ExternalName
@@ -46,6 +48,7 @@ metadata:
   labels:
     tailscale.com/proxy-group: egress
   annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
     tailscale.com/tailnet-ip: 100.64.25.12     # Home Assistant: REST API (box offline since about 2026-09-19)
 spec:
   type: ExternalName

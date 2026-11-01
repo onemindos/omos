@@ -104,7 +104,9 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-volsync` | ops | VolSync operator (chart 0.16.0) | none | n/a | internal | Argo |
 | `platform-ops` | ops | `health-keeper` read-only cluster observer (every 5 minutes). Logs only, it does not alert | none | Git | internal | Argo |
 | `ecosystem-velero` | velero | Velero (chart 12.2.1) and the `velero-onemind-platform` schedule | backups in Spaces | n/a | internal | Argo |
-| `platform-legacy` | hermes | Hermes "Legacy" agent (`nousresearch/hermes-agent`, NATS leaf sidecar) and bridge secrets | 25 GiB PVC (agent home, state.db) | `VolSync` | `hermes-agent` dashboard tailnet | Argo |
+| `platform-hermes-base` | hermes | Namespace `hermes`, the Tailscale egress Services (`omos-ha-edge`, `omos-mbp`, `omos-s24`) and the Secrets both Hermes instances mount (`hermes-dashboard-auth`, `omos-nats-creds`, `hermes-nats-ca`); `prune: false`, no finalizer, objects carry `Prune=false,Delete=false` (`platform/hermes/base/README.md`; added 2026-11-01) | none | n/a | none | Argo |
+| `platform-onemind-mcp` | hermes | `onemind-mcp` tool server (the tool gateway's `onemind` target); split out of `platform-legacy` on 2026-11-01, no finalizer | none | n/a | `onemind-mcp.hermes.svc` in-cluster only | Argo |
+| `platform-legacy` | hermes | Hermes "Legacy" agent (`nousresearch/hermes-agent`, NATS leaf sidecar) and its own bridge secrets. Being retired; ownership transfer of the shared objects to `platform-hermes-base` and `platform-onemind-mcp` in progress (`platform/hermes/base/README.md`), until it completes this Application still lists `platform/hermes/mcp` and `platform/hermes/base` as transfer-only sources | 25 GiB PVC (agent home, state.db) | `VolSync` | `hermes-agent` dashboard tailnet | Argo |
 | `platform-onemind-hermes` | hermes | `onemind-hermes`: new Hermes v0.22.5 instance (persona Legacy, single soul), replaces the `hermes-fresh` launch; runtime acceptance in deployment PR. NATS cutover prepared in Git, not applied: a direct client of the bus (no sidecar) with the Legacy identity `agents.*.hermes.zeus.legacy`; the plugin stays off until `nats/apply.sh` runs (`MIGRATION.md`). The `hermes-fresh` resources were removed on 2026-10-29 except the PVC `hermes-fresh-data`, kept pending owner approval (`platform/hermes/onemind-hermes/README.md`) | New 25 GiB `onemind-hermes-data` (`do-block-storage-retain`); no Legacy import | `VolSync` to its own Restic prefix; restore acceptance pending | `onemind-hermes` dashboard tailnet | Argo |
 
 ### Helm-CLI releases (tier 1)
@@ -296,7 +298,7 @@ See [setup, cost and acceptance](../platform/nextcloud/README.md).
 
 ## OneMind application MCP — verified 2026-10-27
 
-Tier 2, namespace `hermes`, Deployment `onemind-mcp`, owned by `platform-legacy`.
+Tier 2, namespace `hermes`, Deployment `onemind-mcp`, owned by `platform-onemind-mcp` (moved from `platform-legacy` on 2026-11-01).
 Stateless private app tools for Legacy: NATS node/JetStream stats and Prometheus
 instant queries, with a discoverable app catalog. One available replica, 100m CPU /
 128Mi memory requests; no database/PVC. Git source/catalog and SealedSecrets are

@@ -10,12 +10,15 @@
 #  Wave 1 │ BUS         platform-nats            NATS 3-node HA StatefulSet, TLS, tailnet LB
 #         │             edge-nack                NACK JetStream controller
 #         │ OPERATORS   platform-clickhouse-op   Altinity ClickHouse Operator
-#  Wave 2 │ BUS         platform-nats-streams    Stream/KeyValue CRs (platform/nats/streams), after NACK
+#  Wave 2 │ AI          platform-hermes-base     hermes namespace + shared egress/secrets (platform/hermes/base)
+#         │ BUS         platform-nats-streams    Stream/KeyValue CRs (platform/nats/streams), after NACK
 #         │ TAK         platform-onetak          OneTAK API/Events/Media/Tiles
 #         │             platform-takserver       TAK Server overlay (LB, NATS leaf, config)
 #         │             platform-takml           TAK ML vision pipeline (inference → CoT)
 #         │ AUTH        platform-auth-infra      Authentik Postgres + Redis + ingress + secret
-#  Wave 3 │ AI          platform-legacy          Hermes AI agent + copilot bridge
+#  Wave 3 │ AI          platform-legacy          Hermes AI agent + copilot bridge (old instance, being retired)
+#         │             platform-onemind-hermes  new Hermes instance (persona Legacy)
+#         │             platform-onemind-mcp     onemind-mcp tool server (tool gateway target)
 #         │ DATA        platform-observability   ClickHouse (Altinity)
 #         │             platform-redpanda        Redpanda Connect pipelines
 #         │ SERVICES    platform-omos            tak-projector, feeds, mission-engine

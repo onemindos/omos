@@ -14,7 +14,7 @@ Each page condenses the Git-owned documents named under "Sources" and was checke
 | Sealed Secrets | [Sealed Secrets](sealed-secrets.md) | `component:default/platform-core` | `platform-core` |
 | Backups and ops | [Backups and ops](backups-ops.md) | `component:default/platform-backup-recovery`, `volsync`, `velero`, `health-keeper` | `platform-backups`, `platform-volume-backups`, `platform-volsync`, `ecosystem-velero`, `platform-ops` |
 | Argo CD | [Argo CD](argocd.md) | `component:default/argocd` | `platform-argocd`, `app-of-apps` |
-| Hermes | [Hermes](hermes.md) | `component:default/hermes-legacy` | `platform-legacy`, `platform-onemind-hermes` |
+| Hermes | [Hermes](hermes.md) | `component:default/hermes-legacy` | `platform-legacy`, `platform-onemind-hermes`, `platform-hermes-base` |
 
 `docs/STACK.md` also proposes the Tailscale operator for tier 1, because every admin UI is reachable only through it. It has no page here until that proposal is accepted; see its generated page, [Tailscale operator and proxies](../apps/tailscale-operator.md).
 

@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: onemind-mcp
   annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
     argocd.argoproj.io/sync-wave: "-1"
 spec:
   replicas: 1

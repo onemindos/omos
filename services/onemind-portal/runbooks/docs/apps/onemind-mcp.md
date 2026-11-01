@@ -7,7 +7,7 @@ MCP server giving Hermes typed tools for in-cluster apps (NATS monitoring, Prome
 ## Where it runs
 
 - Catalog entity: `component:default/onemind-mcp` in System `ai-agents`
-- Argo CD application: none recorded for this app
+- Argo CD application: `platform-onemind-mcp`
 - Namespace: `hermes`
 
 ## Workloads
