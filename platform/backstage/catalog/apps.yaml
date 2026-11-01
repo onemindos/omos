@@ -223,8 +223,8 @@ kind: System
 metadata:
   name: ai-agents
   title: AI & agents
-  description: Legacy (onemind-hermes), agent consoles, model gateways and runtimes, model
-    providers and workflow automation.
+  description: Legacy (onemind-hermes), agent consoles, model gateways and
+    runtimes, model providers and workflow automation.
   labels:
     onemind.io/catalog-axis: deployment
     onemind.io/pillar: so
@@ -1298,12 +1298,150 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: cotak
+  title: COTAK
+  description: >-
+    External Colorado TAK program and guest resources.
+  tags:
+    - tak-ecosystem
+    - reference
+  links:
+    - url: https://cotak.gov/pages/guest-home
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: gotak
+  title: GoTAK
+  description: >-
+    External TAK ecosystem products and resources.
+  tags:
+    - tak-ecosystem
+    - reference
+  links:
+    - url: https://getgotak.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: takgrid
+  title: TAKGRID
+  description: >-
+    External TAK ecosystem services and resources.
+  tags:
+    - tak-ecosystem
+    - reference
+  links:
+    - url: https://takgrid.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: omnitak-external
+  title: OmniTAK (external project)
+  description: >-
+    External third-party OmniTAK project; unrelated to OneMind and its retired
+    OmniTAK name.
+  tags:
+    - tak-ecosystem
+    - reference
+  links:
+    - url: https://omnitak.engindearing.soy
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: engindearing-projects
+  title: engindearing-projects
+  description: >-
+    External GitHub organization for engindearing projects, including OmniTAK.
+  tags:
+    - tak-ecosystem
+    - reference
+  links:
+    - url: https://github.com/engindearing-projects
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: tak-product-center
   title: TAK Product Center
   description: TAK ecosystem repositories
   tags:
     - tak-ecosystem
   links:
+    - url: https://github.com/TAK-Product-Center
+      title: GitHub organization
     - url: https://github.com/orgs/TAK-Product-Center/repositories
       title: Open application
       icon: dashboard
@@ -1377,7 +1515,7 @@ metadata:
   tags:
     - tak-ecosystem
   links:
-    - url: https://www.eolianvr.com/
+    - url: https://www.eolianvr.com
       title: Open application
       icon: dashboard
   annotations:

@@ -316,6 +316,11 @@ apps:
     system: personal-tools
     description: Native bookmark and read-later workspace prepared with manual Argo and zero replicas; first start, owner enrollment and recovery acceptance are pending.
 placement:
+  engindearing-projects: tak-ecosystem
+  omnitak-external: tak-ecosystem
+  takgrid: tak-ecosystem
+  gotak: tak-ecosystem
+  cotak: tak-ecosystem
   1password: identity-access
   agent-mail: ai-agents
   agent-monitor: ai-agents
