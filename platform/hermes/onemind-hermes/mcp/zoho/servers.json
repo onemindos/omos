@@ -1,0 +1,208 @@
+{
+  "zoho-ops": {
+    "url": "${ZOHO_OPS_MCP_URL}",
+    "connect_timeout": 60,
+    "timeout": 120,
+    "sampling": {
+      "enabled": false
+    },
+    "tools": {
+      "include": [
+        "ZohoOne_get_all_orgs",
+        "ZohoOne_get_org",
+        "ZohoOne_get_all_users",
+        "ZohoOne_get_user",
+        "ZohoOne_get_all_groups",
+        "ZohoOne_get_all_locations",
+        "ZohoWebinar_listWebinars",
+        "ZohoWebinar_getWebinarDetails",
+        "ZohoSocial_getSocialBrands",
+        "ZohoSocial_getSocialPortals",
+        "ZohoSocial_getSocialChannels",
+        "ZohoSocial_getSocialPublishedPosts",
+        "ZohoBookings_getWorkspaces",
+        "ZohoSign_getRequestList",
+        "ZohoMeeting_listMeetings"
+      ],
+      "resources": false,
+      "prompts": false
+    }
+  },
+  "zoho-data-analytics": {
+    "url": "${ZOHO_DATA_ANALYTICS_MCP_URL}",
+    "connect_timeout": 60,
+    "timeout": 120,
+    "sampling": {
+      "enabled": false
+    },
+    "tools": {
+      "include": [
+        "ZohoAnalytics_getOrganizations",
+        "ZohoAnalytics_getOwnedWorkspaces",
+        "ZohoAnalytics_getAllWorkspaces",
+        "ZohoAnalytics_getViews",
+        "ZohoAnalytics_getViewDetails",
+        "ZohoAnalytics_getFolders",
+        "ZohoDataprep_getProject",
+        "ZohoPageSense_listPortals",
+        "ZohoPageSense_getAllProjects",
+        "ZohoPageSense_getUserIdentity"
+      ],
+      "resources": false,
+      "prompts": false
+    }
+  },
+  "zoho-desk": {
+    "url": "${ZOHO_DESK_MCP_URL}",
+    "connect_timeout": 60,
+    "timeout": 120,
+    "sampling": {
+      "enabled": false
+    },
+    "tools": {
+      "include": [
+        "ZohoDesk_getAccounts",
+        "ZohoDesk_searchAccounts",
+        "ZohoDesk_getContact",
+        "ZohoDesk_getThreads",
+        "ZohoDesk_getTicketConversations",
+        "ZohoDesk_getBacklogTickets",
+        "ZohoDesk_getOnholdTickets",
+        "ZohoDesk_getTeams"
+      ],
+      "resources": false,
+      "prompts": false
+    }
+  },
+  "zoho-projects": {
+    "url": "${ZOHO_PROJECTS_MCP_URL}",
+    "connect_timeout": 60,
+    "timeout": 120,
+    "sampling": {
+      "enabled": false
+    },
+    "tools": {
+      "include": [
+        "ZohoProjects_get_portals",
+        "ZohoProjects_get_portal_details",
+        "ZohoProjects_get_projects_list",
+        "ZohoProjects_get_tasks_by_portal",
+        "ZohoProjects_get_task_list_details",
+        "ZohoProjects_get_all_issues",
+        "ZohoProjects_get_issue_description",
+        "ZohoProjects_get_portal_activity"
+      ],
+      "resources": false,
+      "prompts": false
+    }
+  },
+  "zoho-crm": {
+    "url": "${ZOHO_CRM_MCP_URL}",
+    "connect_timeout": 60,
+    "timeout": 120,
+    "sampling": {
+      "enabled": false
+    },
+    "tools": {
+      "include": [
+        "ZohoCRM_getOrganizations",
+        "ZohoCRM_getOrganization",
+        "ZohoCRM_getWorkflowTasks",
+        "ZohoCRM_getScheduledReports",
+        "ZohoCRM_getHomePages",
+        "ZohoCRM_getNotifications"
+      ],
+      "resources": false,
+      "prompts": false
+    }
+  },
+  "zoho-finance": {
+    "url": "${ZOHO_FINANCE_MCP_URL}",
+    "connect_timeout": 60,
+    "timeout": 120,
+    "sampling": {
+      "enabled": false
+    },
+    "tools": {
+      "include": [
+        "ZohoBilling_List_all_Organizations",
+        "ZohoBilling_Get_an_Organization",
+        "ZohoBilling_List_all_Subscriptions",
+        "ZohoBilling_List_all_Products",
+        "ZohoBooks_list_bills",
+        "ZohoBooks_get_expense",
+        "ZohoBooks_list_recurring_expenses"
+      ],
+      "resources": false,
+      "prompts": false
+    }
+  },
+  "zoho-salesiq": {
+    "url": "${ZOHO_SALESIQ_MCP_URL}",
+    "connect_timeout": 60,
+    "timeout": 120,
+    "sampling": {
+      "enabled": false
+    },
+    "tools": {
+      "include": [
+        "ZohoSalesIQ_listPortals",
+        "ZohoSalesIQ_getPortalDetails",
+        "ZohoSalesIQ_getCurrentOperator",
+        "ZohoSalesIQ_getConversationsList",
+        "ZohoSalesIQ_getConversationById",
+        "ZohoSalesIQ_getConversationMessages",
+        "ZohoSalesIQ_listOperators"
+      ],
+      "resources": false,
+      "prompts": false
+    }
+  },
+  "zoho-workdrive": {
+    "url": "${ZOHO_WORKDRIVE_MCP_URL}",
+    "connect_timeout": 60,
+    "timeout": 120,
+    "sampling": {
+      "enabled": false
+    },
+    "tools": {
+      "include": [
+        "ZohoWorkdrive_Get_User_Info",
+        "ZohoWorkdrive_Get_All_Teams_Of_User",
+        "ZohoWorkdrive_Get_Team_Info",
+        "ZohoWorkdrive_Get_Current_Team_User",
+        "ZohoWorkdrive_Get_File_List",
+        "ZohoWorkdrive_Fetch_Files_Folders",
+        "ZohoWorkdrive_Search_Records",
+        "ZohoWorkdrive_Get_All_Team_Folders"
+      ],
+      "resources": false,
+      "prompts": false
+    }
+  },
+  "zoho-mail-calendar": {
+    "url": "${ZOHO_MAIL_CALENDAR_MCP_URL}",
+    "connect_timeout": 60,
+    "timeout": 120,
+    "sampling": {
+      "enabled": false
+    },
+    "tools": {
+      "include": [
+        "ZohoMail_getMailAccounts",
+        "ZohoMail_getAccountDetails",
+        "ZohoMail_listEmails",
+        "ZohoMail_SearchEmails",
+        "ZohoMail_getMessageContent",
+        "ZohoMail_getMessageDetails",
+        "ZohoMail_getAllFolders",
+        "ZohoCalendar_get_calendars",
+        "ZohoCalendar_get_single_calendar",
+        "ZohoCalendar_get_event",
+        "ZohoCalendar_get_busy_slots"
+      ],
+      "resources": false,
+      "prompts": false
+    }
+  }
+}
