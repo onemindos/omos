@@ -1,0 +1,55 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: hermes
+resources:
+  - pvc.yaml
+  - deployment.yaml
+  - service.yaml
+  - network.yaml
+  - backup.yaml
+  - runtime.sealedsecret.yaml
+  # Client key for the tool gateway; deployment.yaml exposes it as ONEMIND_GATEWAY_KEY (Phase 5).
+  - gateway-client.sealedsecret.yaml
+  - backup.sealedsecret.yaml
+  - mcp/zoho/zoho-ops.sealedsecret.yaml
+  - mcp/zoho/zoho-data-analytics.sealedsecret.yaml
+  - mcp/zoho/zoho-desk.sealedsecret.yaml
+  - mcp/zoho/zoho-projects.sealedsecret.yaml
+  - mcp/zoho/zoho-crm.sealedsecret.yaml
+  - mcp/zoho/zoho-finance.sealedsecret.yaml
+  - mcp/zoho/zoho-salesiq.sealedsecret.yaml
+  - mcp/zoho/zoho-workdrive.sealedsecret.yaml
+  - mcp/zoho/zoho-mail-calendar.sealedsecret.yaml
+configMapGenerator:
+  - name: onemind-hermes-onepassword
+    files:
+      - reconcile.py=onepassword/reconcile.py
+      - settings.json=onepassword/settings.json
+      - install_cli.py=onepassword/install_cli.py
+  - name: onemind-hermes-whop
+    files:
+      - reconcile.py=mcp/whop/reconcile.py
+      - server.json=mcp/whop/server.json
+  - name: onemind-hermes-zoho
+    files:
+      - reconcile.py=mcp/zoho/reconcile.py
+      - servers.json=mcp/zoho/servers.json
+  # Hash-pinned Python packages for the NATS gateway platform (install-gateway-deps init container).
+  - name: onemind-hermes-gateway-deps
+    files:
+      - gateway-deps.txt=nats/gateway-deps.txt
+  - name: onemind-hermes-defaults
+    files:
+      - config.yaml=config.defaults.yaml
+  # Scheduled-job scripts, the declarative job list and its applier (cron/, README "Scheduled
+  # jobs"). The init container refreshes them on every start; they are Git-owned, unlike config.
+  - name: onemind-hermes-cron
+    files:
+      - legacy_common.py=cron/scripts/legacy_common.py
+      - legacy_codex_usage.py=cron/scripts/legacy_codex_usage.py
+      - legacy_brief_facts.py=cron/scripts/legacy_brief_facts.py
+      - legacy_infra_health.py=cron/scripts/legacy_infra_health.py
+      - legacy_security_scan.py=cron/scripts/legacy_security_scan.py
+      - legacy_config_export.py=cron/scripts/legacy_config_export.py
+      - jobs.yaml=cron/jobs.yaml
+      - apply_jobs.py=cron/apply_jobs.py
