@@ -423,6 +423,68 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: tacsync
+  title: TacSync
+  description: >-
+    External tactical reference for team awareness in milsims, with private map
+    sessions joined by QR code and no TAK server setup. Listed by request in TAK
+    Ecosystem; no TAK interoperability or OneMind integration is claimed.
+  tags:
+    - tak-ecosystem
+    - reference
+  links:
+    - url: https://tacsync.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://tacsync.com
+    onemind.io/launcher-category: TAK Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cesium-ion-for-tak
+  title: Cesium ion for TAK
+  description: >-
+    External reference to Cesium ion for TAK plugins for 3D Tiles, imagery and
+    terrain from cloud or self-hosted Cesium ion sources. No OneMind deployment,
+    integration or tested compatibility is claimed.
+  tags:
+    - tak-ecosystem
+    - reference
+  links:
+    - url: https://github.com/CesiumGS/cesium-ion-for-TAK-plugins
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/CesiumGS/cesium-ion-for-TAK-plugins
+    onemind.io/launcher-category: TAK Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: district47
   title: District47
   description: >-

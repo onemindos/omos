@@ -12,6 +12,8 @@ const docs = YAML.parseAllDocuments(text).map(doc => {
 });
 const placement = YAML.parse(fs.readFileSync(path.join(root, 'catalog/structure.yaml'), 'utf8')).placement;
 const links = {
+  tacsync: 'https://tacsync.com',
+  'cesium-ion-for-tak': 'https://github.com/CesiumGS/cesium-ion-for-TAK-plugins',
   district47: 'https://district47.us',
   cotak: 'https://cotak.gov/pages/guest-home',
   gotak: 'https://getgotak.com',
@@ -53,6 +55,29 @@ for (const [name, url] of Object.entries(links)) {
     assert.equal(category, 'TAK Ecosystem', `${name} must match the home category dropdown`);
   });
 }
+test('new tactical references explicitly launch external sources without runtime claims', () => {
+  const descriptions = {
+    tacsync: 'External tactical reference for team awareness in milsims, with private map sessions joined by QR code and no TAK server setup. Listed by request in TAK Ecosystem; no TAK interoperability or OneMind integration is claimed.',
+    'cesium-ion-for-tak': 'External reference to Cesium ion for TAK plugins for 3D Tiles, imagery and terrain from cloud or self-hosted Cesium ion sources. No OneMind deployment, integration or tested compatibility is claimed.',
+  };
+  for (const [name, description] of Object.entries(descriptions)) {
+    const entity = docs.find(e => e.kind === 'Component' && e.metadata.name === name);
+    assert.ok(entity, name);
+    assert.equal(entity.metadata.description, description);
+    assert.ok(entity.metadata.tags.includes('reference'));
+    assert.equal(entity.metadata.annotations['onemind.io/launcher-url'], links[name]);
+    assert.equal(entity.metadata.annotations['onemind.io/launcher-category'], 'TAK Ecosystem');
+    assert.deepEqual(entity.metadata.links, [{ url: links[name], title: 'External reference', icon: 'dashboard' }]);
+    for (const key of Object.keys(entity.metadata.annotations)) {
+      assert.ok(!/^(argocd\/|backstage.io\/kubernetes-|onemind.io\/(verified-at|deployment))/.test(key), key);
+    }
+  }
+});
+test('TAK Home reference source and mounted catalog stay byte-identical', {
+  skip: !fs.existsSync(path.join(root, '../../platform/backstage/catalog/apps.yaml')),
+}, () => {
+  assert.equal(text, fs.readFileSync(path.join(root, '../../platform/backstage/catalog/apps.yaml'), 'utf8'));
+});
 test('XMPP for TAK is a deferred Home planning card, not a running endpoint', () => {
   const matches = docs.filter(e => e.kind === 'Component' && e.metadata.name === 'xmpp-for-tak');
   assert.equal(matches.length, 1);

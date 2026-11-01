@@ -313,6 +313,8 @@ placement:
   worldmonitor: intelligence
   argos-atlas: intelligence
   gods-eye-view: intelligence
+  tacsync: tak-ecosystem
+  cesium-ion-for-tak: tak-ecosystem
   xmpp-for-tak: tak-ecosystem
   district47: tak-ecosystem
   engindearing-projects: tak-ecosystem
