@@ -3,6 +3,13 @@
 #
 # The NATS server is TLS-enabled in-cluster, so Surveyor mounts the cluster CA
 # and verifies the server certificate before exporting Prometheus metrics.
+#
+# The $SYS password is never committed here. It comes from the
+# nats-surveyor-creds Secret (key: password) in the nats namespace. That Secret
+# must be committed only as the SealedSecret
+# platform/monitoring/nats-surveyor-creds.sealedsecret.yaml. Surveyor reads
+# NATS_SURVEYOR_PASSWORD natively, so the password is not passed as an argument
+# and stays off the command line.
 ---
 apiVersion: v1
 kind: Service
@@ -50,12 +57,17 @@ spec:
             - --servers=tls://nats.nats.svc.cluster.local:4222
             - --count=3
             - --user=sys
-            - --password=Rhl2yQDxruJ6X09bS7qdZV0ZHRyP
             - --tlscacert=/etc/nats-ca/ca.crt
             - --port=7777
             - --addr=0.0.0.0
             - --jsz=all
             - --accounts
+          env:
+            - name: NATS_SURVEYOR_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nats-surveyor-creds
+                  key: password
           ports:
             - name: metrics
               containerPort: 7777
