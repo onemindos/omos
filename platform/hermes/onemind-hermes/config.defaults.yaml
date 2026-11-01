@@ -119,6 +119,14 @@ MATRIX_USER_ID: '@legacy:onemindos.dev'
 # headers (${VAR} rendered from env), lazy, trust, timeout, connect_timeout. Unset: lazy
 # (connect at start, so tool counts are known) and trust (default full).
 mcp_servers:
+  whop:
+    url: https://mcp.whop.com/mcp
+    auth: oauth
+    connect_timeout: 300
+    oauth:
+      timeout: 300
+    sampling:
+      enabled: false
   ops:
     url: http://agentgateway.tool-gateway.svc.cluster.local:8080/ops/mcp
     headers:

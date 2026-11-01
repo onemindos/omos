@@ -72,6 +72,12 @@ spec:
                   '--manifest', '/zoho/servers.json',
               ], check=True)
 
+              # Whop owns exactly one public OAuth server definition; tokens stay on PVC.
+              subprocess.run([
+                  sys.executable, '/whop/reconcile.py', '--home', '/opt/data',
+                  '--manifest', '/whop/server.json',
+              ], check=True)
+
               # Cron assets are Git-owned, so unlike config.yaml they are refreshed on every
               # start: job scripts go to $HERMES_HOME/scripts (the only place the cron runner
               # accepts them), the job list and its applier to cron-defs/.
@@ -114,6 +120,9 @@ spec:
               readOnly: true
             - name: zoho-config
               mountPath: /zoho
+              readOnly: true
+            - name: whop-config
+              mountPath: /whop
               readOnly: true
         # Python packages the NATS gateway platform needs and the Hermes image lacks (nats-py,
         # nkeys and the Synadia agent SDK; pydantic and pynacl are already in the venv, so
@@ -323,6 +332,9 @@ spec:
         - name: zoho-config
           configMap:
             name: onemind-hermes-zoho
+        - name: whop-config
+          configMap:
+            name: onemind-hermes-whop
         - name: export
           secret:
             secretName: onemind-hermes-export
