@@ -188,10 +188,6 @@ applications:
     apps:
     - kubernetes
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  platform-paperclip:
-    apps:
-    - paperclip
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-redpanda-connect:
     apps:
     - onemind_core

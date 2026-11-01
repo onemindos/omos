@@ -8201,33 +8201,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: paperclip
-  tags:
-    - kubernetes
-  title: Paperclip
-  description: Business agent workspace prepared in PR 438; owner setup and
-    runtime verification are pending.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: platform-paperclip
-    argocd/instance-name: onemind-cloud
-    onemind.io/pillar-review: proposed
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/paperclip/
-    github.com/project-slug: onemindos/omos
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: ai-agents
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: karakeep
   tags:
     - kubernetes

@@ -303,10 +303,6 @@ apps:
     title: Tool gateway ClickHouse backend (mcp-clickhouse)
     system: ai-agents
     description: ClickHouse/mcp-clickhouse 0.7.0 behind the tool gateway (target clickhouse, group data) with three read tools as the readonly ClickHouse user legacy_ro.
-  - name: paperclip
-    title: Paperclip
-    system: ai-agents
-    description: Business agent workspace prepared in PR 438; owner setup and runtime verification are pending.
   - name: karakeep
     title: Karakeep
     system: personal-tools

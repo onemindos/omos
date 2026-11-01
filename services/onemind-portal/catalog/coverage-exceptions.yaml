@@ -134,19 +134,6 @@ exceptions:
     reason: >-
       PR #390 adds platform-cloudtak source; no cloudtak pods or namespace are observed yet.
       The Loki query must be generated from a verified workload snapshot after deployment.
-  - app: component:default/paperclip
-    capability: kubernetes
-    reason: >-
-      PR #438 prepares platform-paperclip and its namespace, but no verified workload snapshot is recorded.
-      Generate the scoped selector after deployment rather than treating desired manifests as observed inventory.
-  - app: component:default/paperclip
-    capability: grafana-alerts
-    reason: >-
-      PR #438 prepares platform-paperclip source; no verified paperclip workload snapshot is recorded. Add namespace-scoped alert routing after the deployment is observed.
-  - app: component:default/paperclip
-    capability: logs
-    reason: >-
-      PR #438 prepares platform-paperclip source; no verified paperclip pods are recorded in the catalog. Generate the Loki query from the first verified workload snapshot after deployment.
   - app: component:default/karakeep
     capability: kubernetes
     reason: >-

@@ -1258,22 +1258,13 @@ checks, a reviewed real-vault upload set, and a coordinated backup/restore drill
 The native Mac upload has started. Full transfer, two-way device acceptance and
 recovery verification remain distinct from the observed healthy server deployment.
 
-## User-directed Paperclip installation — 2026-10-23
+## Paperclip retired — 2026-11-01
 
-Zeus requested Paperclip on Kubernetes for a business workforce using Codex,
-Claude Code and Hermes. This is a bounded Layer 2 agent coordination service
-alongside the portal roadmap, not a migration or a new execution authority.
-Phase 6 stays In progress; Phases 7/8 stay Not started.
-
-| Work | Status | Evidence |
-|---|---|---|
-| Private Paperclip → existing Hermes HTTPS transport | Source prepared; CA trust, authenticated agent setup and end-to-end acceptance pending | [Transport and activation](platform/paperclip/HERMES.md) |
-| Private Paperclip GitOps installation | Prepared; human review/merge and live acceptance pending | [PR #438](https://github.com/onemindos/omos/pull/438); [deployment and acceptance](platform/paperclip/README.md) |
-
-No new controller, public exposure, shared-database migration, existing agent
-credential copy, model billing change or cluster write access is included.
-Runtime onboarding, mobile acceptance, backups/restore and automatic execution
-must be verified separately. Preparing manifests does not complete those gates.
+The 2026-10-23 user-directed Paperclip installation was removed by owner decision on
+2026-11-01 after a final database dump and volume snapshots. See
+[Paperclip: retired](docs/STACK.md#paperclip-retired--2026-11-01) and the
+[retirement runbook](docs/operations/paperclip-retirement-2026-11-01.md). Phase 6 stays
+In progress; Phases 7/8 stay Not started.
 
 ## User-directed personal Vaultwarden — 2026-10-25
 

@@ -9,7 +9,6 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 HERMES = ROOT / 'platform/hermes/agent'
-PAPERCLIP = ROOT / 'platform/paperclip'
 
 
 def documents(path):
@@ -97,25 +96,9 @@ class HermesTransport(unittest.TestCase):
         self.assertEqual(secret['items'], [{'key': 'credentials.json', 'path': 'credentials.json'}])
         self.assertEqual(secret['defaultMode'], 0o444)
 
-    def test_paperclip_trust_and_exact_network_identity(self):
-        deploy = next(d for d in documents(PAPERCLIP / 'deployment.yaml') if d['kind'] == 'Deployment')
-        spec = deploy['spec']['template']['spec']
-        env = spec['containers'][0]['env']
-        self.assertIn({'name': 'NODE_EXTRA_CA_CERTS', 'value': '/run/hermes-gateway-ca/ca.crt'}, env)
-        self.assertNotIn('NODE_TLS_REJECT_UNAUTHORIZED', [e['name'] for e in env])
-        secret = next(v for v in spec['volumes'] if v['name'] == 'hermes-gateway-ca')['secret']
-        self.assertEqual(secret['items'], [{'key': 'ca.crt', 'path': 'ca.crt'}])
-        policy = next(d for d in documents(PAPERCLIP / 'network.yaml')
-                      if d['metadata']['name'] == 'paperclip-network')['spec']
-        peer = {'namespaceSelector': {'matchLabels': {'kubernetes.io/metadata.name': 'hermes'}},
-                'podSelector': {'matchLabels': {'app.kubernetes.io/name': 'hermes',
-                                               'onemind.io/agent': 'legacy'}}}
-        self.assertIn({'to': [peer], 'ports': [{'protocol': 'TCP', 'port': 8643}]}, policy['egress'])
-        self.assertIn({'from': [peer], 'ports': [{'protocol': 'TCP', 'port': 3100}]}, policy['ingress'])
-
     @unittest.skipUnless(shutil.which('kubectl'), 'kubectl kustomize not installed')
     def test_render_resolves_generated_configmap_and_namespaces(self):
-        for directory, namespace in [(HERMES, 'hermes'), (PAPERCLIP, 'paperclip')]:
+        for directory, namespace in [(HERMES, 'hermes')]:
             result = subprocess.run(['kubectl', 'kustomize', str(directory)], check=True,
                                     capture_output=True, text=True)
             rendered = list(yaml.safe_load_all(result.stdout))
