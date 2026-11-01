@@ -7115,6 +7115,170 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: osiris
+  title: OSIRIS
+  description: >-
+    External reference for a global OSINT dashboard combining flight tracking,
+    public CCTV, earthquakes, conflict mapping and news feeds. No OneMind
+    deployment, compatibility or integration verified.
+  tags:
+    - reference
+    - osint
+    - geospatial-intelligence
+    - situational-awareness
+  links:
+    - url: https://github.com/simplifaisoul/osiris
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/simplifaisoul/osiris
+    onemind.io/launcher-category: Intelligence
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: approved
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: worldwideview
+  title: WorldWideView (external reference)
+  description: >-
+    External reference for a plugin-driven geospatial intelligence engine
+    rendering data layers on a CesiumJS 3D globe. No OneMind deployment,
+    compatibility or integration verified.
+  tags:
+    - reference
+    - geospatial-intelligence
+    - situational-awareness
+  links:
+    - url: https://github.com/silvertakana/worldwideview
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/silvertakana/worldwideview
+    onemind.io/launcher-category: Intelligence
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: approved
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: worldmonitor
+  title: World Monitor
+  description: >-
+    External reference for global situational awareness across news,
+    geopolitics, infrastructure and other public-source signals, with map and
+    globe views. No OneMind deployment, compatibility or integration verified.
+  tags:
+    - reference
+    - osint
+    - situational-awareness
+  links:
+    - url: https://github.com/koala73/worldmonitor
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/koala73/worldmonitor
+    onemind.io/launcher-category: Intelligence
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: approved
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: argos-atlas
+  title: Argos Atlas
+  description: >-
+    External reference for a hosted public-source map with camera, flight, ship,
+    conflict and news layers. Provider data and hosting are unverified. No
+    OneMind deployment, compatibility or integration verified.
+  tags:
+    - reference
+    - osint
+    - geospatial-intelligence
+    - situational-awareness
+  links:
+    - url: https://argosatlas.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://argosatlas.com
+    onemind.io/launcher-category: Intelligence
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: approved
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: gods-eye-view
+  title: God's Eye View
+  description: >-
+    External reference for a 3D globe combining public aircraft, ship,
+    satellite, earthquake and camera data. Traffic is simulated; not all layers
+    are live observations. No OneMind deployment, compatibility or integration
+    verified.
+  tags:
+    - reference
+    - osint
+    - geospatial-intelligence
+    - situational-awareness
+  links:
+    - url: https://github.com/bilawalsidhu/gods-eye-view
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/bilawalsidhu/gods-eye-view
+    onemind.io/launcher-category: Intelligence
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: approved
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: platform-core
   tags:
     - kubernetes

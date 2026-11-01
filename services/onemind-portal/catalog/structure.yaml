@@ -308,6 +308,11 @@ apps:
     system: personal-tools
     description: Native bookmark and read-later workspace prepared with manual Argo and zero replicas; first start, owner enrollment and recovery acceptance are pending.
 placement:
+  osiris: intelligence
+  worldwideview: intelligence
+  worldmonitor: intelligence
+  argos-atlas: intelligence
+  gods-eye-view: intelligence
   tacsync: tak-ecosystem
   cesium-ion-for-tak: tak-ecosystem
   xmpp-for-tak: tak-ecosystem
