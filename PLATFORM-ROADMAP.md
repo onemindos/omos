@@ -1394,10 +1394,10 @@ Provider deletion and recovery verification must be recorded from live evidence;
 this source change alone does not certify either. Preserve device originals and
 existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
 
-## User-directed LiveKit pilot — November1,2026
+## User-directed LiveKit pilot — November 1, 2026
 
 Prepared `platform-livekit` as a manual-sync, one-node WebRTC SFU pilot. Private
 signaling, explicit host-network RTC ports and strict SealedSecret provisioning
 are defined in [the runbook](platform/livekit/README.md). Credentials, network
 acceptance, human interface and community Hermes plugin qualification remain
-pending. This source is not a deployment or completion of the broader Phase8.
+pending. This source is not a deployment or completion of the broader Phase 8.

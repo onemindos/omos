@@ -1,6 +1,6 @@
 # LiveKit pilot
 
-Prepared November1,2026 at Zeus's request; **not deployed or a proven Hermes integration**.
+Prepared November 1, 2026 at Zeus's request; **not deployed or a proven Hermes integration**.
 The manual-sync `platform-livekit` Application stages one stateless LiveKit SFU.
 No Helm-CLI release, live secret, firewall, node label or Hermes workload is changed.
 
@@ -29,7 +29,7 @@ This pilot also uses one replica/Recreate; it cannot do zero-interruption update
 Service and Tailscale Ingress terminate private HTTPS/WSS. The root bind setting is
 separate from RTC listeners in upstream v1.13.11 `pkg/service/server.go`.
 
-RTC still needs **direct node connectivity**: UDP7882 mux and TCP7881 fallback.
+RTC still needs **direct node connectivity**: UDP 7882 mux and TCP 7881 fallback.
 `rtc.use_external_ip` discovers the public mapping through STUN. An HTTPS ingress
 or Tailscale HTTPS proxy does not carry this media, and no TCP-only proxy promises
 working WebRTC. TURN is disabled, so restrictive networks may fail; enabling TURN,
@@ -38,11 +38,11 @@ choosing its TLS/DNS/certificates and opening more ports is separate follow-up w
 Before any Argo sync:
 
 1. Confirm the selected ecosystem node's current InternalIP is actually private,
-   and HTTP7880 is unreachable on its public interface. The downward field follows
+   and HTTP 7880 is unreachable on its public interface. The downward field follows
    node replacement without hardcoding the observed node address.
 2. Verify STUN mapping equals that node's reachable external IP. Review node and
-   DigitalOcean firewalls: permit required RTC7881/TCP and7882/UDP only for the
-   chosen clients/networks. Do not expose7880 publicly, use Cloudflare proxying for
+   DigitalOcean firewalls: permit required RTC 7881/TCP and 7882/UDP only for the
+   chosen clients/networks. Do not expose 7880 publicly, use Cloudflare proxying for
    media, or copy broad firewall allowances from a tutorial. No firewall rule is
    created by this PR. If external-IP discovery is inappropriate, commit a reviewed
    node/edge-specific `rtc.node_ip` design with `use_external_ip: false` instead.
@@ -55,7 +55,7 @@ Before any Argo sync:
    makes first start wait for credentials, rather than installing development keys.
 
 The namespace's **PSA enforce=privileged is required for hostNetwork**, not a grant
-of privileged containers: the SFU runs UID/GID10001, read-only root, all capabilities
+of privileged containers: the SFU runs UID/GID 10001, read-only root, all capabilities
 dropped, no service-account token and RuntimeDefault seccomp. PSA warn/audit remain
 restricted to expose the exception. No cluster-wide policy exemption is added.
 Existing Kyverno policy does not deny hostNetwork; recheck the installed admission
@@ -66,7 +66,7 @@ HTTP binding, tailnet policy and JWTs are the actual network/access boundaries.
 ## Credentials and client connection
 
 Provision one strong API key/secret mapping in the existing private credential
-store. Keep a permission0600 YAML map exported **outside the repository**, and an
+store. Keep a permission 0600 YAML map exported **outside the repository**, and an
 independent encrypted recovery copy. Do not paste either value into tickets or CLI
 arguments. Fetch only the controller's public certificate and run:
 
@@ -87,7 +87,7 @@ only URL+JWT; keep administrative room/API credentials server-side. An authentic
 web token service/finished family voice interface is a separate deliverable.
 
 Acceptance: render and schema-check; observe Argo/pod readiness and non-root UID;
-check that private HTTPS works and public7880 fails; validate a two-client room on
+check that private HTTPS works and public 7880 fails; validate a two-client room on
 Mac and Android with video/audio, actual ICE path, reconnect and expired/incorrect
 JWT rejection. Do not infer media readiness from HTTP200. No such live acceptance
 has been performed for this PR.
@@ -96,9 +96,9 @@ has been performed for this PR.
 
 The community [kortexa-ai/hermes-realtime](https://github.com/kortexa-ai/hermes-realtime)
 (previously `hermes-livekit`) documents a LiveKit Conference gateway into Hermes's
-normal agent loop. Releasev0.5.1 / commit
+normal agent loop. Release v0.5.1 / commit
 `6cbda7eb3ef10a8a43a04d6ae94debc1db05c442` is the reviewed candidate. Its docs require
-Hermes>=0.20.0, Python3.11–3.14 and FFmpeg, LiveKit server credentials, and explicit
+Hermes >=0.20.0, Python 3.11–3.14 and FFmpeg, LiveKit server credentials, and explicit
 allowed participants. It uses the selected Hermes profile/STT/TTS; it is more
 relevant than starting a second independent agent. Upstream
 [NousResearch/hermes-agent#3894](https://github.com/NousResearch/hermes-agent/pull/3894)

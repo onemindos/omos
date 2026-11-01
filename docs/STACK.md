@@ -318,7 +318,7 @@ Provider deletion and recovery verification must be recorded from live evidence;
 this source change alone does not certify either. Preserve device originals and
 existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
 
-## Prepared LiveKit pilot — November1,2026 (not live inventory)
+## Prepared LiveKit pilot — November 1, 2026 (not live inventory)
 
 Tier3 experimental `platform-livekit` / namespace `livekit` is prepared for manual
 Argo activation: stateless single SFU, private signaling and direct RTC connectivity.
