@@ -1,0 +1,59 @@
+# Robot Gateway Edge Service
+# Runs on the robot companion computer (Raspberry Pi, Jetson, x86 NUC, etc.)
+# or inside a simulation host alongside Isaac Sim.
+#
+# Deployment: kubectl apply -f robot-gateway.yaml
+# For bare-metal / non-k8s use: docker run --network=host with env vars set.
+#
+# Required env vars:
+#   ROBOT_ID   — unique robot identifier, e.g. "ugv-01" or "drone-01"
+#   ROBOT_TYPE — "robot" (UGV) or "drone" (UAV)
+#   SIM        — "true" for Isaac Sim target, "false" for live hardware
+#
+# NATS is always reached at nats://localhost:4222 via the leaf sidecar.
+# The NATS leaf sidecar connects back to the hub cluster — no hardcoded URLs needed.
+#
+# To deploy alongside an Isaac Sim node, add GPU tolerations matching the sim node pool.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: robot-gateway
+  namespace: robotics
+  labels:
+    app: robot-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: robot-gateway
+  template:
+    metadata:
+      labels:
+        app: robot-gateway
+    spec:
+      hostNetwork: true         # share host ROS2 DDS domain
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: bridge
+          image: ghcr.io/onemindos/robot-gateway:latest
+          imagePullPolicy: Always
+          env:
+            - name: ROBOT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName   # default to node name; override per-instance
+            - name: ROBOT_TYPE
+              value: "robot"
+            - name: SIM
+              value: "false"
+            - name: NATS_URL
+              value: "nats://localhost:4222"  # always via leaf sidecar
+            - name: ROS_DOMAIN_ID
+              value: "0"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
