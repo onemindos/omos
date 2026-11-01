@@ -1,6 +1,7 @@
 """Deployment and credential boundaries for the owner-approved Beeper batch."""
 import importlib.util
 import json
+import shutil
 from pathlib import Path
 import subprocess
 import unittest
@@ -15,11 +16,23 @@ TYPES = {"whatsapp", "telegram", "gmessages", "instagram", "twitter"}
 class BeeperDeploymentContracts(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        rendered = subprocess.check_output(["kubectl", "kustomize", str(APP)], text=True)
-        cls.resources = [item for item in yaml.safe_load_all(rendered) if item]
+        # These contracts inspect authored resources and run without cluster CLIs.
+        cls.resources = []
+        for path in sorted(APP.glob("*.yaml")):
+            if path.name != "kustomization.yaml":
+                cls.resources.extend(item for item in yaml.safe_load_all(path.read_text()) if item)
         spec = importlib.util.spec_from_file_location("prepare_beeper", ROOT / "scripts/prepare_beeper_secrets.py")
         cls.helper = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(cls.helper)
+
+    @unittest.skipUnless(shutil.which("kubectl"), "Kustomize render requires kubectl; source contracts always run")
+    def test_kustomize_render_contains_all_authored_resources(self):
+        rendered = subprocess.check_output(["kubectl", "kustomize", str(APP)], text=True)
+        resources = [item for item in yaml.safe_load_all(rendered) if item]
+        expected = {(r["kind"], r["metadata"]["name"]) for r in self.resources}
+        actual = {(r["kind"], r["metadata"]["name"]) for r in resources}
+        self.assertTrue(expected <= actual)
+        self.assertFalse(any(r["kind"] == "Secret" for r in resources))
 
     def test_all_five_deploy_together_without_public_or_cluster_authority(self):
         deployments = [r for r in self.resources if r["kind"] == "Deployment"]
