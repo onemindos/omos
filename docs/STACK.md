@@ -317,3 +317,14 @@ a completed fresh volume snapshot plus private database/config exports.
 Provider deletion and recovery verification must be recorded from live evidence;
 this source change alone does not certify either. Preserve device originals and
 existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
+
+## User-requested IoT pilots — November1,2026 (prepared source only)
+
+| Tier | Application | Namespace | State/recovery | Exposure | Status |
+|---|---|---|---|---|---|
+|2|`platform-openremote`|`openremote`|Dedicated PostgreSQL17/Keycloak, retained10Gi DB plus5Gi manager storage; separate crash-consistent VolSync sources, coordinated recovery pending|Proposed private `openremote.tail717ba0.ts.net`; native login; no external MQTT|Manual sync; real SealedSecrets, capacity and acceptance pending|
+|2|`platform-thingsboard`|`thingsboard`|Apache CE4.3.1.8 monolith, retained10Gi PostgreSQL; no-demo guarded schema/admin hook; in-memory queue is an evaluation limitation|Proposed private `thingsboard.tail717ba0.ts.net`; native login; no external MQTT|Manual sync; real SealedSecrets, capacity and acceptance pending|
+
+These are fresh evaluation deployments, not migrations of retained Mac volumes,
+verified services or new cluster-count observations. User expressly chose both for
+comparison. See the owning READMEs for edition, launch and restore requirements.
