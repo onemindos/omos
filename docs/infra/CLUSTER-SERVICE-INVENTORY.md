@@ -54,7 +54,9 @@ objects. `HEAD` means the Git-tracked branch revision shown by Argo CD at captur
 | `platform-fedhub` | `platform/takserver/fedhub` | `takserver` | Synced / Healthy |
 | `platform-homepage` | `platform/homepage` | `homepage` | Synced / Healthy |
 | `platform-kube` | `platform/kube` | `kube` | Synced / Healthy |
-| `platform-legacy` | `platform/hermes/agent`; `platform/hermes/bridge` | `hermes` | Synced / Healthy |
+| `platform-hermes-base` | `platform/hermes/base` | `hermes` | not yet applied (2026-11-01 PR) |
+| `platform-legacy` | `platform/hermes/agent`; `platform/hermes/bridge` (plus transfer-only `platform/hermes/mcp`, `platform/hermes/base`) | `hermes` | Synced / Healthy |
+| `platform-onemind-mcp` | `platform/hermes/mcp` | `hermes` | not yet applied (2026-11-01 PR) |
 | `platform-monitoring` | `platform/monitoring` | `monitoring` | Synced / Healthy |
 | `platform-nats` | `platform/nats` | `nats` | Synced / Healthy |
 | `platform-observability` | `platform/data/clickhouse` | `clickhouse` | Synced / Healthy |

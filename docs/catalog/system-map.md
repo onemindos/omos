@@ -183,7 +183,9 @@ Each application resolves to exactly one app Component. The app carries `argocd/
 | `platform-external-dns` | external-dns | ExternalDNS (`external-dns`) | Platform core |
 | `platform-fedhub` | takserver | FedHub (`fedhub`) | TAK & field ops |
 | `platform-kube` | kube | Headlamp (`headlamp`) | Developer platform |
+| `platform-hermes-base` | hermes | Hermes namespace, egress Services and shared Secrets (`onemind-hermes`) | AI & agents |
 | `platform-legacy` | hermes | Hermes (old Legacy instance, being retired) (`hermes-legacy`) | AI & agents |
+| `platform-onemind-mcp` | hermes | OneMind internal app MCP (`onemind-mcp`) | AI & agents |
 | `platform-matrix` | matrix | Matrix Synapse (`matrix-synapse`) | Communication |
 | `platform-monitoring` | monitoring | Grafana (`grafana`) | Observability |
 | `platform-n8n` | n8n | n8n (`n8n`) | AI & agents |

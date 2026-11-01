@@ -1,0 +1,34 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 3 — AI BRAIN                                             sync-wave: "3"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-onemind-mcp: the onemind-mcp tool server (the tool gateway's `onemind` target,
+# onemind-mcp.hermes.svc.cluster.local:8000). Manifests in platform/hermes/mcp/.
+#
+# Split out of platform-legacy on 2026-11-01 so the tool server does not share a lifecycle with
+# the old Hermes instance. No finalizer: deleting this Application never deletes the workload.
+# prune: true is kept because the kustomize ConfigMap generators rename their ConfigMaps when
+# the content changes (the old hashed ConfigMap has to be pruned); the long-lived objects carry
+# argocd.argoproj.io/sync-options: Prune=false,Delete=false.
+# Ownership transfer plan: platform/hermes/base/README.md.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-onemind-mcp
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/hermes/mcp
+    # kustomization.yaml is auto-detected
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: hermes
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

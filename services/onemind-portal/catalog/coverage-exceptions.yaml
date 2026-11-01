@@ -149,12 +149,6 @@ exceptions:
     reason: >-
       Karakeep native source is staged with manual Argo and zero replicas; no live namespace or workload snapshot is recorded.
       Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/onemind-mcp
-    capability: argocd
-    reason: >-
-      Deployed from platform/hermes/mcp by the Argo application platform-legacy (one source of that multi-source
-      application), which the reviewed workload map attributes to the hermes-legacy app (one Argo application maps to
-      one app). It has no Argo application of its own.
   - app: component:default/agentgateway
     capability: kubernetes
     reason: >-

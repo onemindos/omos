@@ -286,7 +286,7 @@ apps:
     system: ai-agents
     description: >-
       MCP server giving Hermes typed tools for in-cluster apps (NATS monitoring, Prometheus, Ollama, OpenCost, and the Tile38 adapter with one write,
-      tile38_set_point); it is the onemind target behind the tool gateway; manifests in platform/hermes/mcp (Argo application platform-legacy).
+      tile38_set_point); it is the onemind target behind the tool gateway; manifests in platform/hermes/mcp (Argo application platform-onemind-mcp).
   - name: agentgateway
     title: Tool gateway (agentgateway)
     system: ai-agents

@@ -190,7 +190,9 @@ argoApplications:
   platform-ecosystem-foundation: component:default/argocd
   platform-ecosystem-resources: component:default/argocd
   platform-fedhub: component:default/fedhub
+  platform-hermes-base: component:default/onemind-hermes
   platform-onemind-hermes: component:default/onemind-hermes
+  platform-onemind-mcp: component:default/onemind-mcp
   platform-kube: component:default/headlamp
   platform-legacy: component:default/hermes-legacy
   platform-matrix: component:default/matrix-synapse

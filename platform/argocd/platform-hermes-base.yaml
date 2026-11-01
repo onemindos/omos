@@ -1,0 +1,48 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 3 — AI BRAIN                                             sync-wave: "2"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-hermes-base: what the hermes namespace shares between instances.
+#
+#   platform/hermes/base/ — Namespace hermes, Tailscale egress Services (omos-ha-edge,
+#   omos-mbp, omos-s24) and the SealedSecrets that more than one workload mounts
+#   (hermes-dashboard-auth, omos-nats-creds, hermes-nats-ca).
+#
+# Why a separate Application: the namespace and these objects have to outlive any single
+# Hermes instance (hermes-legacy, hermes-fresh, onemind-hermes). Before 2026-11-01 they were
+# owned by platform-legacy, whose finalizer would have deleted the namespace (and the new
+# instance with it) when the old Hermes was retired.
+#
+# Deliberately no finalizer and prune: false. Deleting this Application never deletes
+# anything, and every object in base/ also carries argocd.argoproj.io/sync-options:
+# Prune=false,Delete=false. Ownership transfer plan: platform/hermes/base/README.md.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-hermes-base
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/hermes/base
+    directory:
+      recurse: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: hermes
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - RespectIgnoreDifferences=true
+  ignoreDifferences:
+    # The Tailscale operator owns spec.externalName on the egress Services (egress.yaml).
+    - group: ""
+      kind: Service
+      jsonPointers:
+        - /spec/externalName

@@ -124,7 +124,15 @@ applications:
     apps:
     - fedhub
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-hermes-base:
+    apps:
+    - agent_fabric
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-onemind-hermes:
+    apps:
+    - agent_fabric
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-onemind-mcp:
     apps:
     - agent_fabric
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.

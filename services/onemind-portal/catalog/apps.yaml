@@ -8082,10 +8082,12 @@ metadata:
   description: MCP server giving Hermes typed tools for in-cluster apps (NATS
     monitoring, Prometheus, Ollama, OpenCost, and the Tile38 adapter with one
     write, tile38_set_point); it is the onemind target behind the tool gateway;
-    manifests in platform/hermes/mcp (Argo application platform-legacy).
+    manifests in platform/hermes/mcp (Argo application platform-onemind-mcp).
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-onemind-mcp
+    argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: hermes
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=onemind-mcp
     onemind.io/pillar-review: proposed
@@ -8098,7 +8100,7 @@ metadata:
     onemind.io/recovery-runbook: apps/onemind-mcp/
     github.com/project-slug: onemindos/omos
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/services/onemind-mcp
-    onemind.io/deployment-source: platform/hermes/mcp; platform/argocd/platform-legacy.yaml
+    onemind.io/deployment-source: platform/hermes/mcp; platform/argocd/platform-onemind-mcp.yaml
     onemind.io/relationship-source: platform/hermes/mcp/deployment.yaml
       (NATS_MONITOR_URL nats-0 monitoring port 8222, PROMETHEUS_URL);
       platform/hermes/agent/onemind_mcp_config.py (Hermes Legacy client)

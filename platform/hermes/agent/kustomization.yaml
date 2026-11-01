@@ -3,11 +3,9 @@ kind: Kustomization
 namespace: hermes
 resources:
   - cluster-observer.yaml
-  - namespace.yaml
   - pvc.yaml
   - deployment.yaml
   - dashboard.yaml
-  - egress.yaml
   - network-policy.yaml
   - paperclip-api.yaml
   - paperclip-agent.sealedsecret.yaml
@@ -28,4 +26,6 @@ configMapGenerator:
     files:
       - onemind_mcp_config.py
 # Secrets are managed by Sealed Secrets — SealedSecret YAMLs in platform/hermes/bridge/.
+# The hermes Namespace, the Tailscale egress Services and the Secrets that onemind-hermes also mounts
+# moved to platform/hermes/base/ (Application platform-hermes-base) on 2026-11-01.
 # Reconcile through platform-legacy; do not apply this directory by hand.

@@ -11,6 +11,11 @@ agent data.
 separate agents here.
 
 - Argo Application: `platform-onemind-hermes`, path `platform/hermes/onemind-hermes`.
+- Shared objects it depends on are owned by `platform-hermes-base` (path `platform/hermes/base`): the
+  `hermes` Namespace and the Secrets `hermes-dashboard-auth`, `omos-nats-creds` and `hermes-nats-ca`. They
+  used to belong to `platform-legacy`; retiring that Application no longer touches them
+  (`platform/hermes/base/README.md`). The tool gateway's `onemind` target, `onemind-mcp`, is
+  `platform-onemind-mcp` (path `platform/hermes/mcp`).
 - Deployment/Service/Ingress/NetworkPolicy: `onemind-hermes`, namespace `hermes`.
 - Private dashboard: `https://onemind-hermes.tail717ba0.ts.net` once the
   Tailscale operator provisions it. Use the existing Hermes dashboard username

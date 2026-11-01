@@ -3,6 +3,7 @@ kind: Namespace
 metadata:
   name: hermes
   annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
     volsync.backube/privileged-movers: "true"
   labels:
     app.kubernetes.io/part-of: onemind
