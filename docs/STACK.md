@@ -210,7 +210,7 @@ Eleven releases were installed with `helm upgrade --install` (see `platform/inst
 | `loki` | monitoring | loki-7.0.0 | 4 | 2026-07-11 | `platform/values/loki.yaml` | Logs only |
 | `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | 8 | 2026-07-17 | `platform/values/kube-prometheus-stack.yaml` | Alert routing (Alertmanager receiver) is not delivered anywhere (A17) |
 | `nack` | nats | nack-0.34.0 | 4 | 2026-07-11 | `platform/nats/nack-values.yaml` | Streams are not reconciled until reinstalled |
-| `nats` | nats | nats-2.14.2 | 10 | 2026-07-11 | `platform/nats/values.template.yaml` plus an **out-of-band, gitignored** `values.secret.yaml` | Passwords exist only on the machine that last ran Helm; Argo and Helm both own the StatefulSet |
+| `nats` | nats | nats-2.14.2 | 10 | 2026-07-11 | `platform/nats/values.template.yaml` plus an **out-of-band, gitignored** `values.secret.yaml` | Passwords exist only on the machine that last ran Helm; Argo and Helm both own the StatefulSet. Per-service users prepared, not live: `platform/nats/IDENTITIES.md` |
 | `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | 3 | 2026-07-17 | `platform/values/otel-collector.yaml` | Telemetry only |
 | `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | 3 | 2026-07-11 | `platform/values/tailscale-operator.yaml` | All admin UIs depend on it |
 | `takserver` | takserver | takserver-4.6.0 | 34 | 2026-09-29 | `platform/takserver/values-onemind.yaml` and chart `platform/takserver/chart` | The most important workload has no reproducible rebuild path |
