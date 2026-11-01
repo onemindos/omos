@@ -32,6 +32,20 @@ for (const [name, url] of Object.entries(links)) {
     assert.equal(entity.metadata.annotations['onemind.io/hosting'], 'external-provider-unverified');
     assert.equal(docs.flatMap(e => e.metadata.links || []).filter(link => link.url === url).length, 1);
     assert.ok(entity.metadata.links.some(link => link.url === url));
+    // Match useDirectory's launcher eligibility, not merely catalog ingestion.
+    const launcherUrl = entity.metadata.annotations['onemind.io/launcher-url'] ??
+      entity.metadata.links.find(link => link.title === 'Open application')?.url;
+    assert.ok(launcherUrl, `${name} is ingested but excluded from the launcher`);
+    const parsed = new URL(launcherUrl);
+    assert.equal(parsed.protocol, 'https:');
+    assert.equal(parsed.username, '');
+    assert.equal(parsed.password, '');
+    const curated = JSON.parse(fs.readFileSync(path.join(root,
+      'plugins/plugin-onemind-common/directory.json'), 'utf8'));
+    const known = curated.find(item => item.name === name);
+    const category = entity.metadata.annotations['onemind.io/launcher-category'] ??
+      known?.groupTitle ?? 'Services';
+    assert.equal(category, 'TAK Ecosystem', `${name} must match the home category dropdown`);
   });
 }
 test('external OmniTAK is explicitly unrelated to the retired OneMind name', () => {
