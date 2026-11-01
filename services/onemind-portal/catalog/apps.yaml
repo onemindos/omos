@@ -1310,6 +1310,8 @@ metadata:
       title: External reference
       icon: dashboard
   annotations:
+    onemind.io/launcher-url: https://cotak.gov/pages/guest-home
+    onemind.io/launcher-category: TAK Ecosystem
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/pillar-review: proposed
@@ -1337,6 +1339,8 @@ metadata:
       title: External reference
       icon: dashboard
   annotations:
+    onemind.io/launcher-url: https://getgotak.com
+    onemind.io/launcher-category: TAK Ecosystem
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/pillar-review: proposed
@@ -1364,6 +1368,8 @@ metadata:
       title: External reference
       icon: dashboard
   annotations:
+    onemind.io/launcher-url: https://takgrid.com
+    onemind.io/launcher-category: TAK Ecosystem
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/pillar-review: proposed
@@ -1392,6 +1398,8 @@ metadata:
       title: External reference
       icon: dashboard
   annotations:
+    onemind.io/launcher-url: https://omnitak.engindearing.soy
+    onemind.io/launcher-category: TAK Ecosystem
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/pillar-review: proposed
@@ -1419,6 +1427,8 @@ metadata:
       title: External reference
       icon: dashboard
   annotations:
+    onemind.io/launcher-url: https://github.com/engindearing-projects
+    onemind.io/launcher-category: TAK Ecosystem
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/pillar-review: proposed
