@@ -14,7 +14,7 @@ manifest or set `syncPolicy.managedNamespaceMetadata.labels`.
 | `data` | Event bus and the network the data moves on | `nats`, `cnpg-system` |
 | `sense` | Collection and edge sensors | `omos`, `takml`, `takserver` |
 | `make-sense` | Fusion, storage and analytics | `onetak`, `clickhouse`, `onemind-core`, `onemind-data`, `stac`, `stac-validation`, `karakeep`, `nextcloud`, `vaultwarden`, `opencost` |
-| `decide` | AI models and agents | `onemind-ai`, `hermes`, `agent-fabric`, `n8n`, `paperclip` |
+| `decide` | AI models and agents | `onemind-ai`, `hermes`, `agent-fabric`, `n8n` |
 | `act` | Human-facing surfaces and delivery | `backstage`, `matrix`, `cloudtak` |
 | `guard` | Security, identity, observability, backup and CI | `auth`, `monitoring`, `falco`, `kyverno`, `velero`, `ops`, `kube`, `github-runner`, `argocd`, `cert-manager`, `ingress-nginx`, `tailscale` |
 | `system` | Cluster plumbing | `default`, `dapr-system`, `keda` |
