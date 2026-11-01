@@ -4109,6 +4109,50 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: mcp-adapter-forgejo
+  title: 'MCP adapter: forgejo'
+  description: Private secondary Git forge and GitHub pull mirrors; GitHub remains primary. No adapter implemented
+    yet; the entry reserves the application in apps.yaml.
+  tags:
+  - plugin
+  - mcp-adapter
+  - planned
+  - cluster
+  - mcp
+  labels:
+    onemind.io/plugin-type: mcp-adapter
+    onemind.io/plugin-status: planned
+    onemind.io/plugin-origin: onemind
+    onemind.io/runs-on-kind: cluster
+    onemind.io/pillar: so
+  annotations:
+    onemind.io/plugin-type: mcp-adapter
+    onemind.io/plugin-status: planned
+    onemind.io/plugin-origin: onemind
+    onemind.io/runs-on-kind: cluster
+    onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
+    onemind.io/connects-to: forgejo,onemind-mcp,litellm
+    onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
+    onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
+    onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
+      not probed
+    onemind.io/mcp-app-id: forgejo
+    onemind.io/blocked-reason: Prepared source only. Owner enrollment, scoped read-only API adapter/token and authenticated
+      acceptance are pending; no agent repository writes or CI execution.
+spec:
+  type: mcp-adapter
+  lifecycle: planned
+  owner: group:default/onemind-admins
+  system: onemind-plugin-ecosystem
+  subcomponentOf: component:default/onemind-mcp
+  dependsOn:
+  - component:default/k8s-hermes-onemind-mcp-07887746
+  - component:default/forgejo
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: backstage-plugin-onemind-activity-backend
   title: onemind-activity-backend
   description: Backstage backend-plugin @internal/plugin-onemind-activity-backend in the OneMind portal workspace.

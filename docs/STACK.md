@@ -321,3 +321,13 @@ a completed fresh volume snapshot plus private database/config exports.
 Provider deletion and recovery verification must be recorded from live evidence;
 this source change alone does not certify either. Preserve device originals and
 existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
+
+## Forgejo secondary forge — source prepared 2026-11-01
+
+Tier2 candidate, namespace `forgejo`, Application `platform-forgejo` with manual sync.
+Rootless Forgejo15.0.11LTS, SQLite/Git/LFS/config on one20Gi retained claim;
+private proposed hostname `forgejo.tail717ba0.ts.net`, no SSH or public registration,
+Actions/packages disabled. Coordinated offline snapshot/Restic backups are prepared.
+Credentials, owner enrollment, mirror pilot, capacity review and restore drill remain
+pending. No live health, deployed hostname or completed backup is claimed. GitHub
+remains the working forge and Argo source. [Runbook](../platform/forgejo/README.md).

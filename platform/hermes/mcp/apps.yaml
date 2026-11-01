@@ -154,3 +154,7 @@ apps:
   enabled: false
   blocked_reason: Domain query/restore contracts and dedicated identities required; no raw SQL, backup decryption keys or destructive restore
     tools.
+- id: forgejo
+  description: Private secondary Git forge and GitHub pull mirrors; GitHub remains primary
+  enabled: false
+  blocked_reason: Prepared source only. Owner enrollment, scoped read-only API adapter/token and authenticated acceptance are pending; no agent repository writes or CI execution.

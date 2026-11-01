@@ -8838,3 +8838,23 @@ spec:
   system: data-storage
   dependencyOf:
     - component:default/platform-backup-recovery
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: forgejo
+  title: "Forgejo \u2014 independent code mirror"
+  description: Prepared private GitHub pull-mirror/standby forge with coordinated encrypted backups; not deployed or enrolled. GitHub remains primary.
+  annotations:
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/forgejo
+    onemind.io/deployment-status: prepared-not-deployed
+  tags:
+    - forgejo
+    - git
+    - backup
+    - planned
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: developer-platform
