@@ -8,9 +8,16 @@ from __future__ import annotations
 
 import logging
 import os
+import sys
 from typing import Any
 
-from .state import LiveState
+# OneMind: the `hermes` launcher unsets PYTHONPATH and the venv has no user site, so the
+# init container's package directory is added here (appended: the venv's own packages win).
+_DEPS = os.environ.get("ONEMIND_GATEWAY_DEPS", "/opt/data/.local/gateway-deps")
+if os.path.isdir(_DEPS) and _DEPS not in sys.path:
+    sys.path.append(_DEPS)
+
+from .state import LiveState  # noqa: E402
 from .subscriptions import SubscriptionManager
 from .formatter import format_context
 from .tools import (
