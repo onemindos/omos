@@ -307,3 +307,13 @@ credentials unchanged. No Kubernetes API privileges are granted. Update 2026-10-
 all four tools and resource reads pass from Legacy, anonymous access is rejected,
 MCP and Legacy are available, and Argo is Synced/Healthy. Extension, rotation and
 rollback: [runbook](operations/onemind-mcp.md).
+
+## Nextcloud retirement — 2026-11-01
+
+Zeus authorized retiring Nextcloud and its 200 GiB file/1 GiB cache volumes
+to use Dropbox. Deployment manifests are archived under
+`platform/parked/nextcloud`; the Argo Application is removed. Execution requires
+a completed fresh volume snapshot plus private database/config exports.
+Provider deletion and recovery verification must be recorded from live evidence;
+this source change alone does not certify either. Preserve device originals and
+existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
