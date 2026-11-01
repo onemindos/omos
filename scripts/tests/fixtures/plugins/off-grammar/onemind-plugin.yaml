@@ -1,0 +1,15 @@
+# Invalid on purpose (K6 acceptance): fabric.* and a 3-token intel subject are outside the grammar.
+apiVersion: onemind.io/plugin/v1
+id: org.example.layer.off-grammar
+version: 0.1.0
+kinds: [source]
+trust: community
+licence: MIT
+bus:
+  publishes: [fabric.intel.quakes, intel.quakes.usgs]
+source:
+  engine: omos-ingest
+  delivery: rest_poll
+  parser: geojson
+  url: https://example.org/feed.geojson
+  subject: fabric.intel.quakes

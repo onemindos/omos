@@ -1,0 +1,41 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 2 — ONETAK PLATFORM (video)                              sync-wave: "3"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-onetak-media: OneMind video (FEATURES K1, K2), namespace onetak.
+#
+# Covers: platform/onetak/media/ (kustomize)
+#   mediamtx.yml          — MediaMTX config: users per bus identity, path allowlist, recording
+#   deployment.yaml       — onemind-media (MediaMTX 1.21.3, digest-pinned, ecosystem pool)
+#   pvc.yaml              — recordings on do-block-storage-retain
+#   service.yaml          — ClusterIP (API for video-registry, in-cluster RTSP)
+#   tailnet-service.yaml  — Tailscale Service `media` (tailnet-only readers and publishers)
+#   video-registry.yaml   — stream registry (KV OVERWATCH_VIDEO, evt.video.*, svc.registry.video.*)
+#
+# MANUAL SYNC, zero retries. Prerequisites before the first sync (README.md in that directory):
+#   1. The owner seals onemind-media-users and video-registry-nats (SEALING.md) and commits them
+#      into platform/onetak/media/ (add them to kustomization.yaml resources).
+#   2. The first build-video-registry run on main pushed the image; pin its digest.
+#   3. The owner approves the 20 Gi recordings volume (billed).
+# Re-enable automation only after a first rollout has been observed.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-onetak-media
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/onetak/media
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: onetak
+  syncPolicy:
+    retry:
+      limit: 0

@@ -137,6 +137,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-omos` | omos | `feed-intel`, `feed-satellites`, `omos-tak-projector`, `sink-clickhouse`, `omos-mission-engine` (0 replicas) | none (streams in NATS, data in ClickHouse) | Git | internal | Argo |
 | `platform-redpanda-connect` | omos | Redpanda Connect (digest-pinned) | none | Git | internal | Argo |
 | `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (Tile38), WebODM | about 150 GiB of PVCs | `VolSync` x5 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.tail717ba0.ts.net` **tailnet** | Argo |
+| `platform-onetak-media` | onetak | OneMind video (K1, K2): `onemind-media` (MediaMTX 1.21.3, digest-pinned, users per bus identity, path allowlist, fMP4 recording 6 h drones / 2 h cameras sized to the volume, disk alerts at 75% / 90%, no browser CORS origins) and `video-registry` (KV `OVERWATCH_VIDEO`, `evt.video.*`, `svc.registry.video.*`). **Not synced yet** (manual sync; prerequisites in `platform/onetak/media/README.md`) | recordings 20 GiB (`do-block-storage-retain`) | none by decision (video off-site copies cost money) | `media.tail717ba0.ts.net` **tailnet**, auth on every port | Argo (manual) |
 | `platform-takml` | takml | TAK-ML vision pipeline | PostgreSQL, 8 GiB | `PG dump` (06:00 UTC), `VolSync` | internal | Argo |
 | `platform-n8n` | n8n | n8n workflow automation | PostgreSQL, 15 GiB | `PG dump` (05:20 UTC), `VolSync` | tailnet | Argo |
 | `platform-kube` | kube | Headlamp | none | Git | tailnet | Argo |

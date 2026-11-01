@@ -27,6 +27,7 @@ Go services monorepo absorbed from the former `omos-services` repo (merged
 |---------|------|---------|
 | **task-engine** | `task-engine/` | NATS-native task orchestration — create, dispatch, track tasks |
 | **omd** | `omd/` | OneMind Daemon — runs on every node, supervises local agent harnesses |
+| **video-registry** | `video-registry/` | Links MediaMTX streams to entities: KV `OVERWATCH_VIDEO`, `evt.video.{entity_id}.online\|offline`, `svc.registry.video.get\|list`; `internal/takvideo` renders CoT `__video` (K2, K3) |
 | **bridge** | `bridge/` | Universal protocol bridge (MAVLink, MQTT, HA, TAK, webhook) → NATS |
 | **nex** | `nex/` | NATS Execution Engine workloads (overwatch bridges, om-task) |
 | **agents/meta** | `agents/meta/` | Meta agent service |

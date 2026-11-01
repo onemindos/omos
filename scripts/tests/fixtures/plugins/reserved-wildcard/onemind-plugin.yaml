@@ -1,0 +1,15 @@
+# Invalid on purpose: wildcard publishes that cover reserved writers. 'evt.*.*.*' covers
+# evt.so.action.* (the policy audit record); 'tak.cot.>' covers tak.cot.inject.
+apiVersion: onemind.io/plugin/v1
+id: org.example.source.reserved-wildcard
+version: 0.1.0
+kinds: [source]
+trust: verified
+licence: MIT
+bus:
+  publishes: [evt.*.*.*, tak.cot.>, intel.hazard.example.quake]
+source:
+  engine: image
+  image: ghcr.io/onemindos/collector-example:0.1.0
+  delivery: rest_poll
+  subject: intel.hazard.example.quake
