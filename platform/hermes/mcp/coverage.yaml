@@ -180,6 +180,10 @@ applications:
     apps:
     - data_backups
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-mission:
+    apps:
+    - onemind_core
+    reason: Task service beside the policy service. Agents read and report tasks over svc.mission.*; changes go through svc.policy.task.propose. No MCP admin tools.
   platform-omos:
     apps:
     - onemind_core

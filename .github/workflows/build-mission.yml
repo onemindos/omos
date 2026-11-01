@@ -1,0 +1,74 @@
+name: Build mission (task) service
+# FEATURES D2 and H4: tests on every PR that touches the service; image to GHCR
+# (ghcr.io/onemindos/mission:sha-<commit>) on main. The manifest in platform/mission/
+# references the tag; pin its digest from this run's image-digest artifact.
+# The end-to-end test (services/mission/test/e2e.sh: policy service, MAVLink bridge,
+# scripted drone) needs the open #554 and #550 branches and Python with pymavlink, so it
+# runs on a workstation, not here.
+on:
+  push:
+    branches: [main]
+    paths:
+      - services/mission/**
+      - services/schemas/envelope/**
+      - .github/workflows/build-mission.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - services/mission/**
+      - services/schemas/envelope/**
+      - .github/workflows/build-mission.yml
+permissions:
+  contents: read
+concurrency:
+  group: mission-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: services/mission
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
+        with:
+          go-version-file: services/mission/go.mod
+          cache-dependency-path: services/mission/go.sum
+      - run: test -z "$(gofmt -l .)"
+      - run: go vet ./... && go vet -tags e2e ./...
+      # In-process nats-server (CMD, EVT, MISSION, KV mission-state) with the A19 account
+      # layout and a least-privilege `mission` user: section 10 tests 1, 2 and 6 and more.
+      - run: go test -race -count=1 ./...
+  image:
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        id: image
+        with:
+          context: services/mission
+          file: services/mission/Dockerfile
+          push: true
+          tags: ghcr.io/onemindos/mission:sha-${{ github.sha }}
+          platforms: linux/amd64
+          cache-from: type=gha,scope=mission
+          cache-to: type=gha,mode=max,scope=mission
+      - name: Record image digest
+        run: printf '%s\n' '${{ steps.image.outputs.digest }}' > image-digest.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: mission-image
+          path: image-digest.txt
