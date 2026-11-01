@@ -1,0 +1,11 @@
+port: 7880
+key_file: /etc/livekit-keys/keys.yaml
+log_level: info
+rtc:
+  tcp_port: 7881
+  udp_port: 7882
+  use_external_ip: true
+# One instance, in-memory rooms; no Redis or distributed routing in this pilot.
+# TURN, Ingress, Egress, SIP and recordings are deliberately not enabled.
+turn:
+  enabled: false

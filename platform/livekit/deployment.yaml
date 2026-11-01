@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: livekit
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: livekit
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: livekit
+        app.kubernetes.io/part-of: livekit-pilot
+    spec:
+      automountServiceAccountToken: false
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      terminationGracePeriodSeconds: 180
+      nodeSelector:
+        kubernetes.io/os: linux
+        doks.digitalocean.com/node-pool: onemind-ecosystem-cpu
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: livekit
+          # v1.13.11 multi-architecture index verified against Docker Hub Nov1,2026.
+          image: docker.io/livekit/livekit-server:v1.13.11@sha256:25cd902de7cacbd5f1f779f6a6ac1eae20ba8f56b0935934ce6b0ab80d1e3d20
+          args:
+            - --config
+            - /etc/livekit/livekit.yaml
+            # Root bind applies to HTTP signaling; RTC has separate listeners.
+            # Do not expose HTTP on the node's public interface.
+            - --bind
+            - $(NODE_INTERNAL_IP)
+          env:
+            - name: NODE_INTERNAL_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          ports:
+            - name: http
+              containerPort: 7880
+              protocol: TCP
+            - name: rtc-tcp
+              containerPort: 7881
+              protocol: TCP
+            - name: rtc-udp
+              containerPort: 7882
+              protocol: UDP
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: '2'
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+            failureThreshold: 24
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 20
+          volumeMounts:
+            - name: configuration
+              mountPath: /etc/livekit
+              readOnly: true
+            - name: keys
+              mountPath: /etc/livekit-keys
+              readOnly: true
+            - name: temporary
+              mountPath: /tmp
+      volumes:
+        - name: configuration
+          configMap:
+            name: livekit-configuration
+        - name: keys
+          secret:
+            secretName: livekit-api
+            defaultMode: 0440
+        - name: temporary
+          emptyDir:
+            sizeLimit: 64Mi

@@ -4109,6 +4109,50 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: mcp-adapter-livekit
+  title: 'MCP adapter: livekit'
+  description: Private real-time voice and video SFU pilot. No adapter implemented yet; the entry reserves the application
+    in apps.yaml.
+  tags:
+  - plugin
+  - mcp-adapter
+  - planned
+  - cluster
+  - mcp
+  labels:
+    onemind.io/plugin-type: mcp-adapter
+    onemind.io/plugin-status: planned
+    onemind.io/plugin-origin: onemind
+    onemind.io/runs-on-kind: cluster
+    onemind.io/pillar: so
+  annotations:
+    onemind.io/plugin-type: mcp-adapter
+    onemind.io/plugin-status: planned
+    onemind.io/plugin-origin: onemind
+    onemind.io/runs-on-kind: cluster
+    onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
+    onemind.io/connects-to: livekit,onemind-mcp,litellm
+    onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
+    onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
+    onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
+      not probed
+    onemind.io/mcp-app-id: livekit
+    onemind.io/blocked-reason: Server source is staged, not deployed. Room-scoped client JWTs and the community
+      Hermes realtime gateway require separate compatibility and identity acceptance; no administrative API key
+      or generic room-control adapter is exposed to agents.
+spec:
+  type: mcp-adapter
+  lifecycle: planned
+  owner: group:default/onemind-admins
+  system: onemind-plugin-ecosystem
+  subcomponentOf: component:default/onemind-mcp
+  dependsOn:
+  - component:default/k8s-hermes-onemind-mcp-07887746
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: backstage-plugin-onemind-activity-backend
   title: onemind-activity-backend
   description: Backstage backend-plugin @internal/plugin-onemind-activity-backend in the OneMind portal workspace.

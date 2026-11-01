@@ -154,3 +154,10 @@ apps:
   enabled: false
   blocked_reason: Domain query/restore contracts and dedicated identities required; no raw SQL, backup decryption keys or destructive restore
     tools.
+- id: livekit
+  description: Private real-time voice and video SFU pilot
+  enabled: false
+  blocked_reason: >-
+    Server source is staged, not deployed. Room-scoped client JWTs and the community
+    Hermes realtime gateway require separate compatibility and identity acceptance;
+    no administrative API key or generic room-control adapter is exposed to agents.

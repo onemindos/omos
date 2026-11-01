@@ -252,3 +252,9 @@ applications:
     apps:
     - data_backups
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-livekit:
+    apps:
+    - livekit
+    reason: >-
+      Manual-sync SFU pilot; no direct MCP administrative access. Participant grants
+      and the community Hermes gateway require separate qualification.
