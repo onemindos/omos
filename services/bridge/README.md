@@ -52,7 +52,7 @@ omos-bridge/
 ├── bridge-template/          ← copy this to start a new bridge
 ├── bridges/
 │   ├── mavlink/              ← MAVLink v2 drones/autopilots (gomavlib)
-│   ├── tak/                  ← TAK / CoT XML ↔ NATS (ATAK, OTS)
+│   ├── tak/                  ← TAK mesh gateway: SA multicast, TAK Protocol v0/v1 ↔ NATS
 │   ├── homeassistant/        ← Home Assistant WebSocket API ↔ NATS
 │   ├── webhook/              ← HTTP POST → NATS (GitHub, Stripe, Twilio, etc.)
 │   └── mqtt/                 ← MQTT 3.1/5.0 ↔ NATS (IoT, sensors, HA devices)
@@ -88,7 +88,7 @@ omos-bridge/
 | Bridge | Protocol | Domain | Language | Status |
 |---|---|---|---|---|
 | [mavlink](./bridges/mavlink/) | MAVLink v2 | `air` | Go | ✅ v0.2 |
-| [tak](./bridges/tak/) | TAK / CoT XML | `field` | Go | ✅ v0.1 |
+| [tak](./bridges/tak/) | TAK mesh (CoT XML + TAK Protocol v1) | `tak.cot.mesh.*` | Go | ✅ v0.2 |
 | [homeassistant](./bridges/homeassistant/) | HA WebSocket API | `home` | Go | ✅ v0.1 |
 | [webhook](./bridges/webhook/) | HTTP POST/GET/PUT | `net` | Go | ✅ v0.1 |
 | [mqtt](./bridges/mqtt/) | MQTT 3.1 / 5.0 | `home` | Go | ✅ v0.1 |
@@ -338,7 +338,7 @@ Everything in the world
 
 ### ✅ Tier 1 — Live Stack (shipped)
 - [x] `bridges/mavlink` — MAVLink v2 drones/autopilots (gomavlib, UDP)
-- [x] `bridges/tak` — TAK / CoT XML ↔ NATS (ATAK, OTS, UDP)
+- [x] `bridges/tak` — TAK mesh gateway: multicast SA, directed TCP, TAK Protocol v1 negotiation
 - [x] `bridges/homeassistant` — Home Assistant WebSocket API ↔ NATS
 - [x] `bridges/webhook` — HTTP POST/GET/PUT → NATS (GitHub, Stripe, Twilio, etc.)
 - [x] `bridges/mqtt` — MQTT 3.1/5.0 ↔ NATS bidirectional
