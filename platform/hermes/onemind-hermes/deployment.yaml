@@ -88,6 +88,59 @@ spec:
             - name: cron
               mountPath: /cron
               readOnly: true
+        # Python packages the NATS gateway platform needs and the Hermes image lacks (nats-py,
+        # nkeys and the Synadia agent SDK; pydantic and pynacl are already in the venv, so
+        # --no-deps). Pinned with hashes in nats/gateway-deps.txt. They go on the data volume,
+        # not an emptyDir: PyPI is needed only when the pin changes, never on an ordinary restart.
+        # A failed install does not stop the pod (Telegram, Matrix and the dashboard do not need it);
+        # the NATS plugin simply cannot load and says so in the gateway log.
+        - name: install-gateway-deps
+          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          command:
+            - sh
+            - -c
+            - |
+              set -u
+              DEST=/opt/data/.local/gateway-deps
+              WANT=$(sha256sum /requirements/gateway-deps.txt | cut -d' ' -f1)
+              if [ -f "$DEST/.requirements.sha256" ] && [ "$(cat "$DEST/.requirements.sha256")" = "$WANT" ]; then
+                echo "gateway deps up to date"
+                exit 0
+              fi
+              UV=$(ls /opt/hermes/tools/uv-*/uv | head -n 1)
+              mkdir -p /opt/data/.local
+              rm -rf "$DEST.new"
+              if "$UV" pip install --python /opt/hermes/.venv/bin/python3 --target "$DEST.new" \
+                   --no-deps --require-hashes -r /requirements/gateway-deps.txt; then
+                echo "$WANT" > "$DEST.new/.requirements.sha256"
+                chmod -R a+rX "$DEST.new"
+                rm -rf "$DEST"
+                mv "$DEST.new" "$DEST"
+                echo "gateway deps installed"
+              else
+                rm -rf "$DEST.new"
+                echo "WARNING: gateway deps install failed; the NATS gateway platform stays unavailable"
+              fi
+              exit 0
+          env:
+            - name: UV_CACHE_DIR
+              value: /tmp/uv-cache
+            - name: HOME
+              value: /tmp
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          resources:
+            requests: {cpu: 20m, memory: 64Mi}
+            limits: {cpu: 500m, memory: 256Mi}
+          volumeMounts:
+            - name: data
+              mountPath: /opt/data
+            - name: gateway-deps-requirements
+              mountPath: /requirements
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
       containers:
         - name: hermes
           image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
@@ -124,6 +177,52 @@ spec:
                 secretKeyRef:
                   name: onemind-gateway-client
                   key: ONEMIND_GATEWAY_KEY
+            # ---- NATS: a direct client of the cluster bus (no leaf sidecar) ----
+            # Nothing below connects until the nats-platform plugin is listed in plugins.enabled
+            # (nats/apply.sh); until then these are inert. Same shape as every other cloud workload
+            # (CLAUDE.md "Bus Authority"): in-cluster Service, TLS, user and password from a Secret.
+            # omos-nats-creds already exists in this namespace (platform/hermes/bridge/) and holds the
+            # shared `onemind` client user. PR #562 replaces it with a `hermes` user in account AGENTS:
+            # reseal NATS_USER and NATS_PASSWORD from that user and nothing else changes.
+            - name: PYTHONPATH
+              value: /opt/data/.local/gateway-deps
+            - name: NATS_URL
+              value: tls://nats.nats.svc.cluster.local:4222
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+                  optional: true
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+                  optional: true
+            - name: NATS_CA_FILE
+              value: /etc/nats-ca/ca.crt
+            - name: NATS_TLS_SERVER_NAME
+              value: nats.nats.svc.cluster.local
+            - name: NATS_CLIENT_NAME
+              value: onemind-hermes-nats-platform
+            - name: NATS_CONTEXT_CLIENT_NAME
+              value: onemind-hermes-nats-context
+            # Identity on the fabric: agents.{prompt,status,hb}.hermes.zeus.legacy, the one hermes-legacy
+            # holds today. REFUSE_DUPLICATE keeps this instance down while hermes-legacy still holds it
+            # (MIGRATION.md, "NATS cutover").
+            - name: HERMES_NATS_AGENT
+              value: hermes
+            - name: HERMES_NATS_OWNER
+              value: zeus
+            - name: HERMES_NATS_SESSION_NAME
+              value: legacy
+            - name: HERMES_NATS_REFUSE_DUPLICATE
+              value: 'true'
+            # The NATS platform's own switch (the plugin README: the transport authenticates the caller).
+            # GATEWAY_ALLOW_ALL_USERS stays false, so Telegram and Matrix keep their allowlists.
+            - name: NATS_ALLOW_ALL_USERS
+              value: 'true'
           ports:
             - name: dashboard
               containerPort: 9119
@@ -152,7 +251,21 @@ spec:
             - name: export
               mountPath: /var/run/legacy-export
               readOnly: true
+            # Cluster NATS CA (same CA the Legacy leaf verifies against).
+            - name: nats-ca
+              mountPath: /etc/nats-ca
+              readOnly: true
       volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 128Mi
+        - name: gateway-deps-requirements
+          configMap:
+            name: onemind-hermes-gateway-deps
+        - name: nats-ca
+          secret:
+            secretName: hermes-nats-ca
+            optional: true
         - name: data
           persistentVolumeClaim:
             claimName: onemind-hermes-data

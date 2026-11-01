@@ -26,6 +26,13 @@ and five Codex worker roles (`ops-cluster`, `tak-mission`, `builder`, `researche
 `platform/hermes/onemind-hermes/roles/apply.sh` after merge, live verification recorded in the PR.
 See the [README section](platform/hermes/onemind-hermes/README.md#how-legacy-works-doctrine-and-worker-roles).
 
+2026-11-01: Legacy's NATS presence (step 7 of the Legacy to onemind-hermes migration) prepared in Git, not applied:
+onemind-hermes as a direct client of the cluster bus with no leaf sidecar, `nats-platform` vendored without the
+start-up hot-patch, a duplicate-identity guard so it can be enabled before `hermes-legacy` is stopped, and the
+`nats-clients` ingress rule. `platforms/tak-platform` is not ported (PR #585 replaces it). Inventory, order,
+checks and rollback: [MIGRATION.md](platform/hermes/onemind-hermes/MIGRATION.md#nats-inventory-and-cutover-step-7).
+Phase 8 stays Not started; live cutover is recorded in the PR after merge.
+
 2026-10-24 sprint: prepared a dedicated read-only Hermes cluster observer identity
 and sanitized readiness collector for the owner's Paperclip status-report task.
 Argo activation, RBAC acceptance and the agent-written report remain unverified.

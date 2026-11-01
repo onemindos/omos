@@ -1,13 +1,13 @@
 # Hermes plugins
 
-The plugins installed on the Hermes volume (`/opt/data/plugins/`) and where each one's source lives. Checked 2026-10-16.
+The plugins installed on the Hermes volume (`/opt/data/plugins/`) and where each one's source lives. Checked 2026-10-16, NATS rows updated 2026-11-01.
 
 | Plugin on the volume | Source | Notes |
 |----------------------|--------|-------|
-| `nats-platform` | Upstream: `synadia-ai/hermes-nats-gateway` (Apache-2.0), version 0.1.2 | Not vendored here. The live copy differs from the upstream code the old `legacy/` copy held by two lines in `adapter.py`, which are the approval-import patch applied by the init container in `deployment.yaml` (`nats-platform-patch-cm.yaml`). How the plugin is first installed is not recorded; plan step 2 (seeding an empty volume) will capture it |
-| `onemind-vision` | This repo: `platform/hermes/agent/plugins/onemind-vision/` (next to this file) | Byte-identical to the live copy. Installed by hand, so it is a GitOps gap |
-| `nats-context` | Probably `onemindos/hermes-plugin-nats-context` | Not compared with the live copy |
-| `platforms/` (the TAK platform) | Probably `onemindos/hermes-plugin-tak` | Not compared with the live copy |
-| `memory-wiki` | Unknown (upstream, a separate repo, or hand-written) | |
+| `nats-platform` | This repo: `platform/hermes/agent/plugins/nats-platform/` (upstream `synadia-ai/hermes-nats-gateway` 0.1.2, Apache-2.0, vendored; changes in its `ONEMIND-CHANGES.md`) | Vendored from the running Legacy pod. The approval-import line the hot-patch (`nats-platform-patch-cm.yaml`) fixed is now in `adapter.py`; the patch is only still used by `hermes-legacy`. Installed on onemind-hermes by `platform/hermes/onemind-hermes/nats/apply.sh`; hermes-legacy still has its own hand-installed copy |
+| `onemind-vision` | This repo: `platform/hermes/agent/plugins/onemind-vision/` (next to this file) | Byte-identical to the live copy. Installed by hand, so it is a GitOps gap. Formerly `onemind-maven` |
+| `nats-context` | This repo: `platform/hermes/agent/plugins/nats-context/` (OneMind-authored; no upstream repo was found) | Copy from the running Legacy pod plus `conn.py` (credentials and CA from the environment). Installed on onemind-hermes only with `nats/apply.sh --with-context` |
+| `platforms/` (the TAK platform) | Not in Git. `tak-platform` 0.1.0, 469 lines, on the Legacy volume | Deliberately not ported to onemind-hermes: PR #585 replaces it with a TAK-native client. It needs the TAK admin certificate on the volume and disables certificate verification |
+| `memory-wiki` | Upstream `NousResearch/hermes-memory-wiki` (MIT), per `.install-metadata.json` | Dashboard only, no NATS |
 
-To rebuild a plugin, reinstall the upstream or repo version and let the init container apply the patch. Do not edit plugins in place on the volume without exporting the change.
+To rebuild a plugin on hermes-legacy, reinstall the upstream or repo version and let the init container apply the patch. Do not edit plugins in place on a volume without exporting the change.

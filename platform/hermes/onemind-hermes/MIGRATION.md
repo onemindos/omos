@@ -109,13 +109,120 @@ Each step ends with an observed check on onemind-hermes. Legacy keeps running un
 6. **Cron and Telegram.** Recreate only the jobs the owner wants, with a token
    budget that avoids the October `tokens_per_day` failures; enable Telegram as
    their delivery target.
-7. **NATS cutover.** Port the `nats-platform`/`nats-context`/`tak-platform`
-   plugins without the startup hot-patch, give onemind-hermes the leaf sidecar and
-   `HERMES_NATS_SESSION_NAME`, scale Legacy to 0, and verify omos-ui discovery
-   and heartbeats on `agents.*`.
+7. **NATS cutover.** Prepared in Git (this section's PR): `nats-platform` and `nats-context`
+   vendored into `platform/hermes/agent/plugins/` without the startup hot-patch, onemind-hermes a
+   **direct client** of the cluster bus (no leaf sidecar), identity `agents.*.hermes.zeus.legacy` guarded
+   against a double presence. The order of the switch, the checks and the rollback are in
+   [NATS inventory and cutover](#nats-inventory-and-cutover-step-7) below. `tak-platform` is not ported.
 8. **Retire Legacy.** Keep a VolSync snapshot of `hermes-data`, then, with
    owner approval, remove the Legacy Deployment and Application. Rotate the
    credential files listed above.
+
+## NATS inventory and cutover (step 7)
+
+### What `hermes-legacy` does on NATS (measured 2026-11-01 04:48 UTC, uptime 2d2h)
+
+Read from the sidecar's monitor (`/connz?subs=detail`, `/leafz`, `/varz`), the plugin sources on the pod and the
+Synadia SDK in `/gateway-deps`. Nothing was changed on Legacy.
+
+The leaf (`hermes-legacy-leaf`) has 4 client connections, all from the one `hermes` container, plus the uplink
+to `nats-2` as `leaf_tak` into the cluster account (local account `OMOS`, hub side `ONEMIND`). Over the 2d2h the
+uplink carried 652,395 messages from the cluster and 18,324 to it; the four clients together published those
+18.3k (heartbeats, beacons, stats pings, below) and were delivered about 1.32M. So Legacy is almost all
+listener: the earlier "684k in, 5.6k out" is the same picture seen from the hub.
+
+| Connection | Plugin | Subscribes | Publishes | Notes |
+|---|---|---|---|---|
+| cid 9, the agent itself | `nats-platform` (Synadia `hermes-nats-gateway` 0.1.2; SDK `synadia-ai-agents` 0.8.1, `-agent-service` 0.5.0) | `agents.prompt.hermes.zeus.legacy` and `agents.status.hermes.zeus.legacy`, both queue group `agents`; micro-service `$SRV.PING\|INFO\|STATS` (with `.agents` and `.agents.<id>`) | heartbeat on `agents.hb.hermes.zeus.legacy` every 30 s (about 6,100 sent), replies on the caller's inbox | Identity is `{agent}.{owner}.{session}` = `hermes`, `zeus`, `legacy` (`HERMES_NATS_SESSION_NAME=legacy`, `platforms.nats.heartbeat_interval_s: 30`). The heartbeat body is the protocol 0.3 section 8.3 payload: `agent`, `owner`, `session`, `instance_id`, `ts`, `interval_s`, `protocol_version`, `endpoints`. That, and `$SRV.PING.agents`, is what discovery (the Agent Console in `agent-fabric`, omos-ui) reads. No JetStream consumer, no KV |
+| cid 7 and 8, the live picture | `nats-context` (OneMind, source never in Git) | core subscriptions, no queue group: `tak.cot.>` (622,475 msgs), `tel.>` (29,312), `intel.>` (576), `agents.hb.>` (6,109, every agent's heartbeat), plus `ent.>`, `det.>`, `evt.>`, `evt.threat.>`, `evt.mission.>`, `evt.task.>`, `cmd.alert.>`, `svc.bridge.>`, `sys.>` (0 so far) | `$SYS.REQ.SERVER.PING` once a minute per connection; on demand the nine tools (`nats_publish`, `nats_request`, `nats_peek`, `nats_jetstream_fetch`, `nats_kv_get`, `nats_kv_put`, `nats_kv_list`, `nats_server_info`, `nats_list_streams`) open a short connection each | This is the "feed consumer": 661k of the 1.34M outbound messages, counted twice because the gateway and the dashboard process each load the plugin. Core subscriptions only. It prepends a `[LIVE OPERATIONAL PICTURE]` block to every model call |
+| cid 10 `hermes-tak-adapter` | `platforms/tak-platform` | `tak.cot.out` (0 messages ever) | presence beacon to `tak.cot.inject` every 30 s (about 6,100), and the same beacon plus GeoChat replies straight to `takserver-messaging:8089` over TLS with the TAK admin certificate and `CERT_NONE` | Nothing publishes `tak.cot.out`, so it has never heard a GeoChat (PR #585 section 5.1 explains why). No session was ever recorded from `tak` |
+
+The hot-patch (`patch_nats_platform.py`, `nats-platform-patch-cm.yaml`) changes one thing in `adapter.py`: it moves
+`set_current_session_key` and `reset_current_session_key` from `tools.approval` to `tools.approval_context`.
+Hermes v0.22.5 has them **only** in `tools.approval_context` and has **no native NATS platform**
+(`grep` over `gateway/`, `hermes_cli/`, `plugins/`, `tools/`, `agent/` finds none), so the plugin is still needed
+and the fix is still needed. It is now a normal line in the vendored `adapter.py`, not a patch applied at start.
+
+### What was ported, what was not
+
+| Item | Decision |
+|---|---|
+| `nats-platform` | Vendored to `platform/hermes/agent/plugins/nats-platform/` (runtime files, Apache-2.0 `LICENSE`). Three small changes, listed in its `ONEMIND-CHANGES.md`: the approval import, credentials and TLS from the environment, and refusing a duplicate identity. Loads through the real v0.22.5 plugin discovery in the live onemind-hermes image (checked read-only in `/tmp`, nothing kept) |
+| `nats-context` | Vendored to `platform/hermes/agent/plugins/nats-context/`, with `conn.py` so it can use the same credentials. **Not enabled by default** (`apply.sh --with-context`): it takes the raw feeds into the model prompt and gives it a generic `nats_publish`, which PR #562 (no raw feeds, no `cmd.*` for Hermes) and PR #564 (`nats_publish` retired behind a flag, `onemind-bus` tools instead) remove on purpose. Owner decision below |
+| `platforms/tak-platform` | **Not ported.** It hears nothing today, it needs `tak_admin.pem` on the volume (which this document says not to copy) and it disables certificate verification. PR #585 replaces it with a TAK-native client using its own certificate. It stays on Legacy until then, so Legacy keeps its beacon and nothing is lost that worked |
+| `onemind-maven` | Is `onemind-vision` (renamed), already in Git at `platform/hermes/agent/plugins/onemind-vision/`. It makes no NATS connection (the only "NATS" in it is a string in a prompt). Not part of this step |
+| `memory-wiki`, `hermes-project-stewardship` | Third party, no NATS. Not part of this step |
+
+### How onemind-hermes connects
+
+Same shape as every other cloud workload (`CLAUDE.md` Bus Authority): in-cluster `tls://nats.nats.svc.cluster.local:4222`,
+user and password from a Secret, certificate verified against the cluster CA, **no sidecar**.
+
+| Piece | Where |
+|---|---|
+| Credentials | `NATS_USER` and `NATS_PASSWORD` from the existing Secret `omos-nats-creds` in `hermes` (`platform/hermes/bridge/omos-nats-creds.sealedsecret.yaml`; keys `user`, `password`; the shared `onemind` client user, byte-identical to the copy in `omos`). **No new secret and no server change was needed.** PR #562 will give Hermes its own user in account `AGENTS`: reseal these two values from it, nothing else changes |
+| CA | Secret `hermes-nats-ca` (`ca.crt`, same certificate as `nats-server-tls`), mounted at `/etc/nats-ca`; `NATS_TLS_SERVER_NAME=nats.nats.svc.cluster.local` |
+| Dependencies | init container `install-gateway-deps`: `nats-py`, `nkeys`, the two Synadia packages, pinned with hashes in `nats/gateway-deps.txt`, `--no-deps` so the venv's pydantic and pynacl are not replaced, installed to `/opt/data/.local/gateway-deps` (`PYTHONPATH`). PyPI is needed only when the pin changes. A failed install does not stop the pod |
+| Identity | `HERMES_NATS_AGENT=hermes`, `HERMES_NATS_OWNER=zeus`, `HERMES_NATS_SESSION_NAME=legacy`: the subjects above, unchanged |
+| Authorisation | `NATS_ALLOW_ALL_USERS=true` for the NATS platform only. The adapter sets every caller's user id to the session name, so a per-user allowlist cannot work; the bus authenticates. `GATEWAY_ALLOW_ALL_USERS` stays `false` |
+| Network | egress to the NATS pods on 4222 in `network.yaml`; ingress for this pod in the `nats-clients` policy (`platform/nats/network-policy.yaml`) |
+| Switch | the plugin is only loaded when listed in `plugins.enabled`: `nats/apply.sh` adds it, `nats/apply.sh --disable` removes it |
+
+Until the plugin is listed, all of the above is inert. The pod does not touch the bus.
+
+### No double presence
+
+Two bodies behind one identity split the prompts between them and both heartbeat, and upstream only warns about it.
+The vendored adapter, with `HERMES_NATS_REFUSE_DUPLICATE=true` (set in the Deployment), asks the bus whether
+`agents.status.hermes.zeus.legacy` already answers after it connects. If it does, it closes the connection and does
+not register; the gateway retries with a back-off of 30 s, 60 s, ... up to 5 minutes and never gives up. So
+onemind-hermes can be switched on **while Legacy still holds the identity**: it connects, authenticates, probes and
+waits (that already proves the credentials, the CA, the network policy and the permissions), and it takes the
+identity over by itself when Legacy lets go.
+
+### Order
+
+1. **Merge** (Argo rolls the Deployment; the pod restarts once, with a short Telegram and Matrix gap).
+2. `nats/apply.sh --status`: every NATS variable `set`, `gateway deps ... installed`.
+3. `nats/apply.sh --dry-run`, then `nats/apply.sh --restart` (copies `nats-platform`, lists it in `plugins.enabled`,
+   restarts only the gateway process). Check that onemind-hermes is **connected but not registered**: its
+   connection is in `/connz` (client name `onemind-hermes-nats-platform`, user `onemind`) and it holds no
+   `agents.prompt...` subscription; the gateway log says the identity is live elsewhere.
+   Read `/connz` without any new access: `kubectl get --raw "/api/v1/namespaces/nats/pods/nats-0:8222/proxy/connz?subs=detail&auth=true"`
+   (a client is on one of the three servers; look at all three).
+4. **Owner: let Legacy go.** Either
+   - scale `hermes-legacy` to 0 (this also stops its leaf, `nats-context` and `tak-platform`), or
+   - if Paperclip stays on Legacy for now: in Legacy's live `config.yaml` set `platforms.nats.enabled: false` and
+     `platforms.tak.enabled: false` and restart its gateway, as was done for Telegram and Matrix. (Legacy's
+     `nats-context` keeps listening; it publishes nothing but a stats ping.)
+
+   Legacy has no duplicate guard (it runs the upstream adapter), so it must be **disabled or stopped**, not just left
+   alone: if it restarted with `nats` enabled while onemind-hermes holds the identity, the prompts would split.
+5. onemind-hermes registers by itself within 30 s to 5 minutes; to take it immediately, `nats/apply.sh --restart`.
+6. **Verify** (all four, the first before step 4 so there is something to compare):
+   - `$SRV.INFO.agents` / `nats req '$SRV.PING.agents'` lists one `hermes` instance with the new `instance_id`;
+   - `agents.hb.hermes.zeus.legacy` heartbeats every 30 s from the new instance only;
+   - the Agent Console (`agent-fabric`) and omos-ui show Legacy as live;
+   - a prompt to `agents.prompt.hermes.zeus.legacy` (Agent Console chat, or the Synadia SDK) streams a reply, and a
+     slash command (`/help`) answers.
+7. **Rollback**, at any point: `nats/apply.sh --disable --restart` on onemind-hermes, then scale Legacy back up or
+   flip `platforms.nats.enabled` back to `true` on Legacy and restart its gateway. Backups of every file and
+   `config.yaml` the script changes are under `/opt/data/backups/legacy-nats-<stamp>/`.
+
+A rehearsal under a different identity is possible without any other change: temporarily set
+`HERMES_NATS_SESSION_NAME` to `legacy-next` in `deployment.yaml` (a new subject family, so no collision and no
+guard), prompt `agents.prompt.hermes.zeus.legacy-next`, then set it back.
+
+### Owner decisions and later work
+
+- **Paperclip** decides whether step 4 can scale Legacy to 0 (this PR does not touch Paperclip).
+- **`nats-context`**: `--with-context` brings back the live picture and the generic NATS tools. Recommended to wait for
+  PRs #562 and #564, because with the shared `onemind` user nothing on the server side limits what the model can
+  publish (the SOUL rule that physical actions need `execute` is the only guard, the same as on Legacy today).
+- The shared `onemind` credential is readable by the agent's shell (the terminal backend is `local`). PR #562's
+  `hermes` user is the fix; until then this is the same exposure Legacy had through `hermes-env`.
+- After Legacy is retired (step 8): delete the Legacy rule in the `nats-leafnodes` policy and the `hermes-leaf-conf`
+  Secret, and stop `leaf_tak` being shared.
 
 ## Chat channels (Telegram and Matrix), moved 2026-10-29
 

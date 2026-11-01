@@ -38,6 +38,19 @@ spec:
               app.kubernetes.io/instance: agentgateway
       ports:
         - {protocol: TCP, port: 8080}
+    # NATS: the cluster bus, direct (no leaf sidecar). Matching ingress rule is in the `nats-clients`
+    # policy in platform/nats/network-policy.yaml; a drop here is silent (the client times out).
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: nats
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: nats
+              app.kubernetes.io/instance: nats
+              app.kubernetes.io/name: nats
+      ports:
+        - {protocol: TCP, port: 4222}
     # Matrix: in-cluster Synapse client API (the homeserver URL in config.yaml).
     - to:
         - namespaceSelector:
