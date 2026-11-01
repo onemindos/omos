@@ -54,7 +54,6 @@ spec:
       prune: false
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true
       - RespectIgnoreDifferences=true
   ignoreDifferences:
     - group: apps
