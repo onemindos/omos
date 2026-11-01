@@ -312,6 +312,8 @@ apps:
     system: personal-tools
     description: Native bookmark and read-later workspace prepared with manual Argo and zero replicas; first start, owner enrollment and recovery acceptance are pending.
 placement:
+  tacsync: tak-ecosystem
+  cesium-ion-for-tak: tak-ecosystem
   xmpp-for-tak: tak-ecosystem
   district47: tak-ecosystem
   engindearing-projects: tak-ecosystem
