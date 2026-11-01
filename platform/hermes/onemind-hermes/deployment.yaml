@@ -90,7 +90,9 @@ spec:
               readOnly: true
         # Python packages the NATS gateway platform needs and the Hermes image lacks (nats-py,
         # nkeys and the Synadia agent SDK; pydantic and pynacl are already in the venv, so
-        # --no-deps). Pinned with hashes in nats/gateway-deps.txt. They go on the data volume,
+        # --no-deps). Pinned with hashes in nats/gateway-deps.txt. The plugins add the directory to
+        # sys.path themselves: the hermes launcher discards PYTHONPATH and the venv has no user
+        # site, so neither a variable nor a .pth in /opt/data works. They go on the data volume,
         # not an emptyDir: PyPI is needed only when the pin changes, never on an ordinary restart.
         # A failed install does not stop the pod (Telegram, Matrix and the dashboard do not need it);
         # the NATS plugin simply cannot load and says so in the gateway log.
@@ -184,8 +186,6 @@ spec:
             # omos-nats-creds already exists in this namespace (platform/hermes/bridge/) and holds the
             # shared `onemind` client user. PR #562 replaces it with a `hermes` user in account AGENTS:
             # reseal NATS_USER and NATS_PASSWORD from that user and nothing else changes.
-            - name: PYTHONPATH
-              value: /opt/data/.local/gateway-deps
             - name: NATS_URL
               value: tls://nats.nats.svc.cluster.local:4222
             - name: NATS_USER

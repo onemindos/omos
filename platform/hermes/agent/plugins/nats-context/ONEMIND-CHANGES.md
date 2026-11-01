@@ -11,6 +11,7 @@ Changes:
 | `conn.py` (new) | `nats_url()` and `connect_options()` read `NATS_URL`, `NATS_USER`, `NATS_PASSWORD`, `NATS_CA_FILE`, `NATS_TLS_SERVER_NAME`, `NATS_CONTEXT_CLIENT_NAME` | The plugin dialled `nats://localhost:4222` (the leaf sidecar) with no credentials and no TLS. onemind-hermes has no sidecar |
 | `subscriptions.py` | `nats.connect(..., **connect_options())` | same |
 | `tools.py` | the hard-coded `NATS_URL = "nats://localhost:4222"` and 9 `nats.connect(NATS_URL)` calls use `nats_url()` and `connect_options()` | same |
+| `__init__.py` | appends `/opt/data/.local/gateway-deps` to `sys.path` before the imports | The `hermes` launcher unsets `PYTHONPATH`; same reason as `nats-platform` |
 
 With the environment unset the behaviour is what it was.
 
