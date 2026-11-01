@@ -3321,7 +3321,6 @@ spec:
   subcomponentOf: component:default/onemind-mcp
   dependsOn:
   - component:default/k8s-hermes-onemind-mcp-07887746
-  - component:default/nextcloud
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
