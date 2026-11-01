@@ -131,3 +131,7 @@ local auth/DNS, Hermes, STT/LLM/TTS and any model assets, storage and sufficient
 - [HTTP binding implementation](https://github.com/livekit/livekit/blob/v1.13.11/pkg/service/server.go)
 - [Meet frontend](https://github.com/livekit-examples/meet)
 - [Portal robotics](https://docs.livekit.io/robotics/integrations/portal/)
+
+## November 1 runtime/code audit
+
+See [the pinned-source compatibility audit](HERMES-COMPATIBILITY.md). Inspected registration/message APIs match deployed Legacy 0.21.5 and Hermes 0.22.5, but media dependencies require an isolated build. Legacy aiohttp needs dependency resolution. Use a trusted-user room initially: pending capture images are shared room-wide and the capture admission path checks membership rather than the Hermes user allowlist. Qualify sender ownership before mixed-trust participants. Fifty-eight isolated admission/audio tests passed; no end-to-end media, tools or memory acceptance was performed.
