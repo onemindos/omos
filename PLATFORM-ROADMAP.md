@@ -51,6 +51,18 @@ workload or scheduler requests. Tests and source delivery do not establish live
 unsealing or app authorization; [acceptance and recovery](platform/hermes/onemind-hermes/mcp/zoho/README.md)
 remain deployment gates. Broader Phase 8 is not marked complete by this change.
 
+2026-11-01 owner-requested native 1Password access: **source-only draft, NOT
+DEPLOYED**. Default-home configuration, checksum-pinned CLI startup bootstrap,
+ClickUp environment scoping and proposed wiring are retained only in the non-active
+`onepassword/` directory. Production Deployment, defaults and Kustomization are
+restored to original base bytes; no installer/bootstrap/source activation is wired. The encrypted bootstrap SealedSecret, corrected Hermes runtime image (the
+pinned upstream filter leaks bootstrap to terminal children), and authorized
+runtime/recovery checks remain integration gates; no deployed access or broader
+Phase 8 completion is claimed. The local hash-locked runtime correction and
+synthetic regressions are in
+[runtime-fix](platform/hermes/onemind-hermes/onepassword/runtime-fix/README.md).
+See [startup prerequisites and recovery](platform/hermes/onemind-hermes/onepassword/README.md).
+
 ## How to work on this roadmap (any agent)
 
 1. Read this file, `CLAUDE.md` (operating rules) and `docs/MISSION.md` first.

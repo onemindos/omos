@@ -63,6 +63,18 @@ configuration or login is included. See [Whop MCP startup and recovery](mcp/whop
 Source tests do not establish live backup/restore success or authorize financial
 actions.
 
+## Native 1Password app credentials
+
+**Source-only draft — NOT DEPLOYED.** Proposed native-source settings, pinned
+`op` installer, reconciliation, runtime correction and tests remain under
+[`onepassword/`](onepassword/README.md). Production Deployment, defaults and
+Kustomization are byte-identical to the original base: no bootstrap injection,
+installer, ConfigMap or native-source activation is added. The existing runtime
+image is unchanged. Activation requires a built/tested corrected image pinned by
+its real digest, a real rotated strictly scoped bootstrap SealedSecret, reviewed
+GitOps wiring and authorized runtime/recovery acceptance. No new MCP/Connect
+server is introduced.
+
 ## Labels and selectors
 
 `app.kubernetes.io/name: onemind-hermes` is the selector for the Deployment,
