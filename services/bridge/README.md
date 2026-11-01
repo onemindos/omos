@@ -52,6 +52,7 @@ omos-bridge/
 ├── bridge-template/          ← copy this to start a new bridge
 ├── bridges/
 │   ├── mavlink/              ← MAVLink v2 drones/autopilots (gomavlib)
+│   ├── ros2/                 ← ROS 2 robots via zenoh-bridge-ros2dds (rosbridge fallback), Python
 │   ├── tak/                  ← TAK / CoT XML ↔ NATS (ATAK, OTS)
 │   ├── homeassistant/        ← Home Assistant WebSocket API ↔ NATS
 │   ├── webhook/              ← HTTP POST → NATS (GitHub, Stripe, Twilio, etc.)

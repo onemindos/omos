@@ -1,0 +1,54 @@
+name: ROS 2 bridge tests
+
+# Unit and in-process tests for services/bridge/bridges/ros2 (FEATURES H3): the CDR codec,
+# RFC 8785 JCS, the command verifier (including envelopes signed by the policy service
+# code), the bridge core, the Zenoh transport against the scripted robot over real Zenoh
+# sessions on localhost, and the rosbridge fallback against a fake server. The bridge runs
+# at the edge beside the robot (omos CLAUDE.md "Bus Authority"), so there is no image or
+# Argo Application, as for the MAVLink bridge. The end-to-end test (tests/e2e/run.sh)
+# needs nats-server and the policy service and runs on the operator's machine.
+# Follow-up (owner proposal H3-P8, docs/proposals/2026-10-29-ros2-bridge-h3.md): once
+# services/policy (PR #554) is on main, add a job that builds it and runs tests/e2e/run.sh
+# with a pinned nats-server release.
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/test-ros2-bridge.yml"
+      - "services/bridge/bridges/ros2/**"
+      - "services/schemas/command/testdata/params-hash-vectors.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/test-ros2-bridge.yml"
+      - "services/bridge/bridges/ros2/**"
+      - "services/schemas/command/testdata/params-hash-vectors.json"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/bridge/bridges/ros2
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install -r requirements-dev.txt
+
+      - name: Byte-compile
+        run: python -m compileall -q ros2bridge sim tests
+
+      - name: pytest
+        run: python -m pytest -v -p no:cacheprovider tests
