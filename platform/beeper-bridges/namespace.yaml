@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: beeper-bridges
+  labels:
+    app.kubernetes.io/name: beeper-bridges
+    onemind.io/layer: make-sense
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    argocd.argoproj.io/sync-wave: '-2'

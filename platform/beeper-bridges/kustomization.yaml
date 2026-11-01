@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: beeper-bridges
+resources:
+  - namespace.yaml
+  - pvcs.yaml
+  - deployments.yaml
+  - network.yaml
+  - backup.yaml
+  - sealed/
+configMapGenerator:
+  - name: beeper-bridge-runtime
+    files:
+      - scripts/fetch-bridge.sh
+      - scripts/run-bridge.sh
+      - scripts/start-connector.sh
+  - name: beeper-bridge-artifacts
+    files:
+      - artifacts.json=artifacts-lock.json
+generatorOptions:
+  labels:
+    app.kubernetes.io/part-of: beeper-bridges

@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: beeper-whatsapp-data
+  labels:
+    app.kubernetes.io/name: beeper-whatsapp
+    app.kubernetes.io/part-of: beeper-bridges
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: beeper-telegram-data
+  labels:
+    app.kubernetes.io/name: beeper-telegram
+    app.kubernetes.io/part-of: beeper-bridges
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: beeper-gmessages-data
+  labels:
+    app.kubernetes.io/name: beeper-gmessages
+    app.kubernetes.io/part-of: beeper-bridges
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: beeper-instagram-data
+  labels:
+    app.kubernetes.io/name: beeper-instagram
+    app.kubernetes.io/part-of: beeper-bridges
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: beeper-twitter-data
+  labels:
+    app.kubernetes.io/name: beeper-twitter
+    app.kubernetes.io/part-of: beeper-bridges
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 5Gi

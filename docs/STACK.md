@@ -307,3 +307,18 @@ credentials unchanged. No Kubernetes API privileges are granted. Update 2026-10-
 all four tools and resource reads pass from Legacy, anonymous access is rejected,
 MCP and Legacy are available, and Argo is Synced/Healthy. Extension, rotation and
 rollback: [runbook](operations/onemind-mcp.md).
+
+## Prepared Beeper deployment — 2026-10-31
+
+**[Draft PR #605](https://github.com/onemindos/omos/pull/605), source prepared, not live:**
+Tier 2, namespace `beeper-bridges`, Argo Application
+`platform-beeper-bridges` (manual sync). Five single-replica connectors for
+WhatsApp, Telegram, Google Messages, Instagram and X use retained per-bridge
+state, version/checksum-locked binaries and a pinned manager image. The existing
+Matrix deployment is separate and unchanged.
+
+Beeper account authorization, Telegram API credentials, sealed backup credentials
+and device/account acceptance are required before activating the approved batch.
+The bridge pods are not an MCP server; the explicit `beeper` access disposition
+remains disabled pending a separately authenticated client-side MCP integration.
+See [deployment and recovery](../platform/beeper-bridges/README.md).

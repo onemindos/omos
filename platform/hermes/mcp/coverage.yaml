@@ -1,5 +1,11 @@
 # Git-declared inventory only; not a live-state assertion. New Applications must be classified.
 applications:
+  platform-beeper-bridges:
+    apps:
+    - beeper
+    reason: >-
+      Owner-approved self-hosted messaging transports. The beeper app remains disabled until a separately
+      authenticated Desktop or Android MCP connection is reviewed and accepted; bridge tokens are not MCP credentials.
   app-of-apps:
     apps:
     - argocd

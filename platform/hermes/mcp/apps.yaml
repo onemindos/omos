@@ -76,6 +76,12 @@ apps:
   enabled: false
   blocked_reason: Dedicated Matrix bot identity, room membership, reviewed API adapter and authenticated acceptance required. E2EE needs explicit
     key management.
+- id: beeper
+  description: Self-hosted messenger connectors for the owner's Beeper inbox
+  enabled: false
+  blocked_reason: >-
+    Bridge pods provide transport, not an MCP endpoint. Dedicated Desktop or Android MCP authorization,
+    private reachability and authenticated acceptance are required before agent content access is enabled.
 - id: backstage
   description: OneMind service catalog and developer workspace
   adapter: backstage
