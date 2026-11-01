@@ -1,0 +1,96 @@
+# Bake-off candidate B (fallback): CouchDB for Self-hosted LiveSync.
+# After first start, apply LiveSync's required CouchDB settings with the upstream
+# provisioning tool (see README.md). Mobile clients require a valid TLS certificate,
+# so the pilot exposes CouchDB through the Tailscale ingress (ts.net certificate).
+apiVersion: v1
+kind: Service
+metadata:
+  name: couchdb
+spec:
+  selector: {app: vault-couchdb}
+  ports:
+    - {name: http, port: 5984, targetPort: 5984}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: couchdb
+  annotations:
+    tailscale.com/hostname: vault-couchdb
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: couchdb
+      port:
+        number: 5984
+  tls:
+    - hosts: [vault-couchdb]
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: couchdb
+spec:
+  serviceName: couchdb
+  replicas: 1
+  selector:
+    matchLabels: {app: vault-couchdb}
+  template:
+    metadata:
+      labels: {app: vault-couchdb}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        # The image's couchdb user is uid/gid 5984; when started non-root the
+        # entrypoint skips chown/setpriv and writes admin config to local.d.
+        runAsNonRoot: true
+        runAsUser: 5984
+        runAsGroup: 5984
+        fsGroup: 5984
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: couchdb
+          # couchdb:3.5.2 (multi-arch index)
+          image: couchdb:3.5.2@sha256:5fc596110eac7f412173a7d9de14f70aa5d3e816790fb6e70642755d4a4cf464
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+          ports: [{name: http, containerPort: 5984}]
+          env:
+            - name: COUCHDB_USER
+              valueFrom:
+                secretKeyRef: {name: vault-couchdb, key: username}
+            - name: COUCHDB_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: vault-couchdb, key: password}
+          resources:
+            requests: {cpu: 50m, memory: 256Mi}
+            limits: {cpu: '1', memory: 1Gi}
+          readinessProbe:
+            httpGet: {path: /_up, port: http}
+            periodSeconds: 15
+          livenessProbe:
+            httpGet: {path: /_up, port: http}
+            periodSeconds: 60
+          volumeMounts:
+            - {name: data, mountPath: /opt/couchdb/data}
+            # Runtime config written over HTTP (LiveSync provisioning) lands in
+            # local.d/docker.ini, so it gets its own small persistent volume.
+            # Separate PVCs (not subPath) so fsGroup ownership applies to each root.
+            - {name: config, mountPath: /opt/couchdb/etc/local.d}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        storageClassName: do-block-storage-retain
+        resources:
+          requests: {storage: 10Gi}
+    - metadata:
+        name: config
+      spec:
+        accessModes: [ReadWriteOnce]
+        storageClassName: do-block-storage-retain
+        resources:
+          requests: {storage: 1Gi}
