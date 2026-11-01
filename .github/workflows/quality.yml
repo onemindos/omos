@@ -190,6 +190,9 @@ jobs:
           chmod +x "$RUNNER_TEMP/rclone-cli/rclone-${RCLONE_CLI_VERSION}-linux-amd64/rclone"
           echo "RCLONE_BIN=$RUNNER_TEMP/rclone-cli/rclone-${RCLONE_CLI_VERSION}-linux-amd64/rclone" >> "$GITHUB_ENV"
 
+      - name: Install private credential preparation test dependency
+        run: python -m pip install bcrypt==5.0.0
+
       - name: Portable GitOps pipeline safety contracts
         run: python -m unittest discover -s scripts/tests -p 'test_gitops*.py' -v
 

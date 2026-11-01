@@ -1399,3 +1399,18 @@ a completed fresh volume snapshot plus private database/config exports.
 Provider deletion and recovery verification must be recorded from live evidence;
 this source change alone does not certify either. Preserve device originals and
 existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
+
+## User-directed IoT comparison — November1,2026
+
+Zeus selected **both OpenRemote and ThingsBoard** for cluster evaluation, superseding
+the earlier recommendation to promote only one immediately. Source is prepared as
+separate manual-sync Argo Applications in one reviewable batch. Private HTTPS,
+retained data, per-volume encrypted backups and an idempotent ThingsBoard account
+bootstrap are declared. Local containers were retired separately with their saved
+data retained; no data import or cluster rollout is claimed here.
+
+[OpenRemote launch/recovery](platform/openremote/README.md) and
+[ThingsBoard CE4.3 launch/recovery](platform/thingsboard/README.md). Secrets, capacity,
+merge, manual sync, login, telemetry and isolated restore acceptance remain pending.
+No Hermes adapter, NATS contracts or physical-control permission changes. Phase6
+remains In progress; Phases7/8 remain unfinished.

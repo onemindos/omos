@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: thingsboard-bootstrap
+  annotations:
+    argocd.argoproj.io/sync-wave: '0'
+data:
+  guard.sh: |
+    #!/bin/sh
+    set -eu
+    until pg_isready -h "$PGHOST" -U "$PGUSER" -d "$PGDATABASE" >/dev/null; do sleep 3; done
+    marker=$(psql -XAt -v ON_ERROR_STOP=1 -c "SELECT to_regclass('public.onemind_bootstrap') IS NOT NULL")
+    if [ "$marker" = t ]; then
+      [ "$(psql -XAt -v ON_ERROR_STOP=1 -c 'SELECT version FROM public.onemind_bootstrap')" = 1 ]
+      echo 'Existing OneMind initialization marker accepted; credentials are not reset.'
+      exit 0
+    fi
+    count=$(psql -XAt -v ON_ERROR_STOP=1 -c "SELECT count(*) FROM information_schema.tables WHERE table_schema='public'")
+    if [ "$count" != 0 ]; then
+      echo 'Existing database has no OneMind marker: refuse installation or credential reset.' >&2
+      exit 1
+    fi
+    touch /work/install-required
+  secure-admin.sql: |
+    \getenv admin_email TB_SYSADMIN_EMAIL
+    \getenv admin_hash TB_SYSADMIN_PASSWORD_HASH
+    BEGIN;
+    CREATE TEMP TABLE bootstrap_credentials (email text, hash text);
+    INSERT INTO bootstrap_credentials VALUES (:'admin_email', :'admin_hash');
+    DO $$ BEGIN
+      IF (SELECT count(*) FROM tb_user WHERE authority = 'SYS_ADMIN') <> 1 THEN
+        RAISE EXCEPTION 'Expected exactly one initial system administrator';
+      END IF;
+      IF NOT EXISTS (SELECT 1 FROM bootstrap_credentials
+        WHERE email LIKE '%@%' AND hash LIKE '$2%') THEN
+        RAISE EXCEPTION 'Invalid private bootstrap credential material';
+      END IF;
+    END $$;
+    UPDATE user_credentials SET password = (SELECT hash FROM bootstrap_credentials),
+      enabled = true, activate_token = NULL, reset_token = NULL
+    WHERE user_id IN (SELECT id FROM tb_user WHERE authority = 'SYS_ADMIN');
+    UPDATE tb_user SET email = (SELECT email FROM bootstrap_credentials)
+    WHERE authority = 'SYS_ADMIN';
+    CREATE TABLE public.onemind_bootstrap (version integer PRIMARY KEY, initialized_at timestamptz DEFAULT now());
+    INSERT INTO public.onemind_bootstrap(version) VALUES (1);
+    COMMIT;

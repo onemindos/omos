@@ -154,3 +154,13 @@ apps:
   enabled: false
   blocked_reason: Domain query/restore contracts and dedicated identities required; no raw SQL, backup decryption keys or destructive restore
     tools.
+
+- id: openremote
+  description: Physical asset attributes, telemetry and site rules
+  enabled: false
+  blocked_reason: Prepared private IoT pilot; deployment, owner enrollment, dedicated read identity and scoped API or MCP acceptance pending. No physical actions granted.
+
+- id: thingsboard
+  description: Community device telemetry, dashboards and alarms
+  enabled: false
+  blocked_reason: Prepared private IoT pilot; deployment, owner enrollment, dedicated read identity and scoped API or MCP acceptance pending. No physical actions granted.

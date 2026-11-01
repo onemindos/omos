@@ -252,3 +252,9 @@ applications:
     apps:
     - data_backups
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-openremote:
+    apps: [openremote]
+    reason: Prepared private pilot; supporting database and identity services belong to this app. Agent access stays disabled until scoped acceptance.
+  platform-thingsboard:
+    apps: [thingsboard]
+    reason: Prepared private pilot; supporting database and identity services belong to this app. Agent access stays disabled until scoped acceptance.

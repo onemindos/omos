@@ -1,0 +1,118 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: thingsboard
+spec:
+  selector:
+    app: thingsboard
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+    - name: mqtt
+      port: 1883
+      targetPort: mqtt
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thingsboard
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: thingsboard
+  template:
+    metadata:
+      labels:
+        app: thingsboard
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        doks.digitalocean.com/node-pool: onemind-ecosystem-cpu
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 799
+        runAsGroup: 799
+        fsGroup: 799
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: thingsboard
+          image: thingsboard/tb-node:4.3.1.8@sha256:5e2c180f3c48a9f4efd3e19d2f03c41b510ff1a935f25083657e0cf046a94872
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1536Mi
+            limits:
+              cpu: '2'
+              memory: 2Gi
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: mqtt
+              containerPort: 1883
+          env:
+            - name: TB_SERVICE_ID
+              value: onemind-thingsboard
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/thingsboard
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: thingsboard-env
+                  key: DB_PASSWORD
+            - name: JWT_TOKEN_SIGNING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: thingsboard-env
+                  key: JWT_TOKEN_SIGNING_KEY
+            - name: TB_QUEUE_TYPE
+              value: in-memory
+            - name: JAVA_OPTS
+              value: -Xms256m -Xmx1200m
+          startupProbe:
+            httpGet:
+              path: /login
+              port: http
+            periodSeconds: 10
+            failureThreshold: 90
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /login
+              port: http
+            periodSeconds: 30
+            failureThreshold: 5
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: logs
+              mountPath: /var/log/thingsboard
+            - name: data
+              mountPath: /usr/share/thingsboard/data
+      volumes:
+        - name: logs
+          emptyDir:
+            sizeLimit: 512Mi
+        - name: data
+          emptyDir:
+            sizeLimit: 512Mi
