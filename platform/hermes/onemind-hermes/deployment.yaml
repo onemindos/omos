@@ -50,6 +50,28 @@ spec:
                       os.chmod(target, 0o600)
                       handle.write(source.read_bytes())
 
+              # This command overrides image stage2. Repair only the home/config
+              # ownership before the CLI shim drops root to the hermes user.
+              # Never recurse through user data or change other profiles.
+              import pwd
+              try:
+                  owner = pwd.getpwnam('hermes')
+              except KeyError:
+                  owner = None
+              if owner and os.geteuid() == 0:
+                  os.chown(target.parent, owner.pw_uid, owner.pw_gid)
+                  os.chown(target, owner.pw_uid, owner.pw_gid)
+
+              # Reconcile Git-owned Zoho entries on BOTH existing and clean PVCs.
+              # The manifest holds ${ENV} references only; credentials enter the main
+              # container from SealedSecrets, never the config or init container.
+              import subprocess
+              import sys
+              subprocess.run([
+                  sys.executable, '/zoho/reconcile.py', '--home', '/opt/data',
+                  '--manifest', '/zoho/servers.json',
+              ], check=True)
+
               # Cron assets are Git-owned, so unlike config.yaml they are refreshed on every
               # start: job scripts go to $HERMES_HOME/scripts (the only place the cron runner
               # accepts them), the job list and its applier to cron-defs/.
@@ -78,7 +100,9 @@ spec:
             readOnlyRootFilesystem: true
           resources:
             requests: {cpu: 10m, memory: 32Mi}
-            limits: {cpu: 100m, memory: 64Mi}
+            # CLI reconciliation peaked at ~87 MiB RSS in the isolated smoke test.
+            # Keep the existing scheduler request; permit a bounded startup burst.
+            limits: {cpu: 500m, memory: 192Mi}
           volumeMounts:
             - name: data
               mountPath: /opt/data
@@ -87,6 +111,9 @@ spec:
               readOnly: true
             - name: cron
               mountPath: /cron
+              readOnly: true
+            - name: zoho-config
+              mountPath: /zoho
               readOnly: true
         # Python packages the NATS gateway platform needs and the Hermes image lacks (nats-py,
         # nkeys and the Synadia agent SDK; pydantic and pynacl are already in the venv, so
@@ -157,6 +184,24 @@ spec:
                 name: hermes-dashboard-auth
             - secretRef:
                 name: onemind-hermes-runtime
+            - secretRef:
+                name: zoho-ops-mcp
+            - secretRef:
+                name: zoho-data-analytics-mcp
+            - secretRef:
+                name: zoho-desk-mcp
+            - secretRef:
+                name: zoho-projects-mcp
+            - secretRef:
+                name: zoho-crm-mcp
+            - secretRef:
+                name: zoho-finance-mcp
+            - secretRef:
+                name: zoho-salesiq-mcp
+            - secretRef:
+                name: zoho-workdrive-mcp
+            - secretRef:
+                name: zoho-mail-calendar-mcp
           env:
             - name: HERMES_HOME
               value: /opt/data
@@ -275,6 +320,9 @@ spec:
         - name: cron
           configMap:
             name: onemind-hermes-cron
+        - name: zoho-config
+          configMap:
+            name: onemind-hermes-zoho
         - name: export
           secret:
             secretName: onemind-hermes-export

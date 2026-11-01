@@ -43,6 +43,14 @@ the mission it serves is in [`docs/MISSION.md`](docs/MISSION.md).
 > Taking over from another agent? Start with [`docs/roadmap/HANDOFF.md`](docs/roadmap/HANDOFF.md)
 > (state, rules, prompt) and the phase briefs in `docs/roadmap/`.
 
+2026-11-01 owner-requested Zoho onboarding: nine Connections-mode MCP endpoints
+are prepared as SealedSecrets with environment-only URL references, exact read
+allowlists, and an on-start Hermes CLI reconciler for existing and clean PVCs.
+Canonical Projects name: `zoho-projects`; WorkDrive remains separate. No new
+workload or scheduler requests. Tests and source delivery do not establish live
+unsealing or app authorization; [acceptance and recovery](platform/hermes/onemind-hermes/mcp/zoho/README.md)
+remain deployment gates. Broader Phase 8 is not marked complete by this change.
+
 ## How to work on this roadmap (any agent)
 
 1. Read this file, `CLAUDE.md` (operating rules) and `docs/MISSION.md` first.

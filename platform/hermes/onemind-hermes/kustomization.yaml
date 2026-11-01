@@ -11,7 +11,20 @@ resources:
   # Client key for the tool gateway; deployment.yaml exposes it as ONEMIND_GATEWAY_KEY (Phase 5).
   - gateway-client.sealedsecret.yaml
   - backup.sealedsecret.yaml
+  - mcp/zoho/zoho-ops.sealedsecret.yaml
+  - mcp/zoho/zoho-data-analytics.sealedsecret.yaml
+  - mcp/zoho/zoho-desk.sealedsecret.yaml
+  - mcp/zoho/zoho-projects.sealedsecret.yaml
+  - mcp/zoho/zoho-crm.sealedsecret.yaml
+  - mcp/zoho/zoho-finance.sealedsecret.yaml
+  - mcp/zoho/zoho-salesiq.sealedsecret.yaml
+  - mcp/zoho/zoho-workdrive.sealedsecret.yaml
+  - mcp/zoho/zoho-mail-calendar.sealedsecret.yaml
 configMapGenerator:
+  - name: onemind-hermes-zoho
+    files:
+      - reconcile.py=mcp/zoho/reconcile.py
+      - servers.json=mcp/zoho/servers.json
   # Hash-pinned Python packages for the NATS gateway platform (install-gateway-deps init container).
   - name: onemind-hermes-gateway-deps
     files:

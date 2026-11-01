@@ -39,6 +39,15 @@ old LiteLLM `onemind` entry, writes `config.yaml.bak-mcp-<timestamp>` before cha
 key. A second run prints only `unchanged`. Hermes reads `mcp_servers` at start, so restart the pod afterwards.
 Check with `hermes mcp test ops|data|tak` inside the pod.
 
+## Permanent Zoho MCP connections
+
+The nine owner-provided Zoho endpoints are managed through strict-scoped
+SealedSecrets and environment-only URL references. A Git-owned startup reconciler
+uses the supported Hermes CLI to add only these nine entries on existing as well
+as clean volumes, preserving other integrations. Initial exposure is an explicit
+read-only allowlist, not all upstream actions. See [Zoho setup, verification and
+recovery](mcp/zoho/README.md). Source preparation and live acceptance are separate.
+
 ## Labels and selectors
 
 `app.kubernetes.io/name: onemind-hermes` is the selector for the Deployment,
