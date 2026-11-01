@@ -1,0 +1,386 @@
+{
+ "header": {
+  "gtfsRealtimeVersion": "2.0",
+  "incrementality": "FULL_DATASET",
+  "timestamp": "1793273447"
+ },
+ "entity": [
+  {
+   "id": "GO202_26_5_V",
+   "vehicle": {
+    "trip": {
+     "tripId": "GO202_26_5",
+     "startDate": "20261029"
+    },
+    "vehicle": {
+     "id": "506_5",
+     "label": "506"
+    },
+    "position": {
+     "latitude": 40.74926,
+     "longitude": -73.989685
+    },
+    "stopId": "237",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793271715"
+   }
+  },
+  {
+   "id": "GO202_26_809_V",
+   "vehicle": {
+    "trip": {
+     "tripId": "GO202_26_809",
+     "startDate": "20261029"
+    },
+    "vehicle": {
+     "id": "7081_809",
+     "label": "7081"
+    },
+    "position": {
+     "latitude": 40.75516,
+     "longitude": -73.97546
+    },
+    "stopId": "349",
+    "currentStatus": "STOPPED_AT",
+    "timestamp": "1793268367"
+   }
+  },
+  {
+   "id": "GO202_26_611_V",
+   "vehicle": {
+    "trip": {
+     "tripId": "GO202_26_611",
+     "startDate": "20261029"
+    },
+    "vehicle": {
+     "id": "5020_611",
+     "label": "5020"
+    },
+    "position": {
+     "latitude": 40.741344,
+     "longitude": -73.95764
+    },
+    "stopId": "118",
+    "currentStatus": "STOPPED_AT",
+    "timestamp": "1793272254"
+   }
+  },
+  {
+   "id": "GO202_26_35_V",
+   "vehicle": {
+    "trip": {
+     "tripId": "GO202_26_35",
+     "startDate": "20261029"
+    },
+    "vehicle": {
+     "id": "5004_35",
+     "label": "5004"
+    },
+    "position": {
+     "latitude": 40.74411,
+     "longitude": -73.94272
+    },
+    "stopId": "90",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793273433"
+   }
+  },
+  {
+   "id": "GO202_26_122_V",
+   "vehicle": {
+    "trip": {
+     "tripId": "GO202_26_122",
+     "startDate": "20261029"
+    },
+    "vehicle": {
+     "id": "7552_122",
+     "label": "7552"
+    },
+    "position": {
+     "latitude": 40.70069,
+     "longitude": -73.32406
+    },
+    "stopId": "27",
+    "currentStatus": "STOPPED_AT",
+    "timestamp": "1793271345"
+   }
+  },
+  {
+   "id": "GO202_26_1017_V",
+   "vehicle": {
+    "trip": {
+     "tripId": "GO202_26_1017",
+     "startDate": "20261029"
+    },
+    "vehicle": {
+     "id": "7401_1017",
+     "label": "7401"
+    },
+    "position": {
+     "latitude": 40.74926,
+     "longitude": -73.989685
+    },
+    "stopId": "237",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793271233"
+   }
+  },
+  {
+   "id": "GO202_26_7_V",
+   "vehicle": {
+    "trip": {
+     "tripId": "GO202_26_7",
+     "startDate": "20261029"
+    },
+    "vehicle": {
+     "id": "5003_7",
+     "label": "5003"
+    },
+    "position": {
+     "latitude": 40.760902,
+     "longitude": -73.02014
+    },
+    "stopId": "204",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793273188"
+   }
+  },
+  {
+   "id": "GO202_26_1511_V",
+   "vehicle": {
+    "trip": {
+     "tripId": "GO202_26_1511",
+     "startDate": "20261029"
+    },
+    "vehicle": {
+     "id": "9889_1511",
+     "label": "9889"
+    },
+    "position": {
+     "latitude": 40.74926,
+     "longitude": -73.989685
+    },
+    "stopId": "237",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793270719"
+   }
+  },
+  {
+   "id": "GO202_26_37_V",
+   "vehicle": {
+    "trip": {
+     "tripId": "GO202_26_37",
+     "startDate": "20261029"
+    },
+    "vehicle": {
+     "id": "5007_37",
+     "label": "5007"
+    },
+    "position": {
+     "latitude": 40.725494,
+     "longitude": -73.7013
+    },
+    "stopId": "102",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793273445"
+   }
+  },
+  {
+   "id": "GO202_26_1019_V",
+   "vehicle": {
+    "trip": {
+     "tripId": "GO202_26_1019",
+     "startDate": "20261029"
+    },
+    "vehicle": {
+     "id": "7171_1019",
+     "label": "7171"
+    },
+    "position": {
+     "latitude": 40.74926,
+     "longitude": -73.989685
+    },
+    "stopId": "237",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793272161"
+   }
+  },
+  {
+   "id": "GO202_26_713_V",
+   "vehicle": {
+    "trip": {
+     "tripId": "GO202_26_713",
+     "startDate": "20261029"
+    },
+    "vehicle": {
+     "id": "7679_713",
+     "label": "7679"
+    },
+    "position": {
+     "latitude": 40.74926,
+     "longitude": -73.989685
+    },
+    "stopId": "237",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793270339"
+   }
+  },
+  {
+   "id": "GO202_26_1611_V",
+   "vehicle": {
+    "trip": {
+     "tripId": "GO202_26_1611",
+     "startDate": "20261029"
+    },
+    "vehicle": {
+     "id": "7009_1611",
+     "label": "7009"
+    },
+    "position": {
+     "latitude": 40.75516,
+     "longitude": -73.97546
+    },
+    "stopId": "349",
+    "currentStatus": "STOPPED_AT",
+    "timestamp": "1793271752"
+   }
+  },
+  {
+   "id": "GO202_26_5_T",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "GO202_26_5",
+     "routeId": "5",
+     "directionId": 1,
+     "startDate": "20261029",
+     "scheduleRelationship": "SCHEDULED"
+    },
+    "vehicle": {
+     "id": "506_5",
+     "label": "506"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopSequence": 1,
+      "stopId": "191",
+      "departure": {
+       "delay": 134,
+       "time": "1793262854"
+      },
+      "scheduleRelationship": "SCHEDULED"
+     },
+     {
+      "stopSequence": 2,
+      "stopId": "83",
+      "arrival": {
+       "delay": 157,
+       "time": "1793263477"
+      },
+      "departure": {
+       "delay": 257,
+       "time": "1793263577"
+      },
+      "scheduleRelationship": "SCHEDULED"
+     }
+    ],
+    "timestamp": "1793272401"
+   }
+  },
+  {
+   "id": "GO202_26_809_T",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "GO202_26_809",
+     "routeId": "6",
+     "directionId": 1,
+     "startDate": "20261029",
+     "scheduleRelationship": "SCHEDULED"
+    },
+    "vehicle": {
+     "id": "7081_809",
+     "label": "7081"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopSequence": 1,
+      "stopId": "113",
+      "departure": {
+       "delay": 111,
+       "time": "1793265291"
+      },
+      "scheduleRelationship": "SCHEDULED"
+     },
+     {
+      "stopSequence": 2,
+      "stopId": "99",
+      "arrival": {
+       "delay": -2,
+       "time": "1793265538"
+      },
+      "departure": {
+       "delay": -2,
+       "time": "1793265538"
+      },
+      "scheduleRelationship": "SCHEDULED"
+     }
+    ],
+    "timestamp": "1793268368"
+   }
+  },
+  {
+   "id": "GO202_26_611_T",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "GO202_26_611",
+     "routeId": "10",
+     "directionId": 1,
+     "startDate": "20261029",
+     "scheduleRelationship": "SCHEDULED"
+    },
+    "vehicle": {
+     "id": "5020_611",
+     "label": "5020"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopSequence": 1,
+      "stopId": "164",
+      "scheduleRelationship": "NO_DATA"
+     },
+     {
+      "stopSequence": 2,
+      "stopId": "14",
+      "arrival": {
+       "delay": 4,
+       "time": "1793266024"
+      },
+      "departure": {
+       "delay": 4,
+       "time": "1793266024"
+      },
+      "scheduleRelationship": "SCHEDULED"
+     }
+    ],
+    "timestamp": "1793272262"
+   }
+  },
+  {
+   "id": "FIXTURE-ZERO_V",
+   "vehicle": {
+    "trip": {
+     "tripId": "FIXTURE-ZERO",
+     "startDate": "20261029"
+    },
+    "vehicle": {
+     "id": "fixture",
+     "label": "fixture"
+    },
+    "position": {
+     "latitude": 0,
+     "longitude": 0
+    },
+    "timestamp": "1793271715"
+   }
+  }
+ ]
+}
