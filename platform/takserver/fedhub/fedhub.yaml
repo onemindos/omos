@@ -21,6 +21,9 @@
 #     --dry-run=client -o yaml | kubeseal -o yaml \
 #     > tak-server/fedhub/fedhub-certs.sealedsecret.yaml
 #   Commit fedhub-certs.sealedsecret.yaml, NOT the raw cert files.
+#   (Since 2026-10-29 the running Secrets are fedhub-certs-v2, fedhub-store-pass and fedhub-ca-keys, written by
+#   scripts/tak/rotate-step3.sh. Re-encrypt generated stores with a random password before sealing; never keep
+#   the generator's stock password.)
 #
 # AUTHORIZE ADMIN USER (after fedhub pod is Running):
 #   kubectl -n takserver exec deploy/fedhub -- java -jar \
@@ -77,9 +80,22 @@ spec:
               if grep -q "__FEDHUB_OIDC_SECRET__" /mnt/configs/federation-hub-ui.yml; then
                 echo "OIDC secret placeholder was not replaced" >&2; exit 1
               fi
+              # Same for the keystore/truststore password (hex, so it is safe in a sed replacement and in YAML).
+              storepass="$(cat /secrets/store/keystore-password)"
+              if [ -z "$storepass" ]; then echo "fedhub-store-pass/keystore-password is empty" >&2; exit 1; fi
+              for f in federation-hub-broker.yml federation-hub-ui.yml; do
+                sed "s|__FEDHUB_STORE_PASS__|${storepass}|g" "/mnt/configs/$f" > "/mnt/configs/$f.new"
+                mv "/mnt/configs/$f.new" "/mnt/configs/$f"
+                if grep -q "__FEDHUB_STORE_PASS__" "/mnt/configs/$f"; then
+                  echo "store password placeholder was not replaced in $f" >&2; exit 1
+                fi
+              done
           volumeMounts:
             - name: oidc-secret
               mountPath: /secrets/oidc
+              readOnly: true
+            - name: store-pass
+              mountPath: /secrets/store
               readOnly: true
             - name: broker-config
               mountPath: /cm/broker
@@ -141,7 +157,14 @@ spec:
             name: fedhub-ui-config
         - name: fedhub-certs
           secret:
-            secretName: fedhub-certs
+            # fedhub-certs-v2 (2026-10-29, step 3): same file names, stores and keys re-encrypted with a new
+            # password, no CA private keys (those are in fedhub-ca-keys, mounted nowhere). A new Secret name,
+            # so a rollout can never pair the new password with the old stores. The old fedhub-certs stays in
+            # the repository and the cluster until the soak period ends.
+            secretName: fedhub-certs-v2
+        - name: store-pass
+          secret:
+            secretName: fedhub-store-pass
         - name: oidc-secret
           secret:
             secretName: fedhub-oidc-secret

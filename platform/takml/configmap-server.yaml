@@ -22,12 +22,14 @@ data:
     tak.addr=takserver-api-service.takserver.svc.cluster.local
     tak.port=8443
     tak.client_store=/certs/takserver.jks
-    # Step 2 (2026-10-29) rotated TAK Server's own stores only. TAK-ML keeps its own copy of the client
-    # store (Secret tak-keystores-copy) with the stock password, so this file is unchanged. Rotate it
-    # together with that client identity. See docs/operations/tak-ca-password-rotation-step1-2026-10-29.md
-    tak.client_store.password=atakatak
+    # Template: __TAK_STORE_PASS__ is replaced by the render-config init container (deployment.yaml) with the
+    # key `store-password` of the sealed Secret takml-tak-client, and the result is written to an in-memory
+    # emptyDir mounted at /config. The application reads its own properties file, so a Spring placeholder would
+    # not be safe here. Step 3 of the CA/keystore rotation (2026-10-29); the stores are in the same Secret.
+    # See docs/operations/tak-ca-password-rotation-step1-2026-10-29.md
+    tak.client_store.password=__TAK_STORE_PASS__
     tak.trust_store=/certs/truststore-root.jks
-    tak.trust_store.password=atakatak
+    tak.trust_store.password=__TAK_STORE_PASS__
     takfs.mission_name=takml_takfs_sync_mission
     takfs.takserver.file_limit_size.mb=500
     takfs.segmented_file_upload_timeout_millis=10000

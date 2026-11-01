@@ -75,12 +75,6 @@ spec:
                 path: admin-trusted.pem
               - key: admin.csr
                 path: admin.csr
-              - key: admin.jks
-                path: admin.jks
-              - key: admin.key
-                path: admin.key
-              - key: admin.p12
-                path: admin.p12
               - key: admin.pem
                 path: admin.pem
               - key: ca-trusted.pem
@@ -103,26 +97,38 @@ spec:
                 path: takserver-trusted.pem
               - key: takserver.csr
                 path: takserver.csr
-              - key: takserver.key
-                path: takserver.key
-              - key: takserver.p12
-                path: takserver.p12
               - key: takserver.pem
                 path: takserver.pem
-              - key: truststore-root.p12
-                path: truststore-root.p12
               - key: user-trusted.pem
                 path: user-trusted.pem
               - key: user.csr
                 path: user.csr
+              - key: user.pem
+                path: user.pem
+          - secret:
+              name: tak-leaf-identities
+              items:
+              - key: admin.jks
+                path: admin.jks
+              - key: admin.key
+                path: admin.key
+                mode: 256
+              - key: admin.p12
+                path: admin.p12
+              - key: takserver.key
+                path: takserver.key
+                mode: 256
+              - key: takserver.p12
+                path: takserver.p12
+              - key: truststore-root.p12
+                path: truststore-root.p12
               - key: user.jks
                 path: user.jks
               - key: user.key
                 path: user.key
+                mode: 256
               - key: user.p12
                 path: user.p12
-              - key: user.pem
-                path: user.pem
           - secret:
               name: tak-server-stores
               items:
