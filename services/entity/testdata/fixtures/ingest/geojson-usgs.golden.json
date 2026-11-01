@@ -1,0 +1,28 @@
+[
+ {
+  "subject": "",
+  "msgId": "usgs:us7000abcd",
+  "ts": "2025-10-29T09:00:00Z",
+  "data": {
+   "id": "us7000abcd",
+   "lat": 35.7,
+   "lon": -117.5,
+   "mag": 4.6,
+   "place": "Synthetic place A",
+   "time": 1761728400000
+  }
+ },
+ {
+  "subject": "",
+  "msgId": "usgs:nc75000001",
+  "ts": "2025-10-29T09:10:00Z",
+  "data": {
+   "id": "nc75000001",
+   "lat": 38.8,
+   "lon": -122.8,
+   "mag": 2.1,
+   "place": "Synthetic place B",
+   "time": 1761729000000
+  }
+ }
+]
