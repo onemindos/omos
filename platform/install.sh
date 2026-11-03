@@ -158,16 +158,11 @@ kubectl --context "$CTX" apply -f "$PLATFORM/omos/feed-scripts.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/feeds.yaml"
 
 # -----------------------------------------------------------------------------
-# 9. LEGACY AGENT (Hermes — mother) + TAK-AGENT + OneMind AI Bridge
-# Secrets (hermes-env, hermes-leaf-conf, hermes-nats-ca) are SealedSecrets in platform/hermes/
-# cloudtak-agent-token: out-of-band — generate in CloudTAK UI → Settings → Tokens
-#   kubectl create secret generic cloudtak-agent-token -n hermes \
-#     --from-literal=token='<token from CloudTAK UI: Settings → Tokens → New>'
+# 9. HERMES (Legacy): nothing to install here
+# The old hermes-legacy instance was retired and removed from the repository (2026-11). Its replacement,
+# onemind-hermes, and the shared hermes namespace objects are Argo CD Applications
+# (platform-onemind-hermes, platform-hermes-base, platform-onemind-mcp): do not apply them by hand.
 # -----------------------------------------------------------------------------
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/namespace.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/pvc.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/deployment.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/tak-agent.yaml"
 
 # -----------------------------------------------------------------------------
 # 10. CLOUDTAK — API + Events + Media + Tiles

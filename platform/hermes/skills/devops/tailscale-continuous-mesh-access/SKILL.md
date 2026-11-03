@@ -31,7 +31,7 @@ part: a clear picture of what "healthy" means, and a cheap check you can schedul
   re-joins by itself.
 - Machines the agent manages are reached through the **ProxyGroup `egress`**
   (pod `egress-0`, `ProxyGroupReady`) and three `ExternalName` Services in
-  namespace `hermes`, defined in `platform/hermes/agent/egress.yaml`:
+  namespace `hermes`, defined in `platform/hermes/base/egress.yaml`:
   `omos-mbp` (22), `omos-s24` (8022), `omos-ha-edge` (8123). The Home Assistant
   box has been offline since about 2026-09-19, so a failing `omos-ha-edge` is
   expected, not an incident.

@@ -27,7 +27,7 @@ spec:
       app.kubernetes.io/instance: agentgateway
   policyTypes: [Ingress, Egress]
   ingress:
-  # Only Hermes may call the gateway (hermes-legacy is not a client).
+  # Only Hermes may call the gateway (the retired hermes-legacy was never a client).
   - from:
     - namespaceSelector:
         matchLabels:

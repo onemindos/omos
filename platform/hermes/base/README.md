@@ -1,14 +1,15 @@
 # hermes base: what the `hermes` namespace shares
 
 Argo CD Application `platform-hermes-base` (sync wave 2, `prune: false`, `selfHeal: true`, **no
-finalizer**). Added 2026-11-01 while retiring the old Hermes (`hermes-legacy`).
+finalizer**). Added 2026-11-01 while retiring the old Hermes (`hermes-legacy`). **Phase 3 is done (2026-11-03):**
+the old instance and `platform-legacy` are gone from Git; the sections below are the record of how ownership moved.
 
 | Object | Why it is shared |
 |---|---|
-| `Namespace/hermes` | holds `onemind-hermes`, `onemind-mcp`, the old `hermes-legacy` and the volumes. `Prune=false,Delete=false` |
-| `SealedSecret/hermes-dashboard-auth` | dashboard login (`envFrom`) of `onemind-hermes`; also mounted by `hermes-legacy` |
+| `Namespace/hermes` | holds `onemind-hermes`, `onemind-mcp` and the volumes. `Prune=false,Delete=false` |
+| `SealedSecret/hermes-dashboard-auth` | dashboard login (`envFrom`) of `onemind-hermes` |
 | `SealedSecret/omos-nats-creds` | `NATS_USER` / `NATS_PASSWORD` of `onemind-hermes` (direct client of the bus) |
-| `SealedSecret/hermes-nats-ca` | NATS CA volume of `onemind-hermes`; also mounted by `hermes-legacy` |
+| `SealedSecret/hermes-nats-ca` | NATS CA volume of `onemind-hermes` |
 | `Service/omos-ha-edge`, `omos-mbp`, `omos-s24` | Tailscale egress to the edge devices (the tool gateway's Home Assistant target uses `hermes/omos-ha-edge`) |
 
 Every object carries `argocd.argoproj.io/sync-options: Prune=false,Delete=false`. Deleting an
@@ -20,7 +21,8 @@ SealedSecret, so Kubernetes garbage-collects the Secret.)
 Not here, on purpose: `ghcr` (pull secret of `hermes-legacy` only), `cloudtak-agent-token` (mounted by
 no pod; owner decision W05 in `platform/hermes/onemind-hermes/RETIREMENT-AUDIT.md`), `hermes-env`,
 `hermes-leaf-conf`, `hermes-observer` and its RBAC, the `hermes-dashboard` Service and Ingress (selector:
-the old pod), the Paperclip proxy pieces. They stay with `platform-legacy` and go with the old instance.
+the old pod), the Paperclip proxy pieces. They belonged to `platform-legacy` and were deleted with it
+(removal PR, 2026-11-03).
 `onemind-mcp` (`platform/hermes/mcp`) is its own Application, `platform-onemind-mcp`.
 
 ## Ownership transfer (how nothing is deleted)
@@ -60,7 +62,7 @@ transfer-only sources from `platform/argocd/platform-legacy.yaml`. Because every
 tracked by its new owner, and also carries `Prune=false`, `platform-legacy` has nothing it will prune.
 (Belt and braces: either condition alone prevents the delete.)
 
-**Phase 3 (the actual retirement, owner approval).** Remove the old instance from
+**Phase 3 (the actual retirement, owner approval; done 2026-11-03).** The old instance was removed from
 `platform/hermes/agent` and `bridge`, then the `hermes-data` PVC and the Application, as in
 `RETIREMENT-AUDIT.md`. The `hermes` Namespace, `onemind-hermes`, `onemind-mcp`, the three Secrets and
 the egress Services are no longer reachable from `platform-legacy`.

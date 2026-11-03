@@ -26,6 +26,12 @@ and five Codex worker roles (`ops-cluster`, `tak-mission`, `builder`, `researche
 `platform/hermes/onemind-hermes/roles/apply.sh` after merge, live verification recorded in the PR.
 See the [README section](platform/hermes/onemind-hermes/README.md#how-legacy-works-doctrine-and-worker-roles).
 
+2026-11-03: the old Hermes instance (`hermes-legacy`, Application `platform-legacy`) was removed from Git after the owner approved
+retiring it without a soak: `onemind-hermes` holds the Legacy NATS identity. Merging deletes the 24 resources `platform-legacy`
+still tracked, never the `hermes` Namespace or anything of `onemind-hermes`, `onemind-mcp` or `platform-hermes-base`. The old
+volume `hermes-data` goes with the claim but its PV is `Retain`, so the volume stays until a separate delete. Evidence and
+leftovers: [RETIREMENT-AUDIT.md](platform/hermes/onemind-hermes/RETIREMENT-AUDIT.md).
+
 2026-11-01: Legacy's NATS presence (step 7 of the Legacy to onemind-hermes migration) prepared in Git, not applied:
 onemind-hermes as a direct client of the cluster bus with no leaf sidecar, `nats-platform` vendored without the
 start-up hot-patch, a duplicate-identity guard so it can be enabled before `hermes-legacy` is stopped, and the
@@ -201,6 +207,7 @@ patches; Telegram remains selected. See the updated approval record below.
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | In progress | Historical acceptance #282, #318, #319; reopened for [portal stabilization](docs/operations/portal-stabilization-2026-10-20.md) before migration (#322 source, #323 release, #324 inventory, #325 composition, #326 final image); 2/2 healthy, 715 processed entities; broader acceptance gaps remain documented | none |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
+| 8b | Retire the old Hermes (`hermes-legacy`, `platform-legacy`) from Git | In review: removal PR open, not merged. Merge cascades `platform-legacy`'s 24 tracked resources; PV `pvc-993e5ef7-9942-460b-801c-615eab02ae60` is `Retain` | [RETIREMENT-AUDIT.md](platform/hermes/onemind-hermes/RETIREMENT-AUDIT.md) | 8 |
 | 8a | Tool gateway for Legacy: agentgateway front door, tool groups, execute gate ([design](docs/architecture/onemind-tool-gateway.md), [runbook](docs/operations/tool-gateway.md)) | In progress; verified live read-only 2026-10-30 (Argo Synced and Healthy, backends Ready). **Phase 0 spike and 1 gateway core: Done. Phase 2 policy plane: Done. 3a Kubernetes: Done. 3d data (STAC, onemind-core, ClickHouse, Tile38): Done, keyless. 3e TAK: partial, MediaMTX only; CloudTAK, TAK Server, TAK Portal and NATS publish wait on owner credentials. 3b Argo CD and Grafana, 3c GitHub, DigitalOcean and Cloudflare, 3f Work, 3g Home: wait on owner keys. 4 Execute gate: code merged, not deployed (Matrix bot pending); `/execute/mcp` stays deny-all. 5 Hermes cutover: `ops`, `data` and `tak` wired in `onemind-hermes` (PR open 2026-10-31, live verification after merge); `dev`, `cloud`, `home`, `work` and `execute` pending their backends; cron scripts still use LiteLLM MCP. 6 Retire LiteLLM-as-hub: PR open 2026-10-31 (cron scripts moved to the gateway, LiteLLM `mcp_servers` and the Hermes egress/ingress rules removed; LiteLLM stays the model gateway).** | design [#591](https://github.com/onemindos/omos/pull/591), 0 and 1 [#593](https://github.com/onemindos/omos/pull/593), 2 [#594](https://github.com/onemindos/omos/pull/594), 3e MediaMTX [#595](https://github.com/onemindos/omos/pull/595), 3a [#596](https://github.com/onemindos/omos/pull/596), 3d [#597](https://github.com/onemindos/omos/pull/597) and Tile38 [#598](https://github.com/onemindos/omos/pull/598), 4 [#592](https://github.com/onemindos/omos/pull/592) | 6, 7 |
 
 ### Application-lane catalog preparation — 2026-10-27

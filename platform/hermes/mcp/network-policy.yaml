@@ -13,17 +13,6 @@ spec:
   - Ingress
   - Egress
   ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: hermes
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: hermes
-          onemind.io/agent: legacy
-    ports:
-    - protocol: TCP
-      port: 8000
   # LiteLLM MCP gateway (platform/hermes/mcp/HUB.md); its egress is unrestricted.
   - from:
     - namespaceSelector:

@@ -25,7 +25,7 @@ list. Keep the working parts; drop the rest.
 - The `onemind-hermes` pod runs **no `tailscaled`**. It reaches the tailnet only
   through the cluster's Tailscale operator **egress** Services in namespace
   `hermes` (`omos-mbp` :22, `omos-s24` :8022, `omos-ha-edge` :8123), defined in
-  `platform/hermes/agent/egress.yaml`.
+  `platform/hermes/base/egress.yaml`.
 - Its NetworkPolicy (`platform/hermes/onemind-hermes/network.yaml`) allows egress
   only to DNS, LiteLLM, Matrix Synapse and public HTTPS (443). **Connections to
   the egress Services are blocked** until the owner adds an egress rule for them
@@ -62,7 +62,7 @@ curl -s --max-time 10 http://omos-ha-edge.hermes.svc.cluster.local:8123/        
 
 ## Adding a device (Git, not `kubectl apply`)
 
-Add an `ExternalName` Service to `platform/hermes/agent/egress.yaml` with the
+Add an `ExternalName` Service to `platform/hermes/base/egress.yaml` with the
 label `tailscale.com/proxy-group: egress` and the annotation
 `tailscale.com/tailnet-ip`, allow the target and port in `platform/core/policy.hujson`
 and open the pod's NetworkPolicy to it, in one PR. Argo applies it. The operator

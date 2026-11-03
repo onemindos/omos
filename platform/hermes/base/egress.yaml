@@ -1,6 +1,6 @@
 # Tailscale egress: how Hermes reaches machines on the tailnet. Each Service makes the Tailscale operator run a
 # proxy (ProxyGroup "egress") to one tailnet address; Hermes connects to <name>.hermes.svc.cluster.local.
-# The operator fills in spec.externalName; platform-legacy ignores differences in that field so the two never fight.
+# The operator fills in spec.externalName; platform-hermes-base ignores differences in that field (ignoreDifferences).
 # Access is also limited by the tailnet policy (platform/core/policy.hujson): each target and port must be allowed there.
 apiVersion: v1
 kind: Service

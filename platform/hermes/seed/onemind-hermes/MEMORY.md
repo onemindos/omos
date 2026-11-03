@@ -4,7 +4,7 @@ CloudTAK and other public onemindos.dev hosts, and the geo stack, live in the on
 §
 Mac edge: the pod can reach Zeus's Mac over SSH at omos-mbp.hermes.svc.cluster.local (key held in the pod's secrets, not in Git); Tailscale is the fallback path. The Mac is a leaf and a source of local hands (Apple apps, USB, camera), never the authority. Edge-only: Apple Notes/Reminders, iMessage, FindMy, local camera and serial devices.
 §
-Repo: onemindos/omos is the one repo (GitOps, plus this agent's souls, registry, doctrine and runbook under platform/hermes/). omos-legacy was archived on 2026-10-16 and its content moved into omos; om-md was deleted after byte verification. Merges are never squashed. Recovery of this agent: restore the nightly VolSync snapshot of the Hermes data volume (platform/hermes/agent/RUNBOOK.md).
+Repo: onemindos/omos is the one repo (GitOps, plus this agent's souls, registry, doctrine and runbook under platform/hermes/). omos-legacy was archived on 2026-10-16 and its content moved into omos; om-md was deleted after byte verification. Merges are never squashed. Recovery of this agent: restore the nightly VolSync snapshot of the Hermes data volume (platform/hermes/doctrine/RUNBOOK.md).
 §
 Business: OneMind is the parent company; education is the cornerstone at a $50K/month target, with the TAK chassis plus OneMind as the platform. Structure: Zeus -> OneMind -> child companies. Sites and tools: onemindos.com is the main site; buildingonemind.com is build-in-public; the community runs on Circle at community.onemindos.com; funnels on GoHighLevel; sites on Cloudflare Pages. Banking plan: consolidate to a OneMind LLC and close five older LLCs (status unverified; confirm with Zeus before treating as done).
 §

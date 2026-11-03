@@ -35,13 +35,13 @@ The platform is a NATS-native C2/ISR system. NATS is the nervous system, TAK (AT
 **The in-cluster NATS (3-node JetStream, namespace `nats`) is the authority bus. Everything publishes to it.**
 
 - Cloud workloads connect directly to `nats://nats.nats.svc.cluster.local:4222` (a few use `tls://` on the same host:port) with credentials from a Secret (`NATS_USER` / `NATS_PASSWORD`). No sidecar.
-- **Hermes is the exception**: its pod runs a `nats-leaf` sidecar and the container uses `NATS_URL=nats://localhost:4222`, so the agent has its own bus identity. Do not copy that pattern into new services.
+- **Hermes is no longer an exception.** `onemind-hermes` (the Legacy persona) is a direct client like every other cloud workload, with `NATS_USER` / `NATS_PASSWORD` from `omos-nats-creds` and its own agent identity on the fabric (`agents.*.hermes.zeus.legacy`). The old `hermes-legacy` pod, with its `nats-leaf` sidecar on `localhost:4222`, was removed from Git on 2026-11-03. Do not bring a sidecar or leaf back.
 - **Edge and Mac bridges** (MAVLink, Home Assistant, cameras) run a local leaf node that forwards to the cluster through the `omos-nats` Tailscale load balancer (leaf port 7422). The leaf is a forwarding pipe, not a peer bus. If the Mac is offline the cloud bus keeps running.
 - When the home server arrives, it becomes another leaf (and eventually the authority). Do not design anything that treats a single laptop's NATS as the source of truth.
 
 ```
 Edge (Mac / home server)   MAVLink, HA, cameras ── NATS leaf ──►  K8s NATS (3-node)  ◄── all cloud services
-                                                  (forward only)       THE BUS            incl. Hermes via its own leaf
+                                                  (forward only)       THE BUS            incl. Hermes (onemind-hermes)
 ```
 
 ## Repo Layout (short; full table in `docs/REPO-LAYOUT.md`)
@@ -63,7 +63,7 @@ infra/         Terraform: DO VPC + DOKS cluster, NOT matching live, do not apply
 services/ docs/ scripts/                                code (built into images) and bus contracts (services/schemas/), docs, CI helpers
 ```
 
-Not active or not deployed: `docs/references/` (external project research, moved from the top-level `references/` on 2026-10-17). Do not edit it unless asked. (The `onemind-vision` plugin, installed by hand in the Hermes pod, has its source in `platform/hermes/agent/plugins/`.) The Hermes agent's souls, registry, doctrine and runbook are in `platform/hermes/agent/`.
+Not active or not deployed: `docs/references/` (external project research, moved from the top-level `references/` on 2026-10-17). Do not edit it unless asked. (The `onemind-vision` plugin, installed by hand in the Hermes pod, has its source in `platform/hermes/onemind-hermes/plugins/`.) The old Hermes agent's souls, registry, doctrine and runbook are kept, as history, in `platform/hermes/doctrine/`.
 
 ## The Deployment Pattern
 
@@ -113,10 +113,10 @@ kubectl create secret generic <name> -n <namespace> --from-literal=KEY=value \
   > platform/<layer>/<name>.sealedsecret.yaml
 ```
 
-Place the file beside the workload that uses it (existing examples: `platform/hermes/bridge/`, `platform/backups/sealed/`, `platform/ecosystem/resources/secrets/`). Argo applies it. Exceptions that are still out of band: the NATS Helm `values.secret.yaml` (gitignored) and the CloudTAK/agent API tokens generated in a UI.
+Place the file beside the workload that uses it (existing examples: `platform/hermes/base/`, `platform/backups/sealed/`, `platform/ecosystem/resources/secrets/`). Argo applies it. Exceptions that are still out of band: the NATS Helm `values.secret.yaml` (gitignored) and the CloudTAK/agent API tokens generated in a UI.
 
 - Never commit plaintext credentials, even test values or "example" commands. CI runs gitleaks and fails on new findings; `.gitleaks-baseline.json` records the nine pre-existing hits (see `docs/STACK.md`), which need rotation, not suppression.
-- Hermes: `hermes-env` holds `DIGITALOCEAN_AI_KEY` (the default model provider per the cluster review) and legacy `AWS_*` Bedrock keys. The provider is chosen in the agent's runtime config, not in Git. Do not describe Hermes as "on Bedrock"; remove the AWS keys if confirmed unused.
+- Hermes: `onemind-hermes` reads `onemind-hermes-runtime`, the Zoho and gateway Secrets, and the shared `hermes-dashboard-auth`, `omos-nats-creds` and `hermes-nats-ca` in `platform/hermes/base/`. The model provider is chosen in the agent's runtime config, not in Git. The old `hermes-env` (`DIGITALOCEAN_AI_KEY`, legacy `AWS_*` Bedrock keys, 1Password and Todoist tokens) left Git with `hermes-legacy` on 2026-11-03 and its credentials still need rotation (`platform/hermes/onemind-hermes/RETIREMENT-AUDIT.md`, V04). Do not describe Hermes as "on Bedrock".
 
 ## Cluster Access
 
@@ -158,6 +158,6 @@ On every PR to `main`: changed-YAML lint, ShellCheck, Terraform fmt/validate, ku
 - Never deploy imperatively without a matching manifest here; never add a new Helm-CLI release
 - Never create a new NATS subject pattern outside the grammar above
 - Never use DOCR; images are on GHCR
-- Never point a cloud workload at a Mac or edge NATS; cloud services use the in-cluster address (Hermes' sidecar is the one documented exception)
+- Never point a cloud workload at a Mac or edge NATS; cloud services use the in-cluster address (there is no exception any more)
 - Never delete PVCs, namespaces or backup data without a fresh snapshot and explicit approval
 - Never add services that duplicate an existing layer; check `docs/STACK.md` first

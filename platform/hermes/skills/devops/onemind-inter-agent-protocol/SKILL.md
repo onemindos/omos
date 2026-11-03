@@ -22,7 +22,7 @@ Legacy delegated to four pillar agents (SO, GE, HP, LE) over invented
 `agents.escalate.*`, `agents.broadcast.onemind` and `agents.heartbeat.*`
 subjects, each on its own model, with Notion task boards and a table of eleven
 cron jobs. **That fabric does not exist.** The pillar agents were never running
-as separate bus services (`platform/hermes/agent/AGENTS.yaml` lists them as
+as separate bus services (`platform/hermes/doctrine/AGENTS.yaml` lists them as
 `configured`, personas only), the ten cron jobs on `hermes-legacy` have been paused since
 2026-10-01 (`platform/hermes/onemind-hermes/MIGRATION.md`), and the `onemind-hermes` migration keeps one soul. This version keeps
 what is still true.
@@ -40,7 +40,7 @@ say so.
 | Party | Reality | How you reach it |
 |---|---|---|
 | Owner (Zeus) | The only authority | Chat (Matrix; Telegram retained) |
-| `hermes-legacy` | The previous Legacy instance, with a NATS leaf sidecar, being retired. Registers `agents.prompt.hermes.zeus.legacy`. It is **not** a sibling to task. | Do not message it as an agent; the owner moves its data. |
+| `hermes-legacy` | The previous Legacy instance, with a NATS leaf sidecar, retired on 2026-11-03. Registers `agents.prompt.hermes.zeus.legacy`. It is **not** a sibling to task. | Do not message it as an agent; the owner moves its data. |
 | Legacy-Edge | Hermes on the owner's Mac, listed `running` on 2026-10-16 but not seen on the bus. | Only if it appears in `$SRV.INFO.agents`. If it does not, say what needs local hands and stop. |
 | Coding workers | Claude Code, Codex, OpenCode via the bundled skills and `delegate_task`; short-lived, in worktrees. | `onemind-code-orchestration` |
 | Agent Console, agent-tap | Tailnet web tools that list and chat with agents on the bus (`platform/hermes/agent-fabric/`). | Owner opens them; they are not agents. |

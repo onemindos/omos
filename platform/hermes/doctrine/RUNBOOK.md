@@ -1,5 +1,7 @@
 # Hermes runbook
 
+> **Historical (2026-11-03).** This is the runbook of the retired `hermes-legacy` pod. The instance, its manifests and its Argo CD Application were removed; for the running agent see `platform/hermes/onemind-hermes/README.md`. Kept for the doctrine and the recovery reasoning only.
+
 Operating and recovery procedures for Legacy (the `hermes-legacy` pod) and its edge nodes. Distilled from the July 2026 runbook, integration and fabric notes, and the operational lines in Legacy's own memory. Anything that is only an address, a credential or a dated status has been dropped.
 
 **How far to trust each part.** Each section says whether it was **verified** against the live pod on 2026-10-16 or is carried over from July and **not re-verified**. Fix this file when you find something wrong.

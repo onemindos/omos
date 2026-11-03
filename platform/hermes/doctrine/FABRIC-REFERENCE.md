@@ -1,5 +1,7 @@
 # Fabric reference
 
+> **Historical (2026-11-03).** Written for the old Legacy fabric (`hermes-legacy`, retired). Stack facts may be stale; verify against `docs/STACK.md` and the cluster.
+
 Stack facts that used to be written into Legacy's soul. They change, so they live here and not in `agents/legacy/SOUL.md`. The authoritative inventory is `docs/STACK.md`; this file is the short version an agent needs, with each fact checked against the live cluster on 2026-10-16. If something here is wrong, fix it here.
 
 ## NATS

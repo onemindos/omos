@@ -1,5 +1,8 @@
 # OneMind agent registry
 #
+# HISTORICAL (2026-11-03): this is the registry of the old hermes-legacy fabric, kept for reference. The only agent that runs
+# is Legacy as onemind-hermes (platform/hermes/onemind-hermes/); workload and volume names below are the retired ones.
+#
 # One registry for every agent on the OneMind fabric, with a status for each:
 #   running     - verified running on 2026-10-16
 #   configured  - has a soul and config on a live volume, but was not registering on the cluster bus

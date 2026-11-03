@@ -24,7 +24,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Grafana](grafana.md) | observability |
 | [Headlamp](headlamp.md) | developer-platform |
 | [Cluster health observer](health-keeper.md) | observability |
-| [Hermes (old Legacy instance, being retired)](hermes-legacy.md) | ai-agents |
 | [HeyNATS](heynats.md) | messaging-nats |
 | [Hubble UI](hubble-ui.md) | observability |
 | [ingress-nginx](ingress-nginx.md) | infrastructure |
