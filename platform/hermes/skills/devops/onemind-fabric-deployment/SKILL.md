@@ -129,7 +129,7 @@ Treat it as a normal new workload (CLAUDE.md "Adding a New Service"):
 - [ ] Agent protocol: register as the `agents` micro service (`prompt`, `status`,
       `hb`), session name from config, subjects from the locked grammar
       (`onemind-inter-agent-protocol`).
-- [ ] An entry in `platform/hermes/agent/AGENTS.yaml` with an honest `status`
+- [ ] An entry in `platform/hermes/doctrine/AGENTS.yaml` with an honest `status`
       (`running`, `configured` or `planned`; verified date), and the soul in Git.
 - [ ] NetworkPolicy (default deny, named egress), backup decision (VolSync on the
       volume), `docs/STACK.md` row, and a tier.
@@ -170,8 +170,8 @@ them; the Notion database ids and token handling; the Mac Desktop delivery recip
 (base64 over SSH) and the Telegram bot setup steps (the pod's egress and secrets
 model changed); the Homepage dashboard (not deployed; there is no
 `platform/homepage`); and the old `platform/legacy/` ignoreDifferences note (that
-path is gone; `platform-legacy` now syncs `platform/hermes/{mcp,agent,bridge}`,
-so read its Application before relying on an annotation bump). None of the
+path is gone, and so is `platform-legacy`, which synced the old Hermes manifests until 2026-11-03;
+read the owning Application before relying on an annotation bump). None of the
 seven `references/` files were kept: SOUL template, `AGENTS.yaml` structure,
 servant matrix, messaging platforms, Android scoped-storage verification, the
 Buzz/ACP project note (research; it belongs in `docs/references/`) and the

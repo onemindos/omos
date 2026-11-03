@@ -44,7 +44,6 @@ export const mapping: InventoryMapping = {
     'dapr-system/dapr-sidecar-injector': 'component:default/dapr',
     'github-runner/github-runner': 'component:default/platform-core',
     'github-runner/github-runner-hermes': 'component:default/platform-core',
-    'hermes/hermes-legacy': 'component:default/hermes-legacy',
     'hermes/onemind-hermes': 'component:default/onemind-hermes',
     'hermes/onemind-mcp': 'component:default/onemind-mcp',
     'ingress-nginx/ingress-nginx-controller': 'component:default/ingress-nginx',
@@ -127,8 +126,6 @@ export const mapping: InventoryMapping = {
       'component:default/tailscale-operator',
     'tailscale/ts-grafana-ksprn': 'component:default/tailscale-operator',
     'tailscale/ts-headlamp-4qwkc': 'component:default/tailscale-operator',
-    'tailscale/ts-hermes-dashboard-6thbx':
-      'component:default/tailscale-operator',
     'tailscale/ts-heynats-p5dmf': 'component:default/tailscale-operator',
     'tailscale/ts-hubble-tw85d': 'component:default/tailscale-operator',
     'tailscale/ts-n8n-pmtds': 'component:default/tailscale-operator',
@@ -261,12 +258,6 @@ export const mapping: InventoryMapping = {
     headlamp: {
       title: 'Headlamp',
       system: 'developer-platform',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    'hermes-legacy': {
-      title: 'Hermes (old Legacy instance, being retired)',
-      system: 'ai-agents',
       pillar: 'so',
       review: 'proposed',
     },

@@ -26,7 +26,7 @@ created by the workloads themselves.
 | `sink-clickhouse` (omos) | push durable `sink-clickhouse`, ack none | core sub `ent.*.*.state` | min 1 / max 1 |
 | `omos-tak-projector` (omos) | push durable `sink-tak` | core subs `ent.*.*.state`, `cmd.projector.*` | keep 1 |
 | `onemind-core`, `onemind-ingestion` | none (core subscribe, publishes to JS) | | not queue-driven |
-| `hermes-legacy` | none (Synadia agent protocol on `agents.*`, core request/reply) | | not queue-driven |
+| `onemind-hermes` | none (Synadia agent protocol on `agents.*`, core request/reply) | | not queue-driven |
 | `takml-vision-worker` | none: it **publishes** `fabric.vision.*.detect` | | see below |
 
 Push consumers with no deliver group allow one subscriber, so max replicas is 1. `services/subscriber.py`

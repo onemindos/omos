@@ -67,14 +67,6 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: tailscale
-        # Hermes Legacy's nats-leaf sidecar (hermes-legacy-leaf). Not onemind-hermes or onemind-mcp.
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: hermes
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: hermes
-              onemind.io/agent: legacy
         # TAK's leaf. The NatsBridgePlugin connects to it, not to the bus.
         - namespaceSelector:
             matchLabels:
@@ -128,8 +120,8 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: agent-fabric
-        # onemind-hermes (Legacy): a direct client since the NATS cutover, replacing the leaf sidecar of
-        # hermes-legacy (see the leaf rule above). Not onemind-mcp or the other pods in `hermes`.
+        # onemind-hermes (Legacy): a direct client of the bus (no leaf sidecar since the 2026-11 cutover).
+        # Not onemind-mcp or the other pods in `hermes`.
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: hermes

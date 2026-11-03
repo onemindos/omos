@@ -1,41 +1,40 @@
 # Hermes
 
-Hermes "Legacy" is the platform's AI agent: Deployment `hermes-legacy` in namespace `hermes`, on the `nousresearch/hermes-agent` image pinned in Git, with a `nats-leaf` sidecar that gives the agent its own bus identity. All of its identity and state is the 25 GiB PVC `hermes-data`, mounted at `/opt/data`. A separate `onemind-hermes` instance (replacing the `hermes-fresh` launch of October 26, 2026) runs beside it with its own volume and no imported Legacy data.
+Hermes "Legacy" is the platform's AI agent: Deployment `onemind-hermes` in namespace `hermes`, on the official Hermes image pinned by digest in Git. It is a direct client of the NATS bus (no leaf sidecar) and holds the fabric identity `agents.*.hermes.zeus.legacy`. All of its identity and state is the 25 GiB PVC `onemind-hermes-data` (`do-block-storage-retain`), mounted at `/opt/data`. The older `hermes-legacy` instance, with its `nats-leaf` sidecar and the volume `hermes-data`, was removed from Git on 2026-11-03.
 
-Sources: `platform/argocd/platform-legacy.yaml`, `platform/hermes/agent/RUNBOOK.md`, `platform/hermes/agent/README.md`, `platform/hermes/fresh/README.md`, `docs/operations/hermes-recoverability-plan.md`, `docs/operations/hermes-restore-drill-2026-10-16.md`.
+Sources: `platform/hermes/onemind-hermes/README.md`, `platform/hermes/onemind-hermes/MIGRATION.md` (historical), `platform/hermes/onemind-hermes/RETIREMENT-AUDIT.md`, `platform/hermes/base/README.md`, `platform/hermes/doctrine/` (history only).
 
 ## Ownership and access
 
-- Since the 2026-11-01 ownership split, `platform-hermes-base` (`platform/hermes/base`) owns the `hermes` Namespace, the Tailscale egress Services and the Secrets both instances mount (`hermes-dashboard-auth`, `omos-nats-creds`, `hermes-nats-ca`); `platform-onemind-mcp` (`platform/hermes/mcp`) owns `onemind-mcp`; `platform-onemind-hermes` applies `platform/hermes/onemind-hermes`. All three have no finalizer, and the long-lived objects carry `argocd.argoproj.io/sync-options: Prune=false,Delete=false`.
-- `platform-legacy` applies the old instance (`platform/hermes/agent`, `platform/hermes/bridge`). It still prunes, carries the cascade finalizer and applies the `hermes-data` PVC (volume reclaim policy `Delete`). Its Namespace, `onemind-mcp` and shared Secrets moved out (plan: `platform/hermes/base/README.md`), so retiring it no longer reaches them. See [Argo CD](argocd.md); `docs/gitops/APP-FINALIZERS.md` does not list `platform-legacy`.
-- Hermes always connects to `nats://localhost:4222`, where the sidecar runs a leaf node configured from the Secret `hermes-leaf-conf`. Do not copy this pattern into new services; they connect to the cluster NATS directly.
-- The pod has no Kubernetes write access: its only API identity is the read-only `hermes-observer`, which cannot read Secrets, ConfigMaps or logs. Its `gh` token, however, is far more powerful than it needs to be and is due to be replaced with a narrow one (`RUNBOOK.md`, section 5). Argo CD deploys whatever reaches `main`, and GitHub does not enforce branch protection on this repository (`hermes-recoverability-plan.md`, section 2.3), so a push from the pod could reach production. Run cluster commands from an admin workstation.
-- The dashboards are tailnet-only.
+- `platform-hermes-base` (`platform/hermes/base`) owns the `hermes` Namespace, the Tailscale egress Services and the Secrets `onemind-hermes` shares (`hermes-dashboard-auth`, `omos-nats-creds`, `hermes-nats-ca`); `platform-onemind-mcp` (`platform/hermes/mcp`) owns `onemind-mcp`; `platform-onemind-hermes` applies `platform/hermes/onemind-hermes`. All three have no finalizer and `prune: false` (the MCP Application prunes only its hashed ConfigMaps), and the long-lived objects carry `argocd.argoproj.io/sync-options: Prune=false,Delete=false`. See [Argo CD](argocd.md).
+- Hermes connects to the cluster bus with `NATS_USER` / `NATS_PASSWORD` from `omos-nats-creds` and the CA from `hermes-nats-ca`. Do not add a sidecar or a leaf.
+- The pod has no Kubernetes API token (`automountServiceAccountToken: false`). Cluster reads and writes go through the tool gateway groups. Argo CD deploys whatever reaches `main`, and GitHub does not enforce branch protection on this repository (`hermes-recoverability-plan.md`, section 2.3), so keep Git write credentials off the pod.
+- The dashboard is tailnet-only at `onemind-hermes.tail717ba0.ts.net`.
 
 ## Investigate (read-only)
 
 ```sh
-kubectl --context do-nyc3-omos-cloud -n argocd get application platform-legacy platform-onemind-hermes
+kubectl --context do-nyc3-omos-cloud -n argocd get application platform-onemind-hermes platform-hermes-base platform-onemind-mcp
 kubectl --context do-nyc3-omos-cloud -n hermes get deployments,pods,pvc
-kubectl --context do-nyc3-omos-cloud -n hermes logs deploy/hermes-legacy -c hermes --tail=50
+kubectl --context do-nyc3-omos-cloud -n hermes logs deploy/onemind-hermes -c hermes --tail=50
 ```
 
-Inside the pod, `nats account info` shows the leaf's account; "no responders" means the sidecar is down.
+`platform/hermes/onemind-hermes/nats/apply.sh --status` reports the plugin files, the enabled list and which NATS variables the pod has (names only).
 
 ## Recovery
 
 | Situation | Documented action |
 | --- | --- |
-| Pod crashed or restarted | Nothing is lost, because `hermes-data` persists. If the leaf sidecar is down, restart the pod, but never while Hermes' state-database recovery or integrity scan is running |
-| Volume lost or corrupted | Restore the latest VolSync snapshot of `hermes-data` into a new PVC, verify it, then point the Deployment at it through Git. An application-level restore drill passed on October 16, 2026 |
+| Pod crashed or restarted | Nothing is lost, because `onemind-hermes-data` persists |
+| Volume lost or corrupted | Restore the latest VolSync snapshot of `onemind-hermes-data` (its own restic prefix) into a new PVC, verify it, then point the Deployment at it through Git |
 | Cluster lost | Rebuild the cluster from `infra/`, let Argo CD sync `platform/`, then restore the volume as above |
-| Rebuild identity from Git alone | Not available yet: the soul, skills and configuration are not exported to Git (recoverability plan, step 2) |
-| After a restore | Log `gh` in again with a narrow token, confirm the SSH keys under `/opt/data/home/.ssh/` and check the leaf connection |
+| Rebuild identity from Git alone | The soul and the OneMind skills are seeded from `platform/hermes/seed/` and `platform/hermes/skills/`; config defaults and cron jobs are in `platform/hermes/onemind-hermes/` |
+| NATS identity shows "live elsewhere" | Another process holds `agents.*.hermes.zeus.legacy`. Find it with `/connz`; do not start a second copy |
 
 Never put a token in a git remote URL, in this repository or in Hermes' memory. Hermes' standing rules forbid destroying data or deleting files without the owner's explicit go-ahead.
 
 ## Verify completion
 
-The pod is Ready, the leaf connection shows its account, and a real prompt gets a real answer; a Ready pod is not proof of working chat.
+The pod is Ready, the NATS identity is registered (Agent Console shows Legacy live), and a real prompt gets a real answer; a Ready pod is not proof of working chat.
 
-Generated workload list: [Hermes (old Legacy instance, being retired) app runbook](../apps/hermes-legacy.md).
+Generated workload list: [Legacy (onemind-hermes) app runbook](../apps/onemind-hermes.md).

@@ -6,6 +6,7 @@
 
 ## Changes after this snapshot
 
+- `platform-legacy` (the old Hermes instance) was removed on 2026-11-03; its row below is historical. Hermes is `platform-onemind-hermes` now.
 - Homepage was retired later on 2026-10-06 and replaced by `platform-backstage`
   (`platform/backstage`, namespace `backstage`). The historical Homepage entries below
   describe the earlier capture, not an active service or a recommendation to restore it.

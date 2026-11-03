@@ -367,7 +367,6 @@ placement:
   google-messages: communication
   grafana: observability
   headlamp: developer-platform
-  hermes-legacy: ai-agents
   heynats: messaging-nats
   home-assistant: home-homestead
   hubble-ui: observability

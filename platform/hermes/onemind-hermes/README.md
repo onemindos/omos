@@ -1,9 +1,9 @@
 # onemind-hermes
 
-Legacy (`onemind-hermes`): the new OneMind Hermes instance, running beside the current `hermes-legacy`
-Deployment. It replaces the `hermes-fresh` launch of October 26, 2026 (same
-image, same design, new names and new storage). It does not import any existing
-agent data.
+Legacy (`onemind-hermes`): the OneMind Hermes instance. It replaced the old `hermes-legacy`
+Deployment, which was removed from Git on 2026-11-03 (see [`RETIREMENT-AUDIT.md`](RETIREMENT-AUDIT.md)), and the
+`hermes-fresh` launch of October 26, 2026 (same image, same design, new names and new storage). It does not
+import any existing agent data.
 
 **Agent persona: Legacy, a single soul.** The pods carry
 `onemind.io/agent: legacy`; the Deployment, Service and storage are named
@@ -13,7 +13,7 @@ separate agents here.
 - Argo Application: `platform-onemind-hermes`, path `platform/hermes/onemind-hermes`.
 - Shared objects it depends on are owned by `platform-hermes-base` (path `platform/hermes/base`): the
   `hermes` Namespace and the Secrets `hermes-dashboard-auth`, `omos-nats-creds` and `hermes-nats-ca`. They
-  used to belong to `platform-legacy`; retiring that Application no longer touches them
+  used to belong to `platform-legacy`, which no longer exists
   (`platform/hermes/base/README.md`). The tool gateway's `onemind` target, `onemind-mcp`, is
   `platform-onemind-mcp` (path `platform/hermes/mcp`).
 - Deployment/Service/Ingress/NetworkPolicy: `onemind-hermes`, namespace `hermes`.
@@ -80,10 +80,9 @@ server is introduced.
 `app.kubernetes.io/name: onemind-hermes` is the selector for the Deployment,
 Service and NetworkPolicy; it keeps Legacy's selectors
 (`app.kubernetes.io/name: hermes` plus `onemind.io/agent: legacy`) separate.
-Because the pods also carry `onemind.io/agent: legacy`, anything that selects on
-that label alone matches both Deployments. Today that is only the
-`hermes-legacy` PodDisruptionBudget (`maxUnavailable: 1`), which then spans both
-pods. Keep new selectors on `app.kubernetes.io/name`.
+Selecting on `onemind.io/agent: legacy` alone is ambiguous in principle, because the label names the persona, not
+the instance. The only selector that did that, the `hermes-legacy` PodDisruptionBudget, was removed with the old
+instance. Keep new selectors on `app.kubernetes.io/name`.
 
 ## Initial configuration (`config.defaults.yaml`)
 
@@ -163,7 +162,7 @@ Its Restic repository is a new, independently initialized prefix,
 `backups/restic/hermes/onemind-hermes-data` in the `onemind-backups` bucket. That
 is the `backups/restic/<namespace>/<pvc>` layout every other VolSync source uses
 and that `platform/backups/tools/mirror.py` expects. It is not shared with the
-`hermes-fresh` repository or with Legacy's `hermes-data` repository. It shares
+`hermes-fresh` repository or with the retired Legacy `hermes-data` repository (its restic data is kept). It shares
 the existing storage credentials and recovery password; preserve the existing
 off-cluster recovery password. First-backup completion and a restore test must
 be observed; this source configuration alone does not establish recovery.
@@ -384,12 +383,12 @@ and is denied, which is the safe direction. Workers get no authority Legacy lack
 ## NATS: Legacy's bus presence
 
 Legacy is a **direct client of the cluster bus**, like every other cloud workload: no leaf sidecar (the
-`hermes-legacy` sidecar is the one documented exception, `CLAUDE.md` "Bus Authority"; do not copy it).
+retired `hermes-legacy` sidecar was the one exception; `CLAUDE.md` "Bus Authority" no longer has one).
 Inventory of what Legacy does on NATS, what was ported and the switch order are in
 [`MIGRATION.md`](MIGRATION.md#nats-inventory-and-cutover-step-7). Summary:
 
 - Identity `agents.{prompt,status,hb}.hermes.zeus.legacy` through the Synadia agent protocol plugin
-  `nats-platform` (vendored in `platform/hermes/agent/plugins/nats-platform/`; no start-up hot-patch, because
+  `nats-platform` (vendored in `platform/hermes/onemind-hermes/plugins/nats-platform/`; no start-up hot-patch, because
   Hermes v0.22.5 has no native NATS platform and the one line the patch fixed is now in the vendored file).
 - Connection settings are in `deployment.yaml` (URL `tls://nats.nats.svc.cluster.local:4222`, user and password from
   Secret `omos-nats-creds`, CA from Secret `hermes-nats-ca`, identity, `HERMES_NATS_REFUSE_DUPLICATE=true`). They are
@@ -406,8 +405,8 @@ Inventory of what Legacy does on NATS, what was ported and the switch order are 
   platform/hermes/onemind-hermes/nats/apply.sh --disable --restart   # rollback switch
   ```
 
-- While `hermes-legacy` still holds the identity, onemind-hermes connects, sees it, and waits instead of
-  registering; it takes the identity over by itself once Legacy lets go. That makes enabling it first safe.
+- `HERMES_NATS_REFUSE_DUPLICATE=true` stays: if another process ever holds the identity, onemind-hermes connects, sees it,
+  and waits instead of registering. It held that guard while `hermes-legacy` still ran, which made enabling it first safe.
 - `tak-platform` is not ported; PR #585 replaces it with a TAK-native client.
 
 ## TODO
@@ -448,4 +447,4 @@ name is set in three places: `SOUL.md` (identity), `API_SERVER_MODEL_NAME: Legac
 `config.yaml` (the id on `/v1/models`) and the Matrix display name of
 `@legacy:onemindos.dev` (set once through the Synapse profile API). The Telegram bot
 (`omos_hermes_bot`, first name `omos-hermes`) can only be renamed in BotFather. The old
-`hermes-legacy` Deployment is the old Legacy instance, being retired.
+`hermes-legacy` Deployment was the old Legacy instance, retired on 2026-11-03.

@@ -184,7 +184,6 @@ Each application resolves to exactly one app Component. The app carries `argocd/
 | `platform-fedhub` | takserver | FedHub (`fedhub`) | TAK & field ops |
 | `platform-kube` | kube | Headlamp (`headlamp`) | Developer platform |
 | `platform-hermes-base` | hermes | Hermes namespace, egress Services and shared Secrets (`onemind-hermes`) | AI & agents |
-| `platform-legacy` | hermes | Hermes (old Legacy instance, being retired) (`hermes-legacy`) | AI & agents |
 | `platform-onemind-mcp` | hermes | OneMind internal app MCP (`onemind-mcp`) | AI & agents |
 | `platform-matrix` | matrix | Matrix Synapse (`matrix-synapse`) | Communication |
 | `platform-monitoring` | monitoring | Grafana (`grafana`) | Observability |
@@ -232,7 +231,7 @@ Workloads become `spec.subcomponentOf` their app and join the app's System. Full
 | external-dns | 1 | ExternalDNS (1) |
 | external-secrets | 3 | External Secrets Operator (3) |
 | github-runner | 2 | Platform core manifests (2) |
-| hermes | 1 | Hermes (old Legacy instance, being retired) (1) |
+| hermes | 2 | Legacy (onemind-hermes) (1), OneMind internal app MCP (1) |
 | ingress-nginx | 1 | ingress-nginx (1) |
 | keda | 3 | KEDA (3) |
 | kube | 2 | Headlamp (1), Kubernetes Dashboard (1) |
@@ -313,7 +312,6 @@ These Argo-managed products have no curated app today, so the workloads would st
 | Tailscale | `tailscale` | infrastructure | Platform core | SO |
 | Cloudflare | `cloudflare` | infrastructure | Platform core | SO |
 | DigitalOcean | `digitalocean` | infrastructure | Platform core | SO |
-| Hermes (old Legacy instance, being retired) | `hermes-legacy` | ai-agents | AI & agents | SO |
 | Agent Web UI | `agent-web-ui` | ai-agents | AI & agents | SO |
 | OpenClaw | `openclaw` | ai-agents | AI & agents | SO |
 | NATS Dashboard | `nats-dashboard` | ai-agents | Messaging (NATS) | SO |

@@ -1,4 +1,5 @@
-# Dedicated runner for the Hermes identity export (.github/workflows/hermes-identity-export.yml).
+# Dedicated runner with read-only pod access in the hermes namespace. Used by the preflight job of
+# .github/workflows/onemind-mcp.yml (the Hermes identity export workflow it was built for was removed in 2026-11).
 #
 # Separate from the build runner on purpose. This one can read the Hermes pod (platform/core/hermes-identity-export-rbac.yaml),
 # so it is:

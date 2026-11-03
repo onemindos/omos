@@ -35,7 +35,6 @@ workloads:
   github-runner/github-runner: component:default/platform-core
   github-runner/github-runner-hermes: component:default/platform-core
   hermes/onemind-hermes: component:default/onemind-hermes
-  hermes/hermes-legacy: component:default/hermes-legacy
   hermes/onemind-mcp: component:default/onemind-mcp
   ingress-nginx/ingress-nginx-controller: component:default/ingress-nginx
   keda/keda-admission-webhooks: component:default/keda
@@ -109,7 +108,6 @@ workloads:
   tailscale/ts-cilium-gateway-gateway-default-hl5fh: component:default/tailscale-operator
   tailscale/ts-grafana-ksprn: component:default/tailscale-operator
   tailscale/ts-headlamp-4qwkc: component:default/tailscale-operator
-  tailscale/ts-hermes-dashboard-6thbx: component:default/tailscale-operator
   tailscale/ts-heynats-p5dmf: component:default/tailscale-operator
   tailscale/ts-hubble-tw85d: component:default/tailscale-operator
   tailscale/ts-n8n-pmtds: component:default/tailscale-operator
@@ -194,7 +192,6 @@ argoApplications:
   platform-onemind-hermes: component:default/onemind-hermes
   platform-onemind-mcp: component:default/onemind-mcp
   platform-kube: component:default/headlamp
-  platform-legacy: component:default/hermes-legacy
   platform-matrix: component:default/matrix-synapse
   platform-metrics-server: component:default/kubernetes-system
   platform-monitoring: component:default/grafana

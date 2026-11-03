@@ -113,11 +113,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "hermes",
-      "name": "hermes-legacy"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "ingress-nginx",
       "name": "ingress-nginx-controller"
     },
@@ -609,11 +604,6 @@
     {
       "kind": "StatefulSet",
       "namespace": "tailscale",
-      "name": "ts-hermes-dashboard-6thbx"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
       "name": "ts-heynats-p5dmf"
     },
     {
@@ -985,11 +975,6 @@
       "kind": "Service",
       "namespace": "default",
       "name": "kubernetes"
-    },
-    {
-      "kind": "Service",
-      "namespace": "hermes",
-      "name": "hermes-dashboard"
     },
     {
       "kind": "Service",
@@ -1465,11 +1450,6 @@
       "kind": "Service",
       "namespace": "tailscale",
       "name": "ts-headlamp-4qwkc"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-hermes-dashboard-6thbx"
     },
     {
       "kind": "Service",

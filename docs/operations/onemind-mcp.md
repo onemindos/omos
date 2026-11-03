@@ -1,5 +1,7 @@
 # OneMind application MCP for Legacy
 
+> **Historical (2026-11-03).** The direct Legacy client (`hermes-legacy`, its NetworkPolicy rule and the in-pod acceptance job of `.github/workflows/onemind-mcp.yml`) was removed on 2026-11-03. `onemind-mcp` is now reached through the tool gateway (`platform/tool-gateway`); the PR preflight job still runs, against `onemind-hermes`.
+
 User authorization: 2026-10-27, implement an extensible internal MCP and deploy it
 for the cluster Hermes agent. Keep the existing services and their APIs. This is
 a bounded addition, not a new cluster administration gateway or a replacement for

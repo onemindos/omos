@@ -86,7 +86,7 @@ Do not rely on a remembered entity list. At last check the controllable devices
 were Wi-Fi smart plugs (`switch.*`) and the readable ones included a thermometer
 and hygrometer, a phone tracker and router WAN status; there were no `light.*`
 entities. The Home Assistant box has also been offline for long periods
-(`platform/hermes/agent/egress.yaml` notes September 2026), so silence may just
+(`platform/hermes/base/egress.yaml` notes September 2026), so silence may just
 mean the host is down.
 
 ## Credentials
