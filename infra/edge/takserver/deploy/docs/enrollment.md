@@ -18,7 +18,7 @@ for how the server was configured.
 | Port | `8089`  ← the CoT port, NOT the enrollment port |
 | Protocol | `SSL` |
 | Username | `omos-iphone17` / `omos-ipad` (per device) |
-| Password | `OneMind-TAK-2026` |
+| Password | set per device; never commit |
 
 The client connects CoT on **8089** and silently enrolls its cert on **8446**. Accept the
 "trust server certificate" prompt on first connect (it's fetching our self-signed CA). Set the
@@ -47,7 +47,7 @@ and return HTTP 500.
     <TAKServerCAConfig
         keystore="JKS"
         keystoreFile="/opt/tak/certs/files/ca-signing.jks"
-        keystorePass="atakatak"
+        keystorePass="$CAPASS"
         validityDays="365"
         signatureAlg="SHA256WithRSA"
         CAkey="/opt/tak/certs/files/ca-plain.key"
@@ -55,19 +55,19 @@ and return HTTP 500.
 </certificateSigning>
 <security> ... </security>
 ```
-`CAkey` is the **unencrypted** CA private key (`openssl rsa -in ca-do-not-share.key -passin pass:atakatak
+`CAkey` is the **unencrypted** CA private key (`openssl rsa -in ca-do-not-share.key -passin env:CAPASS
 -out ca-plain.key`); `CAcertificate` is `ca.pem`. Both are gitignored (plaintext key).
 
 ### 2. CA signing keystore — `certs/files/ca-signing.jks`
 A JKS holding the CA cert **and its private key** so the server can sign. Built from `ca.pem` +
-`ca-do-not-share.key` (CA password `atakatak`):
+`ca-do-not-share.key` (CA password: set via $CAPASS (the keystore password, default until step-2 rotation)):
 
 ```bash
 # in a throwaway container with certs/files mounted (openssl/keytool live there)
-openssl pkcs12 -export -legacy -in ca.pem -inkey ca-do-not-share.key -passin pass:atakatak \
-  -out ca-signing.p12 -passout pass:atakatak -name ca
-keytool -importkeystore -srckeystore ca-signing.p12 -srcstoretype PKCS12 -srcstorepass atakatak \
-  -destkeystore ca-signing.jks -deststoretype JKS -deststorepass atakatak -destkeypass atakatak -noprompt
+openssl pkcs12 -export -legacy -in ca.pem -inkey ca-do-not-share.key -passin env:CAPASS \
+  -out ca-signing.p12 -passout env:CAPASS -name ca
+keytool -importkeystore -srckeystore ca-signing.p12 -srcstoretype PKCS12 -srcstorepass:env CAPASS \
+  -destkeystore ca-signing.jks -deststoretype JKS -deststorepass:env CAPASS -destkeypass:env CAPASS -noprompt
 ```
 (`certs/files` is bind-mounted read-only into `takserver`; the file just needs to exist on the host.)
 
@@ -111,7 +111,7 @@ docker exec takserver bash -lc \
 grep -oE 'identifier="[^"]+"' tak/UserAuthenticationFile.xml
 ```
 
-Current users (all group Red): `omos-iphone17`, `omos-ipad` (password `OneMind-TAK-2026`),
+Current users (all group Red): `omos-iphone17`, `omos-ipad` (password set per device; never commit),
 `omos-tablet` (cert-based, uses its data-package `.p12`).
 
 ---
@@ -122,7 +122,7 @@ Current users (all group Red): `omos-iphone17`, `omos-ipad` (password `OneMind-T
 # anonymous → 401 (endpoint alive, auth-gated)
 curl -sk -o /dev/null -w '%{http_code}\n' https://100.74.182.117:8446/Marti/api/tls/config
 # with creds → 200 + <certificateConfig> XML
-curl -sk -u 'omos-iphone17:OneMind-TAK-2026' https://100.74.182.117:8446/Marti/api/tls/config
+curl -sk -u "omos-iphone17:$TAK_ENROLL_PASS" https://100.74.182.117:8446/Marti/api/tls/config
 ```
 200 = enrollment ready. 500 = `certificateSigning` misplaced/missing. 401 = bad creds or user file
 not loaded. 000 = wrong port (enrollment is 8446, not 8443/8450).
@@ -136,7 +136,7 @@ POST a real CSR — but the **CSR subject MUST include the O/OU from `nameEntrie
 openssl req -new -newkey rsa:2048 -nodes -keyout t.key -out t.csr \
   -subj "/O=TAK/OU=TAK-OPS/CN=omos-iphone17"          # O + OU MUST match nameEntries
 openssl req -in t.csr -outform DER | base64 | tr -d '\n' > t.b64
-curl -sk -u 'omos-iphone17:OneMind-TAK-2026' --data-binary @t.b64 -H 'Content-Type: text/plain' \
+curl -sk -u "omos-iphone17:$TAK_ENROLL_PASS" --data-binary @t.b64 -H 'Content-Type: text/plain' \
   "https://100.74.182.117:8446/Marti/api/tls/signClient/v2?clientUid=test&version=2"
 # → 200 + JSON {"signedCert":"<base64 DER>"}  = signer fully working
 ```

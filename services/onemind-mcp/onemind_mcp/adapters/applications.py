@@ -136,3 +136,78 @@ def grafana(add, upstream):
         """Find dashboards by title using the dedicated Grafana read-only service identity."""
         return await upstream.get('/api/search', {'query': query, 'type': 'dash-db', 'limit': limit})
     add(dashboards)
+
+
+def litellm(add, upstream):
+    async def models() -> dict:
+        """List the model names routed by the LiteLLM gateway. Read only; no spend, keys, provider settings or completions."""
+        data = await upstream.get('/v1/models')
+        ids = [row['id'] for row in data.get('data', []) if isinstance(row, dict) and isinstance(row.get('id'), str)]
+        return {'count': len(ids), 'models': ids[:200]}
+    add(models)
+
+
+ArgoName = Annotated[str, Field(pattern=r'^[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?$')]
+
+
+def argocd(add, upstream):
+    async def applications(limit: Limit = 100) -> dict:
+        """List Argo CD applications with sync and health status. Read only; cannot sync, refresh, roll back or delete."""
+        data = await upstream.get('/api/v1/applications', {
+            'fields': 'items.metadata.name,items.spec.project,items.status.sync.status,'
+                      'items.status.sync.revision,items.status.health.status'})
+        items = [{'name': row.get('metadata', {}).get('name'), 'project': row.get('spec', {}).get('project'),
+                  'sync': row.get('status', {}).get('sync', {}).get('status'),
+                  'revision': (row.get('status', {}).get('sync', {}).get('revision') or '')[:12],
+                  'health': row.get('status', {}).get('health', {}).get('status')}
+                 for row in data.get('items') or []]
+        return {'count': len(items), 'applications': items[:limit]}
+
+    async def application(name: ArgoName) -> dict:
+        """Read one Argo CD application's sync, health, revision, conditions and out-of-sync resources. Read only."""
+        data = await upstream.get('/api/v1/applications/' + name)
+        spec, status = data.get('spec', {}), data.get('status', {})
+        return {'name': data.get('metadata', {}).get('name'),
+                'project': spec.get('project'),
+                'sources': [{k: s.get(k) for k in ('repoURL', 'path', 'chart', 'targetRevision')}
+                            for s in (spec.get('sources') or [spec.get('source') or {}])],
+                'sync': status.get('sync', {}).get('status'),
+                'revision': status.get('sync', {}).get('revision'),
+                'health': status.get('health', {}),
+                'operation': {k: status.get('operationState', {}).get(k) for k in ('phase', 'message', 'finishedAt')},
+                'conditions': [{k: c.get(k) for k in ('type', 'message')} for c in status.get('conditions') or []][:10],
+                'out_of_sync': [{k: r.get(k) for k in ('group', 'kind', 'namespace', 'name', 'status', 'health')}
+                                for r in status.get('resources') or [] if r.get('status') != 'Synced'][:50]}
+    add(applications)
+    add(application)
+
+
+def backstage(add, upstream):
+    fields = ('kind,metadata.name,metadata.namespace,metadata.title,metadata.description,'
+              'spec.type,spec.lifecycle,spec.owner,spec.system')
+
+    async def entities(kind: Annotated[str, Field(pattern=r'^([A-Za-z]{1,40})?$')] = '',
+                       search: Annotated[str, Field(max_length=100)] = '', limit: Limit = 20) -> dict:
+        """Search the Backstage service catalog by optional kind (Component, API, System, Domain, Resource) and text. Read only; at most 100 entities."""
+        params = {'limit': limit, 'fields': fields}
+        if kind:
+            params['filter'] = 'kind=' + kind.lower()
+        if search:
+            params['fullTextFilterTerm'] = search
+        data = await upstream.get('/api/catalog/entities/by-query', params)
+        return {'totalItems': data.get('totalItems'), 'items': data.get('items', [])}
+
+    async def entity(kind: Annotated[str, Field(pattern=r'^[A-Za-z]{1,40}$')],
+                     name: Annotated[str, Field(pattern=r'^[A-Za-z0-9][A-Za-z0-9._-]{0,62}$')],
+                     namespace: Annotated[str, Field(pattern=r'^[a-z0-9][a-z0-9-]{0,62}$')] = 'default') -> dict:
+        """Read one catalog entity by kind and name: description, owner, lifecycle, tags and relations. Read only."""
+        data = await upstream.get(f'/api/catalog/entities/by-name/{kind.lower()}/{namespace}/{name}')
+        meta, spec = data.get('metadata', {}), data.get('spec', {})
+        return {'kind': data.get('kind'),
+                'metadata': {k: meta.get(k) for k in ('name', 'namespace', 'title', 'description', 'tags') if k in meta},
+                'spec': {k: spec.get(k) for k in ('type', 'lifecycle', 'owner', 'system', 'dependsOn', 'providesApis', 'consumesApis')
+                         if k in spec},
+                'relations': [{'type': r.get('type'), 'targetRef': r.get('targetRef')}
+                              for r in data.get('relations') or []][:50]}
+    add(entities)
+    add(entity)

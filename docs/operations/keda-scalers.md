@@ -10,8 +10,10 @@ namespace `keda` (Argo app `ecosystem-keda`). Before this change there were 0 Sc
 not change replica count.
 
 The NATS monitoring endpoint (`nats-headless.nats.svc.cluster.local:8222`) needs no credentials, so no
-TriggerAuthentication is included. No NetworkPolicy in `nats` or `keda` blocks it. If monitoring ever gets
-auth, add a `TriggerAuthentication` and pass `natsServerMonitoringEndpoint` via `authParams`.
+TriggerAuthentication is included. `platform/nats/network-policy.yaml` admits the `keda-operator` pod
+(`app: keda-operator` in namespace `keda`) to port 8222 on the NATS servers; update that rule if KEDA moves or is
+relabelled. If monitoring ever gets auth, add a `TriggerAuthentication` and pass `natsServerMonitoringEndpoint`
+via `authParams`.
 
 ## Who consumes JetStream
 
@@ -24,7 +26,7 @@ created by the workloads themselves.
 | `sink-clickhouse` (omos) | push durable `sink-clickhouse`, ack none | core sub `ent.*.*.state` | min 1 / max 1 |
 | `omos-tak-projector` (omos) | push durable `sink-tak` | core subs `ent.*.*.state`, `cmd.projector.*` | keep 1 |
 | `onemind-core`, `onemind-ingestion` | none (core subscribe, publishes to JS) | | not queue-driven |
-| `hermes-legacy` | none (Synadia agent protocol on `agents.*`, core request/reply) | | not queue-driven |
+| `onemind-hermes` | none (Synadia agent protocol on `agents.*`, core request/reply) | | not queue-driven |
 | `takml-vision-worker` | none: it **publishes** `fabric.vision.*.detect` | | see below |
 
 Push consumers with no deliver group allow one subscriber, so max replicas is 1. `services/subscriber.py`

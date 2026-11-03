@@ -5,3 +5,5 @@ metadata:
   labels:
     app.kubernetes.io/part-of: omos-platform
     onemind.io/layer: sense
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted

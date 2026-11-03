@@ -1,0 +1,35 @@
+# Registered through /catalog-info.yaml by GitHub discovery. This directory builds the image of
+# the onemind-data CloudNativePG cluster, which the static catalog (platform/backstage/catalog/*.yaml)
+# does not define.
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: onemind-data
+  title: OneMind shared PostgreSQL
+  description: CloudNativePG cluster onemind-data running the onemind-postgres image (PostgreSQL 16 with PostGIS, pgvector and Apache AGE); hosts shared application databases.
+  tags:
+    - kubernetes
+    - postgresql
+  links:
+    - url: https://github.com/onemindos/omos/blob/main/platform/ecosystem/resources/postgres-cluster.yaml
+      title: Cluster manifest
+    - url: https://github.com/onemindos/omos/blob/main/platform/ecosystem/resources/postgres-image-catalog.yaml
+      title: Image catalog
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    argocd/app-name: platform-ecosystem-resources
+    argocd/instance-name: onemind-cloud
+    backstage.io/kubernetes-namespace: onemind-data
+    backstage.io/kubernetes-label-selector: cnpg.io/cluster=onemind-data
+    onemind.io/relationship-source: platform/ecosystem/resources/postgres-cluster.yaml
+    github.com/project-slug: onemindos/omos
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: database
+  owner: group:default/onemind-admins
+  system: data-storage
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+    - component:default/cloudnative-pg

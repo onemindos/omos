@@ -26,6 +26,27 @@ spec:
       insecureSkipVerify: true
 ---
 apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: velero
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  jobLabel: app.kubernetes.io/name
+  namespaceSelector:
+    matchNames: [velero]
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: velero
+      app.kubernetes.io/name: velero
+  endpoints:
+  # Plain-HTTP metrics Service created by the Velero chart (metrics.enabled default).
+  - port: http-monitoring
+    path: /metrics
+    interval: 60s
+---
+apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: onemind-backup-health
@@ -81,6 +102,61 @@ spec:
       annotations:
         summary: "Portable backup monitoring is unavailable"
         description: "Verify the controller and its authenticated metrics scrape before assuming volume backup health."
+    - alert: PortableVolumeBackupStale
+      # volsync_volume_out_of_sync only flips once the next scheduled start passes, so a
+      # stuck daily sync stays silent for a full interval. The summary count is created at
+      # 0 on reconcile and increments on each completed sync; sum drops the pod label so a
+      # controller restart does not split the series. The offset guard skips sources
+      # younger than the window.
+      expr: |
+        (
+          sum by (obj_namespace, obj_name) (increase(volsync_sync_duration_seconds_count{role="source"}[26h])) == 0
+        ) and on(obj_namespace, obj_name)
+          sum by (obj_namespace, obj_name) (volsync_sync_duration_seconds_count{role="source"} offset 26h)
+      for: 30m
+      labels:
+        severity: warning
+        service: backup
+      annotations:
+        summary: "Volume backup {{ $labels.obj_namespace }}/{{ $labels.obj_name }} has not completed a sync in 26 hours"
+        description: "Inspect the ReplicationSource status, mover pod events (snapshot or PVC provisioning), logs and storage quota. Preserve original PVCs and encryption keys."
+    - alert: CriticalBackupScheduleSuspended
+      # ScheduledBackupOverdue ignores suspended CronJobs by design; these schedules must
+      # not stay suspended. Extend the cronjob regex for other must-run schedules.
+      expr: |
+        (
+          min_over_time(
+            kube_cronjob_spec_suspend{job="kube-state-metrics",namespace="ops",cronjob=~"backup-offsite-copy"}[7d]
+          ) == 1
+        ) and on(namespace, cronjob) (time() - kube_cronjob_created{job="kube-state-metrics"} > 604800)
+      for: 10m
+      labels:
+        severity: warning
+        service: backup
+      annotations:
+        summary: "Critical backup schedule {{ $labels.namespace }}/{{ $labels.cronjob }} has been suspended for over 7 days"
+        description: "Suspended CronJobs are excluded from ScheduledBackupOverdue, so it makes no backups and raises no overdue alert. Resume it or record why; see platform/backups/OFFSITE-COPY.md."
+    - alert: VeleroBackupFailed
+      # 0 after a Failed, PartiallyFailed or FailedValidation backup of a schedule; manual
+      # backups carry an empty schedule label.
+      expr: velero_backup_last_status{job="velero",schedule!=""} == 0
+      for: 5m
+      labels:
+        severity: warning
+        service: backup
+      annotations:
+        summary: "Velero schedule {{ $labels.schedule }} last backup failed"
+        description: "Last Velero backup for this schedule failed or partially failed. Run velero backup describe --details on the newest backup and check the storage location."
+    - alert: PostgresWalArchivingFailing
+      # CNPG default monitoring query pg_stat_archiver (primary only); timestamps are -1 when never set.
+      expr: cnpg_pg_stat_archiver_last_failed_time > cnpg_pg_stat_archiver_last_archived_time
+      for: 15m
+      labels:
+        severity: warning
+        service: backup
+      annotations:
+        summary: "WAL archiving failing on {{ $labels.namespace }}/{{ $labels.pod }}"
+        description: "The newest WAL archive attempt failed with no later success; PITR is degrading. Check the Cluster ContinuousArchiving condition and barman-cloud plugin logs."
     - alert: KubeletResidentMemoryHigh
       expr: process_resident_memory_bytes{job="kubelet"} > 1073741824
       for: 15m

@@ -29,6 +29,8 @@ CLI = os.environ.get("KYVERNO_CLI") or shutil.which("kyverno")
 IMAGE_POLICY = "disallow-latest-image-tag"
 RESOURCE_POLICY = "require-requests-limits"
 GUARDED_RULES = ("require-image-tag", "validate-image-tag", "validate-resources")
+# Admission enforces these; the other policies stay Audit (see the policy file header).
+ENFORCED_POLICIES = {IMAGE_POLICY, "require-namespace-layer-label"}
 BAD_CONTAINER = {"name": "workload", "image": "busybox:latest", "resources": {}}
 PROVIDER_BUDGET_SKIP = {
     "provider-system-pod", "provider-system-deployment", "provider-system-daemonset",
@@ -236,6 +238,97 @@ class PolicyDelivery(unittest.TestCase):
                     self.assertTrue(rule["skipBackgroundRequests"])
                     self.assertTrue(rule["validate"]["allowExistingViolations"])
 
+    def test_only_violation_free_policies_enforce(self):
+        names = set()
+        for policy in yaml.safe_load_all(POLICY.read_text()):
+            name = policy["metadata"]["name"]
+            names.add(name)
+            with self.subTest(policy=name):
+                expected = "Enforce" if name in ENFORCED_POLICIES else "Audit"
+                self.assertEqual(policy["spec"]["validationFailureAction"], expected)
+                for rule in policy["spec"]["rules"]:
+                    # Kyverno 1.19.1 lets a rule-level failureAction override the spec field.
+                    self.assertNotIn("failureAction", rule["validate"])
+        self.assertLessEqual(ENFORCED_POLICIES, names)
+
+
+def _wave(doc):
+    return int(((doc.get("metadata") or {}).get("annotations") or {}).get("argocd.argoproj.io/sync-wave", "0"))
+
+
+def _labelled_namespaces(paths):
+    found = {}
+    for path in paths:
+        try:
+            docs = list(yaml.safe_load_all(path.read_text()))
+        except yaml.YAMLError:
+            continue
+        for doc in docs:
+            if isinstance(doc, dict) and doc.get("kind") == "Namespace":
+                labels = doc["metadata"].get("labels") or {}
+                if labels.get("onemind.io/layer"):
+                    found[doc["metadata"]["name"]] = doc
+    return found
+
+
+class NamespaceBootstrap(unittest.TestCase):
+    """Enforce must never deny a namespace that Argo CD auto-creates on a rebuild from zero.
+
+    Argo CD's CreateNamespace=true creates an unlabelled namespace unless the Application ships the
+    Namespace itself or sets managedNamespaceMetadata. A namespace labelled by a *different*
+    Application races require-namespace-layer-label, unless platform-security labels it: its
+    Namespaces apply in the same sync as, and before, the Enforce ClusterPolicies.
+    """
+
+    SECURITY = ROOT / "platform/security"
+
+    def test_security_namespaces_precede_policies(self):
+        namespaces = _labelled_namespaces(sorted(self.SECURITY.glob("*.yaml")))
+        policy_waves = {_wave(p) for p in yaml.safe_load_all(POLICY.read_text())}
+        self.assertTrue(namespaces)
+        for name, doc in namespaces.items():
+            with self.subTest(namespace=name):
+                self.assertLess(_wave(doc), min(policy_waves))
+
+    def test_auto_created_namespaces_are_labelled_before_enforce(self):
+        security = _labelled_namespaces(sorted(self.SECURITY.glob("*.yaml")))
+        checked = 0
+        for path in sorted((ROOT / "platform").rglob("*.yaml")):
+            if "parked" in path.parts:
+                continue
+            try:
+                docs = list(yaml.safe_load_all(path.read_text()))
+            except yaml.YAMLError:
+                continue
+            for app in docs:
+                if not (isinstance(app, dict) and app.get("kind") == "Application"
+                        and str(app.get("apiVersion", "")).startswith("argoproj.io/")):
+                    continue
+                spec = app["spec"]
+                policy = spec.get("syncPolicy") or {}
+                namespace = spec.get("destination", {}).get("namespace")
+                if "CreateNamespace=true" not in (policy.get("syncOptions") or []) or not namespace:
+                    continue
+                # argocd exists before Kyverno (Helm bootstrap) and must not use managedNamespaceMetadata.
+                if namespace == "argocd":
+                    continue
+                checked += 1
+                managed = ((policy.get("managedNamespaceMetadata") or {}).get("labels") or {})
+                own = set()
+                for source in spec.get("sources") or [spec.get("source")]:
+                    if not source or source.get("chart") or not source.get("path"):
+                        continue
+                    base = ROOT / source["path"]
+                    deep = (base / "kustomization.yaml").exists() or (source.get("directory") or {}).get("recurse")
+                    own |= set(_labelled_namespaces(sorted(base.rglob("*.yaml") if deep else base.glob("*.yaml"))))
+                with self.subTest(application=app["metadata"]["name"], namespace=namespace):
+                    self.assertTrue(
+                        namespace in own or namespace in security or managed.get("onemind.io/layer"),
+                        "label it in its own source, in platform/security/shared-namespaces.yaml, "
+                        "or with managedNamespaceMetadata",
+                    )
+        self.assertGreater(checked, 0)
+
 
 class KyvernoNativeNumberContext(unittest.TestCase):
     """Reproduce the reports controller's native-int64 context without JSON laundering."""
@@ -301,6 +394,7 @@ class KyvernoHistoryEngine(unittest.TestCase):
         resources = Path(cls.temp.name) / "resources.yaml"
         resources.write_text(yaml.safe_dump_all([r for r, _ in cls.cases], sort_keys=False))
         cls.results = {}
+        cls.messages = {}
         for mode, variables in [
             ("background", []),
             ("empty-uid", ["--set", "request.uid="]),
@@ -323,6 +417,8 @@ class KyvernoHistoryEngine(unittest.TestCase):
                 raise AssertionError(completed.stdout + completed.stderr)
             cls.results[mode] = {(reference["name"], result["policy"], result["rule"]): result["result"]
                                  for result in report["results"] for reference in result["resources"]}
+            cls.messages[mode] = {(reference["name"], result["policy"], result["rule"]): result.get("message", "")
+                                  for result in report["results"] for reference in result["resources"]}
 
     def assert_guarded_results(self, mode, background):
         for resource, skip in self.cases:
@@ -340,8 +436,15 @@ class KyvernoHistoryEngine(unittest.TestCase):
                 expected[2] = "skip"
             for rule, result in zip(GUARDED_RULES, expected):
                 policy = RESOURCE_POLICY if rule == "validate-resources" else IMAGE_POLICY
+                key = (name, policy, prefix + rule)
                 with self.subTest(mode=mode, resource=name, rule=rule):
-                    self.assertEqual(self.results[mode].get((name, policy, prefix + rule)), result)
+                    if mode == "admission-update" and policy == IMAGE_POLICY:
+                        # The Enforce image rules match CREATE only (see the policy header): Kyverno
+                        # 1.19.1 never applies allowExistingViolations to a rule with preconditions, so
+                        # matching UPDATE would deny every update of an already-violating object.
+                        self.assertIsNone(self.results[mode].get(key))
+                    else:
+                        self.assertEqual(self.results[mode].get(key), result)
 
     def test_background_skips_only_controller_history(self):
         self.assert_guarded_results("background", True)
@@ -352,7 +455,7 @@ class KyvernoHistoryEngine(unittest.TestCase):
     def test_admission_create_evaluates_even_historical_status(self):
         self.assert_guarded_results("admission-create", False)
 
-    def test_admission_update_evaluates_even_historical_status(self):
+    def test_admission_update_skips_image_rules(self):
         self.assert_guarded_results("admission-update", False)
 
     def test_other_security_rules_still_assess_terminal_pods(self):

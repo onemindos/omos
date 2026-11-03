@@ -1,0 +1,400 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onemind-hermes
+  namespace: hermes
+  labels:
+    app.kubernetes.io/name: onemind-hermes
+    onemind.io/agent: legacy
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: onemind-hermes
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: onemind-hermes
+        onemind.io/agent: legacy
+    spec:
+      # The verified op archive is linux/amd64; do not schedule it on arm64.
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 60
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
+      initContainers:
+        - name: initial-config
+          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          command:
+            - /opt/hermes/.venv/bin/python3
+            - -c
+            - |
+              from pathlib import Path
+              import os
+              source = Path('/defaults/config.yaml')
+              target = Path('/opt/data/config.yaml')
+              if not target.exists():
+                  with target.open('xb') as handle:
+                      os.chmod(target, 0o600)
+                      handle.write(source.read_bytes())
+
+              # This command overrides image stage2. Repair only the home/config
+              # ownership before the CLI shim drops root to the hermes user.
+              # Never recurse through user data or change other profiles.
+              import pwd
+              try:
+                  owner = pwd.getpwnam('hermes')
+              except KeyError:
+                  owner = None
+              if owner and os.geteuid() == 0:
+                  os.chown(target.parent, owner.pw_uid, owner.pw_gid)
+                  os.chown(target, owner.pw_uid, owner.pw_gid)
+
+              # Reconcile Git-owned Zoho entries on BOTH existing and clean PVCs.
+              # The manifest holds ${ENV} references only; credentials enter the main
+              # container from SealedSecrets, never the config or init container.
+              import subprocess
+              import sys
+              subprocess.run([
+                  sys.executable, '/zoho/reconcile.py', '--home', '/opt/data',
+                  '--manifest', '/zoho/servers.json',
+              ], check=True)
+
+              # Whop owns exactly one public OAuth server definition; tokens stay on PVC.
+              subprocess.run([
+                  sys.executable, '/whop/reconcile.py', '--home', '/opt/data',
+                  '--manifest', '/whop/server.json',
+              ], check=True)
+
+              # Native secret-source configuration is reconciled on existing AND clean PVCs.
+              # This init container receives no bootstrap Secret and never resolves secrets.
+              subprocess.run([
+                  sys.executable, '/onepassword/reconcile.py', '--home', '/opt/data',
+                  '--manifest', '/onepassword/settings.json',
+              ], check=True)
+
+              # Cron assets are Git-owned, so unlike config.yaml they are refreshed on every
+              # start: job scripts go to $HERMES_HOME/scripts (the only place the cron runner
+              # accepts them), the job list and its applier to cron-defs/.
+              import pwd
+              try:
+                  owner = pwd.getpwnam('hermes')
+              except KeyError:
+                  owner = None
+              for name in sorted(os.listdir('/cron')):
+                  if name.startswith('.'):
+                      continue
+                  folder = Path('/opt/data/cron-defs' if name in ('jobs.yaml', 'apply_jobs.py') else '/opt/data/scripts')
+                  folder.mkdir(parents=True, exist_ok=True)
+                  staged = folder / ('.' + name + '.new')
+                  staged.write_bytes((Path('/cron') / name).read_bytes())
+                  os.chmod(staged, 0o644)
+                  os.replace(staged, folder / name)
+                  if owner:
+                      try:
+                          os.chown(folder / name, owner.pw_uid, owner.pw_gid)
+                          os.chown(folder, owner.pw_uid, owner.pw_gid)
+                      except OSError:
+                          pass  # not root: the files stay world-readable, which is enough
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            # CLI reconciliation peaked at ~87 MiB RSS in the isolated smoke test.
+            # Keep the existing scheduler request; permit a bounded startup burst.
+            limits: {cpu: 500m, memory: 192Mi}
+          volumeMounts:
+            - name: data
+              mountPath: /opt/data
+            - name: defaults
+              mountPath: /defaults
+              readOnly: true
+            - name: cron
+              mountPath: /cron
+              readOnly: true
+            - name: zoho-config
+              mountPath: /zoho
+              readOnly: true
+            - name: whop-config
+              mountPath: /whop
+              readOnly: true
+            - name: onepassword-config
+              mountPath: /onepassword
+              readOnly: true
+        - name: install-onepassword-cli
+          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          command:
+            - /opt/hermes/.venv/bin/python3
+            - /onepassword/install_cli.py
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits: {cpu: 500m, memory: 192Mi}
+          volumeMounts:
+            - name: onepassword-config
+              mountPath: /onepassword
+              readOnly: true
+            - name: onepassword-bin
+              mountPath: /opt/onepassword
+            - name: onepassword-state
+              mountPath: /var/run/onepassword
+        # Python packages the NATS gateway platform needs and the Hermes image lacks (nats-py,
+        # nkeys and the Synadia agent SDK; pydantic and pynacl are already in the venv, so
+        # --no-deps). Pinned with hashes in nats/gateway-deps.txt. The plugins add the directory to
+        # sys.path themselves: the hermes launcher discards PYTHONPATH and the venv has no user
+        # site, so neither a variable nor a .pth in /opt/data works. They go on the data volume,
+        # not an emptyDir: PyPI is needed only when the pin changes, never on an ordinary restart.
+        # A failed install does not stop the pod (Telegram, Matrix and the dashboard do not need it);
+        # the NATS plugin simply cannot load and says so in the gateway log.
+        - name: install-gateway-deps
+          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          command:
+            - sh
+            - -c
+            - |
+              set -u
+              DEST=/opt/data/.local/gateway-deps
+              WANT=$(sha256sum /requirements/gateway-deps.txt | cut -d' ' -f1)
+              if [ -f "$DEST/.requirements.sha256" ] && [ "$(cat "$DEST/.requirements.sha256")" = "$WANT" ]; then
+                echo "gateway deps up to date"
+                exit 0
+              fi
+              UV=$(ls /opt/hermes/tools/uv-*/uv | head -n 1)
+              mkdir -p /opt/data/.local
+              rm -rf "$DEST.new"
+              if "$UV" pip install --python /opt/hermes/.venv/bin/python3 --target "$DEST.new" \
+                   --no-deps --require-hashes -r /requirements/gateway-deps.txt; then
+                echo "$WANT" > "$DEST.new/.requirements.sha256"
+                chmod -R a+rX "$DEST.new"
+                rm -rf "$DEST"
+                mv "$DEST.new" "$DEST"
+                echo "gateway deps installed"
+              else
+                rm -rf "$DEST.new"
+                echo "WARNING: gateway deps install failed; the NATS gateway platform stays unavailable"
+              fi
+              exit 0
+          env:
+            - name: UV_CACHE_DIR
+              value: /tmp/uv-cache
+            - name: HOME
+              value: /tmp
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          resources:
+            requests: {cpu: 20m, memory: 64Mi}
+            limits: {cpu: 500m, memory: 256Mi}
+          volumeMounts:
+            - name: data
+              mountPath: /opt/data
+            - name: gateway-deps-requirements
+              mountPath: /requirements
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+      containers:
+        - name: hermes
+          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          args: [gateway, run]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [NET_RAW]
+          envFrom:
+            # Dashboard login only: no Legacy model/channel/operational credentials.
+            - secretRef:
+                name: hermes-dashboard-auth
+            - secretRef:
+                name: onemind-hermes-runtime
+            - secretRef:
+                name: zoho-ops-mcp
+            - secretRef:
+                name: zoho-data-analytics-mcp
+            - secretRef:
+                name: zoho-desk-mcp
+            - secretRef:
+                name: zoho-projects-mcp
+            - secretRef:
+                name: zoho-crm-mcp
+            - secretRef:
+                name: zoho-finance-mcp
+            - secretRef:
+                name: zoho-salesiq-mcp
+            - secretRef:
+                name: zoho-workdrive-mcp
+            - secretRef:
+                name: zoho-mail-calendar-mcp
+          env:
+            # Required bootstrap: encrypted SealedSecret must be integrated before rollout.
+            - name: OP_SERVICE_ACCOUNT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hermes-onepassword-bootstrap
+                  key: OP_SERVICE_ACCOUNT_TOKEN
+            - name: OP_CONFIG_DIR
+              value: /var/run/onepassword
+            - name: OP_LOAD_DESKTOP_APP_SETTINGS
+              value: 'false'
+            - name: HERMES_HOME
+              value: /opt/data
+            - name: HERMES_DASHBOARD
+              value: 'true'
+            - name: HERMES_DASHBOARD_HOST
+              value: 0.0.0.0
+            - name: HERMES_DASHBOARD_PORT
+              value: '9119'
+            - name: API_SERVER_ENABLED
+              value: 'true'
+            - name: API_SERVER_HOST
+              value: 0.0.0.0
+            - name: API_SERVER_PORT
+              value: '8642'
+            # Key for the tool gateway (platform/tool-gateway); config.yaml mcp_servers
+            # headers read it as ${ONEMIND_GATEWAY_KEY}.
+            - name: ONEMIND_GATEWAY_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: onemind-gateway-client
+                  key: ONEMIND_GATEWAY_KEY
+            # ---- NATS: a direct client of the cluster bus (no leaf sidecar) ----
+            # Nothing below connects until the nats-platform plugin is listed in plugins.enabled
+            # (nats/apply.sh); until then these are inert. Same shape as every other cloud workload
+            # (CLAUDE.md "Bus Authority"): in-cluster Service, TLS, user and password from a Secret.
+            # omos-nats-creds already exists in this namespace (platform/hermes/bridge/) and holds the
+            # shared `onemind` client user. PR #562 replaces it with a `hermes` user in account AGENTS:
+            # reseal NATS_USER and NATS_PASSWORD from that user and nothing else changes.
+            - name: NATS_URL
+              value: tls://nats.nats.svc.cluster.local:4222
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+                  optional: true
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+                  optional: true
+            - name: NATS_CA_FILE
+              value: /etc/nats-ca/ca.crt
+            - name: NATS_TLS_SERVER_NAME
+              value: nats.nats.svc.cluster.local
+            - name: NATS_CLIENT_NAME
+              value: onemind-hermes-nats-platform
+            - name: NATS_CONTEXT_CLIENT_NAME
+              value: onemind-hermes-nats-context
+            # Identity on the fabric: agents.{prompt,status,hb}.hermes.zeus.legacy, the one hermes-legacy
+            # holds today. REFUSE_DUPLICATE keeps this instance down while hermes-legacy still holds it
+            # (MIGRATION.md, "NATS cutover").
+            - name: HERMES_NATS_AGENT
+              value: hermes
+            - name: HERMES_NATS_OWNER
+              value: zeus
+            - name: HERMES_NATS_SESSION_NAME
+              value: legacy
+            - name: HERMES_NATS_REFUSE_DUPLICATE
+              value: 'true'
+            # The NATS platform's own switch (the plugin README: the transport authenticates the caller).
+            # GATEWAY_ALLOW_ALL_USERS stays false, so Telegram and Matrix keep their allowlists.
+            - name: NATS_ALLOW_ALL_USERS
+              value: 'true'
+          ports:
+            - name: dashboard
+              containerPort: 9119
+            - name: gateway
+              containerPort: 8642
+          startupProbe:
+            tcpSocket: {port: dashboard}
+            periodSeconds: 5
+            failureThreshold: 60
+          readinessProbe:
+            httpGet: {path: /health, port: gateway}
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            tcpSocket: {port: dashboard}
+            periodSeconds: 20
+            failureThreshold: 6
+          resources:
+            requests: {cpu: 250m, memory: 1Gi}
+            limits: {cpu: '2', memory: 3Gi}
+          volumeMounts:
+            - name: onepassword-bin
+              mountPath: /opt/onepassword
+              readOnly: true
+            - name: onepassword-state
+              mountPath: /var/run/onepassword
+            - name: data
+              mountPath: /opt/data
+            # Deploy key + repository for the nightly config-export job. The Secret does not
+            # exist until the owner creates it (README "Scheduled jobs"), so it is optional.
+            - name: export
+              mountPath: /var/run/legacy-export
+              readOnly: true
+            # Cluster NATS CA (same CA the Legacy leaf verifies against).
+            - name: nats-ca
+              mountPath: /etc/nats-ca
+              readOnly: true
+      volumes:
+        - name: onepassword-config
+          configMap:
+            name: onemind-hermes-onepassword
+        - name: onepassword-bin
+          emptyDir:
+            sizeLimit: 64Mi
+        # CLI state is pod-local, not included in the retained PVC/backup.
+        - name: onepassword-state
+          emptyDir:
+            medium: Memory
+            sizeLimit: 16Mi
+        - name: tmp
+          emptyDir:
+            sizeLimit: 128Mi
+        - name: gateway-deps-requirements
+          configMap:
+            name: onemind-hermes-gateway-deps
+        - name: nats-ca
+          secret:
+            secretName: hermes-nats-ca
+            optional: true
+        - name: data
+          persistentVolumeClaim:
+            claimName: onemind-hermes-data
+        - name: defaults
+          configMap:
+            name: onemind-hermes-defaults
+        - name: cron
+          configMap:
+            name: onemind-hermes-cron
+        - name: zoho-config
+          configMap:
+            name: onemind-hermes-zoho
+        - name: whop-config
+          configMap:
+            name: onemind-hermes-whop
+        - name: export
+          secret:
+            secretName: onemind-hermes-export
+            optional: true
+            defaultMode: 292   # 0444; the script copies the key to a 0600 file before ssh uses it

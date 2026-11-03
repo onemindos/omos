@@ -30,7 +30,7 @@ The record of every service removed from the cluster during the 2026 cost and cl
 ## Restoring a parked service
 
 1. Move `platform/parked/<service>/` back to where the register says it came from, and add its namespace and backup source back.
-2. If its volumes were deleted, restore them first: create a PVC and a VolSync `ReplicationDestination` pointing at the restic repository in the register (the 2026-10-16 Hermes restore drill shows the exact pattern, `hermes-restore-drill-2026-10-16.md`).
+2. If its volumes were deleted, restore them first: create a PVC and a VolSync `ReplicationDestination` pointing at the restic repository in the register. Copy the `ReplicationDestination` settings from the 2026-10-16 Hermes restore drill (`hermes-restore-drill-2026-10-16.md`), but not its PVC class: the drill's claim was throwaway, while this one becomes the live claim. Give the PVC the name, size and class its manifest declares in Git. The old claim is gone, so if that manifest still puts stateful data on `do-block-storage`, change it to `do-block-storage-retain` first (root `CLAUDE.md`, "The Deployment Pattern").
 3. Merge; ArgoCD recreates the service.
 
 ## Known drift not handled here

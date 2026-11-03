@@ -1,0 +1,7 @@
+{
+  "url": "https://mcp.whop.com/mcp",
+  "auth": "oauth",
+  "connect_timeout": 300,
+  "oauth": {"timeout": 300},
+  "sampling": {"enabled": false}
+}

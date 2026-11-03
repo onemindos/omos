@@ -70,6 +70,11 @@ configs:
     url: https://argocd.tail717ba0.ts.net
     # Break-glass local admin. KEEP until SSO login is proven; remove in a separate follow-up PR.
     admin.enabled: "true"
+    # Read-only API identity for the onemind-mcp hub (platform/hermes/mcp). apiKey: bearer tokens
+    # only (generated out of band, held in the onemind-mcp-auth SealedSecret). Role role:mcp-read below.
+    # `login` is listed only so the token can be issued; no password is kept, so nobody can sign in.
+    accounts.mcp-read: apiKey, login
+    accounts.mcp-read.enabled: "true"
     # Authentik provider/application `argocd` is created by platform/ecosystem/resources/argocd-authentik-provider.yaml.
     # clientSecret is read from Secret argocd/argocd-oidc-authentik (SealedSecret in platform/ecosystem/resources/secrets/).
     oidc.config: |
@@ -88,4 +93,7 @@ configs:
     policy.default: ""
     policy.csv: |
       g, argocd-admins, role:admin
+      # onemind-mcp: application status only. Narrower than role:readonly (no logs, repositories, clusters or projects).
+      p, role:mcp-read, applications, get, */*, allow
+      g, mcp-read, role:mcp-read
     scopes: "[groups]"

@@ -1,0 +1,35 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: onemind-hermes-data
+  namespace: hermes
+  annotations:
+    onemind.dev/source-pvc: onemind-hermes-data
+spec:
+  sourcePVC: onemind-hermes-data
+  trigger:
+    schedule: 25 1 * * *  # 01:25 UTC; offset from the retired hermes-fresh-data source (01:10)
+  restic:
+    repository: onemind-hermes-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests: {cpu: 100m, memory: 256Mi}
+      limits: {cpu: '1', memory: 1Gi}

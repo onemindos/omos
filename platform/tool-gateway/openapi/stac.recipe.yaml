@@ -1,0 +1,10 @@
+# Target `stac`: the read-only stac-fastapi-pgstac API (Service stac/stac-api). The writer (stac-api-writer) is not a target.
+# stac.source.json is GET http://stac-api.stac:8080/api fetched 2026-10-30 (port-forward). Only GET operations are kept.
+source: stac.source.json
+server: http://stac-api.stac.svc.cluster.local:8080
+keep:
+- {method: get, path: /collections, id: list_collections, params: [limit, offset, q, bbox, datetime], limits: {limit: 100}}
+- {method: get, path: "/collections/{collection_id}", id: get_collection}
+- {method: get, path: "/collections/{collection_id}/items", id: list_items, params: [limit, bbox, datetime, sortby, token], limits: {limit: 100}}
+- {method: get, path: "/collections/{collection_id}/items/{item_id}", id: get_item}
+- {method: get, path: /search, id: search, params: [collections, ids, bbox, datetime, limit, sortby, token], limits: {limit: 100}}

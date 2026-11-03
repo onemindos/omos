@@ -15,25 +15,24 @@
 #   tlsCA.secretName:                nats-server-tls  (key: ca.crt)
 #
 # Leaf-node CA trust — manual step on CA rotation:
-#   The hermes leaf sidecar and TAK NATS bridge both mount a ca.crt to verify
+#   onemind-hermes (CA volume) and the TAK NATS bridge both mount a ca.crt to verify
 #   the NATS server TLS chain. Those certs are stored in 1Password (vault: 00-24 SO):
 #     - hermes-nats-ca   (property: ca.crt)  → K8s secret hermes-nats-ca  / hermes ns
-#     - hermes-leaf-conf (property: ca.crt)  → K8s secret hermes-leaf-conf / hermes ns
 #     - tak-nats-leaf    (property: ca.crt)  → K8s secret tak-nats-leaf   / takserver ns
 #
 #   nats-ca has a 10-year duration; cert-manager will auto-renew at the 2/3 mark
 #   (~2033). When it rotates, extract the new CA cert and update all three 1Password
-#   items, then force-sync ESO and restart the leaf pods:
+#   items, then force-sync ESO and restart the consumers:
 #
 #     NEW_CA=$(kubectl get secret nats-server-tls -n nats \
 #               -o jsonpath='{.data.ca\.crt}' | base64 -d)
-#     # Update 1Password items hermes-nats-ca, hermes-leaf-conf, tak-nats-leaf
+#     # Update 1Password items hermes-nats-ca, tak-nats-leaf
 #     # (field: ca.crt) with $NEW_CA, then:
-#     kubectl annotate externalsecret hermes-nats-ca hermes-leaf-conf -n hermes \
+#     kubectl annotate externalsecret hermes-nats-ca -n hermes \
 #       force-sync=$(date +%s) --overwrite
 #     kubectl annotate externalsecret tak-nats-leaf -n takserver \
 #       force-sync=$(date +%s) --overwrite
-#     kubectl rollout restart deployment/hermes-legacy -n hermes
+#     kubectl rollout restart deployment/onemind-hermes -n hermes
 #     kubectl rollout restart deployment/tak-server -n takserver
 ---
 apiVersion: cert-manager.io/v1

@@ -1,6 +1,9 @@
 # Reviewed mapping of generated workloads and Argo CD applications to curated app Components.
 # workloads: "<namespace>/<workload>" -> app ref. Workloads not listed land in system:default/unassigned-workloads.
-# argoApplications: every Argo CD application -> exactly one app Component (carries argocd/app-name).
+# argoApplications: every Argo CD application -> exactly one app Component. The app carries the primary application in
+#   argocd/app-name and lists all of them in onemind.io/argocd-apps; scripts/curate-structure.cjs generates a
+#   Resource argocd-app-<name> (with its own argocd/app-name) for every other application, so each one is shown by the Argo CD plugin.
+# primaryArgoApplication: app name -> the application its argocd/app-name shows, when the default choice is wrong.
 # Checked by scripts/test-catalog-structure.cjs.
 workloads:
   agent-fabric/agent-console: component:default/agent-web-ui
@@ -31,7 +34,8 @@ workloads:
   dapr-system/dapr-sidecar-injector: component:default/dapr
   github-runner/github-runner: component:default/platform-core
   github-runner/github-runner-hermes: component:default/platform-core
-  hermes/hermes-legacy: component:default/hermes-legacy
+  hermes/onemind-hermes: component:default/onemind-hermes
+  hermes/onemind-mcp: component:default/onemind-mcp
   ingress-nginx/ingress-nginx-controller: component:default/ingress-nginx
   keda/keda-admission-webhooks: component:default/keda
   keda/keda-operator: component:default/keda
@@ -45,7 +49,6 @@ workloads:
   kube-system/platform-clickhouse-operator: component:default/clickhouse
   kube-system/sealed-secrets-controller: component:default/platform-core
   kube/headlamp: component:default/headlamp
-  kube/kubernetes-dashboard: component:default/kubernetes-dashboard
   kyverno/kyverno-admission-controller: component:default/kyverno
   kyverno/kyverno-background-controller: component:default/kyverno
   kyverno/kyverno-cleanup-controller: component:default/kyverno
@@ -73,8 +76,6 @@ workloads:
   nats/nats-metrics-scrape: component:default/nats
   nats/nats-surveyor: component:default/nats-surveyor
   nats/nats-ui: component:default/nats-ui
-  nextcloud/nextcloud: component:default/nextcloud
-  nextcloud/nextcloud-redis: component:default/nextcloud
   omos/feed-intel: component:default/omos-data-pipeline
   omos/feed-satellites: component:default/omos-data-pipeline
   omos/omos-mission-engine: component:default/omos-data-pipeline
@@ -107,10 +108,8 @@ workloads:
   tailscale/ts-cilium-gateway-gateway-default-hl5fh: component:default/tailscale-operator
   tailscale/ts-grafana-ksprn: component:default/tailscale-operator
   tailscale/ts-headlamp-4qwkc: component:default/tailscale-operator
-  tailscale/ts-hermes-dashboard-6thbx: component:default/tailscale-operator
   tailscale/ts-heynats-p5dmf: component:default/tailscale-operator
   tailscale/ts-hubble-tw85d: component:default/tailscale-operator
-  tailscale/ts-kubernetes-dashboard-9r9fp: component:default/tailscale-operator
   tailscale/ts-n8n-pmtds: component:default/tailscale-operator
   tailscale/ts-nats-dashboard-242wv: component:default/tailscale-operator
   tailscale/ts-nats-monitor-zh589: component:default/tailscale-operator
@@ -128,6 +127,9 @@ workloads:
   tailscale/ts-onemind-preview-shtd7: component:default/tailscale-operator
   tailscale/ts-opencost-rqpmq: component:default/tailscale-operator
   tailscale/ts-tak-tailnet-jtgn4: component:default/tailscale-operator
+  tool-gateway/agentgateway: component:default/agentgateway
+  tool-gateway/mcp-clickhouse: component:default/mcp-clickhouse
+  tool-gateway/mcp-kubernetes: component:default/mcp-kubernetes
   takml/takml-db: component:default/takml
   takml/takml-server: component:default/takml
   takml/takml-vision-worker: component:default/takml
@@ -146,6 +148,7 @@ workloads:
   takserver/takserver-nats-box: component:default/tak-server
   takserver/takserver-plugins: component:default/tak-server
   takserver/takserver-postgresql: component:default/tak-server
+  vaultwarden/vaultwarden: component:default/vaultwarden
   velero/velero: component:default/velero
   karakeep/web: component:default/karakeep
   karakeep/chrome: component:default/karakeep
@@ -185,18 +188,20 @@ argoApplications:
   platform-ecosystem-foundation: component:default/argocd
   platform-ecosystem-resources: component:default/argocd
   platform-fedhub: component:default/fedhub
+  platform-hermes-base: component:default/onemind-hermes
+  platform-onemind-hermes: component:default/onemind-hermes
+  platform-onemind-mcp: component:default/onemind-mcp
   platform-kube: component:default/headlamp
-  platform-legacy: component:default/hermes-legacy
   platform-matrix: component:default/matrix-synapse
+  platform-metrics-server: component:default/kubernetes-system
   platform-monitoring: component:default/grafana
   platform-n8n: component:default/n8n
   platform-nats: component:default/nats
+  platform-nats-streams: component:default/nats
   platform-nats-tools: component:default/nats
-  platform-nextcloud: component:default/nextcloud
   platform-observability: component:default/clickhouse
   platform-omos: component:default/omos-data-pipeline
   platform-onetak: component:default/onetak
-  platform-paperclip: component:default/paperclip
   platform-ops: component:default/health-keeper
   platform-redpanda-connect: component:default/redpanda-connect
   platform-security: component:default/kyverno
@@ -204,6 +209,10 @@ argoApplications:
   platform-stac-validation: component:default/stac
   platform-takml: component:default/takml
   platform-takserver: component:default/tak-server
+  platform-tool-gateway: component:default/agentgateway
+  platform-vaultwarden: component:default/vaultwarden
   platform-volsync: component:default/volsync
   platform-volume-backups: component:default/platform-backup-recovery
   platform-karakeep: component:default/karakeep
+primaryArgoApplication:
+  cloudnative-pg: ecosystem-cnpg
