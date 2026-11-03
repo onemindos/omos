@@ -690,18 +690,40 @@ class NatsAdapter(BasePlatformAdapter):
         # Build the subject via the SDK so non-conforming owner/session
         # tokens get the same base64-url sanitization AgentService applies —
         # a hand-built f-string could miss a real responder.
-        status_subject = sdk.AgentSubject.new(
+        prompt_subject = sdk.AgentSubject.new(
             settings.agent, settings.owner, settings.session_name
-        ).status
+        ).prompt
+        # OneMind change 4: ask the micro-service registry, not the status subject. In this cluster the
+        # JetStream stream `agents` captures `agents.status.>`, so a request there is answered with a
+        # JetStream PubAck by the server whether or not any agent is alive: the upstream probe always
+        # reported "live". `$SRV.INFO.agents` is answered only by running agent services, and each
+        # answer lists the prompt subject it serves.
         try:
-            await self._nc.request(status_subject, b"", timeout=1.0)
-        except (nats.errors.NoRespondersError, nats.errors.TimeoutError, asyncio.TimeoutError):
-            return False  # nobody home — identity is free
+            inbox = self._nc.new_inbox()
+            sub = await self._nc.subscribe(inbox)
+            try:
+                await self._nc.publish("$SRV.INFO.agents", b"", reply=inbox)
+                loop = asyncio.get_running_loop()
+                deadline = loop.time() + 1.0
+                held = False
+                while not held:
+                    remaining = deadline - loop.time()
+                    if remaining <= 0:
+                        break
+                    try:
+                        msg = await sub.next_msg(timeout=remaining)
+                    except (nats.errors.TimeoutError, asyncio.TimeoutError):
+                        break
+                    held = prompt_subject.encode() in msg.data
+            finally:
+                await sub.unsubscribe()
         except Exception as exc:
             logger.debug(
                 "[%s] identity liveness probe inconclusive: %s", self.name, exc
             )
             return False  # probe failure must not block startup
+        if not held:
+            return False  # nobody home — identity is free
         logger.warning(
             "[%s] identity %s is ALREADY LIVE on this NATS server — prompts will "
             "load-balance across both instances. If unintended, give this profile "
@@ -1348,6 +1370,29 @@ class NatsAdapter(BasePlatformAdapter):
                 return
 
     def _run_agent_sync(
+        self,
+        event: MessageEvent,
+        chat_id: str,
+        stream_delta_callback: Any,
+        loop: "asyncio.AbstractEventLoop",
+    ) -> Any:
+        """OneMind change 5: run the turn inside the default profile's secret scope.
+
+        Hermes v0.22.5 multiplexes profiles in one gateway, and credential reads (the model route,
+        ``HERMES_CODEX_BASE_URL``) raise ``UnscopedSecretError`` outside a scope. The gateway runner
+        opens one around every turn it dispatches; this adapter builds its own agent and bypassed it,
+        so every text prompt failed with a 500. ``_profile_runtime_scope`` is the runner's own helper.
+        Older Hermes without it runs unscoped, as upstream does.
+        """
+        try:
+            from gateway.run import _profile_runtime_scope
+        except ImportError:
+            return self._run_agent_sync_unscoped(event, chat_id, stream_delta_callback, loop)
+        home = Path(os.environ.get("HERMES_HOME") or "/opt/data")
+        with _profile_runtime_scope(home):
+            return self._run_agent_sync_unscoped(event, chat_id, stream_delta_callback, loop)
+
+    def _run_agent_sync_unscoped(
         self,
         event: MessageEvent,
         chat_id: str,
