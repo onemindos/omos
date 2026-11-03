@@ -11,5 +11,6 @@ for the exact diff.
 | 1 | `_connect_options()`: `NATS_USER`, `NATS_PASSWORD`, `NATS_CA_FILE`, `NATS_TLS_SERVER_NAME`, `NATS_CLIENT_NAME` are passed to `nats.connect` | Upstream assumes a local leaf. Legacy now connects directly to the cluster bus over TLS with a password. With none of the variables set the behaviour is upstream's |
 | 2 | `_refuse_duplicate_identity()` (`HERMES_NATS_REFUSE_DUPLICATE`), and `_warn_if_identity_already_live` returns a bool | Upstream starts a second body behind a live identity and splits the prompts between them. With the flag the adapter stays down until the identity is free |
 | 3 | `__init__.py` appends `/opt/data/.local/gateway-deps` to `sys.path` | The `hermes` launcher unsets `PYTHONPATH` and the venv has no user site, so the init container's packages cannot be reached any other way (found at the live cutover: with a `PYTHONPATH` variable the gateway silently skipped the platform) |
+| 4 | the liveness probe asks `$SRV.INFO.agents` and looks for the prompt subject, instead of requesting `agents.status.<id>` | The JetStream stream `agents` (`platform/nats/streams/agents.yaml`) captures `agents.status.>`, so the server answers a status request with a JetStream PubAck whether or not an agent is alive: the upstream probe always said "live" (found at the cutover, with `hermes-legacy` at 0 replicas, and it also meant every probe was stored in the stream) |
 
-When upstream changes, re-vendor and re-apply these four, and keep the diff small.
+When upstream changes, re-vendor and re-apply these five, and keep the diff small.
