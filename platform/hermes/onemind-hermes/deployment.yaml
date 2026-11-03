@@ -262,9 +262,8 @@ spec:
               value: onemind-hermes-nats-platform
             - name: NATS_CONTEXT_CLIENT_NAME
               value: onemind-hermes-nats-context
-            # Identity on the fabric: agents.{prompt,status,hb}.hermes.zeus.legacy, the one hermes-legacy
-            # holds today. REFUSE_DUPLICATE keeps this instance down while hermes-legacy still holds it
-            # (MIGRATION.md, "NATS cutover").
+            # Identity on the fabric: agents.{prompt,status,hb}.hermes.zeus.legacy. This instance is the only
+            # holder since the old Hermes was retired (2026-11-03).
             - name: HERMES_NATS_AGENT
               value: hermes
             - name: HERMES_NATS_OWNER
