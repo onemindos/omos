@@ -29,8 +29,6 @@ spec:
     repoURL: https://github.com/onemindos/omos.git
     targetRevision: main
     path: platform/hermes/base
-    directory:
-      recurse: false
   destination:
     server: https://kubernetes.default.svc
     namespace: hermes
