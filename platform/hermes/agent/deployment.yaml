@@ -12,7 +12,10 @@ spec:
   # SEPARATE Hermes (distinct identity); the fabric interconnects them — this
   # is NOT one identity with two queue-grouped bodies.
   # replicas stays 1: RWO PVC + single-holder self-modification.
-  replicas: 1
+  # STOPPED 0 (2026-11-03, owner-approved retirement): onemind-hermes (persona Legacy) takes over the
+  # NATS identity hermes.zeus.legacy. Removed entirely in the later cleanup PR; do not scale back up
+  # while onemind-hermes runs (two holders of one identity).
+  replicas: 0
   strategy:
     type: Recreate            # RWO PVC — never two pods on one volume
   selector:
