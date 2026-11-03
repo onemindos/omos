@@ -217,10 +217,6 @@ apps:
     title: Backstage portal
     system: developer-platform
     description: The OneMind developer portal and its PostgreSQL database.
-  - name: tempo
-    title: Tempo
-    system: observability
-    description: Distributed tracing backend.
   - name: opentelemetry-collector
     title: OpenTelemetry Collector
     system: observability

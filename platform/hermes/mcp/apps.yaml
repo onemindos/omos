@@ -62,10 +62,6 @@ apps:
   adapter: grafana
   url_env: GRAFANA_URL
   token_env: GRAFANA_API_TOKEN
-- id: tempo
-  description: Distributed traces by trace identifier
-  adapter: tempo
-  url_env: TEMPO_URL
 - id: nextcloud
   description: Files, calendars and contacts
   enabled: false

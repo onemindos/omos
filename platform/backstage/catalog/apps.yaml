@@ -7700,39 +7700,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: tempo
-  tags:
-    - kubernetes
-  title: Tempo
-  description: Distributed tracing backend.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: monitoring-tempo
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: monitoring
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=tempo,app.kubernetes.io/name=tempo
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: monitoring
-    grafana/alert-label-selector: namespace=monitoring
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=monitoring&var-workload=tempo
-    onemind.io/logs-query: '{k8s_namespace_name="monitoring", k8s_pod_name=~"(tempo)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/tempo/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: monitoring/tempo
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: observability
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: opentelemetry-collector
   tags:
     - kubernetes

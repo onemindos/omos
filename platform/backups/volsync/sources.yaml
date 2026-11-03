@@ -365,47 +365,6 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: volume-bec6172775e6
-  namespace: monitoring
-  annotations:
-    onemind.dev/source-pvc: storage-tempo-0
-spec:
-  sourcePVC: storage-tempo-0
-  paused: false
-  trigger:
-    schedule: 40 2 * * *
-  restic:
-    repository: volume-bec6172775e6-restic
-    copyMethod: Snapshot
-    volumeSnapshotClassName: do-block-storage
-    storageClassName: do-block-storage
-    cacheStorageClassName: do-block-storage
-    cacheCapacity: 1Gi
-    pruneIntervalDays: 14
-    retain:
-      daily: 7
-      weekly: 4
-      monthly: 3
-      yearly: 1
-    moverServiceAccount: platform-volume-backup
-    moverPodLabels:
-      app: platform-volume-backup
-    moverSecurityContext:
-      runAsUser: 0
-      runAsGroup: 0
-      seccompProfile:
-        type: RuntimeDefault
-    moverResources:
-      requests:
-        cpu: 100m
-        memory: 256Mi
-      limits:
-        cpu: '1'
-        memory: 1Gi
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
   name: volume-e0d2f2fea651
   namespace: n8n
   annotations:

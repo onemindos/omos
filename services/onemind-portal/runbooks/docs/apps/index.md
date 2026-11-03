@@ -56,7 +56,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Tailscale operator and proxies](tailscale-operator.md) | infrastructure |
 | [TAK Server](tak-server.md) | tak-ecosystem |
 | [TAK-ML](takml.md) | tak-ecosystem |
-| [Tempo](tempo.md) | observability |
 | [TileServer GL](tileserver-gl.md) | geospatial |
 | [Vaultwarden](vaultwarden.md) | identity-access |
 | [Velero](velero.md) | data-storage |
