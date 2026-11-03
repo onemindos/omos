@@ -1376,6 +1376,29 @@ class NatsAdapter(BasePlatformAdapter):
         stream_delta_callback: Any,
         loop: "asyncio.AbstractEventLoop",
     ) -> Any:
+        """OneMind change 5: run the turn inside the default profile's secret scope.
+
+        Hermes v0.22.5 multiplexes profiles in one gateway, and credential reads (the model route,
+        ``HERMES_CODEX_BASE_URL``) raise ``UnscopedSecretError`` outside a scope. The gateway runner
+        opens one around every turn it dispatches; this adapter builds its own agent and bypassed it,
+        so every text prompt failed with a 500. ``_profile_runtime_scope`` is the runner's own helper.
+        Older Hermes without it runs unscoped, as upstream does.
+        """
+        try:
+            from gateway.run import _profile_runtime_scope
+        except ImportError:
+            return self._run_agent_sync_unscoped(event, chat_id, stream_delta_callback, loop)
+        home = Path(os.environ.get("HERMES_HOME") or "/opt/data")
+        with _profile_runtime_scope(home):
+            return self._run_agent_sync_unscoped(event, chat_id, stream_delta_callback, loop)
+
+    def _run_agent_sync_unscoped(
+        self,
+        event: MessageEvent,
+        chat_id: str,
+        stream_delta_callback: Any,
+        loop: "asyncio.AbstractEventLoop",
+    ) -> Any:
         """Build an :class:`AIAgent` and run one conversation turn synchronously.
 
         Called from ``run_in_executor`` so ``run_conversation`` (a
