@@ -15,6 +15,8 @@ def main():
     home = Path(os.environ["HERMES_HOME"])
     assert str(home).startswith("/opt/bot-screen/scratch/"), "isolated home required"
     home.mkdir(parents=True, exist_ok=True)
+    # s6 normally creates/chowns XDG_RUNTIME_DIR before dropping privileges.
+    Path(os.environ["XDG_RUNTIME_DIR"]).mkdir(mode=0o700, parents=True, exist_ok=True)
     assert not runtime.missing_binaries(), runtime.missing_binaries()
     driver = resolve_cua_driver_cmd()
     assert driver, "PM-pinned cua-driver must resolve without runtime downloads"

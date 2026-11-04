@@ -61,6 +61,7 @@ jobs:
             --user 10000:10000 --cap-drop ALL --security-opt no-new-privileges \
             --tmpfs /opt/bot-screen/scratch:rw,uid=10000,gid=10000,mode=0700 \
             --env TMPDIR=/opt/bot-screen/scratch --env PYTHONPATH=/opt/hermes \
+            --env XDG_RUNTIME_DIR=/opt/bot-screen/scratch/runtime \
             --env HERMES_HOME=/opt/bot-screen/scratch/home \
             --env HOME=/opt/bot-screen/scratch/home \
             --entrypoint /opt/hermes/.venv/bin/python "$IMAGE" \
