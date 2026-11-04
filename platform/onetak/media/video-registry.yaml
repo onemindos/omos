@@ -1,0 +1,83 @@
+# video-registry (FEATURES K2): links MediaMTX streams to entities. Writes KV OVERWATCH_VIDEO
+# (key {entity_type}.{entity_id}), publishes evt.video.{entity_id}.online|offline and serves
+# svc.registry.video.get|list. It reads the same mediamtx.yml (read-only) to publish who may
+# publish, read and play back each stream.
+# Credentials: video-registry-nats (keys user, password) and onemind-media-users (key
+# video-registry), both SealedSecrets the owner creates (SEALING.md).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-registry
+  labels:
+    app.kubernetes.io/name: video-registry
+    app.kubernetes.io/part-of: omos-video
+spec:
+  replicas: 1 # single writer of OVERWATCH_VIDEO
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: video-registry
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: video-registry
+        app.kubernetes.io/part-of: omos-video
+    spec:
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      enableServiceLinks: false
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: video-registry
+          # Pin digest after first CI build (.github/workflows/build-video-registry.yml uploads
+          # the digest as an artifact); then use tag@sha256:...
+          image: ghcr.io/onemindos/omos-video-registry:0.1.0
+          ports:
+            - {name: http, containerPort: 8080}
+          env:
+            - {name: NATS_URL, value: "nats://nats.nats.svc.cluster.local:4222"}
+            - name: NATS_USER
+              valueFrom: {secretKeyRef: {name: video-registry-nats, key: user}}
+            - name: NATS_PASSWORD
+              valueFrom: {secretKeyRef: {name: video-registry-nats, key: password}}
+            - {name: MEDIAMTX_API, value: "http://onemind-media.onetak.svc.cluster.local:9997"}
+            - {name: MEDIAMTX_USER, value: "video-registry"}
+            - name: MEDIAMTX_PASSWORD
+              valueFrom: {secretKeyRef: {name: onemind-media-users, key: video-registry}}
+            - {name: MEDIAMTX_CONFIG, value: "/config/mediamtx.yml"}
+            - {name: KV_BUCKET, value: "OVERWATCH_VIDEO"}
+            - {name: ORIGIN, value: "hub"}
+            # Reader-facing host: the onemind-media-tailnet node. Set to the MagicDNS name the
+            # operator assigns (media.<tailnet>.ts.net) at sync time; empty means no URLs.
+            - {name: MEDIA_HOST, value: "media.tail717ba0.ts.net"}
+            - {name: POLL_INTERVAL, value: "2s"}
+            - {name: STALE_AFTER, value: "30s"}
+          readinessProbe:
+            httpGet: {path: /readyz, port: http}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /healthz, port: http}
+            periodSeconds: 20
+            failureThreshold: 3
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits: {cpu: 200m, memory: 128Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - {name: config, mountPath: /config, readOnly: true}
+      volumes:
+        - name: config
+          configMap:
+            name: onemind-media-config

@@ -64,6 +64,14 @@ jobs:
       - name: Require MCP coverage for every Git-declared Application
         run: python scripts/check_onemind_mcp_coverage.py
 
+      # FEATURES K6: every onemind-plugin.yaml validates against its schema and the locked NATS
+      # grammar; the fixtures under scripts/tests/fixtures/plugins must fail.
+      - name: Plugin manifests (locked NATS grammar)
+        run: |
+          pip install pyyaml==6.0.3 jsonschema==4.25.1
+          python scripts/validate_plugin_manifests.py
+          python -m unittest scripts/tests/test_plugin_manifests.py -v
+
       - name: Report existing repository YAML debt
         continue-on-error: true
         run: yamllint -c .yamllint.yml platform/ docs/ platform/takserver/

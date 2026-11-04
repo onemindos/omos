@@ -1,0 +1,24 @@
+# Example Hermes skill plugin (FEATURES K6): Hermes finds the live video of an entity through the
+# stream registry. Read-only; acting skills go through the action path.
+apiVersion: onemind.io/plugin/v1
+id: org.onemindos.skill.video-lookup
+name: Video lookup
+version: 0.1.0
+kinds: [skill]
+trust: built-in
+licence: GPL-3.0-or-later
+bus:
+  requests: [svc.registry.video.get, svc.registry.video.list]
+skill:
+  hermes: platform/hermes/agent/plugins/onemind-video
+  tools:
+    - name: video_stream_for_entity
+      description: Return the live stream (URLs, codec, latency class, who may read it) of an entity such as ent.drone.sim-x1.state.
+      rpc: svc.registry.video.get
+      inputSchema:
+        type: object
+        required: [entity]
+        properties: {entity: {type: string}}
+    - name: list_video_streams
+      description: List every registered stream and whether it is live.
+      rpc: svc.registry.video.list

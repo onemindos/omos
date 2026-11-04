@@ -1,0 +1,16 @@
+# Example video plugin (FEATURES K6): binds the MediaMTX path drone/sim-x1 to the drone entity, so
+# clients show the panel on that entity. Declarative (community trust is enough).
+apiVersion: onemind.io/plugin/v1
+id: org.onemindos.video.sim-x1-camera
+name: SIM-X1 camera
+version: 0.1.0
+kinds: [video]
+trust: community
+licence: CC0-1.0
+bus:
+  subscribes: [evt.video.sim-x1.*]
+  requests: [svc.registry.video.get]
+video:
+  path: drone/sim-x1
+  entity: ent.drone.sim-x1.state
+  latencyClass: tactical

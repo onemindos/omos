@@ -1,0 +1,17 @@
+# Cluster-internal access: the control API for video-registry and RTSP for in-cluster readers
+# (takml after cut-over). The API is never on the tailnet.
+apiVersion: v1
+kind: Service
+metadata:
+  name: onemind-media
+  labels:
+    app.kubernetes.io/name: onemind-media
+    app.kubernetes.io/part-of: omos-video
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: onemind-media
+  ports:
+    - {name: rtsp, port: 8554, targetPort: rtsp, protocol: TCP}
+    - {name: hls, port: 8888, targetPort: hls, protocol: TCP}
+    - {name: api, port: 9997, targetPort: api, protocol: TCP}

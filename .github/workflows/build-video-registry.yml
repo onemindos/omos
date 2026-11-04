@@ -1,0 +1,90 @@
+name: Build video registry
+# Tests the omos video-registry (unit, NATS integration, and an end-to-end run of the real
+# MediaMTX v1.21.3 with platform/onetak/media/mediamtx.yml and ffmpeg) on every PR that touches
+# it or the MediaMTX config, and on main builds ghcr.io/onemindos/omos-video-registry with the
+# tags sha-<commit> and services/video-registry/VERSION. The digest is uploaded as an artifact;
+# pin it in platform/onetak/media/video-registry.yaml.
+on:
+  push:
+    branches: [main]
+    paths:
+      - services/video-registry/**
+      - platform/onetak/media/**
+      - .github/workflows/build-video-registry.yml
+  pull_request:
+    paths:
+      - services/video-registry/**
+      - platform/onetak/media/**
+      - .github/workflows/build-video-registry.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: video-registry-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  MEDIAMTX_VERSION: v1.21.3
+  # sha256 of mediamtx_v1.21.3_linux_amd64.tar.gz from the release's checksums.sha256
+  MEDIAMTX_SHA256: 0a2ea7eba96023631efa1bea7804823a9145b043b6646a8a05798d4ac24ed635
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/video-registry
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
+        with:
+          go-version: "1.26.4"
+          cache: false
+      - name: Install nats-server
+        run: go install github.com/nats-io/nats-server/v2@v2.14.9
+      - name: Install ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Install MediaMTX (checksum-verified)
+        run: |
+          curl -fsSLo /tmp/mediamtx.tgz "https://github.com/bluenviron/mediamtx/releases/download/${MEDIAMTX_VERSION}/mediamtx_${MEDIAMTX_VERSION}_linux_amd64.tar.gz"
+          echo "${MEDIAMTX_SHA256}  /tmp/mediamtx.tgz" | sha256sum -c -
+          mkdir -p /tmp/mediamtx && tar -xzf /tmp/mediamtx.tgz -C /tmp/mediamtx mediamtx
+      - name: Vet
+        run: go vet ./...
+      - name: Test (race)
+        run: >-
+          NATS_SERVER_BIN="$(go env GOPATH)/bin/nats-server" MEDIAMTX_BIN=/tmp/mediamtx/mediamtx
+          go test -race -count=1 -v ./...
+  image:
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Read version
+        id: version
+        run: echo "version=$(tr -d '[:space:]' < services/video-registry/VERSION)" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        id: image
+        with:
+          context: services/video-registry
+          push: true
+          tags: |
+            ghcr.io/onemindos/omos-video-registry:sha-${{ github.sha }}
+            ghcr.io/onemindos/omos-video-registry:${{ steps.version.outputs.version }}
+          platforms: linux/amd64
+          cache-from: type=gha,scope=omos-video-registry
+          cache-to: type=gha,mode=max,scope=omos-video-registry
+      - name: Record image digest
+        run: printf '%s\n' '${{ steps.image.outputs.digest }}' > image-digest.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: omos-video-registry-image
+          path: image-digest.txt

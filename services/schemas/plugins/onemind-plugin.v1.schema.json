@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/onemindos/omos/services/schemas/plugins/onemind-plugin.v1.schema.json",
+  "title": "OneMind plugin manifest (onemind-plugin.yaml), v1",
+  "description": "One manifest for every host (omos collectors, the Unreal client, the L0 web client, OneMindATAK, Hermes). A host ignores the blocks it cannot run. FEATURES K6; design in onemind-xr docs/research/video-and-plugins.md 'Plugin model'. Subject grammar is checked by scripts/validate_plugin_manifests.py, not by this schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "id", "version", "kinds", "trust", "licence", "bus"],
+  "properties": {
+    "apiVersion": {"const": "onemind.io/plugin/v1"},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9][a-z0-9-]*){2,}$", "description": "Reverse-DNS, unique"},
+    "name": {"type": "string", "maxLength": 80},
+    "description": {"type": "string", "maxLength": 500},
+    "version": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$"},
+    "kinds": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"enum": ["source", "layer", "action", "skill", "video"]}
+    },
+    "trust": {"enum": ["built-in", "verified", "community"], "description": "community plugins are declarative only: no image, no code"},
+    "licence": {
+      "enum": ["MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "MPL-2.0", "GPL-3.0-only", "GPL-3.0-or-later", "CC0-1.0"],
+      "description": "Must be usable with the GPL-3.0 client. AGPL-3.0 and Elastic-2.0 are not accepted."
+    },
+    "compat": {
+      "type": "object", "additionalProperties": false,
+      "properties": {"onemind": {"type": "string"}, "omos": {"type": "string"}}
+    },
+    "requires": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "secrets": {
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{1,63}$"},
+          "description": "Names only. Values come from SealedSecrets (omos) or the OS keychain (clients)."
+        }
+      }
+    },
+    "bus": {
+      "type": "object", "additionalProperties": false,
+      "description": "Every subject the plugin touches. NATS permissions are generated from this block, so a plugin cannot use a subject it did not declare.",
+      "properties": {
+        "publishes": {"$ref": "#/$defs/subjects"},
+        "subscribes": {"$ref": "#/$defs/subjects"},
+        "requests": {"$ref": "#/$defs/subjects"},
+        "serves": {"$ref": "#/$defs/subjects"},
+        "kv": {
+          "type": "array", "uniqueItems": true,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["bucket", "access"],
+            "properties": {
+              "bucket": {"type": "string", "pattern": "^[A-Za-z0-9_-]+$"},
+              "access": {"enum": ["read", "watch", "write"]}
+            }
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false, "required": ["engine", "delivery", "subject"],
+      "properties": {
+        "engine": {"enum": ["omos-ingest", "image"], "description": "omos-ingest: a source entry for the A0 collector (config only); image: an own collector container"},
+        "image": {"type": "string", "pattern": "^ghcr\\.io/onemindos/[a-z0-9._/-]+(@sha256:[0-9a-f]{64}|:[0-9]+\\.[0-9]+\\.[0-9]+[^:]*)$", "description": "GHCR, pinned by digest or semver tag, never latest"},
+        "delivery": {"enum": ["rest_poll", "long_poll", "websocket", "sse", "webhook", "mqtt", "file", "rss"]},
+        "parser": {"type": "string"},
+        "url": {"type": "string", "pattern": "^(https|file)://"},
+        "interval": {"type": "string", "pattern": "^[0-9]+(s|m|h)$"},
+        "staleAfter": {"type": "string", "pattern": "^[0-9]+(s|m|h)$"},
+        "subject": {"type": "string"},
+        "registry": {"type": "string", "description": "Feed-registry record id (docs/sources/sources.yaml)"},
+        "terms": {"type": "object"}
+      }
+    },
+    "layer": {
+      "type": "object", "additionalProperties": false, "required": ["id", "from", "render"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "from": {"type": "string", "description": "Subject the layer service reads (usually ent.{type}.*.state or intel.*)"},
+        "where": {"type": "object", "additionalProperties": {"type": ["string", "number", "boolean"]}, "description": "Equality filter on entity fields, e.g. {kind: quake}"},
+        "render": {
+          "type": "object", "additionalProperties": false, "required": ["entity"],
+          "properties": {
+            "entity": {"enum": ["point", "billboard", "model", "polyline", "polygon", "heatmap"]},
+            "sizeField": {"type": "string"},
+            "colorField": {"type": "string"},
+            "maxEntities": {"type": "integer", "minimum": 1, "maximum": 100000},
+            "lod": {"enum": ["always", "on-demand"]}
+          }
+        }
+      }
+    },
+    "action": {
+      "type": "object", "additionalProperties": false, "required": ["name", "subject", "schema", "policy", "confirm"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z]+\\.[a-z_]+$", "description": "Catalogue action, e.g. asset.orbit"},
+        "subject": {"type": "string", "description": "The cmd.* subject the policy service publishes after approval; the plugin only consumes it"},
+        "schema": {"type": "string", "description": "services/schemas/actions/<name>.v1.schema.json"},
+        "policy": {"type": "string", "pattern": "^openfga:"},
+        "confirm": {"const": "human", "description": "Run rule 6: every asset command is confirmed by a human, even in simulation"}
+      }
+    },
+    "skill": {
+      "type": "object", "additionalProperties": false, "required": ["hermes", "tools"],
+      "properties": {
+        "hermes": {"type": "string", "description": "Hermes plugin directory (plugin.yaml format), installed through GitOps"},
+        "tools": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["name", "description", "rpc"],
+            "properties": {
+              "name": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+              "description": {"type": "string"},
+              "rpc": {"type": "string", "description": "svc.* subject the tool calls"},
+              "inputSchema": {"type": "object"}
+            }
+          }
+        }
+      }
+    },
+    "video": {
+      "type": "object", "additionalProperties": false, "required": ["path", "entity", "latencyClass"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^((drone|robot)/sim-[a-z0-9-]+|cam/[a-z0-9-]+)$", "description": "MediaMTX path {class}/{entity_id}"},
+        "entity": {"type": "string", "pattern": "^ent\\.(drone|robot|camera)\\.[a-z0-9-]+\\.state$"},
+        "source": {"type": "string", "pattern": "^(rtsp|rtsps|srt|https)://[^@?]+$", "description": "Pull source for owned cameras; no credentials in the URL"},
+        "latencyClass": {"enum": ["control", "tactical", "situational", "archive"]}
+      }
+    }
+  },
+  "$defs": {
+    "subjects": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 3}}
+  }
+}

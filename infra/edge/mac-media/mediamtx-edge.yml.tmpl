@@ -1,0 +1,75 @@
+# Edge MediaMTX for a OneMind site (FEATURES K9): the owner's Mac or the home server.
+# Rendered by edge-media.sh into a private temp file (mode 600) with the passwords filled in
+# from the macOS keychain or the environment, and deleted when the script exits. Never commit a
+# rendered copy. Based on the M0 video lane config (onemind-xr
+# docs/evidence/M0/video/mediamtx-lane.example.yml).
+#
+# The edge is a forwarding node, like the site NATS leaf: LAN readers (ATAK, the Mac app, a
+# second device) read it directly for low latency, and every allowed path is forwarded to the
+# cloud onemind-media over SRT as the site identity edge-home. If the cloud or the link is down,
+# LAN viewing and local recording keep working.
+logLevel: info
+logDestinations: [stdout]
+readTimeout: 10s
+writeTimeout: 10s
+
+authMethod: internal
+authInternalUsers:
+  # LAN publishers: the Mac camera push, a drone companion on the LAN.
+  - user: edge-publisher
+    pass: @EDGE_PUBLISHER_PASS@
+    ips: []
+    permissions:
+      - {action: publish, path: "~^((drone|robot)/sim-[a-z0-9-]+|cam/[a-z0-9-]+)$"}
+  # LAN readers: ATAK, the Mac app, a second LAN device.
+  - user: lan-viewer
+    pass: @LAN_VIEWER_PASS@
+    ips: []
+    permissions:
+      - {action: read, path: "~^((drone|robot)/sim-[a-z0-9-]+|cam/[a-z0-9-]+)$"}
+      - {action: playback, path: "~^((drone|robot)/sim-[a-z0-9-]+|cam/[a-z0-9-]+)$"}
+  # Control API and metrics from this machine only.
+  - user: any
+    pass:
+    ips: ["127.0.0.1", "::1"]
+    permissions:
+      - {action: api}
+      - {action: metrics}
+
+api: true
+apiAddress: 127.0.0.1:@API_PORT@
+metrics: false
+pprof: false
+playback: @RECORD@
+playbackAddress: @BIND@:@PLAYBACK_PORT@
+
+rtsp: true
+rtspTransports: [tcp]
+rtspAddress: @BIND@:@RTSP_PORT@
+rtmp: false
+hls: true
+hlsAddress: @BIND@:@HLS_PORT@
+hlsVariant: lowLatency
+hlsSegmentDuration: 1s
+hlsPartDuration: 200ms
+webrtc: true
+webrtcAddress: @BIND@:@WEBRTC_PORT@
+webrtcLocalUDPAddress: @BIND@:@ICE_PORT@
+webrtcLocalTCPAddress: ""
+srt: true
+srtAddress: @BIND@:@SRT_PORT@
+moq: false
+
+pathDefaults:
+  overridePublisher: false
+  rtspDemuxMpegts: true
+  record: @RECORD@
+  recordPath: @RECORD_DIR@/%path/%Y-%m-%d_%H-%M-%S-%f_%z
+  recordFormat: fmp4
+  recordSegmentDuration: 60s
+  recordDeleteAfter: 24h
+
+paths:
+  "~^((drone|robot)/sim-[a-z0-9-]+|cam/[a-z0-9-]+)$":
+    forward:
+      - dest: "srt://@CLOUD_HOST@:@CLOUD_SRT_PORT@?streamid=publish:$MTX_PATH:edge-home:@EDGE_HOME_PASS@"

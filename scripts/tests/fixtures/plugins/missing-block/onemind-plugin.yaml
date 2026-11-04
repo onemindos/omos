@@ -1,0 +1,15 @@
+# Invalid on purpose: an action without human confirm, a kind without its block, an AGPL licence.
+apiVersion: onemind.io/plugin/v1
+id: org.example.action.unsafe
+version: 0.1.0
+kinds: [action, layer]
+trust: verified
+licence: AGPL-3.0-only
+bus:
+  subscribes: [cmd.fleet.drone.*.goto]
+action:
+  name: asset.goto
+  subject: cmd.fleet.drone.*.goto
+  schema: services/schemas/actions/asset.goto.v1.schema.json
+  policy: openfga:drone#task
+  confirm: auto
