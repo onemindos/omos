@@ -459,6 +459,69 @@ Inventory of what Legacy does on NATS, what was ported and the switch order are 
   and waits instead of registering. It held that guard while `hermes-legacy` still ran, which made enabling it first safe.
 - `tak-platform` is not ported; PR #585 replaces it with a TAK-native client.
 
+## Hermes Desktop: feature status
+
+Audit of 2026-11-04 for the Mac app (`/Applications/Hermes.app`) connected to this instance. The app's
+`connection.json` and `connections.json` point at `https://onemind-hermes.tail717ba0.ts.net` (OAuth mode) and agree
+with each other. Method: the endpoints the app calls were extracted from its bundle and called in-process against this
+pod's real data (`desktop/apply.sh --check`: status codes and key names only), and the pod logs were read. The UI itself
+was not clicked, so "WORKS" means the server side answers and has a provider behind it, not that every screen was seen.
+Re-run `desktop/apply.sh --check` after any change.
+
+| Feature | Status | Cause or action |
+|---|---|---|
+| Sign-in, connection | WORKS | The 502s and ticket errors at 21:18 to 21:20 EST on 2026-11-03 were the pod restart (new pod started 02:20 UTC). |
+| Chat, sessions, search, stats | WORKS | 497 sessions stored; every route answers 200. |
+| Profiles (roles) | WORKS | `default` plus the five roles. |
+| Skills (list, toggle, hub) | WORKS | 98 skills. Editing skills under `/opt/data/onemind-skills` FAILED (`PermissionError`): the tree was copied with Mac ownership (uid 501) and 120 AppleDouble `._*` files. Fixed by `desktop/apply.sh`. |
+| Skill lock | NOT IN SERVER | `PUT /api/skills/lock` does not exist in v0.22.5; the app is built from a newer source (below). |
+| Capabilities, dashboard plugins | WORKS | `kanban` and `hermes-achievements` are bundled dashboard plugins; they load whatever `plugins.enabled` says (that list gates agent plugins). |
+| Kanban board | WORKS | Board, stats and workflow answer; the dispatcher runs in the gateway (60 s tick). |
+| Mac-side plugins `hermes-project-stewardship`, `home-dashboard` | BROKEN (owner decision) | They live in `~/.hermes/desktop-plugins` on the Mac and call `/api/plugins/<name>/...`, which only exist if the matching server plugin is installed. The pod has none (404; the stewardship popups call is in the Desktop log). See decisions. `hermes-bots` only uses profile and cron routes, which work. |
+| Cron | WORKS | 4 jobs; `config-export` stays paused (deploy-key blocker above). |
+| Memory | WORKS | Built-in files only. `USER.md` is at 1353 of its 1375-character limit: a further addition will be refused. |
+| Models, credentials | WORKS | `openai-codex` / `gpt-6.1-sol`, fallback `ollama-cloud`. |
+| MCP management | WORKS | 16 servers listed; `ops`, `data`, `tak` answer `hermes mcp test`. `whop` OAuth re-prompts now and then and recovers by itself; Todoist reported its daily MCP call limit once (2026-11-03). |
+| Files, image upload, git panel | WORKS | `git` is installed. `gh` is not, so "create PR" has no GitHub login to use (decision below). |
+| Terminal | WORKS | Local backend only; Docker, Modal, Daytona and SSH backends are unavailable by design. |
+| Usage, insights, logs, curator | WORKS | |
+| Messaging platforms | WORKS | Telegram, Matrix, NATS, API server and webhook connected. Discord and Slack have no token and are not enabled; the `discord` toolsets are in `agent.disabled_toolsets`. |
+| Image generation | WORKS (not exercised) | Provider `openai-codex` (gpt-image-2 through the signed-in Codex login); spends Codex quota. |
+| Text-to-speech | FIXED, pending apply | Edge TTS needs the `edge_tts` package, which the image lacks and the read-only venv cannot install. Added to `nats/gateway-deps.txt` (hash-pinned; installed in a scratch directory in the pod and streamed audio on 2026-11-04). |
+| Speech-to-text (dictation, wake word) | BROKEN (needs a key or a decision) | No provider: no `faster-whisper` and no OpenAI, Groq, Mistral, xAI or ElevenLabs key. Gateway log 2026-11-02: "Wake word needs speech-to-text configured". |
+| Realtime voice (`voice-live`) | BROKEN (needs a key) | Wants `OPENAI_API_KEY`; the Codex login does not cover it. |
+| Computer use | DISABLED BY DESIGN | `agent.disabled_toolsets: computer_use`. A headless Linux pod has no desktop. |
+| Browser automation | DISABLED BY DESIGN | `agent.disabled_toolsets: browser` (no browser backend or key). |
+| Video generation, X search, Discord, Feishu, Yuanbao | DISABLED BY DESIGN | Same list. |
+| Local models | DISABLED BY DESIGN | A cloud pod has no GPU; `local-models` is off. |
+| Approvals | WORKS, differs from the seed | Live `approvals.mode` is `smart` (the seed says `manual`) with a three-entry `command_allowlist`; set from outside Git. See decisions. |
+| Updates | MANAGED | The pod updates by image bump, not from the app (`/api/hermes/update/check`). |
+
+**Version skew.** The pod runs v0.22.5 (2026.9.24). The installed Desktop was rebuilt on 2026-11-02 from the Mac's
+`~/.hermes/hermes-agent` at commit `f0d94882e89` (tag `v0.22.6`); upstream's stable image is now `v0.22.7` (2026-11-03).
+Against this server only `PUT /api/skills/lock` is missing among the calls the app makes in its Electron paths; the
+others it calls that v0.22.5 lacks (`/api/chat/file-upload`, `/api/ui-preferences`, `/api/files/ticket`,
+`/api/desktop-plugins/*`, `/api/webapp-*`, `/api/host-terminal`) belong to the browser and web-app transport and were
+read in code, not exercised. The app's `update-check-cache.json` was last written 2026-09-25 and is stale. The Mac
+also runs its own old gateway (`ai.hermes.gateway`, platform NATS only, identity `legacy-edge`) and a stale `~/.hermes`
+profile; neither touches this instance.
+
+**Owner decisions**
+
+1. Speech-to-text: give the pod a cloud key (Groq or OpenAI; seal it like the other secrets) or approve local
+   `faster-whisper` (about 200 MB of packages plus a model download, and CPU/memory on a memory-saturated node).
+2. `OPENAI_API_KEY` for realtime voice, only if wanted.
+3. Install the server halves of the Mac plugins? `hermes-project-stewardship` adds a `pre_llm_call` hook on every
+   turn and writes `kanban.db`; both are third-party community code. Not installed without an audit.
+4. Server image bump `v0.22.5` to `v0.22.7` (digest-pinned) to remove the skew. It touches the vendored `nats-platform`
+   plugin and needs its own PR and test pass; not done here.
+5. `approvals.mode`: `smart` (live) or `manual` (seed). `manual` makes flagged commands wait for a person, which the
+   Desktop approval prompt serves but Telegram, NATS and cron sessions cannot answer.
+6. `gh` in the image plus a fine-grained GitHub token, only if Desktop "create PR" from the pod is wanted.
+7. Mac app update to `v0.22.7-desktop`: report only, nothing was installed.
+
+`desktop/apply.sh` is the only thing here that changes the live volume; `desktop/apply.sh --check` is read-only.
+
 ## Notes
 
 - Ollama Cloud fallback: the key lives in the credential pool (`ollama-pro`), so no `OLLAMA_API_KEY` is needed in
