@@ -2,12 +2,12 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Read-only MCP server giving Hermes typed tools for in-cluster apps (NATS monitoring, Prometheus); manifests in platform/hermes/mcp (Argo application platform-legacy).
+MCP server giving Hermes typed tools for in-cluster apps (NATS monitoring, Prometheus, Ollama, OpenCost, and the Tile38 adapter with one write, tile38_set_point); it is the onemind target behind the tool gateway; manifests in platform/hermes/mcp (Argo application platform-onemind-mcp).
 
 ## Where it runs
 
 - Catalog entity: `component:default/onemind-mcp` in System `ai-agents`
-- Argo CD application: none recorded for this app
+- Argo CD application: `platform-onemind-mcp`
 - Namespace: `hermes`
 
 ## Workloads

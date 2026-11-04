@@ -1,0 +1,12 @@
+# Tool classification for target `cloudflare` (cloudflare/mcp code mode: docs, search, execute, whoami; README read 2026-11-04).
+# docs and search only read documentation and the API spec; whoami returns the token's identity. `execute` calls any Cloudflare API with the
+# token's scope: with a read-only token it is a read, but the gateway cannot see the token's scope, so it is gated until the owner decides.
+target: cloudflare
+read:
+- docs
+- search
+- whoami
+write: []
+destructive:
+- execute
+physical: []

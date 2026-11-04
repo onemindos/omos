@@ -46,7 +46,7 @@
     "Notes": "OneMind's primary AI agent. Runs on NATS, interfaces with Bedrock/Claude, manages state.db, handles voice + text tasks.",
     "Last edited time": "2026-08-20",
     "url": "https://app.notion.com/3c2d0cf70a7e81f4b144f3e8313ce477",
-    "catalogEntity": "hermes-legacy"
+    "catalogEntity": "onemind-hermes"
   },
   {
     "Tool Name": "Langfuse",

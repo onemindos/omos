@@ -1,0 +1,15 @@
+# Python packages the NATS gateway platform (and Desktop text-to-speech, below) needs and the Hermes v0.22.5 image lacks. Installed with
+# `uv pip install --no-deps --require-hashes` by the install-gateway-deps init container (deployment.yaml),
+# so pydantic and pynacl from the image's venv are used, not replaced. Same versions the retired hermes-legacy ran.
+# nkeys has only an sdist on PyPI (pure Python, built at install).
+# To bump: take the sha256 from https://pypi.org/pypi/<name>/<version>/json and edit both lines.
+nats-py==2.16.0 --hash=sha256:aeb1ff123966c05833d26c7df7e1d54c1c6d32b612428b21677a2e921f1fecae
+nkeys==0.2.1 --hash=sha256:3a201dcd203d8bb05ba2884d441b2c92918b2a537a10d324e73738887dde9da3
+synadia-ai-agents==0.8.1 --hash=sha256:214a6ff4faa52c04b20f8719f9aecd70d3b4a72180cb9abe49eaf75559a03024
+synadia-ai-agent-service==0.5.0 --hash=sha256:2f860f065c6e623e79896fc0e1ddbdcae5ab908e8de71de181c574944fba24f0
+# Text-to-speech for Hermes Desktop (2026-11-04): the default `edge` provider needs the edge_tts package, which the
+# image lacks, and the venv is read-only so Hermes cannot install it itself. edge-tts needs aiohttp, certifi and
+# typing-extensions (all in the image's venv) and tabulate (below); srt is not required. Both are pure-Python wheels.
+# Tested 2026-11-04 in the running pod: installed to a scratch directory and streamed audio from the Edge service.
+edge-tts==7.3.1 --hash=sha256:2a3c79d6235a7a736d681233823ce5492e829b43eb47beae49aa181237a8f9a4
+tabulate==0.10.0 --hash=sha256:f0b0622e567335c8fabaaa659f1b33bcb6ddfe2e496071b743aa113f8774f2d3

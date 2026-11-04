@@ -100,10 +100,12 @@ NATS-DOCTRINE §9.8. Do not change the runtime subjects without it.
   `takserver-ignite` in namespace `takserver`.
 - TAK terminates its own mTLS. Keep every path L4 (the nginx `stream` proxy and Tailscale); never
   put a TLS-terminating ingress in front of 8089/8443/8446.
-- Config is mounted from ConfigMaps: `cert-migration` (`/certs-configmap/`), `core-config`
-  (`CoreConfig.xml`) and `tak-ignite-config`. They contain keys and passwords; do not print them.
-  `deploy/CoreConfig.xml` still carries the 5.7 `version` attribute from the original distro; the
-  running images are 5.8.
+- Config comes from `cert-migration` (`/certs-configmap/`: public certs and client material only), the
+  Secrets `tak-server-stores` (server keystore and truststores) and `tak-ca-credentials` (CA signing
+  JKS, messaging only), the password-free template ConfigMap `core-config-v2` (`CoreConfig.xml`, in
+  `deploy/configmap-core-config-v2.yaml`) and `tak-ignite-config`. The init container `copy-coreconfig`
+  of config and messaging fills the three `__PLACEHOLDER__` passwords from Secrets (step 2, 2026-10-29).
+  Do not print any of these.
 
 ## Provenance
 

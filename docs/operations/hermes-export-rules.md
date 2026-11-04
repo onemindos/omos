@@ -1,5 +1,7 @@
 # Hermes export rules: skills and config.yaml
 
+> **Historical (2026-11-03).** The rules stay valid for any Hermes export. The export script, its workflow and its test were removed with `hermes-legacy`; the nightly `config-export` cron of `onemind-hermes` replaces them (section 6 is the record of what was built).
+
 **Status:** rules and decisions D9 to D11 approved by Zeus on 2026-10-16; the workflow is not built yet. This is the rulebook for Step 2 of `hermes-recoverability-plan.md` (the nightly export workflow, decision D3), written before the workflow so the rules can be agreed first.
 **Written:** 2026-10-16. Everything below was measured on the live `hermes-legacy` pod (read-only). Secret values are deliberately not recorded anywhere in this document.
 
@@ -116,8 +118,8 @@ The scan found credentials in the export set, so the first run would be refused.
 
 Built and merged-ready, but **off**:
 
-- `scripts/hermes_identity_export.py`: runs inside the pod, read-only, and streams a tar of the redacted export (or only a failure report, exit code 2). Unit tests in `scripts/tests/test_hermes_identity_export.py` (13 tests).
-- `.github/workflows/hermes-identity-export.yml`: manual trigger only. It needs a runner labelled `onemind-hermes-readonly` with `kubectl`, the variable `HERMES_IDENTITY_EXPORT_ENABLED=true`, and a clean export. It runs gitleaks on the result and opens a PR limited to the exported paths. The nightly schedule is commented out.
-- `platform/core/hermes-identity-export-rbac.yaml`: a dedicated ServiceAccount plus a role that can only read and exec pods in the `hermes` namespace. Inert until a runner uses it.
+- (removed 2026-11-03) `scripts/hermes_identity_export.py`: runs inside the pod, read-only, and streams a tar of the redacted export (or only a failure report, exit code 2). Unit tests in `scripts/tests/test_hermes_identity_export.py` (13 tests).
+- (removed 2026-11-03) `.github/workflows/hermes-identity-export.yml`: manual trigger only. It needs a runner labelled `onemind-hermes-readonly` with `kubectl`, the variable `HERMES_IDENTITY_EXPORT_ENABLED=true`, and a clean export. It runs gitleaks on the result and opens a PR limited to the exported paths. The nightly schedule is commented out.
+- (removed 2026-11-03, RBAC kept for the runner) `platform/core/hermes-identity-export-rbac.yaml`: a dedicated ServiceAccount plus a role that can only read and exec pods in the `hermes` namespace. Inert until a runner uses it.
 
 A dry run of the script against the live pod on 2026-10-16 refused as intended (status FAILED, about 60 findings across the skills and profile configs, no values in the report), which confirms the credential cleanup is the remaining prerequisite. The dedicated runner is built too (`platform/core/github-runner-hermes.yaml`, PR 213): registered to this repository only, ephemeral, no Docker, network limited to DNS, public HTTPS and the Kubernetes API. It registered and is online. The seeding script is built (PR 214) but not wired into the Deployment. The export itself stays off until the credentials are rotated.

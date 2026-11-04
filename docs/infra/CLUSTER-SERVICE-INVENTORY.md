@@ -6,6 +6,7 @@
 
 ## Changes after this snapshot
 
+- `platform-legacy` (the old Hermes instance) was removed on 2026-11-03; its row below is historical. Hermes is `platform-onemind-hermes` now.
 - Homepage was retired later on 2026-10-06 and replaced by `platform-backstage`
   (`platform/backstage`, namespace `backstage`). The historical Homepage entries below
   describe the earlier capture, not an active service or a recommendation to restore it.
@@ -54,7 +55,9 @@ objects. `HEAD` means the Git-tracked branch revision shown by Argo CD at captur
 | `platform-fedhub` | `platform/takserver/fedhub` | `takserver` | Synced / Healthy |
 | `platform-homepage` | `platform/homepage` | `homepage` | Synced / Healthy |
 | `platform-kube` | `platform/kube` | `kube` | Synced / Healthy |
+| `platform-hermes-base` | `platform/hermes/base` | `hermes` | Synced / Healthy |
 | `platform-legacy` | `platform/hermes/agent`; `platform/hermes/bridge` | `hermes` | Synced / Healthy |
+| `platform-onemind-mcp` | `platform/hermes/mcp` | `hermes` | Synced / Healthy |
 | `platform-monitoring` | `platform/monitoring` | `monitoring` | Synced / Healthy |
 | `platform-nats` | `platform/nats` | `nats` | Synced / Healthy |
 | `platform-observability` | `platform/data/clickhouse` | `clickhouse` | Synced / Healthy |
