@@ -17,7 +17,7 @@ manifest or set `syncPolicy.managedNamespaceMetadata.labels`.
 | `decide` | AI models and agents | `onemind-ai`, `hermes`, `agent-fabric`, `n8n` |
 | `act` | Human-facing surfaces and delivery | `backstage`, `matrix`, `cloudtak` |
 | `guard` | Security, identity, observability, backup and CI | `auth`, `monitoring`, `falco`, `kyverno`, `velero`, `ops`, `kube`, `github-runner`, `argocd`, `cert-manager`, `ingress-nginx`, `tailscale` |
-| `system` | Cluster plumbing | `default`, `dapr-system`, `keda` |
+| `system` | Cluster plumbing | `default`, `dapr-system` |
 
 `kyverno` and `falco` were `security`, and `agent-fabric` was `agents`; those values were
 retired. `default` is labelled by `platform/ecosystem/resources/namespaces.yaml` (Application
@@ -32,7 +32,7 @@ Application that does not prune it:
 
 | File | Application | Namespaces |
 |---|---|---|
-| `platform/security/shared-namespaces.yaml` | `platform-security` | `argocd`, `cert-manager`, `ingress-nginx`, `tailscale`, `cnpg-system`, `keda`, `opencost`, `dapr-system`, `clickhouse`, `matrix`, `monitoring`, `nats`, `takserver`, `onemind-ai`, `onemind-core`, `velero` |
+| `platform/security/shared-namespaces.yaml` | `platform-security` | `argocd`, `cert-manager`, `ingress-nginx`, `tailscale`, `cnpg-system`, `opencost`, `dapr-system`, `clickhouse`, `matrix`, `monitoring`, `nats`, `takserver`, `onemind-ai`, `onemind-core`, `velero` |
 | `platform/security/namespaces.yaml` | `platform-security` | `kyverno`, `falco` |
 | `platform/ecosystem/resources/namespaces.yaml` | `platform-ecosystem-resources` | `default`, `onemind-data` |
 

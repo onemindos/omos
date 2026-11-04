@@ -18,15 +18,6 @@
     "namespace": "dapr-system"
   },
   {
-    "name": "keda",
-    "repo": "https://kedacore.github.io/charts",
-    "chart": "keda",
-    "version": "2.21.0",
-    "appVersion": "2.21.0",
-    "url": "https://kedacore.github.io/charts/keda-2.21.0.tgz",
-    "namespace": "keda"
-  },
-  {
     "name": "opencost",
     "repo": "https://opencost.github.io/opencost-helm-chart",
     "chart": "opencost",
