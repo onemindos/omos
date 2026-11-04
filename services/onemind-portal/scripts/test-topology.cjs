@@ -65,6 +65,8 @@ test('quoted long URLs round-trip and catalog pairs match without duplicate edge
 });
 // F2 structure guards run with the topology gate so the existing pipeline step covers them.
 require('./test-catalog-structure.cjs');
+// External Intelligence Home cards are references, not deployed integrations.
+require('./test-intelligence-references.cjs');
 require('./test-snapshot-cluster.cjs');
 // F11 live inventory guards (mapping bundle, flag default, RBAC) ride the same gate and image-build step.
 require('./test-live-inventory.cjs');

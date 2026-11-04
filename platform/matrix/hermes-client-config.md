@@ -9,7 +9,7 @@
 | **iOS** | Element X | Native iOS, fast sync |
 | **Android** | Element X or SchildiChat | Material design, ATAK-friendly |
 | **Linux** | Element (Desktop) | Cross-platform |
-| **Web** | Element Web (element.onemindos.dev) | No install, full access |
+| **Web** | Element Web (element.tail717ba0.ts.net) | No install, full access |
 | **Terminal** | gomuks or weechat-matrix | CLI access |
 
 ## Server Config for All Devices
@@ -18,7 +18,7 @@
 {
   "default_server_config": {
     "m.homeserver": {
-      "base_url": "https://matrix.onemindos.dev",
+      "base_url": "https://matrix.tail717ba0.ts.net",
       "server_name": "onemindos.dev"
     }
   }

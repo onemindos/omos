@@ -1,0 +1,23 @@
+# Gateway egress to the hosted Cloudflare MCP server (mcp.cloudflare.com:443).
+# Activated (moved to manifests/) by scripts/gateway/keys-session.sh when gateway-target-cloudflare is sealed.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: agentgateway-egress-cloudflare
+  namespace: tool-gateway
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: agentgateway-standalone
+      app.kubernetes.io/instance: agentgateway
+  policyTypes: [Egress]
+  egress:
+  # Public HTTPS only; private, tailnet, link-local and loopback ranges are excluded (same exclusions as onemind-hermes).
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10, 169.254.0.0/16, 127.0.0.0/8]
+    ports:
+    - {protocol: TCP, port: 443}

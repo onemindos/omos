@@ -1,0 +1,70 @@
+# Tool classification for target `grafana` (grafana/mcp-grafana 2.2.0, run with -disable-write): conservative read-only start.
+# The 63 names of the server's own `tools/list` with -disable-write, read from the pinned image on 2026-11-04, minus five that are NOT
+# exposed even though the server marks them read-only: grafana_api_request (a generic API passthrough), alerting_manage_routing,
+# get_panel_image and render_grafana_app (image output), validate_provisioning_file. They stay unlisted (hidden everywhere).
+# Writes (annotations, dashboards, silences) are off in the backend; to turn them on remove -disable-write in the backend Deployment, then run
+#   python scripts/gateway/classify_tools.py --target grafana --url <port-forwarded mcp-grafana /mcp> --key-env <none> --write
+# review the proposals, and put delete_* into destructive.
+target: grafana
+read:
+- alerting_rules_read
+- alerting_silences_read
+- analyze_loki_labels
+- check_datasources_health
+- diff_tempo_traces
+- generate_deeplink
+- get_alert_group
+- get_annotation_tags
+- get_annotations
+- get_assertions
+- get_current_oncall_users
+- get_dashboard_by_uid
+- get_dashboard_panel_queries
+- get_dashboard_property
+- get_dashboard_summary
+- get_datasource
+- get_doc
+- get_incident
+- get_oncall_shift
+- get_plugin
+- get_snapshot
+- get_tempo_trace
+- get_tempo_traceql_docs
+- list_alert_groups
+- list_dashboard_versions
+- list_datasources
+- list_incident_custom_fields
+- list_incidents
+- list_loki_label_names
+- list_loki_label_values
+- list_oncall_schedules
+- list_oncall_teams
+- list_oncall_users
+- list_prometheus_label_names
+- list_prometheus_label_values
+- list_prometheus_metric_metadata
+- list_prometheus_metric_names
+- list_provisioning_repositories
+- list_pyroscope_label_names
+- list_pyroscope_label_values
+- list_pyroscope_profile_types
+- list_snapshots
+- list_tempo_attribute_names
+- list_tempo_attribute_values
+- query_loki_logs
+- query_loki_patterns
+- query_loki_stats
+- query_prometheus
+- query_prometheus_histogram
+- query_pyroscope
+- query_tempo_metrics
+- search_dashboards
+- search_docs
+- search_folders
+- search_plugin_information
+- search_tempo_traces
+- suggest_loki_alloy_label_config
+- user_info
+write: []
+destructive: []
+physical: []

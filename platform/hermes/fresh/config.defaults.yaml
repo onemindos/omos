@@ -1,8 +1,0 @@
-# Fresh native configuration. No Legacy state, custom plugins, jobs or connectors.
-# Select/authenticate the model from the new instance before using chat.
-model:
-  provider: openai-codex
-  default: gpt-6.1-sol
-plugins:
-  enabled: []
-mcp_servers: {}

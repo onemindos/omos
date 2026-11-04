@@ -1,0 +1,45 @@
+# Tool classification for gateway target 'mediamtx' (MediaMTX v1.21.2 Control API, trimmed OpenAPI spec).
+# Reviewed in Git; unlisted = destructive (hidden). Schema and rules: scripts/gateway/classification.py.
+# The tool names are the operationIds of manifests/openapi-mediamtx.configmap.yaml, which is generated from this file
+# (scripts/gateway/trim_openapi.py), so a name here that the spec lacks, or the reverse, fails CI.
+# Not exposed at all (not in the spec): /v3/config/* (a path config can carry runOn* shell commands, and the global
+# config holds the internal users), forward-dests, static-sources, auth/jwks/refresh.
+target: mediamtx
+read:
+- hlsMuxersGet
+- hlsMuxersList
+- hlssessionsGet
+- hlssessionsList
+- info
+- pathsGet
+- pathsList
+- recordingsGet
+- recordingsList
+- rtmpConnectionsGet
+- rtmpConnsList
+- rtmpsConnectionsGet
+- rtmpsConnsList
+- rtspConnsGet
+- rtspConnsList
+- rtspSessionsGet
+- rtspSessionsList
+- rtspsConnsGet
+- rtspsConnsList
+- rtspsSessionsGet
+- rtspsSessionsList
+- srtConnsGet
+- srtConnsList
+- webrtcSessionsGet
+- webrtcSessionsList
+write: []
+# Kicking a session cuts a live camera or drone feed; deleting a recording segment is unrecoverable.
+destructive:
+- hlssessionsKick
+- recordingsSegmentsDelete
+- rtmpConnsKick
+- rtmpsConnsKick
+- rtspSessionsKick
+- rtspsSessionsKick
+- srtConnsKick
+- webrtcSessionsKick
+physical: []

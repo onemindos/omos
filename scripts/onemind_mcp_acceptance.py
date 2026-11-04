@@ -1,4 +1,9 @@
-"""Authenticated read-only acceptance from inside the actual Legacy container."""
+"""Authenticated read-only acceptance from inside a Hermes container that calls onemind-mcp directly.
+
+Historical: it ran inside the retired hermes-legacy pod, which no longer exists. The replica assertion on
+hermes-legacy was dropped when that instance was removed. onemind-hermes reaches onemind-mcp through the tool
+gateway and has no Kubernetes token, so this script does not run there; the workflow job that used it was removed.
+"""
 import asyncio
 import json
 import os
@@ -22,7 +27,7 @@ async def observe_rollout():
         verify=str(identity / "ca.crt"), trust_env=False,
         headers={"Authorization": "Bearer " + (identity / "token").read_text()}, timeout=10,
     ) as kube:
-        for name in ("onemind-mcp", "hermes-legacy"):
+        for name in ("onemind-mcp",):
             response = await kube.get(f"https://kubernetes.default.svc/apis/apps/v1/namespaces/hermes/deployments/{name}")
             if response.status_code != 200:
                 report[name] = {"http_status": response.status_code}
@@ -31,7 +36,7 @@ async def observe_rollout():
             report[name] = {"available_replicas": data["status"].get("availableReplicas", 0),
                             "generation": data["metadata"]["generation"],
                             "observed_generation": data["status"].get("observedGeneration", 0)}
-        response = await kube.get("https://kubernetes.default.svc/apis/argoproj.io/v1alpha1/namespaces/argocd/applications/platform-legacy")
+        response = await kube.get("https://kubernetes.default.svc/apis/argoproj.io/v1alpha1/namespaces/argocd/applications/platform-onemind-mcp")
         if response.status_code == 200:
             data = response.json()
             status = data["status"]
@@ -129,7 +134,7 @@ async def main():
         verify=str(identity / "ca.crt"), trust_env=False,
         headers={"Authorization": "Bearer " + (identity / "token").read_text()}, timeout=10,
     ) as kube:
-        for name in ("onemind-mcp", "hermes-legacy"):
+        for name in ("onemind-mcp",):
             response = await kube.get(f"https://kubernetes.default.svc/apis/apps/v1/namespaces/hermes/deployments/{name}")
             response.raise_for_status()
             data = response.json()
@@ -140,7 +145,7 @@ async def main():
             assert data["spec"]["replicas"] == 1
             report[name] = {"available_replicas": 1, "generation": data["metadata"]["generation"],
                             "images": [c["image"] for c in data["spec"]["template"]["spec"]["containers"]]}
-        response = await kube.get("https://kubernetes.default.svc/apis/argoproj.io/v1alpha1/namespaces/argocd/applications/platform-legacy")
+        response = await kube.get("https://kubernetes.default.svc/apis/argoproj.io/v1alpha1/namespaces/argocd/applications/platform-onemind-mcp")
         response.raise_for_status()
         status = response.json()["status"]
         report["argo"] = {"sync": status["sync"]["status"], "health": status["health"]["status"],

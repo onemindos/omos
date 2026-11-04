@@ -71,7 +71,7 @@ self-deleting (`hook-delete-policy`), so they appear as short-lived Jobs during 
 |---------|-----------|-------|--------|-------------|--------|
 | `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | Adopted 2026-10-17 (PR #171 was closed unmerged; redone as adoption only, no alerting changes) | `monitoring-kube-prometheus-stack` | `platform/values/kube-prometheus-stack.yaml` |
 | `loki` | monitoring | loki-7.0.0 | Adopted 2026-10-17 (PR #171 was closed unmerged; redone as adoption only, no alerting changes) | `monitoring-loki` | `platform/values/loki.yaml` |
-| `tempo` | monitoring | tempo-1.24.4 | Adopted 2026-10-17 (PR #171 was closed unmerged; redone as adoption only, no alerting changes) | `monitoring-tempo` | `platform/values/tempo.yaml` |
+| `tempo` | monitoring | tempo-1.24.4 | Adopted 2026-10-17, removed 2026-11-03 (Application and values deleted; the release itself is uninstalled by hand, see the removal PR) | none | none |
 | `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | Adopted 2026-10-17 (PR #171 was closed unmerged; redone as adoption only, no alerting changes) | `monitoring-otel-collector` | `platform/values/otel-collector.yaml` |
 | `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 | Adopted in #176 | `edge-ingress-nginx` | `platform/values/ingress-nginx.yaml` |
 | `cert-manager` | cert-manager | cert-manager-v1.20.3 | Adopted in #176 | `edge-cert-manager` | `platform/values/cert-manager.yaml` |

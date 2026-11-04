@@ -1,5 +1,7 @@
 # Hermes restore drill, 2026-10-16
 
+> **Historical (2026-11-03).** Drill of the retired `hermes-data` volume, kept as evidence. A second drill (2026-11-01) is in `platform/hermes/onemind-hermes/RETIREMENT-AUDIT.md`.
+
 **Result: passed.** The latest nightly VolSync backup of `hermes-data` was restored to a new volume and a copy of Hermes booted against it at application level. The live volume and the running agent were not touched. This closes the gap left by the 2026-10-08 drill, which only verified files.
 
 ## What was done
