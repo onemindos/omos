@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:16-alpine
+          image: postgres:16-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
           env:
             - name: POSTGRES_DB
               value: takml_server
@@ -98,7 +98,7 @@ spec:
               topologyKey: kubernetes.io/hostname
       initContainers:
         - name: check-jar
-          image: busybox:1.36
+          image: busybox:1.36@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
           command:
             - sh
             - -c
@@ -119,7 +119,7 @@ spec:
               mountPath: /jar
       containers:
         - name: takml-server
-          image: eclipse-temurin:21-jre-jammy
+          image: eclipse-temurin:21-jre-jammy@sha256:affcab5356e1270ac35d2361ee83135af2f03e8d580eca78a6d5d6fdbf048db0
           command:
             - java
             - -Dsun.net.client.defaultConnectTimeout=30000
@@ -137,7 +137,7 @@ spec:
             - --server.api.key.enabled=true
             - --server.api.key_path=/apikey
             - --server.api.key.param_name=x-api-key
-            - --logging.level.com.bbn=DEBUG
+            - --logging.level.com.bbn=INFO
           env:
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
@@ -153,15 +153,17 @@ spec:
           ports:
             - name: http
               containerPort: 8234
-          # 2026-09-28: requests/limits adjusted to actual pod usage (92% node imbalance)
-          # Measured usage: 508Mi.
+          # 2026-10-27: measured steady-state usage 507Mi (kubectl top), i.e. 79% of the
+          # old 640Mi limit. Request now covers usage; limit leaves ~50% headroom.
+          # No -Xmx is set, so the JVM default heap cap is 25% of the limit (192Mi);
+          # most of the footprint is non-heap (ONNX Runtime / PyTorch native code).
           resources:
             requests:
               cpu: 500m
-              memory: 305Mi        # ~60% of measured usage
+              memory: 512Mi
             limits:
               cpu: "2"
-              memory: 640Mi        # ~usage + ~26% headroom
+              memory: 768Mi
           startupProbe:
             tcpSocket:
               port: 8234
@@ -254,7 +256,6 @@ spec:
       containers:
         - name: vision-worker
           image: ghcr.io/onemindos/takml-vision@sha256:0aa83e2148ab0553c92b578d7b422f84726a76170d91eb146bbacdd03d1cfa0b
-          imagePullPolicy: Always
           env:
             - name: NATS_URL
               value: tls://nats.nats.svc.cluster.local:4222
@@ -276,10 +277,12 @@ spec:
             - name: FEEDS
               # feeds served by onetak-media (MediaMTX). Streams auto-register on publish.
               value: '{"drone1":"rtsp://onetak-media.onetak.svc.cluster.local:8554/drone1","takcam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/takcam","helmcam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/helmcam","maccam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/maccam"}'  # yamllint disable-line rule:line-length
+          # 2026-10-27: measured 265Mi with no feed publishing (all FEEDS paths 404);
+          # the 1Gi limit is kept for inference spikes when streams are live.
           resources:
             requests:
               cpu: 50m
-              memory: 512Mi
+              memory: 320Mi
             limits:
               cpu: "2"
               memory: 1Gi

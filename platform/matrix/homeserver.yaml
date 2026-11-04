@@ -1,5 +1,5 @@
 server_name: "onemindos.dev"
-public_baseurl: "https://matrix.onemindos.dev/"
+public_baseurl: "https://matrix.tail717ba0.ts.net/"
 pid_file: /data/homeserver.pid
 
 listeners:
@@ -9,7 +9,7 @@ listeners:
     x_forwarded: true
     bind_addresses: ['::']
     resources:
-      - names: [client, federation]
+      - names: [client]
         compress: true
 
 database:

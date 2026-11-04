@@ -6,8 +6,8 @@ not merely launcher categories. This is a foundation/specification in master
 
 ## Names and source of truth
 
-Use the existing [pillar doctrine](../../platform/hermes/agent/doctrine/PILLARS.md)
-and [agent registry](../../platform/hermes/agent/AGENTS.yaml) for terminology:
+Use the existing [pillar doctrine](../../platform/hermes/doctrine/PILLARS.md)
+and [agent registry](../../platform/hermes/doctrine/AGENTS.yaml) for terminology:
 
 | Display order requested | Name | Mission context |
 |---|---|---|

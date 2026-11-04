@@ -10,3 +10,4 @@ spec:
   storage: file
   replicas: 3
   history: 5
+  preventDelete: true

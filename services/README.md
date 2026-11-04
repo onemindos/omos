@@ -27,6 +27,7 @@ Go services monorepo absorbed from the former `omos-services` repo (merged
 |---------|------|---------|
 | **task-engine** | `task-engine/` | NATS-native task orchestration — create, dispatch, track tasks |
 | **omd** | `omd/` | OneMind Daemon — runs on every node, supervises local agent harnesses |
+| **entity** | `entity/` | Entity service (Go): fuses observations into `ent.{entity_type}.{entity_id}.state` in `ENT` |
 | **bridge** | `bridge/` | Universal protocol bridge (MAVLink, MQTT, HA, TAK, webhook) → NATS |
 | **nex** | `nex/` | NATS Execution Engine workloads (overwatch bridges, om-task) |
 | **agents/meta** | `agents/meta/` | Meta agent service |
@@ -44,3 +45,7 @@ Python subscribers — see launchers above. All services connect to
 `nats://nats.nats.svc.cluster.local:4222` (K8s) or via edge leaf node, speak the
 OneMind subject grammar (`cmd.*`, `tel.*`, `evt.*`, `svc.*`), and deploy via
 `ghcr.io/onemindos/{service}:latest` with manifests in `platform/`.
+
+In K8s the NATS servers accept clients only from the namespaces listed in
+`platform/nats/network-policy.yaml`: a service in another namespace needs a rule
+there (see `platform/nats/OPERATIONS.md`), or its connections time out silently.

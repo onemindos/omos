@@ -8,5 +8,7 @@ metadata:
     onemind.io/temporary-diagnostics: 'true'
     onemind.io/layer: make-sense
     pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
   annotations:
     argocd.argoproj.io/sync-wave: '-2'

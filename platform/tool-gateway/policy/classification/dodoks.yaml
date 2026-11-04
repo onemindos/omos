@@ -1,0 +1,20 @@
+# Tool classification for target `dodoks` (DigitalOcean hosted MCP, v1.6.5): conservative read-only start.
+# Names come from the tool registrations in pkg/registry at v1.6.5 (2026-11-04). Not exposed on purpose: doks-get-kubeconfig and
+# doks-get-credentials (they return cluster credentials), every create/update tool. The remote list is not verified until the token exists:
+#   python scripts/gateway/classify_tools.py --target dodoks --url https://<service>.mcp.digitalocean.com/mcp --key-env DO_TOKEN
+target: dodoks
+read:
+- doks-get-cluster
+- doks-get-cluster-upgrades
+- doks-get-nodepool
+- doks-list-clusters
+- doks-list-nodepools
+- doks-list-options
+write: []
+destructive:
+- doks-delete-cluster
+- doks-delete-node
+- doks-delete-nodepool
+- doks-recycle-nodes
+- doks-upgrade-cluster
+physical: []

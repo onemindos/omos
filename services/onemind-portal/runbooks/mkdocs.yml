@@ -9,6 +9,17 @@ theme:
   font: false
 nav:
   - Start here: index.md
+  - Tier 1 services:
+      - Overview: tier1/index.md
+      - TAK Server: tier1/tak-server.md
+      - NATS: tier1/nats.md
+      - Authentik: tier1/authentik.md
+      - Ingress (ingress-nginx): tier1/ingress-nginx.md
+      - cert-manager: tier1/cert-manager.md
+      - Sealed Secrets: tier1/sealed-secrets.md
+      - Backups and ops: tier1/backups-ops.md
+      - Argo CD: tier1/argocd.md
+      - Hermes: tier1/hermes.md
   - Backstage and catalog: backstage.md
   - Identity and access: identity.md
   - NATS fabric: nats.md

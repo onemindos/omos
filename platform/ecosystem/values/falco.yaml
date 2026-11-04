@@ -16,8 +16,58 @@ falco:
   json_include_output_property: true
   stdout_output:
     enabled: true
+# Forward events to Alertmanager (kube-prometheus-stack). The chart wires
+# falco.http_output to the sidekick Service when this is enabled.
 falcosidekick:
-  enabled: false
+  enabled: true
+  fullfqdn: true
+  replicaCount: 1
+  image:
+    registry: docker.io
+    repository: falcosecurity/falcosidekick
+    tag: 2.32.0
+  nodeSelector:
+    onemind.io/compute-role: ecosystem
+  resources:
+    requests: {cpu: 10m, memory: 32Mi}
+    limits: {cpu: 100m, memory: 64Mi}
+  webui:
+    enabled: false
+  config:
+    alertmanager:
+      hostport: http://monitoring-kube-prometheus-alertmanager.monitoring.svc.cluster.local:9093
+      # Alertmanager v0.27+ removed the v1 API (live: v0.33.1).
+      endpoint: /api/v2/alerts
+      # Live 24h sample (2026-10-27): 6443 Notice + 298 Critical, nothing at
+      # Warning/Error. Warning keeps the Notice flood out of Alertmanager.
+      minimumpriority: warning
+      extralabels: source:falco
+# Narrow exceptions for benign, observed sources. Loaded from /etc/falco/rules.d
+# after the upstream ruleset.
+customRules:
+  omos-exceptions.yaml: |-
+    # Backstage (onemind-portal) Kubernetes plugin polls the API server: 4299 of
+    # 6443 "Contact K8S API Server From Container" events in a 24h sample.
+    - rule: Contact K8S API Server From Container
+      exceptions:
+        - name: omos_backstage_k8s_plugin
+          fields: [k8s.ns.name, container.image.repository, proc.name]
+          values:
+            - [backstage, ghcr.io/onemindos/onemind-portal, node]
+      override:
+        exceptions: append
+    # Self-hosted CI runner executes tools unpacked into its tool cache (Python,
+    # pip, node): all 298 Critical "Drop and execute new binary" events in the
+    # same 24h sample. Scoped to that namespace and path only.
+    - rule: Drop and execute new binary in container
+      exceptions:
+        - name: omos_github_runner_toolcache
+          fields: [k8s.ns.name, proc.exepath]
+          comps: [=, startswith]
+          values:
+            - [github-runner, /opt/hostedtoolcache/]
+      override:
+        exceptions: append
 falcoctl:
   artifact:
     install:

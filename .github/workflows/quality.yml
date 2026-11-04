@@ -36,7 +36,10 @@ jobs:
   lint:
     name: Lint & Validate
     # Per-change lint gates do not apply to the scheduled/manual full-tree run.
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 15
     steps:
@@ -57,6 +60,9 @@ jobs:
         env:
           YAML_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: python scripts/validate_changed_yaml.py
+
+      - name: Require MCP coverage for every Git-declared Application
+        run: python scripts/check_onemind_mcp_coverage.py
 
       - name: Report existing repository YAML debt
         continue-on-error: true
@@ -86,6 +92,8 @@ jobs:
 
   manifests:
     name: Kubernetes manifest schema (kubeconform)
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 15
     steps:
@@ -128,6 +136,8 @@ jobs:
 
   helm:
     name: Helm render check
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 30
     steps:
@@ -153,6 +163,12 @@ jobs:
         with:
           node-version: "24"
 
+      # Native Kubernetes int64 values must be tested before the JSON CLI boundary.
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
+        with:
+          go-version: "1.26.4"
+          cache: false
+
       # Match the deployed policy engine; these security tests must not silently skip in CI.
       - name: Install checksum-verified Kyverno policy test engine
         run: |
@@ -177,6 +193,13 @@ jobs:
       - name: Portable GitOps pipeline safety contracts
         run: python -m unittest discover -s scripts/tests -p 'test_gitops*.py' -v
 
+      # A stale values.generated.yaml, a classification that does not match its target, or an unreviewed
+      # `proposed` tool list fails here (docs/operations/tool-gateway.md).
+      - name: Tool gateway policy drift (classification and generated values)
+        run: |
+          python scripts/gateway/render_gateway_config.py --check
+          python scripts/gateway/classify_tools.py --check
+
       # Renders every Argo CD Application that pulls a remote Helm chart when the Application file or one of
       # its valueFiles changed, plus the local charts (platform/takserver/chart, platform/ecosystem/charts/*) when
       # their files change. Weekly/manual runs render everything.
@@ -190,6 +213,8 @@ jobs:
 
   secrets:
     name: Secret scan (gitleaks)
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 10
     steps:

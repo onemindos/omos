@@ -1,5 +1,22 @@
 # Handoff: continuing the platform roadmap
 
+**2026-10-27 merge-preparation update:** for the current dcarku PR batch, start
+with [owner-item merge preparation](2026-10-27-owner-merge-preparation.md).
+**Zeus has approved all owner decisions for #495–#540, retained Telegram and
+authorized Claude to execute the batch's merges on his behalf.** The record
+contains the exact approval, technical holds and release order. Continue past
+an unavailable credential or unresolved technical blocker and report it at the
+end; do not ask again for settled decisions. The historical
+release observations below remain timestamped context, not current live state.
+
+**Latest owner assignment (2026-10-27): Codex merges all four remaining original
+PRs: #505, #535, #533 and #532.** Read the
+[current continuation](../operations/2026-10-27-claude-merge-continuation.md).
+This supersedes the earlier #505-only and Hermes-only assignments. Other
+harnesses must not edit or merge these branches concurrently. Keep current-main
+review and final CI. Telegram and the owner approvals remain unchanged. No
+Terraform apply or storage patches follow merely from their docs merging.
+
 Updated 2026-10-20 during the authorized portal/catalog stabilization. The authoritative tracker and
 phase evidence live in [PLATFORM-ROADMAP.md](../../PLATFORM-ROADMAP.md).
 
@@ -47,8 +64,9 @@ changes. Reconcile shared tracker edits before merging one PR at a time.
 - GitHub later refused to start CI jobs because of an account payment/spending-limit
   error. Do not change billing or weaken merge requirements. Local validation evidence
   and existing whole-tree YAML lint debt are recorded in Phase 5.
-- Recovery PVC observer-restore-20261019 is intentionally protected/retained. Ask
-  before storage cleanup; never delete or restore over production storage.
+- Recovery PVC observer-restore-20261019 was retained until Zeus approved retiring the
+  OpenSearch and OpenChoreo observer recovery assets (2026-10-28); retirement runs through the
+  `cleanup/retire-openchoreo-recovery-assets` PR runbook. Never delete or restore over production storage.
 
 Latest follow-through: [portal acceptance review](../operations/portal-acceptance-followthrough-2026-10-20.md).
 Argo locator works in the production overlay. The historical Grafana search 401

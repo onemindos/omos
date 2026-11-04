@@ -1,0 +1,12 @@
+# Examples only: verify these Service names in the live cluster before deployment.
+# Each adapter may be instantiated more than once, with a different unique id.
+apps:
+  - id: nats
+    adapter: nats
+    description: NATS messaging node and JetStream statistics (read only)
+    url_env: NATS_MONITOR_URL
+  - id: prometheus
+    adapter: prometheus
+    description: Cluster and application metrics via PromQL (read only)
+    url_env: PROMETHEUS_URL
+    # Set token_env if the upstream requires a bearer token.

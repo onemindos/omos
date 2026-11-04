@@ -1,6 +1,8 @@
 """Exercise history suppression with the exact deployed Kyverno 1.19.1 engine.
 
 Set KYVERNO_CLI to a checksum-verified 1.19.1 CLI. No cluster access is used.
+Native-number tests also exercise the exact pinned JMESPath dependency because
+Kubernetes dynamic-client int64 values differ from CLI JSON float64 values.
 The CLI's default CREATE context has no request.uid, like the deployed scanner;
 --set request.uid supplies the discriminator present in real AdmissionReviews.
 Sources for that distinction and auto-generation behavior:
@@ -27,6 +29,8 @@ CLI = os.environ.get("KYVERNO_CLI") or shutil.which("kyverno")
 IMAGE_POLICY = "disallow-latest-image-tag"
 RESOURCE_POLICY = "require-requests-limits"
 GUARDED_RULES = ("require-image-tag", "validate-image-tag", "validate-resources")
+# Admission enforces these; the other policies stay Audit (see the policy file header).
+ENFORCED_POLICIES = {IMAGE_POLICY, "require-namespace-layer-label"}
 BAD_CONTAINER = {"name": "workload", "image": "busybox:latest", "resources": {}}
 PROVIDER_BUDGET_SKIP = {
     "provider-system-pod", "provider-system-deployment", "provider-system-daemonset",
@@ -101,6 +105,18 @@ def fixtures():
     ]:
         add(workload("ReplicaSet", name, references=references,
                      status={"replicas": 0, "observedGeneration": 3}))
+    # Dynamic-client numbers must normalize without treating unknown state as history.
+    for section, key in (("spec", "replicas"), ("status", "replicas"),
+                         ("status", "observedGeneration"), ("metadata", "generation")):
+        for suffix, value in (("missing", None), ("unknown", "unknown"),
+                              ("boolean", False), ("object", {})):
+            r = copy.deepcopy(retired_rs)
+            r["metadata"]["name"] = f"rs-{section}-{key.lower()}-{suffix}"
+            if suffix == "missing":
+                r[section].pop(key, None)
+            else:
+                r[section][key] = value
+            add(r)
     add(workload("Deployment", "deployment-scaled-zero",
                  status={"replicas": 0, "observedGeneration": 3}))
     add(workload("ReplicationController", "replicationcontroller-zero",
@@ -109,6 +125,12 @@ def fixtures():
     completed_job = workload("Job", "job-complete", references=[owner("CronJob", "batch/v1")],
                              status={"active": 0, "conditions": [{"type": "Complete", "status": "True"}]})
     add(completed_job, True)
+    for key in ("active", "terminating"):
+        for suffix, value in (("unknown", "unknown"), ("boolean", False), ("object", {})):
+            r = copy.deepcopy(completed_job)
+            r["metadata"]["name"] = f"job-{key}-{suffix}"
+            r["status"][key] = value
+            add(r)
     failed = copy.deepcopy(completed_job)
     failed["metadata"]["name"] = "job-failed-terminal"
     failed["status"]["conditions"][0]["type"] = "Failed"
@@ -216,6 +238,148 @@ class PolicyDelivery(unittest.TestCase):
                     self.assertTrue(rule["skipBackgroundRequests"])
                     self.assertTrue(rule["validate"]["allowExistingViolations"])
 
+    def test_only_violation_free_policies_enforce(self):
+        names = set()
+        for policy in yaml.safe_load_all(POLICY.read_text()):
+            name = policy["metadata"]["name"]
+            names.add(name)
+            with self.subTest(policy=name):
+                expected = "Enforce" if name in ENFORCED_POLICIES else "Audit"
+                self.assertEqual(policy["spec"]["validationFailureAction"], expected)
+                for rule in policy["spec"]["rules"]:
+                    # Kyverno 1.19.1 lets a rule-level failureAction override the spec field.
+                    self.assertNotIn("failureAction", rule["validate"])
+        self.assertLessEqual(ENFORCED_POLICIES, names)
+
+
+def _wave(doc):
+    return int(((doc.get("metadata") or {}).get("annotations") or {}).get("argocd.argoproj.io/sync-wave", "0"))
+
+
+def _labelled_namespaces(paths):
+    found = {}
+    for path in paths:
+        try:
+            docs = list(yaml.safe_load_all(path.read_text()))
+        except yaml.YAMLError:
+            continue
+        for doc in docs:
+            if isinstance(doc, dict) and doc.get("kind") == "Namespace":
+                labels = doc["metadata"].get("labels") or {}
+                if labels.get("onemind.io/layer"):
+                    found[doc["metadata"]["name"]] = doc
+    return found
+
+
+class NamespaceBootstrap(unittest.TestCase):
+    """Enforce must never deny a namespace that Argo CD auto-creates on a rebuild from zero.
+
+    Argo CD's CreateNamespace=true creates an unlabelled namespace unless the Application ships the
+    Namespace itself or sets managedNamespaceMetadata. A namespace labelled by a *different*
+    Application races require-namespace-layer-label, unless platform-security labels it: its
+    Namespaces apply in the same sync as, and before, the Enforce ClusterPolicies.
+    """
+
+    SECURITY = ROOT / "platform/security"
+
+    def test_security_namespaces_precede_policies(self):
+        namespaces = _labelled_namespaces(sorted(self.SECURITY.glob("*.yaml")))
+        policy_waves = {_wave(p) for p in yaml.safe_load_all(POLICY.read_text())}
+        self.assertTrue(namespaces)
+        for name, doc in namespaces.items():
+            with self.subTest(namespace=name):
+                self.assertLess(_wave(doc), min(policy_waves))
+
+    def test_auto_created_namespaces_are_labelled_before_enforce(self):
+        security = _labelled_namespaces(sorted(self.SECURITY.glob("*.yaml")))
+        checked = 0
+        for path in sorted((ROOT / "platform").rglob("*.yaml")):
+            if "parked" in path.parts:
+                continue
+            try:
+                docs = list(yaml.safe_load_all(path.read_text()))
+            except yaml.YAMLError:
+                continue
+            for app in docs:
+                if not (isinstance(app, dict) and app.get("kind") == "Application"
+                        and str(app.get("apiVersion", "")).startswith("argoproj.io/")):
+                    continue
+                spec = app["spec"]
+                policy = spec.get("syncPolicy") or {}
+                namespace = spec.get("destination", {}).get("namespace")
+                if "CreateNamespace=true" not in (policy.get("syncOptions") or []) or not namespace:
+                    continue
+                # argocd exists before Kyverno (Helm bootstrap) and must not use managedNamespaceMetadata.
+                if namespace == "argocd":
+                    continue
+                checked += 1
+                managed = ((policy.get("managedNamespaceMetadata") or {}).get("labels") or {})
+                own = set()
+                for source in spec.get("sources") or [spec.get("source")]:
+                    if not source or source.get("chart") or not source.get("path"):
+                        continue
+                    base = ROOT / source["path"]
+                    deep = (base / "kustomization.yaml").exists() or (source.get("directory") or {}).get("recurse")
+                    own |= set(_labelled_namespaces(sorted(base.rglob("*.yaml") if deep else base.glob("*.yaml"))))
+                with self.subTest(application=app["metadata"]["name"], namespace=namespace):
+                    self.assertTrue(
+                        namespace in own or namespace in security or managed.get("onemind.io/layer"),
+                        "label it in its own source, in platform/security/shared-namespaces.yaml, "
+                        "or with managedNamespaceMetadata",
+                    )
+        self.assertGreater(checked, 0)
+
+
+class KyvernoNativeNumberContext(unittest.TestCase):
+    """Reproduce the reports controller's native-int64 context without JSON laundering."""
+
+    @classmethod
+    def setUpClass(cls):
+        go = shutil.which("go")
+        if not go:
+            raise RuntimeError("Go is required for the Kyverno native-number regression")
+        cls.temp = tempfile.TemporaryDirectory(prefix="kyverno-native-context-")
+        cls.addClassCleanup(cls.temp.cleanup)
+        cls.binary = Path(cls.temp.name) / "native-context"
+        subprocess.run([go, "build", "-mod=readonly", "-buildvcs=false", "-trimpath", "-o", str(cls.binary), "."],
+                       cwd=ROOT / "scripts/tests/jmespath_native", check=True,
+                       capture_output=True, text=True)
+
+    def evaluate(self, queries, contexts):
+        completed = subprocess.run([str(self.binary)], check=True, capture_output=True, text=True,
+                                   input=json.dumps({"queries": queries, "contexts": contexts}))
+        return json.loads(completed.stdout)
+
+    def test_history_guard_has_identical_native_and_json_classification(self):
+        queries = [entry["variable"]["jmesPath"]
+                   for policy in yaml.safe_load_all(POLICY.read_text())
+                   if policy["metadata"]["name"] in (IMAGE_POLICY, RESOURCE_POLICY)
+                   for rule in policy["spec"]["rules"] for entry in rule.get("context", [])
+                   if entry["name"] == "retiredWorkloadHistory"]
+        self.assertEqual(len(queries), 3)
+        cases = fixtures()
+        results = self.evaluate(queries, [{"request": {"object": r}} for r, _ in cases])
+        for mode, rows in results.items():
+            for (resource, expected), values in zip(cases, rows):
+                for index, result in enumerate(values):
+                    # The policy variable's default:false keeps null/errors evaluated.
+                    with self.subTest(mode=mode, resource=resource["metadata"]["name"], rule=index):
+                        self.assertEqual(result.get("value") is True and not result.get("error"), expected)
+        self.assertEqual(results["json-float64"], results["kubernetes-int64"])
+
+    def test_original_numeric_comparisons_reproduce_scanner_failure(self):
+        queries = ["request.object.spec.replicas == `0`",
+                   "request.object.status.observedGeneration >= request.object.metadata.generation",
+                   "to_number(to_string(request.object.spec.replicas)) == `0`",
+                   "to_number(to_string(request.object.status.observedGeneration)) >= "
+                   "to_number(to_string(request.object.metadata.generation))"]
+        resource = workload("ReplicaSet", "native-type-proof", references=[owner("Deployment")],
+                            status={"replicas": 0, "observedGeneration": 3})
+        results = self.evaluate(queries, [{"request": {"object": resource}}])
+        self.assertEqual([x["value"] for x in results["json-float64"][0]], [True] * 4)
+        self.assertEqual([x["value"] for x in results["kubernetes-int64"][0]],
+                         [False, None, True, True])
+
 
 @unittest.skipUnless(CLI, "Set KYVERNO_CLI to the verified Kyverno 1.19.1 binary")
 class KyvernoHistoryEngine(unittest.TestCase):
@@ -230,6 +394,7 @@ class KyvernoHistoryEngine(unittest.TestCase):
         resources = Path(cls.temp.name) / "resources.yaml"
         resources.write_text(yaml.safe_dump_all([r for r, _ in cls.cases], sort_keys=False))
         cls.results = {}
+        cls.messages = {}
         for mode, variables in [
             ("background", []),
             ("empty-uid", ["--set", "request.uid="]),
@@ -252,6 +417,8 @@ class KyvernoHistoryEngine(unittest.TestCase):
                 raise AssertionError(completed.stdout + completed.stderr)
             cls.results[mode] = {(reference["name"], result["policy"], result["rule"]): result["result"]
                                  for result in report["results"] for reference in result["resources"]}
+            cls.messages[mode] = {(reference["name"], result["policy"], result["rule"]): result.get("message", "")
+                                  for result in report["results"] for reference in result["resources"]}
 
     def assert_guarded_results(self, mode, background):
         for resource, skip in self.cases:
@@ -269,8 +436,15 @@ class KyvernoHistoryEngine(unittest.TestCase):
                 expected[2] = "skip"
             for rule, result in zip(GUARDED_RULES, expected):
                 policy = RESOURCE_POLICY if rule == "validate-resources" else IMAGE_POLICY
+                key = (name, policy, prefix + rule)
                 with self.subTest(mode=mode, resource=name, rule=rule):
-                    self.assertEqual(self.results[mode].get((name, policy, prefix + rule)), result)
+                    if mode == "admission-update" and policy == IMAGE_POLICY:
+                        # The Enforce image rules match CREATE only (see the policy header): Kyverno
+                        # 1.19.1 never applies allowExistingViolations to a rule with preconditions, so
+                        # matching UPDATE would deny every update of an already-violating object.
+                        self.assertIsNone(self.results[mode].get(key))
+                    else:
+                        self.assertEqual(self.results[mode].get(key), result)
 
     def test_background_skips_only_controller_history(self):
         self.assert_guarded_results("background", True)
@@ -281,7 +455,7 @@ class KyvernoHistoryEngine(unittest.TestCase):
     def test_admission_create_evaluates_even_historical_status(self):
         self.assert_guarded_results("admission-create", False)
 
-    def test_admission_update_evaluates_even_historical_status(self):
+    def test_admission_update_skips_image_rules(self):
         self.assert_guarded_results("admission-update", False)
 
     def test_other_security_rules_still_assess_terminal_pods(self):

@@ -33,11 +33,6 @@ exceptions:
     reason: >-
       Deployed from platform/onetak by the Argo application platform-onetak, which the reviewed workload map
       attributes to the onetak app. It has no Argo application of its own.
-  - app: component:default/kubernetes-dashboard
-    capability: argocd
-    reason: >-
-      Deployed from platform/kube by the Argo application platform-kube, which the reviewed workload map attributes
-      to the headlamp app. It has no Argo application of its own.
   - app: component:default/element-chat
     capability: argocd
     reason: >-
@@ -49,9 +44,6 @@ exceptions:
       Deployed from platform/hermes/agent-fabric by the Argo application platform-agent-fabric, which the reviewed
       workload map attributes to the agent-web-ui app. It has no Argo application of its own.
   - app: component:default/hubble-ui
-    capability: argocd
-    reason: "Cluster add-on in kube-system installed and managed by DigitalOcean Kubernetes, not by an Argo CD application in Git."
-  - app: component:default/kubernetes-system
     capability: argocd
     reason: "Cluster add-on in kube-system installed and managed by DigitalOcean Kubernetes, not by an Argo CD application in Git."
   - app: component:default/geo-data-services
@@ -142,19 +134,6 @@ exceptions:
     reason: >-
       PR #390 adds platform-cloudtak source; no cloudtak pods or namespace are observed yet.
       The Loki query must be generated from a verified workload snapshot after deployment.
-  - app: component:default/paperclip
-    capability: kubernetes
-    reason: >-
-      PR #438 prepares platform-paperclip and its namespace, but no verified workload snapshot is recorded.
-      Generate the scoped selector after deployment rather than treating desired manifests as observed inventory.
-  - app: component:default/paperclip
-    capability: grafana-alerts
-    reason: >-
-      PR #438 prepares platform-paperclip source; no verified paperclip workload snapshot is recorded. Add namespace-scoped alert routing after the deployment is observed.
-  - app: component:default/paperclip
-    capability: logs
-    reason: >-
-      PR #438 prepares platform-paperclip source; no verified paperclip pods are recorded in the catalog. Generate the Loki query from the first verified workload snapshot after deployment.
   - app: component:default/karakeep
     capability: kubernetes
     reason: >-
@@ -170,3 +149,21 @@ exceptions:
     reason: >-
       Karakeep native source is staged with manual Argo and zero replicas; no live namespace or workload snapshot is recorded.
       Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
+  - app: component:default/agentgateway
+    capability: kubernetes
+    reason: >-
+      The tool-gateway namespace is live (Argo application platform-tool-gateway, Deployments agentgateway, mcp-kubernetes and
+      mcp-clickhouse) but the committed cluster inventory snapshot predates it, so no workload entry yet generates this
+      annotation. Remove this exception when the inventory is next refreshed from the cluster.
+  - app: component:default/agentgateway
+    capability: grafana-alerts
+    reason: >-
+      The tool-gateway namespace is live (Argo application platform-tool-gateway, Deployments agentgateway, mcp-kubernetes and
+      mcp-clickhouse) but the committed cluster inventory snapshot predates it, so no workload entry yet generates this
+      annotation. Remove this exception when the inventory is next refreshed from the cluster.
+  - app: component:default/agentgateway
+    capability: logs
+    reason: >-
+      The tool-gateway namespace is live (Argo application platform-tool-gateway, Deployments agentgateway, mcp-kubernetes and
+      mcp-clickhouse) but the committed cluster inventory snapshot predates it, so no workload entry yet generates this
+      annotation. Remove this exception when the inventory is next refreshed from the cluster.

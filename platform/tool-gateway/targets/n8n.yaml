@@ -1,0 +1,13 @@
+# n8n instance-level MCP server (built in, /mcp-server/http), Bearer access token. Only workflows with "Available in MCP" are visible.
+# The REST API key is sealed in the same Secret (key api_key) for a later OpenAPI target; nothing reads it yet.
+name: n8n
+groups: [work]
+enabled_by: [gateway-target-n8n]
+env:
+  TARGET_N8N_MCP_TOKEN: {secret: gateway-target-n8n, key: mcp_token}
+target:
+  mcp:
+    host: http://n8n.n8n.svc.cluster.local:5678/mcp-server/http
+  policies:
+    backendAuth:
+      key: "${TARGET_N8N_MCP_TOKEN}"

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/actions/asset.estop/v1",
+  "title": "asset.estop v1 parameters",
+  "description": "Emergency stop (A3; never blocked by preconditions). Parameters of an ActionRequest (onemind-xr docs/contracts/asset-command.md section 6.1). Unknown fields are refused.",
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {}
+}

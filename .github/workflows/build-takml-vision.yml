@@ -28,7 +28,7 @@ jobs:
         with:
           context: platform/takml/vision
           push: true
-          tags: |
-            ${{ env.IMAGE }}:1
-            ${{ env.IMAGE }}:latest
-            ${{ env.IMAGE }}:${{ github.sha }}
+          # Immutable tag only (same sha-<commit> scheme as the other build-*.yml
+          # workflows). platform/takml/deployment.yaml pins the image by digest;
+          # nothing references the old mutable :1 / :latest tags.
+          tags: ${{ env.IMAGE }}:sha-${{ github.sha }}

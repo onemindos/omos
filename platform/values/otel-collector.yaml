@@ -1,4 +1,4 @@
-# OTel pipeline: logs go to Loki, traces to Tempo.
+# OTel pipeline: logs go to Loki. Traces have no backend (Tempo removed 2026-11-03).
 mode: daemonset
 image:
   repository: otel/opentelemetry-collector-contrib
@@ -19,17 +19,9 @@ config:
   exporters:
     otlphttp/loki:
       endpoint: http://loki-gateway.monitoring.svc.cluster.local/otlp
-    otlp/tempo:
-      endpoint: tempo.monitoring.svc.cluster.local:4317
-      tls:
-        insecure: true
   service:
     pipelines:
-      traces:
-        receivers:
-        - otlp
-        exporters:
-        - otlp/tempo
+      traces: null # drop the chart's default traces pipeline (debug exporter): no trace backend
       logs:
         exporters:
         - otlphttp/loki
