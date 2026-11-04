@@ -60,6 +60,45 @@ git diff --check
 make validate
 ```
 
+## Current delivery status: activation blocked
+
+The successfully built, tested and published image is:
+
+```text
+ghcr.io/onemindos/hermes-agent@sha256:7e02bd636a1a6d66276bd006581eec72009aaa582af22a48605d8eae0bed9693
+```
+
+[Build and offline runtime gate](https://github.com/onemindos/omos/actions/runs/41762955873)
+ran against source `6f61b04c1eb41d8de1a94793bd1f2c7d350fb247`. The downloaded
+`hermes-runtime-image.txt` artifact matches the workflow's remote registry
+inspection. Logs report `cua-driver 0.21.0` and
+`PASS: UID10000, packages, cua-driver, WebSocket route, Xfce/X11, private RFB, headed Chromium`.
+Chromium emitted missing **system** D-Bus socket warnings in the isolated
+container, but reached DevTools readiness and the gate exited successfully;
+the private desktop session bus worked. This is not a human-takeover UI test.
+
+**Do not merge for activation yet.** Anonymous GHCR pull-token acquisition returned
+HTTP 401 (`UNAUTHORIZED`, `authentication required`). The current Deployment and
+its default ServiceAccount have no `imagePullSecrets` reference. Consequently
+`../deployment.yaml` deliberately remains unchanged. `activation.patch` records
+the exact tested gateway-only image change, but is NOT referenced by Kustomize
+and does not deploy anything. Do not apply it to the cluster.
+
+An owner must provide an approved pull credential as a namespace-appropriate
+SealedSecret plus the pod's `imagePullSecrets` wiring, or explicitly choose and
+verify public package visibility. Do not relabel another namespace's encrypted
+Secret, expose credentials or silently make the package public. Include that
+prerequisite in this PR and verify pulling before activating the patch in Git.
+This blocker is distinct from successful image publishing and runtime testing.
+
+Local source contracts (3 tests), Python compilation, changed-workflow yamllint,
+and `git diff --check` pass. Full `make validate` was attempted with yamllint
+1.38.0 installed in a scratch-only venv: it fails at existing YAML lint errors.
+The unchanged base `5808b17873ae0f2132970821f73f5cc47ba2820f` returns the same
+exit code 2 and byte-identical output (Matrix whitespace/newlines and other
+unrelated files); Terraform/ShellCheck stages are therefore not reached. Do not
+claim the full gate passed. Repository PR CI checks are recorded on the PR.
+
 ## Capacity and owner acceptance after merge
 
 The existing gateway requests (250m CPU / 1Gi memory) and limits (2 CPU / 3Gi)
