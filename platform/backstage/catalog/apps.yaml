@@ -7452,6 +7452,7 @@ metadata:
     onemind.io/api-relationship-source: services/onemind-core/onemind/ingestion.py
       (subscribes tel.fleet.>, evt.world.>, evt.tak.cot.>), deployed as
       onemind-core/onemind-ingestion
+    onemind.io/argocd-apps: ecosystem-onemind-core,platform-policy
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8654,6 +8655,35 @@ spec:
   system: data-storage
   dependencyOf:
     - component:default/clickhouse
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-policy
+  title: Argo CD application platform-policy
+  description: Argo CD application platform-policy, one of the applications that
+    deploy OneMind core services (component:default/onemind-core, whose primary
+    application is ecosystem-onemind-core).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-policy
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-policy
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependencyOf:
+    - component:default/onemind-core
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
