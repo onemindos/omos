@@ -121,6 +121,20 @@ MATRIX_USER_ID: '@legacy:onemindos.dev'
 # headers (${VAR} rendered from env), lazy, trust, timeout, connect_timeout. Unset: lazy
 # (connect at start, so tool counts are known) and trust (default full).
 mcp_servers:
+  # Hosted Todoist OAuth; mcp/todoist/server.json also reconciles existing PVCs at every start.
+  # Preserve the working exclusions, not a restrictive tool allowlist. No task-authority migration.
+  todoist:
+    url: https://ai.todoist.net/mcp
+    auth: oauth
+    enabled: true
+    tools:
+      exclude:
+        - search
+        - fetch
+        - export-project-template
+        - import-project-template
+    sampling:
+      enabled: false
   # Hosted Whop MCP (mcp/whop/README.md): an allowlist of reads plus low-risk writes. Not listed on purpose:
   # delete/remove, creating or changing payments, payouts, transfers, fees and refunds, cards and bank
   # accounts, account/user changes, tokens and API keys. mcp/whop/server.json is the single source; keep the two identical.
