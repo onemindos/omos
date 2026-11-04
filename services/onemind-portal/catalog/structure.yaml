@@ -300,6 +300,12 @@ apps:
     system: personal-tools
     description: Native bookmark and read-later workspace prepared with manual Argo and zero replicas; first start, owner enrollment and recovery acceptance are pending.
 placement:
+  hermes-atlas: ai-agents
+  hermes-bible: ai-agents
+  oh-my-hermes: ai-agents
+  hermes-official-plugins: ai-agents
+  hermes-skills: ai-agents
+  hermes-documentation: ai-agents
   osiris: intelligence
   worldwideview: intelligence
   worldmonitor: intelligence
