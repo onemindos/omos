@@ -1,0 +1,13 @@
+# ExternalName to the tailnet egress proxy of the edge Home Assistant (same proxy the hermes/omos-ha-edge Service points to).
+apiVersion: v1
+kind: Service
+metadata:
+  name: homeassistant-edge
+  namespace: tool-gateway
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  type: ExternalName
+  externalName: ts-omos-ha-edge-rlv6k.tailscale.svc.cluster.local
+  ports:
+  - {name: http, port: 8123, protocol: TCP, targetPort: 8123}

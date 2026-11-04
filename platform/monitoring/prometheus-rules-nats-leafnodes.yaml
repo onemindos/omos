@@ -12,7 +12,8 @@ spec:
     # Per-leaf series come from nats-leafz-exporter (nats-leafz-exporter.yaml). A leaf is
     # matched on the server name it presents to the hub, the "name" field of /leafz.
     # Baseline 2026-10-27: three leaves, all in account ONEMIND, one per hub server:
-    # hermes-legacy-leaf, zeus-mac, and the TAK leaf. takserver/tak-nats-leaf is named after
+    # hermes-legacy-leaf, zeus-mac, and the TAK leaf. hermes-legacy-leaf is gone since 2026-11-03
+    # (Hermes Legacy now runs as onemind-hermes, a direct client with no leaf), so its rule was removed. takserver/tak-nats-leaf is named after
     # its pod (--name in platform/takserver/deploy/tak-nats-leaf.yaml), so its rule matches
     # the tak-nats-leaf-<replicaset>-<pod> prefix.
     #
@@ -28,21 +29,6 @@ spec:
     - name: onemind.nats.leafnodes
       interval: 30s
       rules:
-        - alert: NATSLeafnodeDown
-          expr: |
-            absent(gnatsd_leafz_info{job="nats-leafz-exporter", name="hermes-legacy-leaf"})
-            and on() count(gnatsd_leafz_conn_nodes_total{job="nats-leafz-exporter"})
-          for: 5m
-          labels:
-            severity: warning
-            service: nats
-            leaf: hermes-legacy-leaf
-          annotations:
-            summary: "NATS leaf hermes-legacy-leaf is not connected to the hub"
-            description: >-
-              No hub server has a leafnode connection from hermes-legacy-leaf, the nats-leaf sidecar of
-              hermes/hermes-legacy. The Hermes agent is cut off from the bus. Check that container's log.
-
         - alert: NATSLeafnodeDown
           expr: |
             absent(gnatsd_leafz_info{job="nats-leafz-exporter", name=~"tak-nats-leaf-.+"})
@@ -65,7 +51,7 @@ spec:
         # US Eastern evening. 15m skips the blips and still reports a Mac that is away.
         # Since that absence is routine, the rule has its own alertname at severity info: a
         # route for critical and warning alerts skips it, and its notifications never share a
-        # group with NATSLeafnodeDown, so a real Hermes or TAK leaf outage stays distinct.
+        # group with NATSLeafnodeDown, so a real TAK leaf outage stays distinct.
         - alert: NATSEdgeLeafAway
           expr: |
             absent(gnatsd_leafz_info{job="nats-leafz-exporter", name="zeus-mac"})

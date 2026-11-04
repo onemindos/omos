@@ -1,0 +1,25 @@
+# Gateway egress to target `stac` (read-only API, not the writer). The ingress rule is in platform/stac/network.yaml.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: agentgateway-egress-stac
+  namespace: tool-gateway
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: agentgateway-standalone
+      app.kubernetes.io/instance: agentgateway
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: stac
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: stac
+          app.kubernetes.io/component: api
+    ports:
+    - {protocol: TCP, port: 8080}

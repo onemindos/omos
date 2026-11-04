@@ -39,15 +39,17 @@ Matrix OutOfSync/Healthy and OpenClaw Synced/Progressing exceptions. This narrow
 observation does not recertify historical inventory.
 See [Phase 6 evidence](../PLATFORM-ROADMAP.md#phase-6-one-portal).
 
-## Paperclip preparation — 2026-10-23
+## Paperclip: retired — 2026-11-01
 
-User-requested business agent workspace, **prepared in Git; not deployed or live-verified**.
-The namespace was absent during the read-only preflight. This entry does not refresh
-historical inventory counts or certify working agent integrations.
-
-| Tier | Application | Namespace | State / recovery | Exposure | Status |
-|---|---|---|---|---|---|
-| 2 | `platform-paperclip` | `paperclip` | Dedicated PostgreSQL 17 and 10 GiB app + 10 GiB DB PVCs; encrypted logical dump/restore-check and two VolSync sources configured | Proposed private `paperclip.tail717ba0.ts.net`; app authentication | Awaiting reviewed merge, Argo sync and [acceptance](../platform/paperclip/README.md) |
+Owner decision (2026-11-01): remove Paperclip entirely. `platform-paperclip` and its
+manifests are removed from the repository. Final backups taken 2026-11-01 before removal: a
+`pg_dump -Fc` of the `paperclip` database (242 tables, 1.3 MB; held locally by the
+operator, not committed or uploaded because it may contain user data) and DigitalOcean
+snapshots of both volumes (`paperclip-postgres-final-2026-11-01`,
+`paperclip-data-final-2026-11-01`, tag `paperclip-retirement`). The two retain-class
+volumes are kept until the owner approves their deletion. Live teardown steps:
+[retirement runbook](operations/paperclip-retirement-2026-11-01.md). The Hermes-side
+pieces (`hermes-paperclip-api`) are retired with the old Hermes, separately.
 
 ## Karakeep preparation — 2026-10-24
 
@@ -115,8 +117,9 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-volsync` | ops | VolSync operator (chart 0.16.0) | none | n/a | internal | Argo |
 | `platform-ops` | ops | `health-keeper` read-only cluster observer (every 5 minutes). Logs only, it does not alert | none | Git | internal | Argo |
 | `ecosystem-velero` | velero | Velero (chart 12.2.1) and the `velero-onemind-platform` schedule | backups in Spaces | n/a | internal | Argo |
-| `platform-legacy` | hermes | Hermes "Legacy" agent (`nousresearch/hermes-agent`, NATS leaf sidecar) and bridge secrets | 25 GiB PVC (agent home, state.db) | `VolSync` | `hermes-agent` dashboard tailnet | Argo |
-| `platform-hermes-fresh` | hermes | Independent vanilla Hermes v0.22.5; launch source prepared, runtime acceptance in deployment PR | New 25 GiB `hermes-fresh-data`; no Legacy import | Separate VolSync/Restic prefix; restore acceptance pending | `hermes-fresh` dashboard tailnet | Argo |
+| `platform-hermes-base` | hermes | Namespace `hermes`, the Tailscale egress Services (`omos-ha-edge`, `omos-mbp`, `omos-s24`) and the Secrets `onemind-hermes` mounts (`hermes-dashboard-auth`, `omos-nats-creds`, `hermes-nats-ca`); `prune: false`, no finalizer, objects carry `Prune=false,Delete=false` (`platform/hermes/base/README.md`; added 2026-11-01) | none | n/a | none | Argo |
+| `platform-onemind-mcp` | hermes | `onemind-mcp` tool server (the tool gateway's `onemind` target); split out of the retired `platform-legacy` on 2026-11-01, no finalizer | none | n/a | `onemind-mcp.hermes.svc` in-cluster only | Argo |
+| `platform-onemind-hermes` | hermes | `onemind-hermes`: new Hermes v0.22.7 instance (persona Legacy, single soul), replaces the `hermes-fresh` launch; runtime acceptance in deployment PR. Holds the Legacy identity `agents.*.hermes.zeus.legacy` as a direct client of the bus (no sidecar; owner-reported 2026-11-03, it answered a real prompt). The old `hermes-legacy` instance and its Application `platform-legacy` were removed from Git on 2026-11-03 (`platform/hermes/onemind-hermes/RETIREMENT-AUDIT.md`); the old 25 GiB volume `hermes-data` is kept as a Retain PV until a separate delete. The `hermes-fresh` resources were removed on 2026-10-29 except the PVC `hermes-fresh-data`, kept pending owner approval (`platform/hermes/onemind-hermes/README.md`) | New 25 GiB `onemind-hermes-data` (`do-block-storage-retain`); no Legacy import | `VolSync` to its own Restic prefix; restore acceptance pending | `onemind-hermes` dashboard tailnet | Argo |
 
 ### Helm-CLI releases (tier 1)
 
@@ -149,6 +152,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-kube` | kube | Headlamp | none | Git | tailnet | Argo |
 | `platform-ecosystem-applications` | argocd | Generates the `ecosystem-*` Applications (11) from `platform/ecosystem/applications` | none | Git | internal | Argo |
 | `platform-ecosystem-foundation` | argocd | Generates the foundation `ecosystem-*` Applications (10) | none | Git | internal | Argo |
+| `platform-tool-gateway` | tool-gateway | Legacy's tool front door: agentgateway v1.7.0 standalone chart (`agentgateway-standalone`, no controller, no CRDs) on the ecosystem pool. Nine MCP routes (`/ops`, `/dev`, `/cloud`, `/data`, `/tak`, `/home`, `/work`, `/identity`, `/execute`) and six live targets: `onemind` and `kubernetes` (ops), `stac`, `core` and `clickhouse` (data), `mediamtx` (tak); [backends below](#tool-gateway-backends-tier-2). Per-target classification is the policy plane: destructive tools are hidden on every route and `/execute/mcp` is deny-all until Phase 4. **Hermes is not cut over to it yet** (Phase 5); LiteLLM still serves the MCP hub. Design: [`onemind-tool-gateway.md`](architecture/onemind-tool-gateway.md); runbook: [`tool-gateway.md`](operations/tool-gateway.md). Verified live 2026-10-30 (read-only): Synced and Healthy, 1/1 Ready | none (config is in the repo; sessions are in memory) | Git (SealedSecrets `gateway-clients`, `gateway-target-onemind`, `-core`, `-mediamtx`, `-clickhouse`) | internal: ClusterIP `agentgateway:8080`, ingress only from `onemind-hermes` | Argo |
 | `platform-ecosystem-resources` | argocd | Ecosystem SealedSecrets, namespaces and shared resources | sealed credentials | Git | internal | Argo. **OutOfSync** (`SharedResourceWarning`: `SealedSecret auth/ghcr` is also owned by `platform-backups`) |
 
 ### Argo CD Applications, ecosystem layer
@@ -164,10 +168,25 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 | `ecosystem-litellm` | onemind-ai | litellm-helm 1.104.2 (OCI) | Model gateway | PostgreSQL (CNPG) | `Velero`, `Barman` | internal. `/metrics` scrape returns 401 (A6) |
 | `ecosystem-ollama` | onemind-ai | ollama 1.86.0 | Local model runtime | 20 GiB models | `Velero` (`onemind-ai`), `VolSync` | internal |
 | `ecosystem-dapr` | dapr-system | dapr 1.18.5 | Dapr runtime | 15 GiB | `VolSync` | internal |
-| `ecosystem-keda` | keda | keda 2.21.0 | Event-driven autoscaling | none | Git | internal |
 | `ecosystem-kyverno` | kyverno | kyverno 3.9.1 | Policy engine | none | Git | internal |
 | `ecosystem-falco` | falco | falco 9.2.0 | Runtime security | none | Git | internal |
 | `ecosystem-opencost` | opencost | opencost 2.5.32 | Cost metrics. Duplicates kube-state-metrics series (M2) | none | Git | internal |
+
+### Tool gateway backends (tier 2)
+
+Reached only through `platform-tool-gateway` (namespace `tool-gateway` unless stated); the backend rows share its Argo Application, so they have no Application of their own. All stateless, backed up by Git, `internal` exposure, GitOps `Argo`. "Live" below was checked read-only against `do-nyc3-omos-cloud` on 2026-10-30; tool counts are from the reviewed classification files in `platform/tool-gateway/policy/classification/`. Details: [`tool-gateway-kubernetes.md`](operations/tool-gateway-kubernetes.md), [`tool-gateway-data.md`](operations/tool-gateway-data.md).
+
+| Backend | Where it runs | Tier | Route and tools | Live check |
+|---------|---------------|------|-----------------|------------|
+| `agentgateway` | Deployment in `tool-gateway`, 1 replica | 2 | all nine routes | Deployment 1/1; image `agentgateway:v1.7.0` by digest |
+| `execute-gate` | Deployment and Service in `tool-gateway` (`ghcr.io/onemindos/execute-gate`, digest-pinned), `replicas: 0` until the owner session seals `gate-matrix`, `gate-nats` and `ghcr` | 2 | AuthZEN decision point for `/execute/mcp` (owner types `execute <id>` or `override <id>` in the Matrix room `approvals`); state in NATS KV `exec-approvals` | not running (off by design); until then `/execute` calls are denied (403, fail closed) |
+| `mcp-kubernetes` | Deployment and Service in `tool-gateway` (`containers/kubernetes-mcp-server` v0.1.1, ServiceAccount `k8s-operator`, no Secrets in its RBAC) | 2 | `kubernetes` target, `ops`: 10 read, 1 write (`resources_create_or_update`); `pods_delete`, `resources_delete`, `resources_scale` held for `/execute` | Deployment 1/1; target in the rendered config |
+| `mcp-clickhouse` | Deployment and Service in `tool-gateway` (`ClickHouse/mcp-clickhouse` 0.7.0), talks to ClickHouse as the user `legacy_ro` | 2 | `clickhouse` target, `data`: 3 read (`list_databases`, `list_tables`, `run_query`) | Deployment 1/1; sealed `mcp-clickhouse-credentials` and `gateway-target-clickhouse` present |
+| ClickHouse user `legacy_ro` | declared in the Altinity CHI `onemind` (namespace `clickhouse`, Application `platform-observability`), `readonly=1`, 30 s, 1 GB, 100,000 rows, network `10.0.0.0/8`, password stored as a SHA-256 hash | 2 | used by `mcp-clickhouse` only | CHI `Completed`; `legacy_ro` users and profile settings present in the live spec |
+| MediaMTX target | OpenAPI target `mediamtx` onto the Control API of `onetak-media` (namespace `onetak`, port 4000), spec trimmed in Git | 2 | `tak`: 25 read; 8 destructive operations hidden | Service `onetak-media` and its pod Running; ConfigMap `gateway-openapi-mediamtx` |
+| STAC target | OpenAPI target `stac` onto `stac-api` (namespace `stac`, 8080), spec trimmed to GET in Git; the `stac-api-writer` Service is not a target | 2 | `data`: 5 read | Service `stac-api`; ConfigMap `gateway-openapi-stac` |
+| onemind-core target | OpenAPI target `core` onto `onemind-core` (namespace `onemind-core`, 8080), hand-written read subset | 2 | `data`: 6 read | Service `onemind-core`; ConfigMap `gateway-openapi-core` |
+| Tile38 adapter | `tile38` adapter inside `onemind-mcp` (`hermes`), served by the `onemind` target in `ops`; reaches `tile38.onetak:9851` | 2 | 6 read, 1 write (`tile38_set_point`); `tile38_delete_object` and `tile38_drop_collection` are not registered (`allow_destructive` off) | `onemind-mcp` 1/1 ready; `TILE38_URL` set and the app `tile38` has `allow_writes: true` in the live apps ConfigMap; Deployment `tile38` 1/1 |
 
 ### Helm-CLI releases (tier 2)
 
@@ -175,7 +194,6 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 |---------|-----------|-------|---------|-------|--------|----------|--------|
 | `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | Prometheus, Alertmanager, Grafana | Prometheus TSDB, Grafana DB, 40 GiB PVCs in the namespace | `VolSync` | Grafana tailnet; Alertmanager internal | Argo (`monitoring-kube-prometheus-stack`, adopted 2026-10-17) |
 | `loki` | monitoring | loki-7.0.0 | Log storage. **PVC 89% full** (A4) | 20 GiB | `VolSync` | internal | Argo (`monitoring-loki`, adopted 2026-10-17) |
-| `tempo` | monitoring | tempo-1.24.4 | Trace storage | PVC | `VolSync` | internal | Argo (`monitoring-tempo`, adopted 2026-10-17) |
 | `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | Telemetry pipeline | none | Git | internal | Argo (`monitoring-otel-collector`, adopted 2026-10-17) |
 
 ## Not tracked by Argo or Helm
@@ -185,13 +203,13 @@ These run live and are not owned by any Application. Manifests for some of them 
 | Namespace | Workloads | Manifests in Git | Tier | Backup | Exposure |
 |-----------|-----------|------------------|------|--------|----------|
 | `nats` (UIs) | `heynats`, `nats-dashboard`, `nats-ui` (digest-pinned 2026-10-23); the agent tools moved to namespace `agent-fabric` (Agent Console, agent-tap, digest-pinned) on 2026-10-17 | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
-| `matrix` | Synapse, Element Web, PostgreSQL, Redis | `platform/matrix/argo/`, Application `platform-matrix` (**manual sync** until `Secret/synapse-homeserver` is sealed, see `platform/matrix/SECRETS-TODO.md`; the older `base/` and `overlays/` are not deployed and not synced) | 2 | `PG dump` (05:40 UTC), `VolSync` x3 (80 GiB) | `matrix.onemindos.com`, `element.onemindos.com` **public (open)** |
+| `matrix` | Synapse, Element Web, PostgreSQL, Redis | `platform/matrix/argo/`, Application `platform-matrix` (**manual sync** until `Secret/synapse-homeserver` is sealed, see `platform/matrix/SECRETS-TODO.md`; the older `base/` and `overlays/` are not deployed and not synced) | 2 | `PG dump` (05:40 UTC), `VolSync` x3 (80 GiB) | `matrix.tail717ba0.ts.net`, `element.tail717ba0.ts.net` **tailnet** (public hosts retired 2026-10-29; federation off) |
 | `tailscale` | about 24 operator-generated proxy StatefulSets | generated | n/a | none | tailnet |
 | `kube-system` | Cilium, CoreDNS, Hubble, metrics-server, DO CSI and agents | DOKS-managed | n/a | none | `hubble` tailnet |
 
 ## GitOps gaps
 
-Eleven releases were installed with `helm upgrade --install` (see `platform/install.sh`). **Update 2026-10-17:** four of them (`cert-manager`, `ingress-nginx`, `nack`, `tailscale-operator`) were adopted into Argo in PR #176 and are owned by the `edge-*` Applications. The four monitoring releases (`monitoring`, `loki`, `tempo`, `otel-collector`) were adopted later the same day as `monitoring-*` Applications. The remaining three are Helm CLI only: `nats`, `takserver` and `argocd`. `helm list -A` still shows all eleven, because adoption leaves the release record. Do not run `platform/install.sh`: it would `helm upgrade` the adopted releases too. Current status: `docs/gitops/HELM-ADOPTION.md`.
+Eleven releases were installed with `helm upgrade --install` (see `platform/install.sh`). **Update 2026-10-17:** four of them (`cert-manager`, `ingress-nginx`, `nack`, `tailscale-operator`) were adopted into Argo in PR #176 and are owned by the `edge-*` Applications. The four monitoring releases (`monitoring`, `loki`, `tempo`, `otel-collector`) were adopted later the same day as `monitoring-*` Applications. **Update 2026-11-03:** Tempo was removed (no trace backend; the OTel collector now ships logs only), leaving three monitoring Applications. The remaining three are Helm CLI only: `nats`, `takserver` and `argocd`. `helm list -A` still shows all eleven, because adoption leaves the release record. Do not run `platform/install.sh`: it would `helm upgrade` the adopted releases too. Current status: `docs/gitops/HELM-ADOPTION.md`.
 
 | Release | Namespace | Chart | Rev | Last updated | Values in Git | Risk if the cluster is rebuilt |
 |---------|-----------|-------|-----|--------------|---------------|-------------------------------|
@@ -205,11 +223,10 @@ Eleven releases were installed with `helm upgrade --install` (see `platform/inst
 | `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | 3 | 2026-07-17 | `platform/values/otel-collector.yaml` | Telemetry only |
 | `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | 3 | 2026-07-11 | `platform/values/tailscale-operator.yaml` | All admin UIs depend on it |
 | `takserver` | takserver | takserver-4.6.0 | 34 | 2026-09-29 | `platform/takserver/values-onemind.yaml` and chart `platform/takserver/chart` | The most important workload has no reproducible rebuild path |
-| `tempo` | monitoring | tempo-1.24.4 | 4 | 2026-07-17 | `platform/values/tempo.yaml` | Traces only |
 
 Whether the values in Git still match what is deployed was not checked; `helm get values` can contain secrets and was not run. Verify with a values diff before adopting any release.
 
-**Suggested adoption order** (from the cluster review, finding H2): `takserver` and `nats` first, behind fresh volume snapshots; then `monitoring`, `loki`, `tempo`, `otel-collector`, `nack`; then `ingress-nginx`, `cert-manager`, `tailscale-operator`; `argocd` last. Per release: export values, commit them, create an Application with the same chart, version and `releaseName`, sync with `ServerSideApply` and `prune: false`, then confirm a zero diff. To back out, delete the Application with `--cascade=false` (workloads keep running, the Helm release secret still exists). This document does not make any of those changes.
+**Suggested adoption order** (from the cluster review, finding H2): `takserver` and `nats` first, behind fresh volume snapshots; then `monitoring`, `loki`, `otel-collector`, `nack`; then `ingress-nginx`, `cert-manager`, `tailscale-operator`; `argocd` last. Per release: export values, commit them, create an Application with the same chart, version and `releaseName`, sync with `ServerSideApply` and `prune: false`, then confirm a zero diff. To back out, delete the Application with `--cascade=false` (workloads keep running, the Helm release secret still exists). This document does not make any of those changes.
 
 Gaps beyond the eleven releases:
 
@@ -222,9 +239,8 @@ Gaps beyond the eleven releases:
 | Path | What is behind it |
 |------|-------------------|
 | Public, Cloudflare ranges only (nginx) | `auth.onemindos.dev`, `ws.onemindos.dev` (NATS WebSocket), `onemindos.dev` (tak-portal) |
-| Public, **no source restriction** (nginx) | `matrix.onemindos.com`, `element.onemindos.com` |
 | Public, control plane | Kubernetes API endpoint, no control-plane firewall (review finding H3) |
-| Tailnet only | TAK (`tak`: 8089, 8443, 8446, 64738), TAK Portal (`enroll`), FedHub (`fedhub`), Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
+| Tailnet only | Matrix (`matrix`, `element`), TAK (`tak`: 8089, 8443, 8446, 64738), TAK Portal (`enroll`), FedHub (`fedhub`), Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
 
 ## Mutable image tags
 
@@ -255,7 +271,7 @@ The new secret scan found nine locations that look like real or example credenti
 | File | Lines | Likely nature |
 |------|-------|---------------|
 | `docs/infra/CONSTELLATION-OVERWATCH.md` | 183 | API key literal in an example |
-| `platform/hermes/agent/SECRETS.md` | 74, 80 | OAuth client secret in an example command |
+| `platform/hermes/agent/SECRETS.md` | 74, 80 | OAuth client secret in an example command. The file was deleted with `hermes-legacy` on 2026-11-03 but is still in history; rotate the secret |
 | `platform/monitoring/deployment.yaml` | 53 | `--password=` argument on a container |
 | `services/om_presence.py` | 50, 52 | Default token and API key in code |
 | `infra/edge/takserver/deploy/docs/enrollment.md` | 123, 139 | Line 139 is a `curl -u user:password` example; line 123 is probably a false positive |
@@ -292,14 +308,24 @@ See [setup, cost and acceptance](../platform/nextcloud/README.md).
 
 ## OneMind application MCP — verified 2026-10-27
 
-Tier 2, namespace `hermes`, Deployment `onemind-mcp`, owned by `platform-legacy`.
+Tier 2, namespace `hermes`, Deployment `onemind-mcp`, owned by `platform-onemind-mcp` (moved from `platform-legacy` on 2026-11-01).
 Stateless private app tools for Legacy: NATS node/JetStream stats and Prometheus
 instant queries, with a discoverable app catalog. One available replica, 100m CPU /
 128Mi memory requests; no database/PVC. Git source/catalog and SealedSecrets are
 recovery artifacts. A dedicated image-pull credential keeps unrelated registry
-credentials unchanged. No Kubernetes API privileges or write tools are granted.
+credentials unchanged. No Kubernetes API privileges are granted. Update 2026-10-30: since the tool-gateway work it also serves the Ollama, OpenCost and Tile38 adapters, and the Tile38 adapter has one write tool (`tile38_set_point`; its two destructive tools are not registered). It is the `onemind` target of `platform-tool-gateway` (see [Tool gateway backends](#tool-gateway-backends-tier-2)).
 
 [Live acceptance](operations/onemind-mcp-acceptance-2026-10-27.json), 04:00 EDT:
 all four tools and resource reads pass from Legacy, anonymous access is rejected,
 MCP and Legacy are available, and Argo is Synced/Healthy. Extension, rotation and
 rollback: [runbook](operations/onemind-mcp.md).
+
+## Nextcloud retirement — 2026-11-01
+
+Zeus authorized retiring Nextcloud and its 200 GiB file/1 GiB cache volumes
+to use Dropbox. Deployment manifests are archived under
+`platform/parked/nextcloud`; the Argo Application is removed. Execution requires
+a completed fresh volume snapshot plus private database/config exports.
+Provider deletion and recovery verification must be recorded from live evidence;
+this source change alone does not certify either. Preserve device originals and
+existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.

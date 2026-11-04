@@ -40,9 +40,9 @@
     "groupTitle": "Infrastructure"
   },
   {
-    "name": "hermes-legacy",
-    "title": "Hermes (Legacy)",
-    "url": "https://hermes-agent.tail717ba0.ts.net/login?next=%2F",
+    "name": "onemind-hermes",
+    "title": "Legacy (onemind-hermes)",
+    "url": "https://onemind-hermes.tail717ba0.ts.net/",
     "description": "Legacy AI — cloud",
     "group": "ai-agents",
     "groupTitle": "AI & Agents"
