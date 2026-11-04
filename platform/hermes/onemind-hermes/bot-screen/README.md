@@ -60,44 +60,77 @@ git diff --check
 make validate
 ```
 
-## Current delivery status: activation blocked
+## Current delivery status: private activation blocked
 
-The successfully built, tested and published image is:
+The prior builder reported this candidate image:
 
 ```text
 ghcr.io/onemindos/hermes-agent@sha256:7e02bd636a1a6d66276bd006581eec72009aaa582af22a48605d8eae0bed9693
 ```
 
 [Build and offline runtime gate](https://github.com/onemindos/omos/actions/runs/41762955873)
-ran against source `6f61b04c1eb41d8de1a94793bd1f2c7d350fb247`. The downloaded
-`hermes-runtime-image.txt` artifact matches the workflow's remote registry
-inspection. Logs report `cua-driver 0.21.0` and
-`PASS: UID10000, packages, cua-driver, WebSocket route, Xfce/X11, private RFB, headed Chromium`.
-Chromium emitted missing **system** D-Bus socket warnings in the isolated
-container, but reached DevTools readiness and the gate exited successfully;
-the private desktop session bus worked. This is not a human-takeover UI test.
+ran against source `6f61b04c1eb41d8de1a94793bd1f2c7d350fb247`. The build job
+reports success, including its smoke and digest steps. The prior builder reported
+matching artifact/registry inspection and a successful UID10000 runtime smoke.
+Independent checker downloads of logs/artifacts returned HTTP 401, so the exact
+digest and runtime output remain **pending independent verification**. Source
+contracts are not a replacement for that gate or a human-takeover UI test.
 
-**Do not merge for activation yet.** Anonymous GHCR pull-token acquisition returned
-HTTP 401 (`UNAUTHORIZED`, `authentication required`). The current Deployment and
-its default ServiceAccount have no `imagePullSecrets` reference. Consequently
-`../deployment.yaml` deliberately remains unchanged. `activation.patch` records
-the exact tested gateway-only image change, but is NOT referenced by Kustomize
-and does not deploy anything. Do not apply it to the cluster.
+**Private GHCR only, per owner decision. Do not change visibility.** Anonymous
+GHCR pull-token acquisition returned HTTP 401. A read-only live inspection on
+2026-11-04 confirmed the gateway is still available (1 ready replica) on the
+original upstream image. Neither its Deployment nor default ServiceAccount has
+`imagePullSecrets`. `../deployment.yaml` deliberately remains unchanged.
+`activation.patch` now prepares the gateway-only image pin and pod-level
+`imagePullSecrets: [{name: onemind-hermes-registry}]`; it is NOT referenced by
+Kustomize. Its regression test applies it only to a scratch copy and verifies no
+other manifest bytes change. Do not apply it to the cluster.
 
-An owner must provide an approved pull credential as a namespace-appropriate
-SealedSecret plus the pod's `imagePullSecrets` wiring, or explicitly choose and
-verify public package visibility. Do not relabel another namespace's encrypted
-Secret, expose credentials or silently make the package public. Include that
-prerequisite in this PR and verify pulling before activating the patch in Git.
-This blocker is distinct from successful image publishing and runtime testing.
+### Credential discovery and exact requirement
 
-Local source contracts (3 tests), Python compilation, changed-workflow yamllint,
-and `git diff --check` pass. Full `make validate` was attempted with yamllint
-1.38.0 installed in a scratch-only venv: it fails at existing YAML lint errors.
-The unchanged base `5808b17873ae0f2132970821f73f5cc47ba2820f` returns the same
-exit code 2 and byte-identical output (Matrix whitespace/newlines and other
-unrelated files); Terraform/ShellCheck stages are therefore not reached. Do not
-claim the full gate passed. Repository PR CI checks are recorded on the PR.
+- `platform/hermes/base/README.md` records that the old `ghcr` credential belonged
+  only to the retired `hermes-legacy`; do not revive it as a shared credential.
+- The documented existing pull Secret is `onemind-mcp-registry`, dedicated to
+  OneMind MCP. Its approved source is repository Actions secret
+  `ONEMIND_MCP_GHCR_PULL_TOKEN`, used by `onemind-mcp-registry.yml` and
+  `scripts/seal_onemind_mcp_registry.py`. That flow validates only the MCP image.
+  It does not establish approval or access for `onemindos/hermes-agent`.
+- Actions **names-only** discovery also found `GHCR_PAT`; no checked-in workflow
+  references it or documents its approved package/scope. Existence is not
+  authorization: neither credential was extracted, repurposed or tested here.
+- The current MCP identity `system:serviceaccount:tool-gateway:k8s-operator`
+  cannot list `sealedsecrets.bitnami.com` in `hermes` (Forbidden). Its resource
+  tools do not expose a metadata-only Secret projection; raw Secret reads were
+  deliberately not attempted. This inspection cannot certify absence of every
+  live pull credential. No privilege expansion or alternate identity was used.
+
+**Required owner-provided artifact:** a namespace-wide SealedSecret named
+`onemind-hermes-registry`, sealed for namespace `hermes` with the current
+controller public certificate, yielding type `kubernetes.io/dockerconfigjson`
+and key `.dockerconfigjson` for `ghcr.io`. Use a dedicated service identity with
+`read:packages` and read access to the **private** `onemindos/hermes-agent` package
+(and organization SSO authorization if required); no package write/delete or
+registry visibility rights are needed. Do not send the token in chat or commit
+plaintext. An owner may instead explicitly approve a documented existing pull
+source for this package and have the same artifact produced through a reviewed
+in-memory/stdin sealing flow. Do not use a GitHub API OAuth grant as that source.
+The MCP sealing flow is a security pattern, not authorization to run it with its
+existing dedicated token for another package.
+
+Before activation, verify authenticated pull access to the exact candidate digest
+without exposing credentials, independently verify the build artifact, and commit
+the ciphertext as `../registry.sealedsecret.yaml` with sync wave `-2`. Add that
+file to `../kustomization.yaml` and incorporate the prepared image/pull-reference
+patch into `../deployment.yaml` in the same reviewed GitOps change. Until these
+prerequisites pass, keep this PR draft and activation inert. No live write,
+manual deployment, merge, Secret data read or registry visibility change is
+part of this preparation.
+
+Local source contracts, Python compilation and `git diff --check` are the cheap
+checks below. Full `make validate` previously failed at existing YAML lint
+errors on both this branch and unchanged base
+`5808b17873ae0f2132970821f73f5cc47ba2820f`; Terraform/ShellCheck were not reached.
+Report fresh validation and exact-head CI separately; do not claim a full pass.
 
 ## Capacity and owner acceptance after merge
 

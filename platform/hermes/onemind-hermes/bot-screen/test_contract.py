@@ -2,6 +2,9 @@
 import ast
 from pathlib import Path
 import re
+import os
+import subprocess
+import tempfile
 import unittest
 
 HERE = Path(__file__).resolve().parent
@@ -41,6 +44,30 @@ class ImageContract(unittest.TestCase):
             self.assertIn(boundary, source)
         self.assertNotIn("min_free_memory_mb", source)
         self.assertNotIn("mock", source)
+
+    def test_private_activation_patch_is_inert_and_narrow(self):
+        relative = Path("platform/hermes/onemind-hermes/deployment.yaml")
+        original = (ROOT / relative).read_text()
+        upstream = "nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d"
+        private = "ghcr.io/onemindos/hermes-agent@sha256:7e02bd636a1a6d66276bd006581eec72009aaa582af22a48605d8eae0bed9693"
+        expected = original.replace(
+            "      automountServiceAccountToken: false\n",
+            "      automountServiceAccountToken: false\n"
+            "      imagePullSecrets:\n        - name: onemind-hermes-registry\n", 1,
+        ).replace("        - name: hermes\n          image: " + upstream,
+                  "        - name: hermes\n          image: " + private, 1)
+        with tempfile.TemporaryDirectory(dir=os.environ.get("TMPDIR")) as folder:
+            target = Path(folder) / relative
+            target.parent.mkdir(parents=True)
+            target.write_text(original)
+            subprocess.run(["git", "apply", str(HERE / "activation.patch")],
+                           cwd=folder, check=True, capture_output=True)
+            self.assertEqual(target.read_text(), expected)
+        self.assertNotIn(private, original)
+        self.assertNotIn("onemind-hermes-registry", original)
+        kustomization = (HERE.parent / "kustomization.yaml").read_text()
+        self.assertNotIn("activation.patch", kustomization)
+        self.assertNotIn("bot-screen", kustomization)
 
 
 if __name__ == "__main__":

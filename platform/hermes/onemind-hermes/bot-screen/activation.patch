@@ -1,6 +1,15 @@
 --- a/platform/hermes/onemind-hermes/deployment.yaml
 +++ b/platform/hermes/onemind-hermes/deployment.yaml
-@@ -191,7 +191,7 @@
+@@ -20,6 +20,8 @@
+         onemind.io/agent: legacy
+     spec:
+       automountServiceAccountToken: false
++      imagePullSecrets:
++        - name: onemind-hermes-registry
+       terminationGracePeriodSeconds: 60
+       securityContext:
+         seccompProfile:
+@@ -191,7 +193,7 @@
                mountPath: /tmp
        containers:
          - name: hermes
