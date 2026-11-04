@@ -1,0 +1,8 @@
+name: tak-client
+runtime: native
+entity: omos.bridge.tak-client
+
+env:
+  NATS_URL: nats://localhost:4222
+  TAK_ADDR: localhost:8089
+  TAK_PROTOCOL: auto
