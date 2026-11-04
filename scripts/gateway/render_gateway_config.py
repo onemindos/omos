@@ -82,6 +82,18 @@ def _ext_authz(gname: str, authz: dict) -> dict:
     }
 
 
+def sealed_exists(secret: str) -> bool:
+    return (BASE / "manifests" / f"{secret}.sealedsecret.yaml").is_file()
+
+
+def is_active(t: dict) -> bool:
+    """A fragment with `enabled_by: [<secret>, ...]` is rendered only while each SealedSecret file is committed."""
+    names = t.get("enabled_by") or []
+    if not isinstance(names, list) or not all(isinstance(n, str) and re.fullmatch(r"[a-z0-9][a-z0-9-]*", n) for n in names):
+        raise RenderError(f"{t.get('_file')}: enabled_by must be a list of Secret names")
+    return all(sealed_exists(n) for n in names)
+
+
 def _walk(node):
     if isinstance(node, dict):
         for k, v in node.items():
@@ -146,6 +158,7 @@ def render(gw: dict, targets: list[dict], classes: dict[str, dict]) -> dict:
     by_group: dict[str, list[dict]] = {g: [] for g in groups}
     gated_targets: list[dict] = []
     seen: set[str] = set()
+    seen_env: list[set[str]] = []
     for t in targets:
         f = t["_file"]
         name = t.get("name", "")
@@ -156,7 +169,7 @@ def render(gw: dict, targets: list[dict], classes: dict[str, dict]) -> dict:
         if name in seen:
             raise RenderError(f"{f}: duplicate target {name}")
         seen.add(name)
-        unknown = set(t) - {"name", "groups", "env", "target", "_file"}
+        unknown = set(t) - {"name", "groups", "env", "target", "enabled_by", "_file"}
         if unknown:
             raise RenderError(f"{f}: unknown keys {sorted(unknown)}")
         if not t.get("groups") or not isinstance(t.get("target"), dict):
@@ -168,15 +181,20 @@ def render(gw: dict, targets: list[dict], classes: dict[str, dict]) -> dict:
         for var, ref in t_env.items():
             if not ENV_RE.match(var) or not var.startswith(prefix):
                 raise RenderError(f"{f}: env {var} must start with {prefix}")
-            if var in env:
+            if var in env or any(var in other for other in seen_env):
                 raise RenderError(f"{f}: env {var} defined twice")
             if set(ref) != {"secret", "key"}:
                 raise RenderError(f"{f}: env {var} needs exactly secret and key")
-            env[var] = ref
+        seen_env.append(set(t_env))
         _check_dollars(f, t["target"], set(t_env) | {c["env"] for c in clients.values()})
         if name not in classes:
             raise RenderError(f"{f}: no policy/classification/{name}.yaml; an unclassified target exposes nothing "
                               "and is rejected")
+        if not is_active(t):
+            # Disabled: its SealedSecret(s) are not committed yet. It is validated above but contributes no route, no
+            # tool and no Secret reference, so an absent key cannot take the gateway pod or any route down.
+            continue
+        env.update(t_env)
         for g in t["groups"]:
             if g not in groups:
                 raise RenderError(f"{f}: unknown group {g}")
@@ -282,7 +300,7 @@ def gate_policy_text(targets: list[dict], classes: dict[str, dict]) -> str:
     The gate treats anything that is not `physical` as destructive, so only the physical list changes behaviour (the
     owner must type `override`, not `execute`); `destructive` documents intent.
     """
-    names = sorted(t["name"] for t in targets if classification.has_gated(classes[t["name"]]))
+    names = sorted(t["name"] for t in targets if is_active(t) and classification.has_gated(classes[t["name"]]))
     pol = {cls: sorted(f"{n}/{tool}" for n in names for tool in classes[n][cls]) for cls in classification.GATED}
     body = yaml.safe_dump({"physical": pol["physical"], "destructive": pol["destructive"]}, sort_keys=False)
     cm = {
