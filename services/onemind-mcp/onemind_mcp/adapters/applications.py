@@ -1,6 +1,5 @@
 """Reviewed fixed API operations. No arbitrary paths, methods, SQL or destinations."""
 from typing import Annotated
-from uuid import UUID
 
 from pydantic import Field
 
@@ -110,25 +109,6 @@ def n8n(add, upstream):
         return await upstream.get('/api/v1/executions', {'limit': limit, 'includeData': 'false'})
     add(workflows)
     add(executions)
-
-
-def paperclip(add, upstream):
-    async def companies() -> list:
-        """List companies visible to the dedicated Paperclip agent identity."""
-        return await upstream.get('/api/companies')
-
-    async def issues(company_id: UUID) -> list:
-        """List company issues visible to the dedicated Paperclip agent identity."""
-        return await upstream.get(f'/api/companies/{company_id}/issues')
-
-    async def create_issue(company_id: UUID, title: Annotated[str, Field(min_length=1, max_length=200)],
-                           description: Text) -> dict:
-        """Create a Paperclip issue in backlog. Does not assign an agent or start execution. Retries may create duplicates."""
-        return await upstream.post(f'/api/companies/{company_id}/issues',
-                                   {'title': title, 'description': description, 'status': 'backlog'})
-    add(companies)
-    add(issues)
-    add(create_issue, read_only=False)
 
 
 def grafana(add, upstream):

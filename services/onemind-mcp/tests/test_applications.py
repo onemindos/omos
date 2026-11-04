@@ -25,19 +25,6 @@ def test_blocked_apps_visible_without_credentials():
         assert 'blocked' in json.dumps(result)
 
 
-def test_writes_opt_in_annotations_and_http201(monkeypatch):
-    for enabled in (False, True):
-        with TestClient(build(catalog(monkeypatch, 'paperclip', enabled), lambda _: httpx.Response(201, json={'id': 'new'}))) as client:
-            tools = {t['name']: t for t in rpc(client, 'tools/list')['result']['tools']}
-            assert ('app_create_issue' in tools) == enabled
-            if enabled:
-                assert not tools['app_create_issue']['annotations']['readOnlyHint']
-                assert not tools['app_create_issue']['annotations']['idempotentHint']
-                result = rpc(client, 'tools/call', {'name': 'app_create_issue', 'arguments': {
-                    'company_id': '9b1d58fe-8d58-4b18-b336-8acb8439d05e', 'title': 'Review', 'description': 'Review the plan'}})
-                assert not result['result'].get('isError')
-
-
 def test_stac_invalid_bbox_makes_no_request(monkeypatch):
     with TestClient(build(catalog(monkeypatch, 'stac'), lambda _: pytest.fail('Invalid bbox made request'))) as client:
         for bbox in ([0, 0, 181, 20], [5, 0, 1, 20], [0, -91, 20, 0]):
