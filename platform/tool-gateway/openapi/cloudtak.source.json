@@ -1,0 +1,3740 @@
+{
+ "info": {
+  "title": "CloudTAK API",
+  "version": "13.113.0"
+ },
+ "openapi": "3.1.0",
+ "paths": {
+  "/api/basemap": {
+   "get": {
+    "deprecated": false,
+    "parameters": [
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "scope",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "const": "server",
+         "type": "string"
+        },
+        {
+         "const": "user",
+         "type": "string"
+        }
+       ]
+      }
+     },
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "impersonate",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "description": "List all of the given resource, regardless of ACL",
+         "type": "boolean"
+        },
+        {
+         "description": "Filter the given resource by a given username",
+         "type": "string"
+        }
+       ]
+      }
+     },
+     {
+      "description": "Limit the number of responses returned",
+      "in": "query",
+      "name": "limit",
+      "required": true,
+      "schema": {
+       "default": 10,
+       "description": "Limit the number of responses returned",
+       "maximum": 100,
+       "minimum": 1,
+       "type": "integer"
+      }
+     },
+     {
+      "description": "Iterate through \"pages\" of items based on the \"limit\" query param",
+      "in": "query",
+      "name": "page",
+      "required": true,
+      "schema": {
+       "default": 0,
+       "description": "Iterate through \"pages\" of items based on the \"limit\" query param",
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     {
+      "description": "Order in which results are returned based on the \"sort\" query param",
+      "in": "query",
+      "name": "order",
+      "required": true,
+      "schema": {
+       "anyOf": [
+        {
+         "const": "asc",
+         "type": "string"
+        },
+        {
+         "const": "desc",
+         "type": "string"
+        }
+       ],
+       "default": "asc",
+       "description": "Order in which results are returned based on the \"sort\" query param"
+      }
+     },
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "type",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "anyOf": [
+          {
+           "const": "raster",
+           "type": "string"
+          },
+          {
+           "const": "raster-dem",
+           "type": "string"
+          },
+          {
+           "const": "vector",
+           "type": "string"
+          }
+         ]
+        },
+        {
+         "items": {
+          "anyOf": [
+           {
+            "const": "raster",
+            "type": "string"
+           },
+           {
+            "const": "raster-dem",
+            "type": "string"
+           },
+           {
+            "const": "vector",
+            "type": "string"
+           }
+          ]
+         },
+         "type": "array"
+        }
+       ]
+      }
+     },
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "sort",
+      "required": true,
+      "schema": {
+       "default": "created",
+       "enum": [
+        "id",
+        "created",
+        "updated",
+        "parent",
+        "name",
+        "url",
+        "protocol",
+        "bounds",
+        "center",
+        "minzoom",
+        "maxzoom",
+        "format",
+        "type",
+        "username",
+        "sharing_enabled",
+        "sharing_token",
+        "hidden",
+        "tilesize",
+        "attribution",
+        "collection",
+        "frequency",
+        "scheme",
+        "overlay",
+        "tilejson",
+        "enableRLS"
+       ],
+       "type": "string"
+      }
+     },
+     {
+      "description": "Filter results by a human readable name field",
+      "in": "query",
+      "name": "filter",
+      "required": true,
+      "schema": {
+       "default": "",
+       "description": "Filter results by a human readable name field",
+       "maxLength": 64,
+       "minLength": 0,
+       "type": "string"
+      }
+     },
+     {
+      "description": "Only show Basemaps belonging to a given collection",
+      "in": "query",
+      "name": "collection",
+      "required": false,
+      "schema": {
+       "description": "Only show Basemaps belonging to a given collection",
+       "type": "string"
+      }
+     },
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "overlay",
+      "required": true,
+      "schema": {
+       "default": false,
+       "type": "boolean"
+      }
+     },
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "hidden",
+      "required": true,
+      "schema": {
+       "anyOf": [
+        {
+         "const": "true",
+         "type": "string"
+        },
+        {
+         "const": "false",
+         "type": "string"
+        },
+        {
+         "const": "all",
+         "type": "string"
+        }
+       ],
+       "default": "false"
+      }
+     },
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "snapping",
+      "required": false,
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "collections": {
+           "items": {
+            "properties": {
+             "name": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "name"
+            ],
+            "type": "object"
+           },
+           "type": "array"
+          },
+          "items": {
+           "items": {
+            "properties": {
+             "actions": {
+              "properties": {
+               "feature": {
+                "items": {
+                 "anyOf": [
+                  {
+                   "const": "query",
+                   "type": "string"
+                  },
+                  {
+                   "const": "fetch",
+                   "type": "string"
+                  },
+                  {
+                   "const": "create",
+                   "type": "string"
+                  },
+                  {
+                   "const": "update",
+                   "type": "string"
+                  },
+                  {
+                   "const": "delete",
+                   "type": "string"
+                  }
+                 ]
+                },
+                "type": "array"
+               }
+              },
+              "required": [
+               "feature"
+              ],
+              "type": "object"
+             },
+             "attribution": {
+              "anyOf": [
+               {
+                "type": "null"
+               },
+               {
+                "type": "string"
+               }
+              ]
+             },
+             "bounds": {
+              "items": {
+               "type": "number"
+              },
+              "maxItems": 4,
+              "minItems": 4,
+              "type": "array"
+             },
+             "center": {
+              "items": {
+               "type": "number"
+              },
+              "type": "array"
+             },
+             "collection": {
+              "anyOf": [
+               {
+                "type": "null"
+               },
+               {
+                "type": "string"
+               }
+              ]
+             },
+             "created": {
+              "type": "string"
+             },
+             "encoding": {
+              "anyOf": [
+               {
+                "const": "mapbox",
+                "type": "string"
+               },
+               {
+                "const": "terrarium",
+                "type": "string"
+               }
+              ]
+             },
+             "format": {
+              "anyOf": [
+               {
+                "const": "png",
+                "type": "string"
+               },
+               {
+                "const": "webp",
+                "type": "string"
+               },
+               {
+                "const": "jpeg",
+                "type": "string"
+               },
+               {
+                "const": "mvt",
+                "type": "string"
+               }
+              ]
+             },
+             "frequency": {
+              "anyOf": [
+               {
+                "type": "null"
+               },
+               {
+                "type": "integer"
+               }
+              ]
+             },
+             "hidden": {
+              "type": "boolean"
+             },
+             "iconset": {
+              "anyOf": [
+               {
+                "type": "null"
+               },
+               {
+                "type": "string"
+               }
+              ]
+             },
+             "id": {
+              "type": "integer"
+             },
+             "maxzoom": {
+              "type": "integer"
+             },
+             "minzoom": {
+              "type": "integer"
+             },
+             "name": {
+              "type": "string"
+             },
+             "overlay": {
+              "type": "boolean"
+             },
+             "parent": {
+              "anyOf": [
+               {
+                "type": "null"
+               },
+               {
+                "type": "integer"
+               }
+              ],
+              "description": "If set, this Basemap/Overlay is a child of the given parent Basemap/Overlay"
+             },
+             "protocol": {
+              "anyOf": [
+               {
+                "const": "zxy",
+                "type": "string"
+               },
+               {
+                "const": "mapserver",
+                "type": "string"
+               },
+               {
+                "const": "imageserver",
+                "type": "string"
+               },
+               {
+                "const": "featureserver",
+                "type": "string"
+               },
+               {
+                "const": "hosted",
+                "type": "string"
+               }
+              ]
+             },
+             "scheme": {
+              "const": "xyz",
+              "type": "string"
+             },
+             "sharing_enabled": {
+              "type": "boolean"
+             },
+             "sharing_token": {
+              "anyOf": [
+               {
+                "type": "null"
+               },
+               {
+                "type": "string"
+               }
+              ]
+             },
+             "snapping_enabled": {
+              "type": "boolean"
+             },
+             "snapping_layer": {
+              "anyOf": [
+               {
+                "type": "null"
+               },
+               {
+                "type": "string"
+               }
+              ]
+             },
+             "styles": {
+              "items": {},
+              "type": "array"
+             },
+             "tilesize": {
+              "type": "integer"
+             },
+             "title": {
+              "type": "string"
+             },
+             "type": {
+              "anyOf": [
+               {
+                "const": "raster",
+                "type": "string"
+               },
+               {
+                "const": "raster-dem",
+                "type": "string"
+               },
+               {
+                "const": "vector",
+                "type": "string"
+               }
+              ]
+             },
+             "updated": {
+              "type": "string"
+             },
+             "url": {
+              "type": "string"
+             },
+             "username": {
+              "anyOf": [
+               {
+                "type": "null"
+               },
+               {
+                "type": "string"
+               }
+              ]
+             }
+            },
+            "required": [
+             "id",
+             "created",
+             "updated",
+             "parent",
+             "name",
+             "url",
+             "protocol",
+             "minzoom",
+             "maxzoom",
+             "format",
+             "type",
+             "username",
+             "sharing_enabled",
+             "sharing_token",
+             "hidden",
+             "tilesize",
+             "attribution",
+             "collection",
+             "frequency",
+             "scheme",
+             "overlay",
+             "actions"
+            ],
+            "type": "object"
+           },
+           "type": "array"
+          },
+          "total": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "total",
+          "collections",
+          "items"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "403": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "404": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     }
+    },
+    "summary": "List BaseMaps",
+    "tags": [
+     "BaseMap"
+    ]
+   }
+  },
+  "/api/connection": {
+   "get": {
+    "deprecated": false,
+    "parameters": [
+     {
+      "description": "Limit the number of responses returned",
+      "in": "query",
+      "name": "limit",
+      "required": true,
+      "schema": {
+       "default": 10,
+       "description": "Limit the number of responses returned",
+       "maximum": 100,
+       "minimum": 1,
+       "type": "integer"
+      }
+     },
+     {
+      "description": "Iterate through \"pages\" of items based on the \"limit\" query param",
+      "in": "query",
+      "name": "page",
+      "required": true,
+      "schema": {
+       "default": 0,
+       "description": "Iterate through \"pages\" of items based on the \"limit\" query param",
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     {
+      "description": "Order in which results are returned based on the \"sort\" query param",
+      "in": "query",
+      "name": "order",
+      "required": true,
+      "schema": {
+       "anyOf": [
+        {
+         "const": "asc",
+         "type": "string"
+        },
+        {
+         "const": "desc",
+         "type": "string"
+        }
+       ],
+       "default": "asc",
+       "description": "Order in which results are returned based on the \"sort\" query param"
+      }
+     },
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "sort",
+      "required": true,
+      "schema": {
+       "default": "created",
+       "enum": [
+        "id",
+        "readonly",
+        "agency",
+        "created",
+        "updated",
+        "username",
+        "name",
+        "description",
+        "enabled",
+        "features",
+        "auth",
+        "enableRLS"
+       ],
+       "type": "string"
+      }
+     },
+     {
+      "description": "Filter results by a human readable name field",
+      "in": "query",
+      "name": "filter",
+      "required": true,
+      "schema": {
+       "default": "",
+       "description": "Filter results by a human readable name field",
+       "maxLength": 64,
+       "minLength": 0,
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "items": {
+           "items": {
+            "properties": {
+             "agency": {
+              "anyOf": [
+               {
+                "type": "null"
+               },
+               {
+                "type": "integer"
+               }
+              ]
+             },
+             "certificate": {
+              "description": "Public metadata of an X509 certificate - clients derive expiry state from validTo",
+              "properties": {
+               "channels": {
+                "description": "The certificate carries the TAK Server channels Extended Key Usage - without it TAK Server ignores the client's channel (group) selection",
+                "type": "boolean"
+               },
+               "known": {
+                "description": "The TAK Server has a record of this certificate - only populated where the server was consulted",
+                "type": "boolean"
+               },
+               "revocationDate": {
+                "description": "When the TAK Server revoked this certificate",
+                "type": "string"
+               },
+               "revoked": {
+                "description": "The TAK Server has revoked this certificate - only populated where the server was consulted",
+                "type": "boolean"
+               },
+               "subject": {
+                "type": "string"
+               },
+               "validFrom": {
+                "type": "string"
+               },
+               "validTo": {
+                "type": "string"
+               }
+              },
+              "required": [
+               "subject",
+               "validFrom",
+               "validTo",
+               "channels"
+              ],
+              "type": "object"
+             },
+             "created": {
+              "type": "string"
+             },
+             "description": {
+              "type": "string"
+             },
+             "enabled": {
+              "type": "boolean"
+             },
+             "id": {
+              "type": "integer"
+             },
+             "name": {
+              "type": "string"
+             },
+             "readonly": {
+              "type": "boolean"
+             },
+             "status": {
+              "type": "string"
+             },
+             "updated": {
+              "type": "string"
+             },
+             "username": {
+              "anyOf": [
+               {
+                "type": "null"
+               },
+               {
+                "type": "string"
+               }
+              ]
+             }
+            },
+            "required": [
+             "id",
+             "status",
+             "certificate",
+             "created",
+             "updated",
+             "readonly",
+             "username",
+             "name",
+             "description",
+             "enabled"
+            ],
+            "type": "object"
+           },
+           "type": "array"
+          },
+          "status": {
+           "properties": {
+            "dead": {
+             "description": "The connection is not currently connected to a TAK server",
+             "type": "integer"
+            },
+            "live": {
+             "description": "The connection is currently connected to a TAK server",
+             "type": "integer"
+            },
+            "unknown": {
+             "description": "The status of the connection could not be determined",
+             "type": "integer"
+            }
+           },
+           "required": [
+            "dead",
+            "live",
+            "unknown"
+           ],
+           "type": "object"
+          },
+          "total": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "total",
+          "status",
+          "items"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "403": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "404": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     }
+    },
+    "summary": "List Connections",
+    "tags": [
+     "Connection"
+    ]
+   }
+  },
+  "/api/marti/api/contacts/all": {
+   "get": {
+    "deprecated": false,
+    "parameters": [],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "properties": {
+           "callsign": {
+            "type": "string"
+           },
+           "filterGroups": {},
+           "notes": {
+            "type": "string"
+           },
+           "role": {
+            "type": "string"
+           },
+           "takv": {
+            "type": "string"
+           },
+           "team": {
+            "type": "string"
+           },
+           "uid": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "filterGroups",
+           "notes",
+           "callsign",
+           "team",
+           "role",
+           "takv",
+           "uid"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "403": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "404": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     }
+    },
+    "summary": "Helper API to list contacts",
+    "tags": [
+     "Marti"
+    ]
+   }
+  },
+  "/api/marti/clients": {
+   "get": {
+    "deprecated": false,
+    "parameters": [
+     {
+      "description": "User tokens only - act as this Connection, or 0 for the server certificate (System Admin only). Connection & Layer tokens infer the Connection from the token",
+      "in": "query",
+      "name": "connection",
+      "required": false,
+      "schema": {
+       "description": "User tokens only - act as this Connection, or 0 for the server certificate (System Admin only). Connection & Layer tokens infer the Connection from the token",
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     {
+      "description": "Number of seconds ago to look back for client updates. Default is 300 (5 minutes)",
+      "in": "query",
+      "name": "secago",
+      "required": true,
+      "schema": {
+       "default": 300,
+       "description": "Number of seconds ago to look back for client updates. Default is 300 (5 minutes)",
+       "type": "integer"
+      }
+     },
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "groups",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "data": {
+           "items": {
+            "properties": {
+             "callsign": {
+              "type": "string"
+             },
+             "lastStatus": {
+              "type": "string"
+             },
+             "role": {
+              "type": "string"
+             },
+             "team": {
+              "type": "string"
+             },
+             "uid": {
+              "type": "string"
+             },
+             "username": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "callsign",
+             "uid",
+             "username",
+             "team",
+             "role",
+             "lastStatus"
+            ],
+            "type": "object"
+           },
+           "type": "array"
+          },
+          "messages": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "nodeId": {
+           "type": "string"
+          },
+          "type": {
+           "type": "string"
+          },
+          "version": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "version",
+          "type",
+          "data"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "403": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "404": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     }
+    },
+    "summary": "Helper API to list clients",
+    "tags": [
+     "Marti"
+    ]
+   }
+  },
+  "/api/marti/group": {
+   "get": {
+    "deprecated": false,
+    "parameters": [
+     {
+      "description": "User tokens only - act as this Connection, or 0 for the server certificate (System Admin only). Connection & Layer tokens infer the Connection from the token",
+      "in": "query",
+      "name": "connection",
+      "required": false,
+      "schema": {
+       "description": "User tokens only - act as this Connection, or 0 for the server certificate (System Admin only). Connection & Layer tokens infer the Connection from the token",
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     {
+      "description": "This tells TAK server to return the users cached group selection vs the groups that came directly from the auth backend.",
+      "in": "query",
+      "name": "useCache",
+      "required": false,
+      "schema": {
+       "description": "This tells TAK server to return the users cached group selection vs the groups that came directly from the auth backend.",
+       "type": "boolean"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "data": {
+           "items": {
+            "properties": {
+             "active": {
+              "type": "boolean"
+             },
+             "bitpos": {
+              "type": "number"
+             },
+             "created": {
+              "type": "string"
+             },
+             "description": {
+              "type": "string"
+             },
+             "direction": {
+              "type": "string"
+             },
+             "name": {
+              "type": "string"
+             },
+             "type": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "name",
+             "direction",
+             "created",
+             "type",
+             "bitpos",
+             "active"
+            ],
+            "type": "object"
+           },
+           "type": "array"
+          },
+          "messages": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "nodeId": {
+           "type": "string"
+          },
+          "type": {
+           "type": "string"
+          },
+          "version": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "version",
+          "type",
+          "data"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "403": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "404": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     }
+    },
+    "summary": "Helper API to list groups that the client is part of. Pass connection to list the groups a Connection is part of, or connection=0 for the server certificate. Resource tokens require the `group:read` permission",
+    "tags": [
+     "Marti"
+    ]
+   }
+  },
+  "/api/marti/mission": {
+   "get": {
+    "deprecated": false,
+    "parameters": [
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "passwordProtected",
+      "required": false,
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "defaultRole",
+      "required": false,
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "tool",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "paged",
+      "required": false,
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "description": "Zero-indexed page number (default 0)",
+      "in": "query",
+      "name": "page",
+      "required": false,
+      "schema": {
+       "description": "Zero-indexed page number (default 0)",
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     {
+      "description": "Missions per page (default 10)",
+      "in": "query",
+      "name": "pagesize",
+      "required": false,
+      "schema": {
+       "description": "Missions per page (default 10)",
+       "minimum": 1,
+       "type": "integer"
+      }
+     },
+     {
+      "description": "Sort direction (default true)",
+      "in": "query",
+      "name": "ascending",
+      "required": false,
+      "schema": {
+       "description": "Sort direction (default true)",
+       "type": "boolean"
+      }
+     },
+     {
+      "description": "Filter by mission name",
+      "in": "query",
+      "name": "nameFilter",
+      "required": false,
+      "schema": {
+       "description": "Filter by mission name",
+       "type": "string"
+      }
+     },
+     {
+      "description": "Filter by mission uid",
+      "in": "query",
+      "name": "uidFilter",
+      "required": false,
+      "schema": {
+       "description": "Filter by mission uid",
+       "type": "string"
+      }
+     },
+     {
+      "description": "Filter by one or more mission keywords",
+      "in": "query",
+      "name": "keywordFilter",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        {
+         "type": "string"
+        }
+       ],
+       "description": "Filter by one or more mission keywords"
+      }
+     },
+     {
+      "description": "Filter by one or more mission groups",
+      "in": "query",
+      "name": "groupFilter",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        {
+         "type": "string"
+        }
+       ],
+       "description": "Filter by one or more mission groups"
+      }
+     },
+     {
+      "description": "Property to sort by",
+      "in": "query",
+      "name": "sort",
+      "required": true,
+      "schema": {
+       "default": "createTime",
+       "description": "Property to sort by",
+       "type": "string"
+      }
+     },
+     {
+      "description": "Order in which results are returned based on the \"sort\" query param",
+      "in": "query",
+      "name": "order",
+      "required": true,
+      "schema": {
+       "anyOf": [
+        {
+         "const": "asc",
+         "type": "string"
+        },
+        {
+         "const": "desc",
+         "type": "string"
+        }
+       ],
+       "default": "asc",
+       "description": "Order in which results are returned based on the \"sort\" query param"
+      }
+     },
+     {
+      "description": "Filter by one or more groups (comma separated)",
+      "in": "query",
+      "name": "groups",
+      "required": false,
+      "schema": {
+       "description": "Filter by one or more groups (comma separated)",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "invites": {
+           "items": {
+            "properties": {
+             "createTime": {
+              "type": "string"
+             },
+             "creatorUid": {
+              "type": "string"
+             },
+             "invitee": {
+              "type": "string"
+             },
+             "missionGuid": {
+              "type": "string"
+             },
+             "missionName": {
+              "type": "string"
+             },
+             "role": {
+              "properties": {
+               "description": {
+                "type": "string"
+               },
+               "name": {
+                "type": "string"
+               },
+               "permissions": {
+                "items": {
+                 "type": "string"
+                },
+                "type": "array"
+               }
+              },
+              "type": "object"
+             },
+             "token": {
+              "type": "string"
+             },
+             "type": {
+              "type": "string"
+             }
+            },
+            "type": "object"
+           },
+           "type": "array"
+          },
+          "items": {
+           "items": {
+            "properties": {
+             "baseLayer": {
+              "type": "string"
+             },
+             "bbox": {
+              "type": "string"
+             },
+             "chatRoom": {
+              "type": "string"
+             },
+             "classification": {
+              "type": "string"
+             },
+             "contents": {
+              "items": {
+               "properties": {
+                "creatorUid": {
+                 "type": "string"
+                },
+                "data": {
+                 "properties": {
+                  "creatorUid": {
+                   "type": "string"
+                  },
+                  "expiration": {
+                   "type": "integer"
+                  },
+                  "hash": {
+                   "type": "string"
+                  },
+                  "keywords": {
+                   "items": {
+                    "type": "string"
+                   },
+                   "type": "array"
+                  },
+                  "mimeType": {
+                   "type": "string"
+                  },
+                  "name": {
+                   "type": "string"
+                  },
+                  "size": {
+                   "type": "integer"
+                  },
+                  "submissionTime": {
+                   "type": "string"
+                  },
+                  "submitter": {
+                   "type": "string"
+                  },
+                  "uid": {
+                   "type": "string"
+                  }
+                 },
+                 "required": [
+                  "hash"
+                 ],
+                 "type": "object"
+                },
+                "timestamp": {
+                 "type": "string"
+                }
+               },
+               "required": [
+                "timestamp",
+                "data"
+               ],
+               "type": "object"
+              },
+              "type": "array"
+             },
+             "createTime": {
+              "type": "string"
+             },
+             "creatorUid": {
+              "type": "string"
+             },
+             "description": {
+              "type": "string"
+             },
+             "expiration": {
+              "type": "number"
+             },
+             "externalData": {
+              "items": {},
+              "type": "array"
+             },
+             "feeds": {
+              "items": {},
+              "type": "array"
+             },
+             "groups": {
+              "anyOf": [
+               {
+                "type": "string"
+               },
+               {
+                "items": {
+                 "type": "string"
+                },
+                "type": "array"
+               }
+              ]
+             },
+             "guid": {
+              "type": "string"
+             },
+             "inviteOnly": {
+              "type": "boolean"
+             },
+             "keywords": {
+              "items": {
+               "type": "string"
+              },
+              "type": "array"
+             },
+             "logs": {
+              "items": {
+               "properties": {
+                "content": {
+                 "type": "string"
+                },
+                "contentHashes": {
+                 "items": {
+                  "type": "string"
+                 },
+                 "type": "array"
+                },
+                "created": {
+                 "type": "string"
+                },
+                "creatorUid": {
+                 "type": "string"
+                },
+                "dtg": {
+                 "type": "string"
+                },
+                "entryUid": {
+                 "description": "CoT UID this log entry references; appears as a clickable link in TAK clients",
+                 "type": "string"
+                },
+                "id": {
+                 "type": "string"
+                },
+                "keywords": {
+                 "items": {
+                  "type": "string"
+                 },
+                 "type": "array"
+                },
+                "missionNames": {
+                 "items": {
+                  "type": "string"
+                 },
+                 "type": "array"
+                },
+                "servertime": {
+                 "type": "string"
+                }
+               },
+               "required": [
+                "id",
+                "content",
+                "creatorUid",
+                "missionNames",
+                "servertime",
+                "created",
+                "contentHashes",
+                "keywords"
+               ],
+               "type": "object"
+              },
+              "type": "array"
+             },
+             "mapLayers": {
+              "items": {},
+              "type": "array"
+             },
+             "missionChanges": {
+              "items": {
+               "properties": {
+                "contentResource": {
+                 "properties": {
+                  "creatorUid": {
+                   "type": "string"
+                  },
+                  "expiration": {
+                   "type": "integer"
+                  },
+                  "hash": {
+                   "type": "string"
+                  },
+                  "keywords": {
+                   "items": {
+                    "type": "string"
+                   },
+                   "type": "array"
+                  },
+                  "mimeType": {
+                   "type": "string"
+                  },
+                  "name": {
+                   "type": "string"
+                  },
+                  "size": {
+                   "type": "integer"
+                  },
+                  "submissionTime": {
+                   "type": "string"
+                  },
+                  "submitter": {
+                   "type": "string"
+                  },
+                  "uid": {
+                   "type": "string"
+                  }
+                 },
+                 "required": [
+                  "hash"
+                 ],
+                 "type": "object"
+                },
+                "contentUid": {
+                 "type": "string"
+                },
+                "creatorUid": {
+                 "type": "string"
+                },
+                "details": {
+                 "properties": {
+                  "attachments": {
+                   "items": {
+                    "type": "string"
+                   },
+                   "type": "array"
+                  },
+                  "callsign": {
+                   "type": "string"
+                  },
+                  "category": {
+                   "type": "string"
+                  },
+                  "color": {
+                   "type": "string"
+                  },
+                  "iconsetPath": {
+                   "type": "string"
+                  },
+                  "location": {
+                   "properties": {
+                    "lat": {
+                     "type": "number"
+                    },
+                    "lon": {
+                     "type": "number"
+                    }
+                   },
+                   "required": [
+                    "lat",
+                    "lon"
+                   ],
+                   "type": "object"
+                  },
+                  "name": {
+                   "type": "string"
+                  },
+                  "title": {
+                   "type": "string"
+                  },
+                  "type": {
+                   "type": "string"
+                  }
+                 },
+                 "required": [
+                  "type"
+                 ],
+                 "type": "object"
+                },
+                "isFederatedChange": {
+                 "type": "boolean"
+                },
+                "missionGuid": {
+                 "type": "string"
+                },
+                "missionName": {
+                 "type": "string"
+                },
+                "serverTime": {
+                 "type": "string"
+                },
+                "timestamp": {
+                 "type": "string"
+                },
+                "type": {
+                 "type": "string"
+                }
+               },
+               "required": [
+                "isFederatedChange",
+                "type",
+                "missionName",
+                "timestamp",
+                "serverTime"
+               ],
+               "type": "object"
+              },
+              "type": "array"
+             },
+             "name": {
+              "type": "string"
+             },
+             "ownerRole": {
+              "properties": {
+               "permissions": {
+                "items": {
+                 "type": "string"
+                },
+                "type": "array"
+               },
+               "type": {
+                "anyOf": [
+                 {
+                  "const": "MISSION_OWNER",
+                  "type": "string"
+                 },
+                 {
+                  "const": "MISSION_SUBSCRIBER",
+                  "type": "string"
+                 },
+                 {
+                  "const": "MISSION_READONLY_SUBSCRIBER",
+                  "type": "string"
+                 }
+                ]
+               }
+              },
+              "required": [
+               "permissions",
+               "type"
+              ],
+              "type": "object"
+             },
+             "passwordProtected": {
+              "type": "boolean"
+             },
+             "path": {
+              "type": "string"
+             },
+             "token": {
+              "type": "string"
+             },
+             "tool": {
+              "type": "string"
+             },
+             "uids": {
+              "items": {},
+              "type": "array"
+             }
+            },
+            "required": [
+             "name",
+             "description",
+             "tool",
+             "keywords",
+             "createTime",
+             "externalData",
+             "feeds",
+             "mapLayers",
+             "inviteOnly",
+             "expiration",
+             "guid",
+             "uids",
+             "contents",
+             "passwordProtected"
+            ],
+            "type": "object"
+           },
+           "type": "array"
+          },
+          "total": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "items",
+          "invites",
+          "total"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "403": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "404": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     }
+    },
+    "summary": "Helper API to list missions",
+    "tags": [
+     "MartiMissions"
+    ]
+   }
+  },
+  "/api/marti/video": {
+   "get": {
+    "deprecated": false,
+    "parameters": [
+     {
+      "description": "No Description",
+      "in": "query",
+      "name": "protocol",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "videoConnections": {
+           "items": {
+            "properties": {
+             "active": {
+              "type": "boolean"
+             },
+             "alias": {
+              "type": "string"
+             },
+             "classification": {
+              "anyOf": [
+               {
+                "type": "string"
+               },
+               {
+                "type": "null"
+               }
+              ]
+             },
+             "feeds": {
+              "items": {
+               "properties": {
+                "active": {
+                 "type": "boolean"
+                },
+                "alias": {
+                 "type": "string"
+                },
+                "bitrate": {
+                 "anyOf": [
+                  {
+                   "type": "integer"
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "bufferTime": {
+                 "type": "string"
+                },
+                "classification": {
+                 "anyOf": [
+                  {
+                   "type": "string"
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "fov": {
+                 "anyOf": [
+                  {
+                   "type": "string"
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "heading": {
+                 "anyOf": [
+                  {
+                   "type": "string"
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "height": {
+                 "anyOf": [
+                  {
+                   "type": "integer"
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "ignoreEmbeddedKLV": {
+                 "type": "string"
+                },
+                "latitude": {
+                 "anyOf": [
+                  {
+                   "type": "string"
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "longitude": {
+                 "anyOf": [
+                  {
+                   "type": "string"
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "macAddress": {
+                 "type": "string"
+                },
+                "networkTimeout": {
+                 "type": "string"
+                },
+                "order": {
+                 "anyOf": [
+                  {
+                   "type": "integer"
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "range": {
+                 "anyOf": [
+                  {
+                   "type": "string"
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "roverPort": {
+                 "type": "string"
+                },
+                "rtspReliable": {
+                 "type": "string"
+                },
+                "source": {
+                 "anyOf": [
+                  {
+                   "type": "string"
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "thumbnail": {
+                 "anyOf": [
+                  {
+                   "type": "string"
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "url": {
+                 "type": "string"
+                },
+                "uuid": {
+                 "type": "string"
+                },
+                "width": {
+                 "anyOf": [
+                  {
+                   "type": "integer"
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                }
+               },
+               "required": [
+                "uuid",
+                "active",
+                "alias",
+                "url",
+                "order",
+                "macAddress",
+                "roverPort",
+                "ignoreEmbeddedKLV",
+                "source",
+                "networkTimeout",
+                "bufferTime",
+                "rtspReliable",
+                "thumbnail",
+                "classification",
+                "latitude",
+                "longitude",
+                "fov",
+                "heading",
+                "range",
+                "width",
+                "height",
+                "bitrate"
+               ],
+               "type": "object"
+              },
+              "type": "array"
+             },
+             "thumbnail": {
+              "anyOf": [
+               {
+                "type": "string"
+               },
+               {
+                "type": "null"
+               }
+              ]
+             },
+             "uuid": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "uuid",
+             "active",
+             "alias",
+             "thumbnail",
+             "classification",
+             "feeds"
+            ],
+            "type": "object"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "videoConnections"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "403": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "404": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     }
+    },
+    "summary": "Helper API to get list video streams",
+    "tags": [
+     "MartiVideos"
+    ]
+   }
+  },
+  "/api/profile": {
+   "get": {
+    "deprecated": false,
+    "parameters": [],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "active": {
+           "description": "Does the user have an active CloudTAK Session",
+           "type": "boolean"
+          },
+          "agency_admin": {
+           "items": {
+            "type": "integer"
+           },
+           "type": "array"
+          },
+          "created": {
+           "type": "string"
+          },
+          "disabled": {
+           "description": "User has been deprovisioned and cannot log in",
+           "type": "boolean"
+          },
+          "display_area": {
+           "anyOf": [
+            {
+             "const": "square meter",
+             "type": "string"
+            },
+            {
+             "const": "square feet",
+             "type": "string"
+            },
+            {
+             "const": "acre",
+             "type": "string"
+            },
+            {
+             "const": "hectare",
+             "type": "string"
+            }
+           ]
+          },
+          "display_coordinate": {
+           "anyOf": [
+            {
+             "const": "dd",
+             "type": "string"
+            },
+            {
+             "const": "dm",
+             "type": "string"
+            },
+            {
+             "const": "dms",
+             "type": "string"
+            },
+            {
+             "const": "mgrs",
+             "type": "string"
+            },
+            {
+             "const": "utm",
+             "type": "string"
+            }
+           ]
+          },
+          "display_distance": {
+           "anyOf": [
+            {
+             "const": "meter",
+             "type": "string"
+            },
+            {
+             "const": "kilometer",
+             "type": "string"
+            },
+            {
+             "const": "mile",
+             "type": "string"
+            }
+           ]
+          },
+          "display_elevation": {
+           "anyOf": [
+            {
+             "const": "meter",
+             "type": "string"
+            },
+            {
+             "const": "feet",
+             "type": "string"
+            }
+           ]
+          },
+          "display_icon_rotation": {
+           "type": "boolean"
+          },
+          "display_projection": {
+           "anyOf": [
+            {
+             "const": "mercator",
+             "type": "string"
+            },
+            {
+             "const": "globe",
+             "type": "string"
+            }
+           ]
+          },
+          "display_radiation_dose": {
+           "anyOf": [
+            {
+             "const": "sieverts",
+             "type": "string"
+            },
+            {
+             "const": "rems",
+             "type": "string"
+            }
+           ]
+          },
+          "display_speed": {
+           "anyOf": [
+            {
+             "const": "m/s",
+             "type": "string"
+            },
+            {
+             "const": "km/h",
+             "type": "string"
+            },
+            {
+             "const": "mi/h",
+             "type": "string"
+            }
+           ]
+          },
+          "display_stale": {
+           "anyOf": [
+            {
+             "const": "Immediate",
+             "type": "string"
+            },
+            {
+             "const": "10 Minutes",
+             "type": "string"
+            },
+            {
+             "const": "30 Minutes",
+             "type": "string"
+            },
+            {
+             "const": "1 Hour",
+             "type": "string"
+            },
+            {
+             "const": "Never",
+             "type": "string"
+            }
+           ]
+          },
+          "display_style": {
+           "anyOf": [
+            {
+             "const": "System Default",
+             "type": "string"
+            },
+            {
+             "const": "Light",
+             "type": "string"
+            },
+            {
+             "const": "Dark",
+             "type": "string"
+            }
+           ]
+          },
+          "display_text": {
+           "anyOf": [
+            {
+             "const": "Small",
+             "type": "string"
+            },
+            {
+             "const": "Medium",
+             "type": "string"
+            },
+            {
+             "const": "Large",
+             "type": "string"
+            }
+           ]
+          },
+          "display_wakelock": {
+           "anyOf": [
+            {
+             "const": "Default",
+             "type": "string"
+            },
+            {
+             "const": "Charging",
+             "type": "string"
+            },
+            {
+             "const": "Always On",
+             "type": "string"
+            }
+           ]
+          },
+          "display_zoom": {
+           "anyOf": [
+            {
+             "const": "always",
+             "type": "string"
+            },
+            {
+             "const": "conditional",
+             "type": "string"
+            },
+            {
+             "const": "never",
+             "type": "string"
+            }
+           ]
+          },
+          "geometry_point_color": {
+           "type": "string"
+          },
+          "geometry_point_icon": {
+           "type": "string"
+          },
+          "geometry_point_type": {
+           "type": "string"
+          },
+          "last_login": {
+           "anyOf": [
+            {
+             "type": "string"
+            },
+            {
+             "type": "null"
+            }
+           ],
+           "description": "Null until the user has logged in for the first time"
+          },
+          "menu_order": {
+           "items": {
+            "properties": {
+             "key": {
+              "description": "Menu Key",
+              "type": "string"
+             },
+             "visibility": {
+              "anyOf": [
+               {
+                "const": "full",
+                "type": "string"
+               },
+               {
+                "const": "partial",
+                "type": "string"
+               },
+               {
+                "const": "hidden",
+                "type": "string"
+               }
+              ],
+              "default": "full",
+              "description": "Menu Visibility"
+             }
+            },
+            "required": [
+             "key",
+             "visibility"
+            ],
+            "type": "object"
+           },
+           "type": "array"
+          },
+          "system_admin": {
+           "type": "boolean"
+          },
+          "tak_callsign": {
+           "type": "string"
+          },
+          "tak_group": {
+           "anyOf": [
+            {
+             "const": "White",
+             "type": "string"
+            },
+            {
+             "const": "Yellow",
+             "type": "string"
+            },
+            {
+             "const": "Orange",
+             "type": "string"
+            },
+            {
+             "const": "Magenta",
+             "type": "string"
+            },
+            {
+             "const": "Red",
+             "type": "string"
+            },
+            {
+             "const": "Maroon",
+             "type": "string"
+            },
+            {
+             "const": "Purple",
+             "type": "string"
+            },
+            {
+             "const": "Dark Blue",
+             "type": "string"
+            },
+            {
+             "const": "Blue",
+             "type": "string"
+            },
+            {
+             "const": "Cyan",
+             "type": "string"
+            },
+            {
+             "const": "Teal",
+             "type": "string"
+            },
+            {
+             "const": "Green",
+             "type": "string"
+            },
+            {
+             "const": "Dark Green",
+             "type": "string"
+            },
+            {
+             "const": "Brown",
+             "type": "string"
+            }
+           ]
+          },
+          "tak_loc": {
+           "anyOf": [
+            {
+             "properties": {
+              "coordinates": {
+               "items": {
+                "type": "number"
+               },
+               "type": "array"
+              },
+              "type": {
+               "const": "Point",
+               "type": "string"
+              }
+             },
+             "required": [
+              "type",
+              "coordinates"
+             ],
+             "type": "object"
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "tak_loc_freq": {
+           "type": "integer"
+          },
+          "tak_phone": {
+           "type": "string"
+          },
+          "tak_remarks": {
+           "type": "string"
+          },
+          "tak_role": {
+           "anyOf": [
+            {
+             "const": "Team Member",
+             "type": "string"
+            },
+            {
+             "const": "Team Lead",
+             "type": "string"
+            },
+            {
+             "const": "HQ",
+             "type": "string"
+            },
+            {
+             "const": "Sniper",
+             "type": "string"
+            },
+            {
+             "const": "Medic",
+             "type": "string"
+            },
+            {
+             "const": "Forward Observer",
+             "type": "string"
+            },
+            {
+             "const": "RTO",
+             "type": "string"
+            },
+            {
+             "const": "K9",
+             "type": "string"
+            }
+           ]
+          },
+          "tak_type": {
+           "type": "string"
+          },
+          "updated": {
+           "type": "string"
+          },
+          "username": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "username",
+          "created",
+          "updated",
+          "last_login",
+          "active",
+          "disabled",
+          "system_admin",
+          "agency_admin",
+          "tak_callsign",
+          "tak_remarks",
+          "tak_phone",
+          "tak_group",
+          "tak_role",
+          "tak_type",
+          "tak_loc",
+          "tak_loc_freq",
+          "menu_order",
+          "display_projection",
+          "display_zoom",
+          "display_style",
+          "display_coordinate",
+          "display_icon_rotation",
+          "display_stale",
+          "display_text",
+          "display_distance",
+          "display_elevation",
+          "display_area",
+          "display_speed",
+          "display_radiation_dose",
+          "display_wakelock"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "403": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "404": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     }
+    },
+    "summary": "Get User's Profile",
+    "tags": [
+     "Profile"
+    ]
+   }
+  },
+  "/api/server": {
+   "get": {
+    "deprecated": false,
+    "parameters": [],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "api": {
+           "type": "string"
+          },
+          "auth": {
+           "description": "Once an admin certificate is configured it is not retrivable. This boolean refers to if a certificate is currently loaded",
+           "type": "boolean"
+          },
+          "certificate": {
+           "description": "Public metadata of an X509 certificate - clients derive expiry state from validTo",
+           "properties": {
+            "channels": {
+             "description": "The certificate carries the TAK Server channels Extended Key Usage - without it TAK Server ignores the client's channel (group) selection",
+             "type": "boolean"
+            },
+            "known": {
+             "description": "The TAK Server has a record of this certificate - only populated where the server was consulted",
+             "type": "boolean"
+            },
+            "revocationDate": {
+             "description": "When the TAK Server revoked this certificate",
+             "type": "string"
+            },
+            "revoked": {
+             "description": "The TAK Server has revoked this certificate - only populated where the server was consulted",
+             "type": "boolean"
+            },
+            "subject": {
+             "type": "string"
+            },
+            "validFrom": {
+             "type": "string"
+            },
+            "validTo": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "subject",
+            "validFrom",
+            "validTo",
+            "channels"
+           ],
+           "type": "object"
+          },
+          "connection": {
+           "default": true,
+           "description": "Whether the Admin Connection (connection 0) is enabled in the connection pool",
+           "type": "boolean"
+          },
+          "connection_status": {
+           "anyOf": [
+            {
+             "const": "live",
+             "type": "string"
+            },
+            {
+             "const": "dead",
+             "type": "string"
+            },
+            {
+             "const": "unknown",
+             "type": "string"
+            }
+           ],
+           "default": "unknown",
+           "description": "The connected status of the Admin Connection (connection 0)"
+          },
+          "created": {
+           "type": "string"
+          },
+          "id": {
+           "type": "integer"
+          },
+          "name": {
+           "type": "string"
+          },
+          "status": {
+           "type": "string"
+          },
+          "updated": {
+           "type": "string"
+          },
+          "url": {
+           "type": "string"
+          },
+          "version": {
+           "type": "string"
+          },
+          "webtak": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "id",
+          "status",
+          "connection_status",
+          "connection",
+          "created",
+          "updated",
+          "version",
+          "name",
+          "url",
+          "api",
+          "webtak",
+          "auth"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "403": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "404": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "properties": {
+          "details": {
+           "description": "Extended error details (ie: TAK Server exception trace)",
+           "type": "string"
+          },
+          "message": {
+           "type": "string"
+          },
+          "status": {
+           "type": "integer"
+          }
+         },
+         "required": [
+          "status",
+          "message"
+         ],
+         "type": "object"
+        }
+       }
+      },
+      "description": "Error Response"
+     }
+    },
+    "summary": "Get Server",
+    "tags": [
+     "Server"
+    ]
+   }
+  }
+ }
+}

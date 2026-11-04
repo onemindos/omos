@@ -1,0 +1,127 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: onemind-hermes
+  namespace: hermes
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: onemind-hermes
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+      ports:
+        - {protocol: TCP, port: 9119}
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - {protocol: UDP, port: 53}
+        - {protocol: TCP, port: 53}
+    # Tool gateway (agentgateway, platform/tool-gateway): the one tool front door (/ops, /data,
+    # /tak). Matching ingress rule is in platform/tool-gateway/manifests/network.yaml.
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tool-gateway
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: agentgateway-standalone
+              app.kubernetes.io/instance: agentgateway
+      ports:
+        - {protocol: TCP, port: 8080}
+    # NATS: the cluster bus, direct (no leaf sidecar). Matching ingress rule is in the `nats-clients`
+    # policy in platform/nats/network-policy.yaml; a drop here is silent (the client times out).
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: nats
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: nats
+              app.kubernetes.io/instance: nats
+              app.kubernetes.io/name: nats
+      ports:
+        - {protocol: TCP, port: 4222}
+    # Matrix: in-cluster Synapse client API (the homeserver URL in config.yaml).
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: matrix
+          podSelector:
+            matchLabels:
+              app: synapse
+      ports:
+        - {protocol: TCP, port: 8008}
+    # Tailnet devices, one rule per device and port. Each target is the Tailscale operator's proxy pod for the
+    # egress Service of the same name in platform/hermes/base/egress.yaml; the tailnet policy
+    # (platform/core/policy.hujson) must also allow that port. The public rule below excludes 100.64.0.0/10.
+    # MacBook Pro: SSH (also the ADB bridge).
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+          podSelector:
+            matchLabels:
+              tailscale.com/parent-resource: omos-mbp
+              tailscale.com/parent-resource-ns: hermes
+              tailscale.com/parent-resource-type: svc
+      ports:
+        - {protocol: TCP, port: 22}
+    # S24 Ultra: Termux SSH (ADB goes through an SSH tunnel to this port).
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+          podSelector:
+            matchLabels:
+              tailscale.com/parent-resource: omos-s24
+              tailscale.com/parent-resource-ns: hermes
+              tailscale.com/parent-resource-type: svc
+      ports:
+        - {protocol: TCP, port: 8022}
+    # Home Assistant REST API (box offline since about 2026-09-19).
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+          podSelector:
+            matchLabels:
+              tailscale.com/parent-resource: omos-ha-edge
+              tailscale.com/parent-resource-ns: hermes
+              tailscale.com/parent-resource-type: svc
+      ports:
+        - {protocol: TCP, port: 8123}
+    # Windows laptop: SSH (OpenSSH Server must be enabled on it).
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+          podSelector:
+            matchLabels:
+              tailscale.com/parent-resource: omos-dell-zeus
+              tailscale.com/parent-resource-ns: hermes
+              tailscale.com/parent-resource-type: svc
+      ports:
+        - {protocol: TCP, port: 22}
+    # Telegram (api.telegram.org:443) and other HTTPS: the public rule below.
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              - 100.64.0.0/10
+              - 169.254.0.0/16
+              - 127.0.0.0/8
+      ports:
+        - {protocol: TCP, port: 443}

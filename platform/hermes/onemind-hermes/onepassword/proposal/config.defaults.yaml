@@ -1,0 +1,326 @@
+# onemind-hermes initial configuration (agent persona: Legacy, single soul).
+# Copied once into the empty PVC by the init container; later edits made through
+# Hermes win. No Legacy state, custom plugins, jobs or connectors.
+# Every key below was checked against Hermes v0.22.5 (/opt/hermes); see README.md.
+# Select/authenticate the model from the instance before using chat.
+# The agent's name is Legacy. Hermes has no agent-name key: the persona is SOUL.md
+# (seed/onemind-hermes/), and the id advertised on the API server's /v1/models comes
+# from API_SERVER_MODEL_NAME below (a top-level scalar, bridged to the env at startup).
+API_SERVER_MODEL_NAME: Legacy
+
+# Public native-source references only. Also reconciled on every pod start.
+secrets:
+  onepassword:
+    enabled: true
+    env:
+      CLICKUP_API_TOKEN: op://aaeyris5z44pdqspk277u2oppi/q3jm77jbor2ymoc5xlyltrv7ue/credential
+    account: ''
+    service_account_token_env: OP_SERVICE_ACCOUNT_TOKEN
+    binary_path: /opt/onepassword/op
+    cache_ttl_seconds: 0
+    override_existing: true
+terminal:
+  env_passthrough:
+    - CLICKUP_API_TOKEN
+
+model:
+  provider: openai-codex
+  default: gpt-6.1-sol
+
+# Spread turns across every signed-in openai-codex credential instead of
+# draining the first one (fill_first, the default) into its daily token cap.
+credential_pool_strategies:
+  openai-codex: least_used
+
+# Used only when the primary route fails. Needs OLLAMA_API_KEY in the runtime
+# environment, which is not provisioned yet: until it is, the fallback is skipped.
+fallback_providers:
+  - provider: ollama-cloud
+    model: glm-5.3
+
+agent:
+  # Global suppression list, applied last and at tool granularity. Use `yuanbao`
+  # (the yb_* platform tools), not `hermes-yuanbao`: that composite contains
+  # terminal, file, web, skills, delegation and kanban tools and would strip them.
+  disabled_toolsets:
+    - computer_use
+    - browser
+    - discord
+    - discord_admin
+    - yuanbao
+    - feishu_doc
+    - feishu_drive
+    - x_search
+    - video_gen
+
+# The terminal backend stays `local`: the pod itself is the sandbox (no
+# service-account token, NetworkPolicy, no privilege escalation). Docker, SSH,
+# Modal and Daytona backends are unavailable or external here.
+approvals:
+  mode: manual            # dangerous commands wait for a human, not the LLM judge (default: smart)
+  timeout: 300
+  cron_mode: deny         # scheduled jobs never run flagged commands
+  single_query_mode: deny
+  unattended_mode: deny   # API-server/webhook sessions never run flagged commands
+
+security:
+  redact_secrets: true
+  allow_private_urls: false
+
+skills:
+  # Reviewed OneMind skills from platform/hermes/skills/, copied here after deploy
+  # (see platform/hermes/skills/README.md). Read-only to Hermes; local skills win.
+  external_dirs:
+    - /opt/data/onemind-skills
+  # Bundled skills that do not fit a headless cloud agent (reasons in skills/README.md).
+  disabled:
+    - apple-notes
+    - apple-reminders
+    - findmy
+    - imessage
+    - ascii-video
+    - baoyu-infographic
+    - manim-video
+    - p5js
+    - popular-web-designs
+    - songwriting-and-ai-music
+    - design-md
+    - claude-design
+    - gif-search
+    - songsee
+    - xurl
+    - himalaya
+    - obsidian
+    - airtable
+    - box
+    - teams-meeting-pipeline
+    - product-price-monitor
+    - competitor-news-monitor
+    - llm-wiki
+    - inspecting-hermes-desktop-dom
+    - computer-use
+
+plugins:
+  enabled: []
+
+# Chat channels, moved from Legacy (same bot identities). The Telegram bot token and
+# the Matrix access token are NOT here: they come from the onemind-hermes-runtime
+# SealedSecret (TELEGRAM_BOT_TOKEN, MATRIX_ACCESS_TOKEN), and their presence enables
+# each platform. Top-level scalars below are exported by Hermes to the matching env
+# vars when the container env does not already set them (gateway/run.py
+# _bridge_config_to_env). Unknown senders get nothing: the allowlists are the only
+# way in, and the pairing flow is suppressed when an allowlist is set.
+# Only one instance may poll a Telegram bot (a second one gets 409 Conflict), so
+# Legacy has telegram and matrix disabled.
+GATEWAY_ALLOW_ALL_USERS: 'false'
+TELEGRAM_ALLOW_ALL_USERS: 'false'
+TELEGRAM_ALLOWED_USERS: '8297858681'      # Zeus only
+TELEGRAM_HOME_CHANNEL: '8297858681'       # Zeus's DM
+MATRIX_ALLOW_ALL_USERS: 'false'
+MATRIX_ALLOWED_USERS: '@zeus:onemindos.dev'   # Zeus only; invites from others are refused
+# In-cluster Synapse Service, not the public hostname (matrix.onemindos.dev is going
+# tailnet-only). NetworkPolicy egress: network.yaml. E2EE stays off, as on Legacy.
+MATRIX_HOMESERVER: http://synapse.matrix.svc.cluster.local:8008
+MATRIX_USER_ID: '@legacy:onemindos.dev'
+# MATRIX_REQUIRE_MENTION keeps its default (true): rooms need an @-mention, DMs do not.
+# OneMind tools come from the agentgateway tool gateway (platform/tool-gateway, design
+# docs/architecture/onemind-tool-gateway.md): one MCP server per route, tools named
+# <target>_<tool>. Each route lists only the classified read and write tools; destructive
+# and physical tools are on /execute, which is not deployed, so it is not listed here.
+# ONEMIND_GATEWAY_KEY comes from the onemind-gateway-client SealedSecret (deployment.yaml).
+# Every route runs apiKey.mode strict: without the Authorization header it answers 401.
+# Keep gateway.multiplex_profiles off: with it on, ${VAR} in headers is not filled from
+# container env (Legacy's 401). Keys checked against v0.22.5 tools/mcp_tool_*.py: url,
+# headers (${VAR} rendered from env), lazy, trust, timeout, connect_timeout. Unset: lazy
+# (connect at start, so tool counts are known) and trust (default full).
+mcp_servers:
+  whop:
+    url: https://mcp.whop.com/mcp
+    auth: oauth
+    connect_timeout: 300
+    oauth:
+      timeout: 300
+    sampling:
+      enabled: false
+  ops:
+    url: http://agentgateway.tool-gateway.svc.cluster.local:8080/ops/mcp
+    headers:
+      Authorization: Bearer ${ONEMIND_GATEWAY_KEY}
+  data:
+    url: http://agentgateway.tool-gateway.svc.cluster.local:8080/data/mcp
+    headers:
+      Authorization: Bearer ${ONEMIND_GATEWAY_KEY}
+  tak:
+    url: http://agentgateway.tool-gateway.svc.cluster.local:8080/tak/mcp
+    headers:
+      Authorization: Bearer ${ONEMIND_GATEWAY_KEY}
+  zoho-ops:
+    url: ${ZOHO_OPS_MCP_URL}
+    connect_timeout: 60
+    timeout: 120
+    sampling:
+      enabled: false
+    tools:
+      include:
+        - ZohoOne_get_all_orgs
+        - ZohoOne_get_org
+        - ZohoOne_get_all_users
+        - ZohoOne_get_user
+        - ZohoOne_get_all_groups
+        - ZohoOne_get_all_locations
+        - ZohoWebinar_listWebinars
+        - ZohoWebinar_getWebinarDetails
+        - ZohoSocial_getSocialBrands
+        - ZohoSocial_getSocialPortals
+        - ZohoSocial_getSocialChannels
+        - ZohoSocial_getSocialPublishedPosts
+        - ZohoBookings_getWorkspaces
+        - ZohoSign_getRequestList
+        - ZohoMeeting_listMeetings
+      resources: false
+      prompts: false
+  zoho-data-analytics:
+    url: ${ZOHO_DATA_ANALYTICS_MCP_URL}
+    connect_timeout: 60
+    timeout: 120
+    sampling:
+      enabled: false
+    tools:
+      include:
+        - ZohoAnalytics_getOrganizations
+        - ZohoAnalytics_getOwnedWorkspaces
+        - ZohoAnalytics_getAllWorkspaces
+        - ZohoAnalytics_getViews
+        - ZohoAnalytics_getViewDetails
+        - ZohoAnalytics_getFolders
+        - ZohoDataprep_getProject
+        - ZohoPageSense_listPortals
+        - ZohoPageSense_getAllProjects
+        - ZohoPageSense_getUserIdentity
+      resources: false
+      prompts: false
+  zoho-desk:
+    url: ${ZOHO_DESK_MCP_URL}
+    connect_timeout: 60
+    timeout: 120
+    sampling:
+      enabled: false
+    tools:
+      include:
+        - ZohoDesk_getAccounts
+        - ZohoDesk_searchAccounts
+        - ZohoDesk_getContact
+        - ZohoDesk_getThreads
+        - ZohoDesk_getTicketConversations
+        - ZohoDesk_getBacklogTickets
+        - ZohoDesk_getOnholdTickets
+        - ZohoDesk_getTeams
+      resources: false
+      prompts: false
+  zoho-projects:
+    url: ${ZOHO_PROJECTS_MCP_URL}
+    connect_timeout: 60
+    timeout: 120
+    sampling:
+      enabled: false
+    tools:
+      include:
+        - ZohoProjects_get_portals
+        - ZohoProjects_get_portal_details
+        - ZohoProjects_get_projects_list
+        - ZohoProjects_get_tasks_by_portal
+        - ZohoProjects_get_task_list_details
+        - ZohoProjects_get_all_issues
+        - ZohoProjects_get_issue_description
+        - ZohoProjects_get_portal_activity
+      resources: false
+      prompts: false
+  zoho-crm:
+    url: ${ZOHO_CRM_MCP_URL}
+    connect_timeout: 60
+    timeout: 120
+    sampling:
+      enabled: false
+    tools:
+      include:
+        - ZohoCRM_getOrganizations
+        - ZohoCRM_getOrganization
+        - ZohoCRM_getWorkflowTasks
+        - ZohoCRM_getScheduledReports
+        - ZohoCRM_getHomePages
+        - ZohoCRM_getNotifications
+      resources: false
+      prompts: false
+  zoho-finance:
+    url: ${ZOHO_FINANCE_MCP_URL}
+    connect_timeout: 60
+    timeout: 120
+    sampling:
+      enabled: false
+    tools:
+      include:
+        - ZohoBilling_List_all_Organizations
+        - ZohoBilling_Get_an_Organization
+        - ZohoBilling_List_all_Subscriptions
+        - ZohoBilling_List_all_Products
+        - ZohoBooks_list_bills
+        - ZohoBooks_get_expense
+        - ZohoBooks_list_recurring_expenses
+      resources: false
+      prompts: false
+  zoho-salesiq:
+    url: ${ZOHO_SALESIQ_MCP_URL}
+    connect_timeout: 60
+    timeout: 120
+    sampling:
+      enabled: false
+    tools:
+      include:
+        - ZohoSalesIQ_listPortals
+        - ZohoSalesIQ_getPortalDetails
+        - ZohoSalesIQ_getCurrentOperator
+        - ZohoSalesIQ_getConversationsList
+        - ZohoSalesIQ_getConversationById
+        - ZohoSalesIQ_getConversationMessages
+        - ZohoSalesIQ_listOperators
+      resources: false
+      prompts: false
+  zoho-workdrive:
+    url: ${ZOHO_WORKDRIVE_MCP_URL}
+    connect_timeout: 60
+    timeout: 120
+    sampling:
+      enabled: false
+    tools:
+      include:
+        - ZohoWorkdrive_Get_User_Info
+        - ZohoWorkdrive_Get_All_Teams_Of_User
+        - ZohoWorkdrive_Get_Team_Info
+        - ZohoWorkdrive_Get_Current_Team_User
+        - ZohoWorkdrive_Get_File_List
+        - ZohoWorkdrive_Fetch_Files_Folders
+        - ZohoWorkdrive_Search_Records
+        - ZohoWorkdrive_Get_All_Team_Folders
+      resources: false
+      prompts: false
+  zoho-mail-calendar:
+    url: ${ZOHO_MAIL_CALENDAR_MCP_URL}
+    connect_timeout: 60
+    timeout: 120
+    sampling:
+      enabled: false
+    tools:
+      include:
+        - ZohoMail_getMailAccounts
+        - ZohoMail_getAccountDetails
+        - ZohoMail_listEmails
+        - ZohoMail_SearchEmails
+        - ZohoMail_getMessageContent
+        - ZohoMail_getMessageDetails
+        - ZohoMail_getAllFolders
+        - ZohoCalendar_get_calendars
+        - ZohoCalendar_get_single_calendar
+        - ZohoCalendar_get_event
+        - ZohoCalendar_get_busy_slots
+      resources: false
+      prompts: false

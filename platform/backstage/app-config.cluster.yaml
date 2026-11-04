@@ -45,12 +45,33 @@ backend:
           - plugin: mcp-actions
           - plugin: catalog
           - plugin: onemind
+      # onemind-mcp hub (platform/hermes/mcp): its own token so the audit trail and revocation are
+      # separate from the MCP actions token above. Catalog reads only.
+      - type: static
+        options:
+          token: ${ONEMIND_MCP_HUB_TOKEN}
+          subject: onemind-mcp-hub
+        accessRestrictions:
+          - plugin: catalog
 
 catalog:
   # Arrays replace the image defaults. Domain admits the OneMind / SO / LE / HP / GE Domains
   # from catalog/apps.yaml; every other kind stays as in app-config.yaml.
   rules:
     - allow: [Component, System, API, Resource, Location, Domain]
+  # Arrays replace the image defaults, so the image's locations (app-config.production.yaml) are
+  # restated here with one addition: /app/catalog-plugins/plugins.yaml, the plugin ecosystem
+  # (ConfigMap backstage-catalog-plugins). Keep this list in step with app-config.production.yaml.
+  locations:
+    - {type: file, target: /app/templates/service-registration/template.yaml, rules: [{allow: [Template]}]}
+    - {type: file, target: /app/templates/service/template.yaml, rules: [{allow: [Template]}]}
+    - {type: file, target: /app/templates/app-onboarding/template.yaml, rules: [{allow: [Template]}]}
+    - {type: file, target: /app/templates/deployment-change/template.yaml, rules: [{allow: [Template]}]}
+    - {type: file, target: /app/templates/recovery-preparation/template.yaml, rules: [{allow: [Template]}]}
+    - {type: file, target: /app/catalog/apps.yaml}
+    - {type: file, target: /app/catalog/cluster.yaml}
+    - {type: file, target: /app/catalog/org.yaml, rules: [{allow: [User, Group]}]}
+    - {type: file, target: /app/catalog-plugins/plugins.yaml}
   # GitHub discovery (catalog-backend-module-github; images without it ignore this block). Reuses
   # the read-only GitHub App under integrations.github: no new credential and no webhook ingress.
   # Scope: omos only. The App installation selects only omos, and Backstage will not read another

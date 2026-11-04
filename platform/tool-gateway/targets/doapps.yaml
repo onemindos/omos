@@ -1,0 +1,14 @@
+# DigitalOcean hosted MCP endpoint `apps` (App Platform; digitalocean-labs/mcp-digitalocean v1.6.5). No pod.
+# One Personal Access Token for all DigitalOcean targets (Secret gateway-target-digitalocean, key token): custom scopes, read plus
+# chosen create/update, NO delete scopes, so a mistaken classification still cannot delete.
+name: doapps
+groups: [cloud]
+enabled_by: [gateway-target-digitalocean]
+env:
+  TARGET_DOAPPS_TOKEN: {secret: gateway-target-digitalocean, key: token}
+target:
+  mcp:
+    host: https://apps.mcp.digitalocean.com/mcp
+  policies:
+    backendAuth:
+      key: "${TARGET_DOAPPS_TOKEN}"

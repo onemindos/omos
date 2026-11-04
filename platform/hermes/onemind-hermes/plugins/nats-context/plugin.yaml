@@ -1,0 +1,23 @@
+name: nats-context
+version: "1.0.0"
+description: >
+  OneMind OS omnipresence layer — gives Hermes a live, continuously updated
+  operational picture injected into every prompt. Subscribes to the full NATS
+  subject taxonomy (TAK/CoT, entity state, telemetry, intel, threats,
+  detections, agent heartbeats, bridge health, system stats) and prepends
+  a [LIVE OPERATIONAL PICTURE] block to every LLM call via pre_llm_call hook.
+  Also registers NATS tools: publish, request, peek, JetStream fetch, KV
+  read/write/list, server info, stream list.
+author: OneMind OS
+hooks:
+  - pre_llm_call
+provides_tools:
+  - nats_publish
+  - nats_request
+  - nats_peek
+  - nats_jetstream_fetch
+  - nats_kv_get
+  - nats_kv_put
+  - nats_kv_list
+  - nats_server_info
+  - nats_list_streams
