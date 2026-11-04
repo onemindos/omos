@@ -127,6 +127,10 @@ credential or Paperclip credential. The NetworkPolicy allows:
 - egress on TCP 4222 to the NATS pods in `nats` (a direct client of the bus, see
   [NATS](#nats-legacys-bus-presence)); the `nats-clients` policy in
   `platform/nats/network-policy.yaml` admits this pod;
+- egress to the Tailscale operator's proxy pods for the owner's devices, one rule per device and port
+  (`omos-mbp` 22, `omos-s24` 8022, `omos-ha-edge` 8123, `omos-dell-zeus` 22), matched by the pod labels
+  `tailscale.com/parent-resource` and `-ns: hermes`. The Services are in `platform/hermes/base/egress.yaml` and
+  the tailnet policy `platform/core/policy.hujson` allows the same ports. The pod has no `tailscaled`;
 - egress on 443 to public addresses, with private, cluster and tailnet ranges
   excluded.
 

@@ -20,25 +20,41 @@ Rewritten from the Legacy-pod version. That one SSHed from the pod to personal
 machines with a pinned key, a userspace `tailscaled` and a hard-coded address
 list. Keep the working parts; drop the rest.
 
-## Read this first: what `onemind-hermes` can reach today
+## Read this first: what `onemind-hermes` can reach
 
 - The `onemind-hermes` pod runs **no `tailscaled`**. It reaches the tailnet only
-  through the cluster's Tailscale operator **egress** Services in namespace
-  `hermes` (`omos-mbp` :22, `omos-s24` :8022, `omos-ha-edge` :8123), defined in
-  `platform/hermes/base/egress.yaml`.
-- Its NetworkPolicy (`platform/hermes/onemind-hermes/network.yaml`) allows egress
-  only to DNS, LiteLLM, Matrix Synapse and public HTTPS (443). **Connections to
-  the egress Services are blocked** until the owner adds an egress rule for them
-  in Git. Test with a short `timeout 5 nc -vz omos-mbp.hermes.svc.cluster.local 22`;
-  a timeout means the policy, not the device.
-- The pod also has no SSH key, no cluster ServiceAccount token and no kubeconfig.
-  A key for the target machines is a credential: it comes from a SealedSecret the
-  owner provisions, never from this skill, and never goes into a reply or memory.
-- The tailnet policy (`platform/core/policy.hujson`) separately limits each
-  target and port.
+  through the Tailscale operator **egress** Services in namespace `hermes`
+  (`platform/hermes/base/egress.yaml`), each a proxy pod for one device:
 
-If any of these is missing, say so and propose the Git change (egress rule, key
-SealedSecret). Do not build a workaround such as a userspace `tailscaled`, a
+  | Device | Service (`<name>.hermes.svc.cluster.local`) | Port | What listens there |
+  |---|---|---|---|
+  | MacBook Pro | `omos-mbp` | 22 | SSH (Remote Login). ADB for the phone runs through this Mac |
+  | S24 Ultra | `omos-s24` | 8022 | Termux `sshd` (Termux must be running). Wireless ADB is tunnelled over this SSH, no separate port |
+  | Home Assistant box | `omos-ha-edge` | 8123 | REST API; box offline since about 2026-09-19 |
+  | Windows laptop | `omos-dell-zeus` | 22 | OpenSSH Server, only if the owner enabled it |
+
+- Its NetworkPolicy (`platform/hermes/onemind-hermes/network.yaml`) opens exactly
+  those device/port pairs, plus DNS, the tool gateway, NATS, Matrix and public
+  HTTPS. Nothing else on the tailnet is reachable: no other port on these devices
+  (not VNC 5900, not RDP) and no other device. The tailnet policy
+  (`platform/core/policy.hujson`) allows the same ports.
+- Devices with no Service (Dell edge, Intel box, TV, iPad) have been offline for
+  months or offer nothing to reach. Ask the owner before expecting them.
+- A probe result tells you which layer: connected = path and device are fine;
+  refused = path fine, service on the device is off; timeout = proxy, tailnet
+  policy or the device is offline (the proxy accepts the connection only when the
+  device answers). Test with `timeout 5 nc -vz omos-mbp.hermes.svc.cluster.local 22`
+  or `python3 scripts/mesh-health.py probe` (tailscale-continuous-mesh-access).
+- The pod has **no SSH key, no ADB key, no Home Assistant token**, no cluster
+  ServiceAccount token and no kubeconfig. Those are credentials: they come from a
+  SealedSecret the owner provisions, never from this skill, and never go into a
+  reply or memory. Per device the owner must supply: an SSH key whose public half
+  is in the device's `authorized_keys` (Mac, S24 Termux, Windows OpenSSH), the
+  one-time ADB pairing and Wireless Debugging on (S24), and a long-lived access
+  token (Home Assistant).
+
+If a credential or a path is missing, say so and propose the Git change (egress
+rule, key SealedSecret). Do not build a workaround such as a userspace `tailscaled`, a
 tunnel through the Mac or an exit node.
 
 ## Reaching a device, once access is provisioned
@@ -46,8 +62,9 @@ tunnel through the Mac or an exit node.
 ```bash
 # Hostnames are the egress Service names; they resolve only inside the cluster.
 ssh -o BatchMode=yes -o ConnectTimeout=10 zeus@omos-mbp.hermes.svc.cluster.local '<command>'
-ssh -p 8022 -o BatchMode=yes zeus@omos-s24.hermes.svc.cluster.local '<command>'     # Termux must be running
+ssh -p 8022 -o BatchMode=yes omos-s24.hermes.svc.cluster.local '<command>'     # Termux must be running
 curl -s --max-time 10 http://omos-ha-edge.hermes.svc.cluster.local:8123/            # HA; prefer the bus (ha-nats-bridge)
+ssh -o BatchMode=yes <windows-user>@omos-dell-zeus.hermes.svc.cluster.local 'hostname'  # needs OpenSSH Server on the laptop
 ```
 
 - Pin the host key once (`ssh-keyscan` over the same path) and keep it in the
@@ -65,7 +82,8 @@ curl -s --max-time 10 http://omos-ha-edge.hermes.svc.cluster.local:8123/        
 Add an `ExternalName` Service to `platform/hermes/base/egress.yaml` with the
 label `tailscale.com/proxy-group: egress` and the annotation
 `tailscale.com/tailnet-ip`, allow the target and port in `platform/core/policy.hujson`
-and open the pod's NetworkPolicy to it, in one PR. Argo applies it. The operator
+and add a rule to the pod's NetworkPolicy for the proxy pod
+(`tailscale.com/parent-resource: <Service name>`, that one port), in one PR. Argo applies it. The operator
 fills in `externalName`.
 
 If egress breaks: `kubectl -n hermes get proxygroup egress` and
