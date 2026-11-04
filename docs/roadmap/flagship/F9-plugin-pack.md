@@ -7,9 +7,8 @@ reverted alone.
 ## Outcome Zeus sees
 
 - **Cost.** A working Cost page with real OpenCost data per app, namespace and
-  pillar. Today `/cost-insights` loads empty.
+  pillar. Today the portal has only the `/api/proxy/opencost/allocation` route.
 - **Security.** Kyverno policy results per app ("3 policy violations").
-- **Images.** Harbor image info per app: tags, scan results, size.
 - **Shortcuts and bookmarks.** Personal shortcuts in the sidebar; bookmarks
   per entity.
 - **Admin tools.** DevTools (installed packages, config, health) and the
@@ -19,14 +18,13 @@ reverted alone.
 
 | Plugin | Why it fits | Notes |
 |---|---|---|
-| `@backstage-community/plugin-opencost` | OpenCost already runs (`opencost` namespace) | Check its new-frontend support; otherwise wrap with core-compat. Reuse #352's allocation contract for unknown/partial data. Decide with Zeus whether it replaces the empty OpenChoreo Cost Insights page or feeds it. |
+| `@backstage-community/plugin-opencost` | OpenCost already runs (`opencost` namespace) | Check its new-frontend support; otherwise wrap with core-compat. Read through the existing proxy route and reuse `services/onemind-portal/scripts/cost-allocation.cjs` for unknown/partial data. |
 | Kyverno Policy Reporter (`kyverno` Policy Reporter plugin or TeraSky Kyverno) | Kyverno installed | Needs Policy Reporter UI/API in-cluster (GitOps, manual sync) |
-| Harbor (`BESTSELLER` Harbor plugin) | Harbor installed (`ecosystem-harbor`) | Read-only robot account; Zeus creates the SealedSecret |
 | Shortcuts (`@backstage/plugin-shortcuts`) | Personal sidebar shortcuts | Core-maintained |
 | DevTools (`@backstage/plugin-devtools`) | Admin diagnostics | Admin-only permission; no secret display |
 | Catalog unprocessed entities (`@backstage/plugin-catalog-unprocessed-entities`) | Shows why entities fail to ingest | Admin-only |
 | Optional: Q&A (`drodil/backstage-plugin-qeta`) | Family/household knowledge Q&A | Only if Zeus wants it |
-| Optional: Trivy Operator + Policy Reporter source | Vulnerability reports per workload | Capacity check first; manual-sync Argo app |
+| Optional: Trivy Operator + Policy Reporter source | Vulnerability reports per workload | Capacity check first; see the pilot in #442 |
 
 Not recommended now: Datadog, PagerDuty, Snyk, SonarQube and other SaaS
 products we do not use. The existing Grafana, Prometheus, Loki and Alertmanager
