@@ -47,7 +47,7 @@ Google client after cutover; recreate needed ones as SealedSecrets.
 
 ## Skills not shipped with onemind-hermes
 
-onemind-hermes (Hermes v0.22.5) bundles 58 skills. Legacy has about 104 non-archived skills that
+onemind-hermes (Hermes v0.22.7) bundles 58 skills. Legacy has about 104 non-archived skills that
 onemind-hermes lacks. They fall into three groups:
 
 **OneMind / Zeus authored: candidates to bring over (review each).**
@@ -145,7 +145,7 @@ listener: the earlier "684k in, 5.6k out" is the same picture seen from the hub.
 
 The hot-patch (`patch_nats_platform.py`, `nats-platform-patch-cm.yaml`) changes one thing in `adapter.py`: it moves
 `set_current_session_key` and `reset_current_session_key` from `tools.approval` to `tools.approval_context`.
-Hermes v0.22.5 has them **only** in `tools.approval_context` and has **no native NATS platform**
+Hermes v0.22.7 (and v0.22.5) has them **only** in `tools.approval_context` and has **no native NATS platform**
 (`grep` over `gateway/`, `hermes_cli/`, `plugins/`, `tools/`, `agent/` finds none), so the plugin is still needed
 and the fix is still needed. It is now a normal line in the vendored `adapter.py`, not a patch applied at start.
 

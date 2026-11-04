@@ -54,6 +54,18 @@ execution or verification of all later layer contents. Only amd64 is assessed,
 matching the workload's node selector. Do not infer compatibility from the version
 string alone.
 
+### Re-pinned to v0.22.7 (2026-11-04)
+
+The base image and the patcher's `local_env_policy.py` hash now follow the `onemind-hermes` bump to
+`nousresearch/hermes-agent:v0.22.7@sha256:e6d81ae52ebf6a43efa529701405509f20054ba818f179ddd748bed4f8af584c`. In v0.22.7
+that file hashes to `d8b3a8941dcbd85bc1f195ce4bd4e47f2a6fa9913a62dd3d702fd035cefab5a3`; the only change is two new
+supervisor-identity helpers and a comment, and the patch anchor is unchanged. `code_execution_env.py` is byte-identical
+(`1c6e0c42...`). With the hash updated the patcher applies, and the ten actual-filter regressions in
+`test_child_policy.py` pass against the unmodified v0.22.7 image (run in a throwaway container on 2026-11-04). The table
+above is the v0.22.5 review and is kept as history. Two of its files changed again in v0.22.7 and were **not**
+re-reviewed: `tools/environments/local.py` (`ac64fb63...`) and `agent/secret_sources/onepassword.py` (`aa682d5b...`). Redo
+that review, and the amd64 manifest and layer digests, before building or activating anything from this directory.
+
 ## Reproduction and build gate
 
 Use a new interpreter with the installed Hermes dependencies. The test harness

@@ -8214,7 +8214,7 @@ metadata:
   tags:
     - kubernetes
   title: Legacy (onemind-hermes)
-  description: Hermes v0.22.5 instance with the single Legacy soul in the hermes
+  description: Hermes v0.22.7 instance with the single Legacy soul in the hermes
     namespace (Argo application platform-onemind-hermes); no NATS sidecar, no
     imported Legacy data.
   annotations:
