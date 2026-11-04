@@ -1,0 +1,283 @@
+{
+  "generator": "omos feat/policy-service (PR #554) policy.Signer/ParamsHash/Canonicalize via a throwaway cmd/genvec; see tests/fixtures/README.md",
+  "public_key_b64": "JY/ezTy88n//j/twx5v+nXza4vK9KbZhrdKjCPuQCJ8=",
+  "kid": "policy-1",
+  "now": "2026-10-29T12:00:00.000Z",
+  "vectors": [
+    {
+      "name": "goto",
+      "subject": "cmd.fleet.robot.sim-tb1.goto",
+      "envelope": {
+        "action_id": "act-01jbtestvector0000000000a",
+        "approval": {
+          "approvals": [
+            {
+              "by": "user:zeus",
+              "at": "2026-10-29T11:59:58.000Z",
+              "step": 1
+            }
+          ],
+          "approver": "user:zeus",
+          "level": "A3",
+          "params_hash": "sha256:01be81f469c3beaf8fe2bd1540ca7eeef07833d0ff8e3aa5e117efd69e0f5f93",
+          "reason": "",
+          "required": true,
+          "status": "approved"
+        },
+        "cmd": "cmd.fleet.robot.sim-tb1.goto",
+        "corr": "0d6b1f8e-6a3c-4b9e-8f21-7c5d4e3b2a10",
+        "data": {
+          "hae_m": 150.25,
+          "lat": 30.2672,
+          "lon": -97.7431,
+          "speed_mps": 0.5
+        },
+        "expires_at": "2026-10-29T12:00:30.000Z",
+        "id": "6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b60",
+        "policy": {
+          "allowed": true,
+          "decision_id": "dec-testgoto"
+        },
+        "sig": {
+          "alg": "ed25519",
+          "kid": "policy-1",
+          "value": "FjNJn7KU3Bs2+49mSf2IF9Jjx3luo8VRDYQIvIrGP7A8qBUlVou1YB7KSXhW4Fm+djV1c9IMF6EAN7WnRQh2Ag=="
+        },
+        "simulated": true,
+        "source": "service:policy",
+        "subject": "cmd.fleet.robot.sim-tb1.goto",
+        "ts": "2026-10-29T12:00:00.000Z",
+        "v": 1
+      },
+      "params_hash": "sha256:01be81f469c3beaf8fe2bd1540ca7eeef07833d0ff8e3aa5e117efd69e0f5f93",
+      "jcs_without_sig": "{\"action_id\":\"act-01jbtestvector0000000000a\",\"approval\":{\"approvals\":[{\"at\":\"2026-10-29T11:59:58.000Z\",\"by\":\"user:zeus\",\"step\":1}],\"approver\":\"user:zeus\",\"level\":\"A3\",\"params_hash\":\"sha256:01be81f469c3beaf8fe2bd1540ca7eeef07833d0ff8e3aa5e117efd69e0f5f93\",\"reason\":\"\",\"required\":true,\"status\":\"approved\"},\"cmd\":\"cmd.fleet.robot.sim-tb1.goto\",\"corr\":\"0d6b1f8e-6a3c-4b9e-8f21-7c5d4e3b2a10\",\"data\":{\"hae_m\":150.25,\"lat\":30.2672,\"lon\":-97.7431,\"speed_mps\":0.5},\"expires_at\":\"2026-10-29T12:00:30.000Z\",\"id\":\"6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b60\",\"policy\":{\"allowed\":true,\"decision_id\":\"dec-testgoto\"},\"simulated\":true,\"source\":\"service:policy\",\"subject\":\"cmd.fleet.robot.sim-tb1.goto\",\"ts\":\"2026-10-29T12:00:00.000Z\",\"v\":1}"
+    },
+    {
+      "name": "goto-unicode-reason",
+      "subject": "cmd.fleet.robot.sim-tb1.goto",
+      "envelope": {
+        "action_id": "act-01jbtestvector0000000000b",
+        "approval": {
+          "approvals": [
+            {
+              "by": "user:zeus",
+              "at": "2026-10-29T11:59:58.000Z",
+              "step": 1
+            }
+          ],
+          "approver": "user:zeus",
+          "level": "A3",
+          "params_hash": "sha256:88052588c7afe92e1e0e6bb7dd2e1349453e46682a65147c4d82e972d68cfc0f",
+          "reason": "",
+          "required": true,
+          "status": "approved"
+        },
+        "cmd": "cmd.fleet.robot.sim-tb1.goto",
+        "corr": "0d6b1f8e-6a3c-4b9e-8f21-7c5d4e3b2a10",
+        "data": {
+          "hae_m": 0,
+          "lat": -0.000001,
+          "lon": 1e-7
+        },
+        "expires_at": "2026-10-29T12:00:30.000Z",
+        "id": "6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b61",
+        "policy": {
+          "allowed": true,
+          "decision_id": "dec-testgoto-unicode-reason"
+        },
+        "sig": {
+          "alg": "ed25519",
+          "kid": "policy-1",
+          "value": "yL9mt4uQ00QSwMullyLjGA3Fl6K8Cm3QhYjpeCW7sjM+GN1xco3Tkis77NzGm1LFTnu4HmAW/Z2a484vqH3uBw=="
+        },
+        "simulated": true,
+        "source": "service:policy",
+        "subject": "cmd.fleet.robot.sim-tb1.goto",
+        "ts": "2026-10-29T12:00:00.000Z",
+        "v": 1
+      },
+      "params_hash": "sha256:88052588c7afe92e1e0e6bb7dd2e1349453e46682a65147c4d82e972d68cfc0f",
+      "jcs_without_sig": "{\"action_id\":\"act-01jbtestvector0000000000b\",\"approval\":{\"approvals\":[{\"at\":\"2026-10-29T11:59:58.000Z\",\"by\":\"user:zeus\",\"step\":1}],\"approver\":\"user:zeus\",\"level\":\"A3\",\"params_hash\":\"sha256:88052588c7afe92e1e0e6bb7dd2e1349453e46682a65147c4d82e972d68cfc0f\",\"reason\":\"\",\"required\":true,\"status\":\"approved\"},\"cmd\":\"cmd.fleet.robot.sim-tb1.goto\",\"corr\":\"0d6b1f8e-6a3c-4b9e-8f21-7c5d4e3b2a10\",\"data\":{\"hae_m\":0,\"lat\":-0.000001,\"lon\":1e-7},\"expires_at\":\"2026-10-29T12:00:30.000Z\",\"id\":\"6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b61\",\"policy\":{\"allowed\":true,\"decision_id\":\"dec-testgoto-unicode-reason\"},\"simulated\":true,\"source\":\"service:policy\",\"subject\":\"cmd.fleet.robot.sim-tb1.goto\",\"ts\":\"2026-10-29T12:00:00.000Z\",\"v\":1}"
+    },
+    {
+      "name": "hold",
+      "subject": "cmd.fleet.robot.sim-tb1.hold",
+      "envelope": {
+        "action_id": "act-01jbtestvector0000000000c",
+        "approval": {
+          "approvals": [
+            {
+              "by": "user:zeus",
+              "at": "2026-10-29T11:59:58.000Z",
+              "step": 1
+            }
+          ],
+          "approver": "user:zeus",
+          "level": "A3",
+          "params_hash": "sha256:437266e607dd5cc503807632961af495dc443d83e76826421324f16527327d45",
+          "reason": "",
+          "required": true,
+          "status": "approved"
+        },
+        "cmd": "cmd.fleet.robot.sim-tb1.hold",
+        "corr": "0d6b1f8e-6a3c-4b9e-8f21-7c5d4e3b2a10",
+        "data": {
+          "duration_s": 30,
+          "reason": "wait é ✓"
+        },
+        "expires_at": "2026-10-29T12:00:30.000Z",
+        "id": "6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b62",
+        "policy": {
+          "allowed": true,
+          "decision_id": "dec-testhold"
+        },
+        "sig": {
+          "alg": "ed25519",
+          "kid": "policy-1",
+          "value": "tujlWDXt85PzGt6MOJr+5Up3YiCiVR7ivLjjeSGuTIp8QR7TdIPDS0ohS+Eu70Jw6d2LrCY1LeN65jWSt6AQAQ=="
+        },
+        "simulated": true,
+        "source": "service:policy",
+        "subject": "cmd.fleet.robot.sim-tb1.hold",
+        "ts": "2026-10-29T12:00:00.000Z",
+        "v": 1
+      },
+      "params_hash": "sha256:437266e607dd5cc503807632961af495dc443d83e76826421324f16527327d45",
+      "jcs_without_sig": "{\"action_id\":\"act-01jbtestvector0000000000c\",\"approval\":{\"approvals\":[{\"at\":\"2026-10-29T11:59:58.000Z\",\"by\":\"user:zeus\",\"step\":1}],\"approver\":\"user:zeus\",\"level\":\"A3\",\"params_hash\":\"sha256:437266e607dd5cc503807632961af495dc443d83e76826421324f16527327d45\",\"reason\":\"\",\"required\":true,\"status\":\"approved\"},\"cmd\":\"cmd.fleet.robot.sim-tb1.hold\",\"corr\":\"0d6b1f8e-6a3c-4b9e-8f21-7c5d4e3b2a10\",\"data\":{\"duration_s\":30,\"reason\":\"wait é ✓\"},\"expires_at\":\"2026-10-29T12:00:30.000Z\",\"id\":\"6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b62\",\"policy\":{\"allowed\":true,\"decision_id\":\"dec-testhold\"},\"simulated\":true,\"source\":\"service:policy\",\"subject\":\"cmd.fleet.robot.sim-tb1.hold\",\"ts\":\"2026-10-29T12:00:00.000Z\",\"v\":1}"
+    },
+    {
+      "name": "rtl",
+      "subject": "cmd.fleet.robot.sim-tb1.rtl",
+      "envelope": {
+        "action_id": "act-01jbtestvector0000000000d",
+        "approval": {
+          "approvals": [
+            {
+              "by": "user:alice",
+              "at": "2026-10-29T11:59:58.000Z",
+              "step": 1
+            }
+          ],
+          "approver": "user:alice",
+          "level": "A3",
+          "params_hash": "sha256:82705f284ef1c0285d7ef9161990fb5bbce8f8977590fb1532b8d0c20c6c6ed5",
+          "reason": "",
+          "required": true,
+          "status": "approved"
+        },
+        "cmd": "cmd.fleet.robot.sim-tb1.rtl",
+        "corr": "0d6b1f8e-6a3c-4b9e-8f21-7c5d4e3b2a10",
+        "data": {},
+        "expires_at": "2026-10-29T12:00:30.000Z",
+        "id": "6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b63",
+        "policy": {
+          "allowed": true,
+          "decision_id": "dec-testrtl"
+        },
+        "sig": {
+          "alg": "ed25519",
+          "kid": "policy-1",
+          "value": "/IEy9ddi+4uuEFU3Da7rxIBsFOvNoJTfirs95P22k2Au6S3FRrDNtLPKUsXbEyopmxK+P/Za8fC+/AAjFWFmDQ=="
+        },
+        "simulated": true,
+        "source": "service:policy",
+        "subject": "cmd.fleet.robot.sim-tb1.rtl",
+        "ts": "2026-10-29T12:00:00.000Z",
+        "v": 1
+      },
+      "params_hash": "sha256:82705f284ef1c0285d7ef9161990fb5bbce8f8977590fb1532b8d0c20c6c6ed5",
+      "jcs_without_sig": "{\"action_id\":\"act-01jbtestvector0000000000d\",\"approval\":{\"approvals\":[{\"at\":\"2026-10-29T11:59:58.000Z\",\"by\":\"user:alice\",\"step\":1}],\"approver\":\"user:alice\",\"level\":\"A3\",\"params_hash\":\"sha256:82705f284ef1c0285d7ef9161990fb5bbce8f8977590fb1532b8d0c20c6c6ed5\",\"reason\":\"\",\"required\":true,\"status\":\"approved\"},\"cmd\":\"cmd.fleet.robot.sim-tb1.rtl\",\"corr\":\"0d6b1f8e-6a3c-4b9e-8f21-7c5d4e3b2a10\",\"data\":{},\"expires_at\":\"2026-10-29T12:00:30.000Z\",\"id\":\"6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b63\",\"policy\":{\"allowed\":true,\"decision_id\":\"dec-testrtl\"},\"simulated\":true,\"source\":\"service:policy\",\"subject\":\"cmd.fleet.robot.sim-tb1.rtl\",\"ts\":\"2026-10-29T12:00:00.000Z\",\"v\":1}"
+    },
+    {
+      "name": "estop",
+      "subject": "cmd.fleet.robot.sim-tb1.estop",
+      "envelope": {
+        "action_id": "act-01jbtestvector0000000000e",
+        "approval": {
+          "approvals": [
+            {
+              "by": "user:zeus",
+              "at": "2026-10-29T11:59:58.000Z",
+              "step": 1
+            }
+          ],
+          "approver": "user:zeus",
+          "level": "A3",
+          "params_hash": "sha256:bcb159549b4be5916a8f94089cddc181162ea173349a24cb6f9bd59abbd009d2",
+          "reason": "",
+          "required": true,
+          "status": "approved"
+        },
+        "cmd": "cmd.fleet.robot.sim-tb1.estop",
+        "corr": "0d6b1f8e-6a3c-4b9e-8f21-7c5d4e3b2a10",
+        "data": {},
+        "expires_at": "2026-10-29T12:00:30.000Z",
+        "id": "6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b64",
+        "policy": {
+          "allowed": true,
+          "decision_id": "dec-testestop"
+        },
+        "sig": {
+          "alg": "ed25519",
+          "kid": "policy-1",
+          "value": "WsrlgwVeUl/rz9aODxylxMwyImrpMFeRxoIAA7GD7VEVUo7C+R+iiPq0AB+Ge14TfTF+C9hAayOXtazd866NDA=="
+        },
+        "simulated": true,
+        "source": "service:policy",
+        "subject": "cmd.fleet.robot.sim-tb1.estop",
+        "ts": "2026-10-29T12:00:00.000Z",
+        "v": 1
+      },
+      "params_hash": "sha256:bcb159549b4be5916a8f94089cddc181162ea173349a24cb6f9bd59abbd009d2",
+      "jcs_without_sig": "{\"action_id\":\"act-01jbtestvector0000000000e\",\"approval\":{\"approvals\":[{\"at\":\"2026-10-29T11:59:58.000Z\",\"by\":\"user:zeus\",\"step\":1}],\"approver\":\"user:zeus\",\"level\":\"A3\",\"params_hash\":\"sha256:bcb159549b4be5916a8f94089cddc181162ea173349a24cb6f9bd59abbd009d2\",\"reason\":\"\",\"required\":true,\"status\":\"approved\"},\"cmd\":\"cmd.fleet.robot.sim-tb1.estop\",\"corr\":\"0d6b1f8e-6a3c-4b9e-8f21-7c5d4e3b2a10\",\"data\":{},\"expires_at\":\"2026-10-29T12:00:30.000Z\",\"id\":\"6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b64\",\"policy\":{\"allowed\":true,\"decision_id\":\"dec-testestop\"},\"simulated\":true,\"source\":\"service:policy\",\"subject\":\"cmd.fleet.robot.sim-tb1.estop\",\"ts\":\"2026-10-29T12:00:00.000Z\",\"v\":1}"
+    },
+    {
+      "name": "estop_release",
+      "subject": "cmd.fleet.robot.sim-tb1.estop_release",
+      "envelope": {
+        "action_id": "act-01jbtestvector0000000000f",
+        "approval": {
+          "approvals": [
+            {
+              "by": "user:zeus",
+              "at": "2026-10-29T11:59:58.000Z",
+              "step": 1
+            },
+            {
+              "by": "user:alice",
+              "at": "2026-10-29T11:59:59.000Z",
+              "step": 2
+            }
+          ],
+          "approver": "user:alice",
+          "level": "A4",
+          "params_hash": "sha256:2d9285a7409d2cd11f9e7a58e82467040af59116233294c3fd71b433e9c8a2a4",
+          "reason": "",
+          "required": true,
+          "status": "approved"
+        },
+        "cmd": "cmd.fleet.robot.sim-tb1.estop_release",
+        "corr": "0d6b1f8e-6a3c-4b9e-8f21-7c5d4e3b2a10",
+        "data": {},
+        "expires_at": "2026-10-29T12:00:30.000Z",
+        "id": "6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b65",
+        "policy": {
+          "allowed": true,
+          "decision_id": "dec-testestop_release"
+        },
+        "sig": {
+          "alg": "ed25519",
+          "kid": "policy-1",
+          "value": "NvLp4UcbGWlk50js3ixITDL7kRbnPvQbNSRXBNc3t9/qhznDf481qLPM13VEy/q44a8ZjAvuh3EMQhn2OcQ9Dg=="
+        },
+        "simulated": true,
+        "source": "service:policy",
+        "subject": "cmd.fleet.robot.sim-tb1.estop_release",
+        "ts": "2026-10-29T12:00:00.000Z",
+        "v": 1
+      },
+      "params_hash": "sha256:2d9285a7409d2cd11f9e7a58e82467040af59116233294c3fd71b433e9c8a2a4",
+      "jcs_without_sig": "{\"action_id\":\"act-01jbtestvector0000000000f\",\"approval\":{\"approvals\":[{\"at\":\"2026-10-29T11:59:58.000Z\",\"by\":\"user:zeus\",\"step\":1},{\"at\":\"2026-10-29T11:59:59.000Z\",\"by\":\"user:alice\",\"step\":2}],\"approver\":\"user:alice\",\"level\":\"A4\",\"params_hash\":\"sha256:2d9285a7409d2cd11f9e7a58e82467040af59116233294c3fd71b433e9c8a2a4\",\"reason\":\"\",\"required\":true,\"status\":\"approved\"},\"cmd\":\"cmd.fleet.robot.sim-tb1.estop_release\",\"corr\":\"0d6b1f8e-6a3c-4b9e-8f21-7c5d4e3b2a10\",\"data\":{},\"expires_at\":\"2026-10-29T12:00:30.000Z\",\"id\":\"6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b65\",\"policy\":{\"allowed\":true,\"decision_id\":\"dec-testestop_release\"},\"simulated\":true,\"source\":\"service:policy\",\"subject\":\"cmd.fleet.robot.sim-tb1.estop_release\",\"ts\":\"2026-10-29T12:00:00.000Z\",\"v\":1}"
+    }
+  ]
+}

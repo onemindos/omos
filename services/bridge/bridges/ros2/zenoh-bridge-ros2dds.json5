@@ -1,0 +1,25 @@
+// zenoh-bridge-ros2dds configuration for one robot (run it on the robot or its sim host).
+// Keys follow DEFAULT_CONFIG.json5 of eclipse-zenoh/zenoh-plugin-ros2dds 1.10.2.
+// Only the interfaces bridge-ros2 uses are routed; everything else stays on the robot's DDS.
+{
+  plugins: {
+    ros2dds: {
+      // Every routed interface is prefixed with this namespace on Zenoh, so
+      // /odom becomes the key "sim_tb1/odom" (set ROS_NAMESPACE=sim_tb1 on bridge-ros2).
+      namespace: "/sim_tb1",
+      allow: {
+        publishers: ["/odom", "/battery_state", "/amcl_pose"],
+        subscribers: ["/cmd_vel"],
+        service_servers: [],
+        service_clients: [],
+        action_servers: ["/navigate_to_pose"],
+        action_clients: [],
+      },
+      pub_max_frequencies: ["/odom=10"],
+    },
+  },
+  mode: "router",
+  // bridge-ros2 connects here (ZENOH_CONNECT=tcp/<robot-host>:7447). Keep it on the
+  // site LAN or tailnet; do not expose it publicly.
+  listen: { endpoints: ["tcp/0.0.0.0:7447"] },
+}

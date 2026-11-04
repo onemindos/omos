@@ -1,0 +1,96 @@
+// genvec writes cross-language test vectors for the ROS 2 bridge (H3): command envelopes
+// built and signed exactly as policy.Service.publishCommandID does, with policy.Signer,
+// policy.ParamsHash and policy.Canonicalize. The key is derived from a public test label,
+// not a secret: sha256("onemind-h3-test-vector") is the ed25519 seed.
+package main
+
+import (
+	"crypto/ed25519"
+	"crypto/sha256"
+	"encoding/base64"
+	"encoding/json"
+	"os"
+	"time"
+
+	"github.com/onemindos/omos/services/policy/internal/policy"
+)
+
+func main() {
+	seed := sha256.Sum256([]byte("onemind-h3-test-vector"))
+	key := ed25519.NewKeyFromSeed(seed[:])
+	signer := &policy.Signer{Key: key, KID: "policy-1"}
+	now := time.Date(2026, 10, 29, 12, 0, 0, 0, time.UTC)
+	ts := func(t time.Time) string { return t.UTC().Format("2006-01-02T15:04:05.000Z") }
+	type vec struct {
+		Name      string          `json:"name"`
+		Subject   string          `json:"subject"`
+		Envelope  json.RawMessage `json:"envelope"`
+		Hash      string          `json:"params_hash"`
+		JCS       string          `json:"jcs_without_sig"`
+	}
+	cases := []struct {
+		name, verb, level string
+		params            string
+		approvers         []string
+	}{
+		{"goto", "goto", "A3", `{"lat":30.2672,"lon":-97.7431,"hae_m":150.25,"speed_mps":0.5}`, []string{"user:zeus"}},
+		{"goto-unicode-reason", "goto", "A3", `{"lat":-0.000001,"lon":1e-7,"hae_m":0}`, []string{"user:zeus"}},
+		{"hold", "hold", "A3", `{"duration_s":30,"reason":"wait é ✓"}`, []string{"user:zeus"}},
+		{"rtl", "rtl", "A3", `{}`, []string{"user:alice"}},
+		{"estop", "estop", "A3", `{}`, []string{"user:zeus"}},
+		{"estop_release", "estop_release", "A4", `{}`, []string{"user:zeus", "user:alice"}},
+	}
+	var out struct {
+		Generator string `json:"generator"`
+		PublicKey string `json:"public_key_b64"`
+		Kid       string `json:"kid"`
+		Now       string `json:"now"`
+		Vectors   []vec  `json:"vectors"`
+	}
+	out.Generator = "omos feat/policy-service (PR #554) policy.Signer/ParamsHash/Canonicalize via a throwaway cmd/genvec; see tests/fixtures/README.md"
+	out.PublicKey = base64.StdEncoding.EncodeToString(key.Public().(ed25519.PublicKey))
+	out.Kid = "policy-1"
+	out.Now = ts(now)
+	for i, c := range cases {
+		subject := "cmd.fleet.robot.sim-tb1." + c.verb
+		hash, err := policy.ParamsHash("asset."+c.verb, 1, policy.Target{EntityType: "robot", EntityID: "sim-tb1"}, json.RawMessage(c.params))
+		if err != nil {
+			panic(err)
+		}
+		var d any
+		_ = json.Unmarshal([]byte(c.params), &d)
+		apps := []policy.Approval{}
+		for j, a := range c.approvers {
+			apps = append(apps, policy.Approval{By: a, At: ts(now.Add(-time.Duration(2-j) * time.Second)), Step: j + 1})
+		}
+		id := []string{"6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b60", "6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b61",
+			"6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b62", "6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b63",
+			"6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b64", "6f1c2a4e-0b7d-4c1e-9a52-1d2e3f4a5b65"}[i]
+		env := map[string]any{
+			"v": 1, "id": id, "ts": ts(now), "cmd": subject, "source": "service:policy", "subject": subject, "data": d,
+			"action_id":  "act-01jbtestvector0000000000" + string(rune('a'+i)),
+			"expires_at": ts(now.Add(30 * time.Second)),
+			"simulated":  true,
+			"approval": map[string]any{"required": true, "status": "approved", "approver": c.approvers[len(c.approvers)-1],
+				"reason": "", "level": c.level, "params_hash": hash, "approvals": apps},
+			"policy": map[string]any{"decision_id": "dec-test" + c.name, "allowed": true},
+			"corr":   "0d6b1f8e-6a3c-4b9e-8f21-7c5d4e3b2a10",
+		}
+		jcs, err := policy.Canonicalize(env)
+		if err != nil {
+			panic(err)
+		}
+		if err := signer.Sign(env); err != nil {
+			panic(err)
+		}
+		b, _ := json.Marshal(env)
+		if err := policy.VerifyCommand(key.Public().(ed25519.PublicKey), b); err != nil {
+			panic(err)
+		}
+		out.Vectors = append(out.Vectors, vec{Name: c.name, Subject: subject, Envelope: b, Hash: hash, JCS: string(jcs)})
+	}
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	enc.SetEscapeHTML(false)
+	_ = enc.Encode(out)
+}
