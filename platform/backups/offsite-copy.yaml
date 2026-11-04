@@ -146,25 +146,45 @@ spec:
               # copy (never sync): deletions and expiry at the source never propagate.
               # Changed objects overwrite the mirror, and the replaced version is moved
               # to _overwritten/<run> instead of being lost.
+              : "${COPY_MIN_AGE:?COPY_MIN_AGE must be configured}"
               RUN="$(date -u +%Y%m%dT%H%M%SZ)"
               SRC="src:${SRC_BUCKET}"
               DST="dst:${DST_BUCKET}/${DST_PATH}"
-              AGE=""
-              if [ -n "${COPY_MAX_AGE:-}" ]; then AGE="--max-age ${COPY_MAX_AGE}"; fi
-              # Restic lock files are transient and meaningless in a copy.
-              FILTER="--min-age ${COPY_MIN_AGE} --exclude backups/restic/**/locks/**"
               COMMON="--s3-no-check-bucket --retries 3 --low-level-retries 10 --log-level INFO"
+              MANIFEST="$(mktemp "${TMPDIR:-/tmp}/offsite-files.XXXXXX")"
+              MATCHED=""
+              trap 'rm -f "$MANIFEST"; if [ -n "$MATCHED" ]; then rm -f "$MATCHED"; fi' EXIT
+              MATCHED="$(mktemp "${TMPDIR:-/tmp}/offsite-matched.XXXXXX")"
+              # Select once: a moving age cutoff would let check include objects
+              # that were still too young when copy started. Restic locks are transient.
+              set -- --min-age "$COPY_MIN_AGE" --exclude 'backups/restic/**/locks/**'
+              if [ -n "${COPY_MAX_AGE:-}" ]; then set -- "$@" --max-age "$COPY_MAX_AGE"; fi
+              # shellcheck disable=SC2086
+              rclone lsf "$SRC" --recursive --files-only --format p "$@" $COMMON > "$MANIFEST"
+              if [ ! -s "$MANIFEST" ]; then
+                echo "No eligible backup objects; refusing to record offsite success" >&2
+                exit 1
+              fi
 
               echo "[$(date -u)] copy ${SRC} -> ${DST} (run ${RUN})"
               # shellcheck disable=SC2086
-              rclone copy "$SRC" "$DST" $FILTER $AGE $COMMON \
+              rclone copy "$SRC" "$DST" --files-from-raw "$MANIFEST" $COMMON \
                 --backup-dir "dst:${DST_BUCKET}/_overwritten/${RUN}" \
                 --transfers 4 --checkers 16 --s3-chunk-size 16M --s3-upload-concurrency 4 \
                 --stats 120s --stats-one-line
 
-              echo "[$(date -u)] verify: every source object present at destination with equal size"
+              echo "[$(date -u)] verify: every selected source object present at destination with equal size"
               # shellcheck disable=SC2086
-              rclone check "$SRC" "$DST" --one-way --size-only $FILTER $AGE $COMMON --checkers 16
+              rclone check "$SRC" "$DST" --one-way --size-only --files-from-raw "$MANIFEST" \
+                --match "$MATCHED" $COMMON --checkers 16
+              # files-from silently ignores paths that disappeared from the source.
+              # Require a successful comparison for every path originally selected.
+              sort "$MANIFEST" -o "$MANIFEST"
+              sort "$MATCHED" -o "$MATCHED"
+              if ! cmp -s "$MANIFEST" "$MATCHED"; then
+                echo "Not every selected backup object was verified; refusing offsite success" >&2
+                exit 1
+              fi
 
               # Heartbeat object for out-of-cluster consumers (home server, B2 job).
               printf '{"completed":"%s","source":"%s","run":"%s"}\n' \

@@ -20,16 +20,6 @@
     "sha256": "9fa3ca7ee9151b7d9bd415565a5a5d67ae3265ff621a6b6e128baf21920d57df"
   },
   {
-    "name": "keda",
-    "repo": "https://kedacore.github.io/charts",
-    "chart": "keda",
-    "version": "2.21.0",
-    "appVersion": "2.21.0",
-    "url": "https://kedacore.github.io/charts/keda-2.21.0.tgz",
-    "namespace": "keda",
-    "sha256": "a7da56bf41a33dad9d2fc82a6fdecee552fff947d80bf1e1dbcf4db0f9e26dee"
-  },
-  {
     "name": "opencost",
     "repo": "https://opencost.github.io/opencost-helm-chart",
     "chart": "opencost",

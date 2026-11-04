@@ -1,0 +1,27 @@
+# Gateway egress to target `mediamtx` (Control API on onetak-media :4000). Egress ports are destination pod ports.
+# No ingress rule is added in namespace onetak: no NetworkPolicy selects the onetak-media pod, so it already accepts
+# the gateway, and adding an ingress policy would cut off takml-vision-worker, onemind-mcp and the other clients.
+# MediaMTX still requires the `mcp-read` credential for /v3 from any address except localhost.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: agentgateway-egress-mediamtx
+  namespace: tool-gateway
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: agentgateway-standalone
+      app.kubernetes.io/instance: agentgateway
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: onetak
+      podSelector:
+        matchLabels:
+          app: onetak-media
+    ports:
+    - {protocol: TCP, port: 4000}

@@ -1,0 +1,13 @@
+# GitHub remote MCP server (github/github-mcp-server v2.1.0, hosted): the /readonly endpoint only offers read tools. No pod.
+# Credential: fine-grained PAT (owner onemindos, repository access limited, read permissions) as a Bearer.
+name: github
+groups: [dev]
+enabled_by: [gateway-target-github]
+env:
+  TARGET_GITHUB_TOKEN: {secret: gateway-target-github, key: token}
+target:
+  mcp:
+    host: https://api.githubcopilot.com/mcp/readonly
+  policies:
+    backendAuth:
+      key: "${TARGET_GITHUB_TOKEN}"

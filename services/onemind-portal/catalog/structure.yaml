@@ -84,7 +84,7 @@ systems:
     domain: domain:default/onemind-so
   - name: ai-agents
     title: AI & agents
-    description: Hermes (Legacy), agent consoles, model gateways and runtimes, model providers and workflow automation.
+    description: Legacy (onemind-hermes), agent consoles, model gateways and runtimes, model providers and workflow automation.
     pillar: so
     review: proposed
     domain: domain:default/onemind-so
@@ -177,10 +177,6 @@ apps:
     title: Tailscale operator and proxies
     system: infrastructure
     description: Tailscale Kubernetes operator and the per-service tailnet proxies it creates.
-  - name: keda
-    title: KEDA
-    system: infrastructure
-    description: Event-driven autoscaling.
   - name: dapr
     title: Dapr
     system: infrastructure
@@ -188,7 +184,7 @@ apps:
   - name: kubernetes-system
     title: Kubernetes system services
     system: infrastructure
-    description: "DOKS-managed core services: CoreDNS, konnectivity agent and metrics-server. No Argo application."
+    description: "DOKS-managed core services: CoreDNS, konnectivity agent and metrics-server. Argo application platform-metrics-server adopts only metrics-server."
   - name: onemind-core
     title: OneMind core services
     system: infrastructure
@@ -204,19 +200,19 @@ apps:
   - name: kyverno
     title: Kyverno
     system: identity-access
-    description: Admission and background policy engine; also carries the platform-security Argo application (Kyverno, Falco and OpenFGA wiring).
+    description: Admission and background policy engine; also carries the platform-security Argo application (Kyverno, Falco, OpenFGA and Trivy image-scan pilot wiring).
   - name: falco
     title: Falco
     system: identity-access
     description: Runtime security detection (DaemonSet).
+  - name: vaultwarden
+    title: Vaultwarden
+    system: identity-access
+    description: Private Vaultwarden vault (one replica, SQLite on a 5Gi volume, tailnet-only HTTPS, registration disabled), deployed by Argo application platform-vaultwarden.
   - name: backstage
     title: Backstage portal
     system: developer-platform
     description: The OneMind developer portal and its PostgreSQL database.
-  - name: tempo
-    title: Tempo
-    system: observability
-    description: Distributed tracing backend.
   - name: opentelemetry-collector
     title: OpenTelemetry Collector
     system: observability
@@ -237,10 +233,6 @@ apps:
     title: Velero
     system: data-storage
     description: Cluster backup and restore.
-  - name: nextcloud
-    title: Nextcloud
-    system: data-storage
-    description: Private file and vault sync for the Mac and Android (Nextcloud, its Redis and the files volume).
   - name: volsync
     title: VolSync
     system: data-storage
@@ -264,7 +256,7 @@ apps:
   - name: geo-data-services
     title: OneTAK geospatial services
     system: geospatial
-    description: Tile38, STAC API/browser and the geo database.
+    description: Tile38 and the STAC browser.
   - name: stac
     title: STAC imagery catalog
     system: geospatial
@@ -277,7 +269,57 @@ apps:
     title: LiteLLM
     system: ai-agents
     description: Model gateway.
+  - name: onemind-hermes
+    title: Legacy (onemind-hermes)
+    system: ai-agents
+    description: Hermes v0.22.7 instance with the single Legacy soul in the hermes namespace (Argo application platform-onemind-hermes); no NATS sidecar, no imported Legacy data.
+  - name: onemind-mcp
+    title: OneMind internal app MCP
+    system: ai-agents
+    description: >-
+      MCP server giving Hermes typed tools for in-cluster apps (NATS monitoring, Prometheus, Ollama, OpenCost, and the Tile38 adapter with one write,
+      tile38_set_point); it is the onemind target behind the tool gateway; manifests in platform/hermes/mcp (Argo application platform-onemind-mcp).
+  - name: agentgateway
+    title: Tool gateway (agentgateway)
+    system: ai-agents
+    description: >-
+      The tool gateway in front of Legacy's tools, agentgateway v1.7.0, serving one MCP endpoint per tool group (ops, dev, cloud, data, tak, home, work,
+      identity, execute); Argo application platform-tool-gateway in namespace tool-gateway. Hermes is not cut over yet.
+  - name: mcp-kubernetes
+    title: Tool gateway Kubernetes backend (mcp-kubernetes)
+    system: ai-agents
+    description: >-
+      containers/kubernetes-mcp-server v0.1.1 behind the tool gateway (target kubernetes, group ops) with 10 read tools, 1 write, 3 destructive tools held
+      back for the execute route; no Secrets in its RBAC.
+  - name: mcp-clickhouse
+    title: Tool gateway ClickHouse backend (mcp-clickhouse)
+    system: ai-agents
+    description: ClickHouse/mcp-clickhouse 0.7.0 behind the tool gateway (target clickhouse, group data) with three read tools as the readonly ClickHouse user legacy_ro.
+  - name: karakeep
+    title: Karakeep
+    system: personal-tools
+    description: Native bookmark and read-later workspace prepared with manual Argo and zero replicas; first start, owner enrollment and recovery acceptance are pending.
 placement:
+  hermes-atlas: ai-agents
+  hermes-bible: ai-agents
+  oh-my-hermes: ai-agents
+  hermes-official-plugins: ai-agents
+  hermes-skills: ai-agents
+  hermes-documentation: ai-agents
+  osiris: intelligence
+  worldwideview: intelligence
+  worldmonitor: intelligence
+  argos-atlas: intelligence
+  gods-eye-view: intelligence
+  tacsync: tak-ecosystem
+  cesium-ion-for-tak: tak-ecosystem
+  xmpp-for-tak: tak-ecosystem
+  district47: tak-ecosystem
+  engindearing-projects: tak-ecosystem
+  omnitak-external: tak-ecosystem
+  takgrid: tak-ecosystem
+  gotak: tak-ecosystem
+  cotak: tak-ecosystem
   1password: identity-access
   agent-mail: ai-agents
   agent-monitor: ai-agents
@@ -310,7 +352,6 @@ placement:
   equifax: personal-finance
   experian: personal-finance
   external-argocd: gitops-delivery
-  external-kubernetes-dashboard: developer-platform
   external-tailscale: infrastructure
   facebook-legacy: social-media
   facebook-zeus: social-media
@@ -324,14 +365,12 @@ placement:
   google-messages: communication
   grafana: observability
   headlamp: developer-platform
-  hermes-legacy: ai-agents
   heynats: messaging-nats
   home-assistant: home-homestead
   hubble-ui: observability
   innovis: personal-finance
   instagram-zeus: social-media
   jan: ai-agents
-  kubernetes-dashboard: developer-platform
   langfuse: observability
   lf-edge: reference-links
   lingbot-map: geospatial
@@ -348,8 +387,14 @@ placement:
   ministral-models: ai-agents
   miro: productivity-saas
   mta: communication
+  nats-agent-protocol: messaging-nats
+  nats-commands: messaging-nats
   nats-dashboard: messaging-nats
+  nats-events: messaging-nats
+  nats-intel: messaging-nats
+  nats-service-rpc: messaging-nats
   nats-surveyor: messaging-nats
+  nats-telemetry: messaging-nats
   nats-ui: messaging-nats
   nemotron-models: ai-agents
   notion: productivity-saas
@@ -387,6 +432,7 @@ placement:
   tailscale-admin: infrastructure
   tak-gov: tak-ecosystem
   tak-product-center: tak-ecosystem
+  tak-cot-bridge: tak-ecosystem
   tak-server: tak-ecosystem
   termius: personal-tools
   threads-zeus: social-media
@@ -492,5 +538,4 @@ fallbackSystems:
 pillarOverrides: {}
 titles:
   component:default/external-argocd: ArgoCD (external launcher)
-  component:default/external-kubernetes-dashboard: Kubernetes Dashboard (external launcher)
   component:default/external-tailscale: Tailscale (external launcher)

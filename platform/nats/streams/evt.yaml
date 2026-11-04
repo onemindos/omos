@@ -18,9 +18,11 @@ spec:
     - "evt.robot.>"
     - "evt.drone.>"
     - "evt.sat.>"
+    - "evt.toolgw.>" # execute-gate audit: evt.toolgw.approval.{requested,granted,denied,consumed}
   storage: file
   replicas: 3
   retention: limits
   discard: old
   maxAge: 2160h
   duplicateWindow: 2m
+  preventDelete: true

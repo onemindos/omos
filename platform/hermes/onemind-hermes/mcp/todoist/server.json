@@ -1,0 +1,9 @@
+{
+  "url": "https://ai.todoist.net/mcp",
+  "auth": "oauth",
+  "enabled": true,
+  "tools": {
+    "exclude": ["search", "fetch", "export-project-template", "import-project-template"]
+  },
+  "sampling": {"enabled": false}
+}

@@ -46,7 +46,7 @@ spec:
                   providers = request("GET", "providers/oauth2/?page_size=100")["results"]
                   if any(p["client_id"] == "onemind-backstage" for p in providers):
                       print("OAuth2 provider onemind-backstage already exists; nothing to do")
-                      return
+                      raise SystemExit(0)
 
                   flows = {f["slug"]: f["pk"] for f in request("GET", "flows/instances/?page_size=100")["results"]}
                   if "default-provider-authorization-implicit-consent" not in flows:

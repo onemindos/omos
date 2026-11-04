@@ -5,35 +5,20 @@ metadata:
   name: headlamp
   namespace: kube
 ---
+# Read-only (built-in view; no Secrets). Headlamp runs -in-cluster without -unsafe-use-service-account-token, so it
+# forwards each user's own token to the API server and never acts as this ServiceAccount for them. The pod's token
+# is only used at startup to read kube-system/kubeadm-config (absent on DOKS).
+# roleRef cannot be changed in place: to change the role, rename the binding so Argo CD creates the new one and
+# prunes the old one.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: headlamp
+  name: headlamp-view
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cluster-admin
+  name: view
 subjects:
   - kind: ServiceAccount
     name: headlamp
-    namespace: kube
----
-# ServiceAccount + ClusterRoleBinding for Kubernetes Dashboard
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: kubernetes-dashboard
-  namespace: kube
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: kubernetes-dashboard
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: kubernetes-dashboard
     namespace: kube

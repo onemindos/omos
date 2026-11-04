@@ -1,0 +1,29 @@
+# Tool classification for target `kubernetes` (containers/kubernetes-mcp-server v0.1.1, toolset core, 14 tools after disabled_tools in
+# manifests/backends/kubernetes/config.yaml). Names are the server's own, without the gateway's `kubernetes_` prefix.
+# Schema: scripts/gateway/classification.py. A tool in no list is destructive, so a new release's tools stay off the group route until
+# someone classifies them here.
+#
+# No guards: argument predicates (`mcp.tool.arguments.*`) are inert in agentgateway v1.7.0 `allow` rules. Tested 2026-10-30 against the
+# pinned image: a guard on resources_scale that should have fired on `scale: 0` let the call through, and a call-time `has(arguments)`
+# guard never denied. So nothing here may depend on an argument, and a tool that is only dangerous for some arguments is classified by
+# its worst case. The Phase 4 execute gate (AuthZEN PDP) can see arguments and is where such rules belong.
+target: kubernetes
+read:
+- events_list
+- namespaces_list
+- nodes_top
+- pods_get
+- pods_list
+- pods_list_in_namespace
+- pods_log
+- pods_top
+- resources_get
+- resources_list
+write:
+# Server-side apply on existing workloads (RBAC: patch only, no create): rollout restart, image bump, env edit. It can also set
+# `replicas: 0`; neither RBAC nor the gateway can tell that apart (see above). Accepted residual risk, listed in the PR.
+- resources_create_or_update
+destructive:
+- pods_delete # RBAC: the only delete verb the identity has
+- resources_delete # RBAC allows no delete beyond Pods, so the API server refuses everything but kind Pod
+- resources_scale # worst case is scale to zero; scale up and the replica read go through /execute too

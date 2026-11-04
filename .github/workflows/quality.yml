@@ -25,6 +25,10 @@ env:
   GITLEAKS_VERSION: 8.30.1
   GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
   HELM_VERSION: v3.19.0
+  RCLONE_CLI_VERSION: v1.75.2
+  RCLONE_SHA256: 349ac8fba6ff65d6247043f1750cdcb518ec5d500ef91463a10d37c0ccdf3702
+  KYVERNO_CLI_VERSION: v1.19.1
+  KYVERNO_CLI_SHA256: b38228f367fc0fdc2b08f4c83ea50ac5f16c60ff8d62d76a66157c33c47b70ae
   # Kubernetes minor to validate against. kubeconform schemas are published for 1.36.x.
   KUBECONFORM_K8S_VERSION: "1.36.0"
 
@@ -32,7 +36,10 @@ jobs:
   lint:
     name: Lint & Validate
     # Per-change lint gates do not apply to the scheduled/manual full-tree run.
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 15
     steps:
@@ -53,6 +60,9 @@ jobs:
         env:
           YAML_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: python scripts/validate_changed_yaml.py
+
+      - name: Require MCP coverage for every Git-declared Application
+        run: python scripts/check_onemind_mcp_coverage.py
 
       - name: Report existing repository YAML debt
         continue-on-error: true
@@ -82,6 +92,8 @@ jobs:
 
   manifests:
     name: Kubernetes manifest schema (kubeconform)
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 15
     steps:
@@ -124,6 +136,8 @@ jobs:
 
   helm:
     name: Helm render check
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 30
     steps:
@@ -149,8 +163,42 @@ jobs:
         with:
           node-version: "24"
 
+      # Native Kubernetes int64 values must be tested before the JSON CLI boundary.
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
+        with:
+          go-version: "1.26.4"
+          cache: false
+
+      # Match the deployed policy engine; these security tests must not silently skip in CI.
+      - name: Install checksum-verified Kyverno policy test engine
+        run: |
+          mkdir -p "$RUNNER_TEMP/kyverno-cli"
+          curl -fsSL --retry 3 -o "$RUNNER_TEMP/kyverno-cli.tar.gz" \
+            "https://github.com/kyverno/kyverno/releases/download/${KYVERNO_CLI_VERSION}/kyverno-cli_${KYVERNO_CLI_VERSION}_linux_x86_64.tar.gz"
+          echo "$KYVERNO_CLI_SHA256  $RUNNER_TEMP/kyverno-cli.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/kyverno-cli.tar.gz" -C "$RUNNER_TEMP/kyverno-cli" kyverno
+          echo "KYVERNO_CLI=$RUNNER_TEMP/kyverno-cli/kyverno" >> "$GITHUB_ENV"
+
+      # Match the deployed backup-copy engine; regression tests must run in CI.
+      - name: Install checksum-verified rclone backup test engine
+        run: |
+          mkdir -p "$RUNNER_TEMP/rclone-cli"
+          curl -fsSL --retry 3 -o "$RUNNER_TEMP/rclone-cli.zip" \
+            "https://github.com/rclone/rclone/releases/download/${RCLONE_CLI_VERSION}/rclone-${RCLONE_CLI_VERSION}-linux-amd64.zip"
+          echo "$RCLONE_SHA256  $RUNNER_TEMP/rclone-cli.zip" | sha256sum -c -
+          python -m zipfile -e "$RUNNER_TEMP/rclone-cli.zip" "$RUNNER_TEMP/rclone-cli"
+          chmod +x "$RUNNER_TEMP/rclone-cli/rclone-${RCLONE_CLI_VERSION}-linux-amd64/rclone"
+          echo "RCLONE_BIN=$RUNNER_TEMP/rclone-cli/rclone-${RCLONE_CLI_VERSION}-linux-amd64/rclone" >> "$GITHUB_ENV"
+
       - name: Portable GitOps pipeline safety contracts
         run: python -m unittest discover -s scripts/tests -p 'test_gitops*.py' -v
+
+      # A stale values.generated.yaml, a classification that does not match its target, or an unreviewed
+      # `proposed` tool list fails here (docs/operations/tool-gateway.md).
+      - name: Tool gateway policy drift (classification and generated values)
+        run: |
+          python scripts/gateway/render_gateway_config.py --check
+          python scripts/gateway/classify_tools.py --check
 
       # Renders every Argo CD Application that pulls a remote Helm chart when the Application file or one of
       # its valueFiles changed, plus the local charts (platform/takserver/chart, platform/ecosystem/charts/*) when
@@ -165,6 +213,8 @@ jobs:
 
   secrets:
     name: Secret scan (gitleaks)
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 10
     steps:

@@ -1,6 +1,9 @@
 # Trivy Operator image vulnerability pilot
 
-Prepared 2026-10-24 for Zeus. **Not deployed or live-accepted by this PR.**
+Prepared 2026-10-24 for Zeus; retargeted 2026-11-04 to `auth,nats,onetak,n8n` after
+owner approval to deploy (Nextcloud was retired 2026-11-01 and is no longer a target).
+**Not live-accepted by this PR.** Merging deploys it: `platform-security` auto-syncs
+the RBAC/quota and the `ecosystem-trivy-operator` child (see GitOps rollout).
 Implementation PR: [#442](https://github.com/onemindos/omos/pull/442).
 This implements the requested bounded scanning pilot alongside Kyverno/Falco.
 It does not block deployments, patch apps, install an admission webhook, or run
@@ -14,7 +17,7 @@ commands inside application pods. Authentik's login program is separate.
 | Helm child | `ecosystem-trivy-operator`, release `trivy-operator`, namespace `trivy-system`, sync wave 5, prune off, no cascading finalizer |
 | Chart | Aqua `trivy-operator` **0.37.0**, operator **0.35.0**, scanner **0.75.0**; archive checksum in both chart metadata/verified foundation lock as appropriate |
 | Image references | Operator and scanner index digests pinned in `platform/ecosystem/values/trivy-operator.yaml`; observed public mirror manifest digests on preparation date |
-| Workloads | Current ReplicaSets and StatefulSets in **nextcloud,n8n**; public images only, including ordinary and init containers |
+| Workloads | Current ReplicaSets and StatefulSets in **auth,nats,onetak,n8n**, including ordinary and init containers. Public images are scanned; the three private `ghcr.io/onemindos` images are **not** (see Private images) |
 | Scan jobs | In `trivy-system`; **one concurrent Job**, 15-minute Job deadline, 12-minute scanner timeout, 5-minute retry delay/cleanup TTL |
 | Reports | Namespaced `VulnerabilityReport`; 24-hour TTL triggers refresh, and workload changes trigger new reports |
 | Optional scanners | Configuration, RBAC, nodes/host filesystem, compliance, secret and SBOM generation/cache **disabled**; no compliance specs instantiated |
@@ -55,23 +58,64 @@ namespaces. The Kubernetes API Service endpoint port is 443. No Trivy deployment
 or Aqua report CRDs were found during the preceding read-only inventory.
 Recheck these facts and node ephemeral storage before merge/rollout; they can change.
 
-The later workload-only preflight found four active controllers and **six ordinary
-containers**, with no init containers: Nextcloud app + cron (35.0.2-apache),
-Nextcloud Redis (7.4.7-alpine), n8n + task-runners (2.42.4) and n8n PostgreSQL
-(17-alpine). Redis/n8n/runners/PostgreSQL references already include digests;
-Nextcloud is a mutable version tag. Acceptance must resolve that tag and match
-the report to the actual running digest, not just these preparation-time tags.
+Workload inventory re-read from the cluster on **2026-11-04** (read-only; current,
+non-zero-replica ReplicaSets and StatefulSets): **21 controllers, 24 ordinary
+containers and 1 init container**.
+
+| Namespace | Controllers | Containers (init) |
+|---|---|---|
+| `auth` | 4: authentik server, worker, redis, postgres | 4 |
+| `nats` | 7: nats StatefulSet (nats + reloader), nack, heynats, nats-dashboard, nats-ui, nats-surveyor, leafz-exporter | 8 |
+| `onetak` | 8: nodeodm, mediamtx, tak-portal, tile38, tileserver-gl, webodm (webapp + worker), webodm-broker, webodm-db | 9 (+1 init: `fix-perms` busybox) |
+| `n8n` | 2: n8n (n8n + task-runners), postgres | 3 |
+
+The largest Job is two scanner containers (nats StatefulSet, webodm, n8n, and
+webodm-db with its init container). `mediamtx:1-ffmpeg`, `authentik-redis`
+(`redis:7-alpine`), `postgres:17-alpine` (auth) and `redis:7.0.10` are mutable
+tags; most others carry digests. Acceptance must match each report to the
+actual running digest, not just these tags. The largest image (nodeodm) is about
+800 MB compressed, so the 4Gi per-container ephemeral limit and 12-minute scanner
+timeout are expected to hold; measure it, and raise only if a real OOM, eviction or
+timeout is recorded.
+
+### Private images (not scanned)
+
+No registry credential is created or copied (`privateRegistryScanSecretsNames: {}`,
+`accessGlobalSecretsAndServiceAccount: false`, no Secret read outside `trivy-system`).
+These three `ghcr.io/onemindos` images, which pods pull with the `ghcr` image pull
+secret, **cannot be scanned**:
+
+| Namespace | Workload | Image |
+|---|---|---|
+| `nats` | `heynats` | `ghcr.io/onemindos/heynats@sha256:65f1d5aa...` |
+| `nats` | `nats-dashboard` | `ghcr.io/onemindos/nats-dashboard@sha256:bccc7a25...` |
+| `onetak` | `tak-portal` | `ghcr.io/onemindos/tak-portal@sha256:eaa14729...` |
+
+The scanner pulls anonymously, is refused, and its container fails. In pinned operator
+v0.35.0 a Job with no successfully completed container is deleted and **no
+VulnerabilityReport is written**; there is no immediate retry (the 5-minute delay
+only applies to concurrency push-back). The gap is therefore visible as: no report for
+that workload, no row in the Grafana table (No data), a failed-scan log line in the
+operator, and an events/Job failure in `trivy-system`. It must never be read as
+clean. The operator may attempt the scan again on a later reconcile (operator
+restart, workload change, cache resync); count those attempts during acceptance.
+Other `ghcr.io` images (`goauthentik/server`, `gastbob40/nats-ui`) are public.
 
 - Operator request **50m / 128Mi**, limit **500m / 512Mi**; ephemeral storage
   request 64Mi, limit 256Mi.
 - Each scanner container requests **100m / 512Mi / 1Gi ephemeral**, limited to
-  **1 CPU / 2Gi memory / 4Gi ephemeral**. The current Nextcloud Deployment has
-  app and cron containers, so its scan may request 200m / 1Gi plus the operator.
-  The resulting initial maximum two-container request is 250m / 1152Mi; this is
-  capacity planning from the current workload, not a universal per-Job maximum.
+  **1 CPU / 2Gi memory / 4Gi ephemeral**. The widest current workloads have two
+  scanner containers, so a Job requests 200m / 1Gi plus the operator: 250m / 1152Mi
+  maximum, limits 4Gi plus the operator's 512Mi (4.5Gi, within the 5Gi quota). This
+  is capacity planning from the current workload set, not a universal per-Job maximum.
+  The 4 target namespaces add controllers but not concurrency: still **one Job at a
+  time**, so the 21 workloads are scanned serially. Because the 5-minute push-back
+  applies to the 20 waiting workloads, the first full pass can take well over an hour;
+  this is accepted for a pilot and not tuned.
 - Namespace quota caps total requests at **1 CPU / 2Gi memory / 4Gi ephemeral**
   and limits at **3 CPU / 5Gi memory / 10Gi ephemeral**, with four pods and five
-  Job objects. This deliberately stops a future larger workload from consuming
+  Job objects; these still suit the larger set (unchanged, see the 2026-11-04
+  capacity re-check). This deliberately stops a future larger workload from consuming
   an unreviewed budget. Quota rejection is a failed/missing scan, not clean coverage.
 - Operator and scanner jobs prefer the existing ecosystem pool, with scheduling
   fallback. No node-name pin, node scaling or reserved high priority is introduced.
@@ -79,13 +123,20 @@ the report to the actual running digest, not just these preparation-time tags.
   vulnerability DB downloads per Job. Measure duration, throttling, rate limits,
   storage and memory/OOM before changing cache architecture or concurrency.
 
+Capacity re-check **2026-11-04** (read-only; sum of container requests per node,
+allocatable memory minus requested): `onemind-ecosystem-cpu-3rhwrp` about **6.5 GiB**
+free; hub nodes `3rtf47` / `3rtf4m` / `3rtf4q` about **4.4 / 4.8 / 4.1 GiB** free;
+CPU requests 3.1 to 5.5 of 7.88 cores. `kubectl top` memory use was 58 to 61% on all
+four nodes. The operator (128Mi) plus one Job (1Gi) fits on any node, and jobs prefer
+the ecosystem pool. The first table above is the original 2026-10-24 snapshot.
+
 ## Permissions and network boundary
 
 The chart's broad operator RBAC is **disabled**. Explicit roles/bindings are
 owned by `platform-security` in `trivy-pilot-rbac.yaml` before the child starts:
 
 - Namespace-bound workload metadata reads and vulnerability-report CRUD in
-  `nextcloud`, `n8n` and `trivy-system`. No writes to Deployments, StatefulSets,
+  `auth`, `nats`, `onetak`, `n8n` and `trivy-system`. No writes to Deployments, StatefulSets,
   pods or application configuration. Listing metadata includes workload specs;
   it is not permission to read application Secret objects.
 - Read-only `exposedsecretreports` and `sbomreports` in those namespaces are
@@ -138,28 +189,31 @@ there is no imperative Helm installation or `kubectl apply` step.
    ```bash
    kubectl --context do-nyc3-omos-cloud auth can-i create jobs -n trivy-system --as=system:serviceaccount:trivy-system:trivy-operator
    kubectl --context do-nyc3-omos-cloud auth can-i create jobs -n auth --as=system:serviceaccount:trivy-system:trivy-operator
-   kubectl --context do-nyc3-omos-cloud auth can-i get secrets -n nextcloud --as=system:serviceaccount:trivy-system:trivy-operator
+   kubectl --context do-nyc3-omos-cloud auth can-i get secrets -n nats --as=system:serviceaccount:trivy-system:trivy-operator
    kubectl --context do-nyc3-omos-cloud auth can-i patch deployments -n n8n --as=system:serviceaccount:trivy-system:trivy-operator
    ```
 
-   Expected answers: yes, no, no, no. Also verify report writes allowed only in
+   Expected answers: yes, no, no, no (`nextcloud` is no longer a namespace or target). Also verify report writes allowed only in
    the pilot namespaces, read-only SBOM/secret-report watches work, and node/proxy
    access is denied. Check all explicit bindings, not just one Role document.
 4. Observe at most one active scan Job, all scanner pods in `trivy-system`, no
    projected service-account token/host mounts, and no optional scanner Jobs.
    Record scan duration, memory/CPU/storage peaks, failures/retries and quota
-   events. Confirm Nextcloud and n8n remain healthy and their app specs unchanged.
+   events. Confirm Authentik, NATS, OneTAK and n8n remain healthy and their app specs
+   unchanged; NATS (3-node JetStream) and Authentik are the sensitive ones.
 5. For **each current pilot ReplicaSet/StatefulSet container and init container**,
    enumerate image references/digests and match an actual VulnerabilityReport.
-   Include Nextcloud/Redis and n8n/PostgreSQL. Compare report scanner version,
+   Cover all four namespaces (21 controllers). Compare report scanner version,
    artifact digest, creationTimestamp, summary and a sample package/fixed version.
    Mutable target image tags may move: confirm report digest against running
    `status.containerStatuses[].imageID`. Inactive ReplicaSets are intentionally
    excluded. A private-image failure, OOM, timeout or absent report stays visible
-   as incomplete coverage. Do not add credentials or change application images
+   as incomplete coverage. Expect exactly three missing reports (`heynats`,
+   `nats-dashboard`, `tak-portal`, private images) and verify the failures are
+   logged, not looping. Do not add credentials or change application images
    automatically to obtain a successful report.
 6. Prometheus target must be discovered/up and emit
-   `trivy_image_vulnerabilities{namespace="nextcloud"}` and `namespace="n8n"`.
+   `trivy_image_vulnerabilities` for `namespace` in `auth`, `nats`, `onetak` and `n8n`.
    HonorLabels preserves the report's workload namespace against the scrape
    target's namespace; per-CVE ID metrics are off to keep cardinality bounded.
    Open Grafana `/d/onemind-trivy-pilot` using existing login, verify OneMind folder,
@@ -197,7 +251,8 @@ completion. Keep CRDs/reports and namespace until approved; deleting a report
 CRD would delete its reports. Do not use Helm CLI uninstall, blanket namespace
 deletion or finalizer stripping as rollback.
 
-After acceptance, separately consider private-image credential references,
+After acceptance, separately consider private-image credential references (a
+SealedSecret in `trivy-system` plus `privateRegistryScanSecretsNames`, needing owner approval),
 additional namespaces, configuration/RBAC reports, actionable alerts and OneMind
 catalog links. Reassess permissions/capacity/visibility for each. Node collectors,
 admission enforcement, automatic remediation and paid services stay out of this

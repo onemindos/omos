@@ -1,6 +1,8 @@
-# Public-image pilot only. RBAC is explicitly scoped by platform-security;
-# never enable chart RBAC or widen namespaces without reviewing those bindings.
-targetNamespaces: nextcloud,n8n
+# Public-image pilot. RBAC is explicitly scoped by platform-security; never enable
+# chart RBAC or widen namespaces without reviewing those bindings. Private
+# ghcr.io/onemindos images (heynats, nats-dashboard, tak-portal) cannot be pulled
+# because no registry credentials are configured here; those scans fail visibly.
+targetNamespaces: auth,nats,onetak,n8n
 targetWorkloads: replicaset,statefulset
 operator:
   replicas: 1

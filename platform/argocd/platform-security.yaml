@@ -20,20 +20,12 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
+  # ClusterPolicy defaults are explicit in source. Do not restore rule-list ignore
+  # paths: RespectIgnoreDifferences prepatching could replace intended rule edits
+  # with the entire old live rule list while reporting a successful apply.
   syncPolicy:
     automated:
       prune: false
       selfHeal: true
     syncOptions:
       - ServerSideApply=true
-      - RespectIgnoreDifferences=true
-  # Kyverno writes defaulted fields back into every ClusterPolicy, which showed the Application as
-  # permanently OutOfSync. Ignore exactly those fields (read from the live objects), on ClusterPolicy only.
-  ignoreDifferences:
-    - group: kyverno.io
-      kind: ClusterPolicy
-      jqPathExpressions:
-        - .spec.admission
-        - .spec.emitWarning
-        - .spec.rules[]?.skipBackgroundRequests
-        - .spec.rules[]?.validate?.allowExistingViolations

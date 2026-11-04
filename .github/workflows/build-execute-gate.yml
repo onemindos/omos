@@ -1,0 +1,62 @@
+name: Build execute-gate
+on:
+  push:
+    branches: [main]
+    paths:
+      - services/execute-gate/**
+      - .github/workflows/build-execute-gate.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - services/execute-gate/**
+      - .github/workflows/build-execute-gate.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: build-execute-gate-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  test-and-image:
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: >-
+      github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, linux, amd64, zeus-v2]
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    defaults:
+      run:
+        working-directory: services/execute-gate
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        id: image
+        with:
+          context: services/execute-gate
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ghcr.io/onemindos/execute-gate:sha-${{ github.sha }}
+          platforms: linux/amd64
+      - name: Record deployable digest
+        if: github.event_name != 'pull_request'
+        run: printf '%s\n' '${{ steps.image.outputs.digest }}' > image-digest.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: github.event_name != 'pull_request'
+        with:
+          name: execute-gate-image
+          path: services/execute-gate/image-digest.txt

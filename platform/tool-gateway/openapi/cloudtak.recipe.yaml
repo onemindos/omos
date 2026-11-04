@@ -1,0 +1,12 @@
+source: cloudtak.source.json
+server: http://cloudtak-api.cloudtak.svc.cluster.local:5000
+keep:
+- {method: get, path: /api/server, id: get_server, params: []}
+- {method: get, path: /api/connection, id: list_connections, params: []}
+- {method: get, path: /api/marti/mission, id: list_missions, params: []}
+- {method: get, path: /api/marti/clients, id: list_clients, params: []}
+- {method: get, path: /api/marti/group, id: list_groups, params: [], summary: List the groups the client is part of}
+- {method: get, path: /api/marti/api/contacts/all, id: list_contacts, params: []}
+- {method: get, path: /api/marti/video, id: list_video_streams, params: []}
+- {method: get, path: /api/profile, id: get_profile, params: []}
+- {method: get, path: /api/basemap, id: list_basemaps, params: []}

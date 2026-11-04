@@ -1,0 +1,51 @@
+"""Work around Apache AGE #2256 without changing its shared native library.
+
+The pinned PgSTAC bootstrap uses COALESCE as a FROM expression. AGE 1.6
+misidentifies that PostgreSQL node as a function call and can crash the backend.
+A one-row lateral SELECT preserves the expression and transaction semantics.
+See https://github.com/apache/age/pull/2259 for the native upstream fix.
+"""
+from hashlib import sha256
+from pathlib import Path
+
+from pypgstac import __version__, migrate
+from pypgstac.pypgstac import cli
+
+EXPECTED_VERSION = "0.9.12"
+EXPECTED_SQL_SHA256 = "781d5d2936e599d01c239ac8e65f39798e48ba5cd36b7009d4cdc031e9a9bf8a"
+ORIGINAL = (
+    "JOIN LATERAL COALESCE(constraint_tstzrange(pg_get_expr(c.relpartbound, c.oid)), "
+    "inf_range) as partition_dtrange ON TRUE"
+)
+COMPATIBLE = (
+    "JOIN LATERAL (SELECT COALESCE(constraint_tstzrange(pg_get_expr(c.relpartbound, c.oid)), "
+    "inf_range) AS partition_dtrange) AS partition_dtrange ON TRUE"
+)
+upstream_get_sql = migrate.get_sql
+
+
+def compatibility_sql(filename):
+    """Change one reviewed expression; reject unreviewed SQL and upgrades."""
+    name = Path(filename).name
+    if name != "pgstac.0.9.12.sql":
+        raise RuntimeError("Only the reviewed PgSTAC 0.9.12 bootstrap is supported")
+    source = Path(migrate.migrations_dir) / name
+    if sha256(source.read_bytes()).hexdigest() != EXPECTED_SQL_SHA256:
+        raise RuntimeError("Pinned PgSTAC SQL checksum changed")
+    sql = upstream_get_sql(filename)
+    if sql.count(ORIGINAL) != 1:
+        raise RuntimeError("Expected exactly one reviewed LATERAL COALESCE expression")
+    print("Applying scoped AGE compatibility for PgSTAC partition_sys_meta", flush=True)
+    return sql.replace(ORIGINAL, COMPATIBLE)
+
+
+def main():
+    if __version__ != EXPECTED_VERSION:
+        raise RuntimeError("Unreviewed PgSTAC client version")
+    # Keep the original CLI, role handling, full-file transaction and version checks.
+    migrate.get_sql = compatibility_sql
+    cli()
+
+
+if __name__ == "__main__":
+    main()

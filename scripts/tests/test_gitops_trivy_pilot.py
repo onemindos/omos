@@ -81,10 +81,10 @@ class TrivyPilotTests(unittest.TestCase):
         spec.loader.exec_module(gate)
         self.assertIn('platform/security/ecosystem-trivy-operator.yaml', [p for p, _ in gate.load_apps()])
 
-    def test_runtime_configuration_scans_only_two_namespaces_without_optional_scanners(self):
+    def test_runtime_configuration_scans_only_four_namespaces_without_optional_scanners(self):
         dep = self.resource('Deployment', 'trivy-operator')
         env = {e['name']: e['value'] for e in dep['spec']['template']['spec']['containers'][0]['env']}
-        self.assertEqual(set(env['OPERATOR_TARGET_NAMESPACES'].split(',')), {'nextcloud', 'n8n'})
+        self.assertEqual(set(env['OPERATOR_TARGET_NAMESPACES'].split(',')), {'auth', 'nats', 'onetak', 'n8n'})
         self.assertEqual(env['OPERATOR_TARGET_WORKLOADS'], 'replicaset,statefulset')
         config = self.resource('ConfigMap', 'trivy-operator-config')['data']
         self.assertEqual(config['OPERATOR_VULNERABILITY_SCANNER_ENABLED'], 'true')
@@ -100,7 +100,7 @@ class TrivyPilotTests(unittest.TestCase):
                                          'MutatingWebhookConfiguration') for d in self.rendered))
 
     def test_scanner_can_observe_workloads_and_publish_findings_but_cannot_change_apps(self):
-        for namespace in ['nextcloud', 'n8n', 'trivy-system']:
+        for namespace in ['auth', 'nats', 'onetak', 'n8n', 'trivy-system']:
             self.assertTrue(permits(self.rbac, namespace, 'apps', 'replicasets', 'watch'))
             self.assertTrue(permits(self.rbac, namespace, 'batch', 'jobs', 'list'))
             self.assertTrue(permits(self.rbac, namespace, 'aquasecurity.github.io', 'vulnerabilityreports', 'create'))
@@ -108,12 +108,17 @@ class TrivyPilotTests(unittest.TestCase):
                 self.assertTrue(permits(self.rbac, namespace, 'aquasecurity.github.io', report, 'watch'))
                 self.assertFalse(permits(self.rbac, namespace, 'aquasecurity.github.io', report, 'create'))
             self.assertFalse(permits(self.rbac, namespace, 'apps', 'deployments', 'patch'))
-        for namespace in ['nextcloud', 'n8n', 'auth', 'kube-system', 'backstage']:
+        for namespace in ['auth', 'nats', 'onetak', 'n8n', 'kube-system', 'backstage', 'nextcloud', 'monitoring']:
             for verb in ['get', 'list', 'create', 'update', 'delete']:
                 self.assertFalse(permits(self.rbac, namespace, '', 'secrets', verb), (namespace, verb))
             self.assertFalse(permits(self.rbac, namespace, 'batch', 'jobs', 'create'))
             self.assertFalse(permits(self.rbac, namespace, '', 'pods/log', 'get'))
-        self.assertFalse(permits(self.rbac, 'auth', 'aquasecurity.github.io', 'vulnerabilityreports', 'create'))
+        for namespace in ['nextcloud', 'kube-system', 'monitoring']:
+            self.assertFalse(permits(self.rbac, namespace, 'aquasecurity.github.io', 'vulnerabilityreports', 'create'))
+        self.assertFalse(permits(self.rbac, '', '', 'namespaces', 'get', 'nextcloud'))
+        # No registry credentials: private ghcr.io/onemindos images fail visibly, never via copied secrets.
+        self.assertEqual(self.values['operator']['privateRegistryScanSecretsNames'], {})
+        self.assertFalse(self.values['operator']['accessGlobalSecretsAndServiceAccount'])
         self.assertFalse(permits(self.rbac, '', '', 'nodes/proxy', 'get'))
         self.assertFalse(permits(self.rbac, '', '', 'nodes', 'list'))
         self.assertTrue(permits(self.rbac, 'trivy-system', 'batch', 'jobs', 'create'))
@@ -129,8 +134,8 @@ class TrivyPilotTests(unittest.TestCase):
         role = next(d for d in documents if d['kind'] == 'Role' and d['metadata']['name'] == 'trivy-pilot-jobs')
         role['kind'] = 'ClusterRole'
         role['metadata'].pop('namespace')
-        self.assertTrue(permits(documents, 'auth', '', 'secrets', 'get'))
-        self.assertTrue(permits(documents, 'auth', 'batch', 'jobs', 'create'))
+        self.assertTrue(permits(documents, 'kube-system', '', 'secrets', 'get'))
+        self.assertTrue(permits(documents, 'kube-system', 'batch', 'jobs', 'create'))
 
     def test_scan_configuration_has_pinned_images_resources_and_no_token_or_host_access(self):
         pod = self.resource('Deployment', 'trivy-operator')['spec']['template']['spec']
@@ -166,7 +171,7 @@ class TrivyPilotTests(unittest.TestCase):
                 query = target['expr']
                 self.assertNotIn('or vector(0)', query)
                 if 'trivy_image_vulnerabilities' in query:
-                    self.assertIn('namespace=~"nextcloud|n8n"', query)
+                    self.assertIn('namespace=~"auth|nats|onetak|n8n"', query)
         roles = [d for d in self.rendered if d['kind'] == 'ClusterRole']
         self.assertEqual(len(roles), 3)  # upstream report-view aggregation, not operator rights
         for role in roles:

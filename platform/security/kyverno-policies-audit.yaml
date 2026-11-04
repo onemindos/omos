@@ -1,11 +1,43 @@
-# Kyverno ClusterPolicies, AUDIT ONLY. Applied by platform-security (platform/argocd/platform-security.yaml).
+# Kyverno ClusterPolicies. Applied by platform-security (platform/argocd/platform-security.yaml).
 #
 # Safety:
-#   * validationFailureAction: Audit on every policy. Nothing is blocked; violations show up in
-#     PolicyReports (wgpolicyk8s.io). Do not switch to Enforce without a cleanup PR and Zeus's approval.
+#   * validationFailureAction: Enforce on disallow-latest-image-tag and require-namespace-layer-label only
+#     (no live violation on 2026-10-27). A rule-level validate.failureAction would override this field in
+#     Kyverno 1.19.1; none is set.
+#     - require-namespace-layer-label denies a CREATE that violates and an UPDATE that adds a violation;
+#       allowExistingViolations admits updates to namespaces that already violated.
+#     - The image rules match CREATE only. Kyverno 1.19.1 never applies allowExistingViolations to a rule
+#       with preconditions: validateOldObject re-checks the raw preconditions in matchResource, which fails
+#       even for a constant condition, so every UPDATE of an already-violating object would be denied
+#       (finalizer, label or ownerReference patches on a Pod admitted while the webhook was down).
+#       Every Pod a controller makes is still a CREATE, background scans run as CREATE, and an in-place
+#       image change to :latest on UPDATE is reported, not denied. Re-check on every Kyverno upgrade
+#       (test_admission_update_skips_image_rules).
+#     The installed CRD marks this spec field deprecated (and kyverno.io/v1 ClusterPolicy itself). On every Kyverno
+#     upgrade, check the release notes for it, then confirm both policies still show Enforce (kubectl get
+#     clusterpolicy) and that `kubectl create namespace enforce-probe --dry-run=server` and
+#     `kubectl run enforce-probe --image=busybox --dry-run=server` are denied. If the field is dropped or ignored,
+#     move all four policies to rules[].validate.failureAction and update test_only_violation_free_policies_enforce
+#     (scripts/tests/test_gitops_kyverno_history.py), which forbids the rule-level field today.
+#   * require-requests-limits and disallow-privileged-and-hostpath stay Audit (the github-runner dind container
+#     is privileged): violations only show up in PolicyReports (wgpolicyk8s.io). Do not switch them to Enforce
+#     without a cleanup PR and Zeus's approval.
+#   * Enforce never sees what Kyverno filters out: the webhook skips the kube-system and kyverno namespaces, and
+#     the kyverno ConfigMap resourceFilters also skip kube-public, kube-node-lease and ReplicaSets (the Pods a
+#     ReplicaSet creates are still checked). New namespaces need the layer label at creation; see
+#     docs/architecture/namespace-layers.md.
 #   * failurePolicy: Ignore. Kyverno runs one admission replica; with the default (Fail) a Kyverno outage
-#     would reject every Pod create. Ignore lets requests through if the webhook is down.
+#     would reject every Pod create. Ignore lets requests through if the webhook is down, so Enforce fails open.
 #   * Per-resource SkipDryRun + sync-wave 5 so these apply after the Kyverno CRDs on a fresh bootstrap.
+#
+# Image/resource background scans skip only settled controller history. Real admission
+# requests always retain validation, identified by their nonempty request.uid.
+# Kyverno 1.19.1 background scans also use operation CREATE, so operation cannot
+# distinguish them. Quoting request."object" preserves controller fields in autogen.
+# Normalize native Kubernetes int64 values for JMESPath comparisons: CLI JSON floats
+# and the reports controller must classify history identically. Unknown values fail closed.
+# Keep the exact-version engine fixtures in test_gitops_kyverno_history.py passing
+# before changing this guard or upgrading Kyverno. Other security rules are unchanged.
 #
 # Excluded from the privileged/hostPath policy (what actually runs them, checked 2026-10-23):
 #   kube-system (cilium, csi-do-node, do-node-agent, doks-telemetry-config-reloader), falco, velero (node-agent),
@@ -25,7 +57,9 @@ metadata:
     policies.kyverno.io/description: >-
       Images must carry an explicit tag or digest and must not use the mutable :latest tag.
 spec:
-  validationFailureAction: Audit
+  admission: true
+  emitWarning: false
+  validationFailureAction: Enforce
   failurePolicy: Ignore
   background: true
   rules:
@@ -35,7 +69,43 @@ spec:
           - resources:
               kinds:
                 - Pod
+              operations:
+                - CREATE
+      context: &historical-workload-context
+        - name: retiredWorkloadHistory
+          variable:
+            # Missing or uncertain status stays evaluated; no API lookups are needed.
+            jmesPath: >-
+              (request."object".kind == 'ReplicaSet' &&
+               to_number(to_string(request."object".spec.replicas)) == `0` &&
+               to_number(to_string(request."object".status.replicas)) == `0` &&
+               to_number(to_string(request."object".status.observedGeneration)) >=
+               to_number(to_string(request."object".metadata.generation)) &&
+               length(request."object".metadata.ownerReferences[?apiVersion == 'apps/v1' && kind == 'Deployment' &&
+               controller == `true` && uid != null && uid != ''] || `[]`) > `0`) ||
+              (request."object".kind == 'Job' &&
+               to_number(to_string(not_null(request."object".status.active, `0`))) == `0` &&
+               to_number(to_string(not_null(request."object".status.terminating, `0`))) == `0` &&
+               length(request."object".status.conditions[?(type == 'Complete' || type == 'Failed') && status == 'True'] || `[]`) > `0` &&
+               length(request."object".metadata.ownerReferences[?apiVersion == 'batch/v1' && kind == 'CronJob' &&
+               controller == `true` && uid != null && uid != ''] || `[]`) > `0`) ||
+              (request."object".kind == 'Pod' && contains(`["Succeeded", "Failed"]`, request."object".status.phase || '') &&
+               length(request."object".metadata.ownerReferences[?controller == `true` && uid != null && uid != '' &&
+               ((apiVersion == 'batch/v1' && kind == 'Job') ||
+               (apiVersion == 'apps/v1' && contains(`["ReplicaSet", "StatefulSet", "DaemonSet"]`, kind)) ||
+               (apiVersion == 'v1' && kind == 'ReplicationController'))] || `[]`) > `0`)
+            default: false
+      preconditions: &assess-admission-or-current
+        any:
+          - key: "{{ request.uid || '' }}"
+            operator: NotEquals
+            value: ""
+          - key: "{{ retiredWorkloadHistory }}"
+            operator: Equals
+            value: false
+      skipBackgroundRequests: true
       validate:
+        allowExistingViolations: true
         message: "Images must have an explicit tag or digest (not an implicit :latest)."
         pattern:
           spec:
@@ -51,7 +121,13 @@ spec:
           - resources:
               kinds:
                 - Pod
+              operations:
+                - CREATE
+      context: *historical-workload-context
+      preconditions: *assess-admission-or-current
+      skipBackgroundRequests: true
       validate:
+        allowExistingViolations: true
         message: "Using the :latest tag is not allowed. Pin a version or digest."
         pattern:
           spec:
@@ -76,6 +152,8 @@ metadata:
     policies.kyverno.io/description: >-
       Every container must set CPU and memory requests and a memory limit. CPU limits are not required.
 spec:
+  admission: true
+  emitWarning: false
   validationFailureAction: Audit
   failurePolicy: Ignore
   background: true
@@ -86,7 +164,49 @@ spec:
           - resources:
               kinds:
                 - Pod
+      context:
+        - name: retiredWorkloadHistory
+          variable:
+            # Missing or uncertain status stays evaluated; no API lookups are needed.
+            jmesPath: >-
+              (request."object".kind == 'ReplicaSet' &&
+               to_number(to_string(request."object".spec.replicas)) == `0` &&
+               to_number(to_string(request."object".status.replicas)) == `0` &&
+               to_number(to_string(request."object".status.observedGeneration)) >=
+               to_number(to_string(request."object".metadata.generation)) &&
+               length(request."object".metadata.ownerReferences[?apiVersion == 'apps/v1' && kind == 'Deployment' &&
+               controller == `true` && uid != null && uid != ''] || `[]`) > `0`) ||
+              (request."object".kind == 'Job' &&
+               to_number(to_string(not_null(request."object".status.active, `0`))) == `0` &&
+               to_number(to_string(not_null(request."object".status.terminating, `0`))) == `0` &&
+               length(request."object".status.conditions[?(type == 'Complete' || type == 'Failed') && status == 'True'] || `[]`) > `0` &&
+               length(request."object".metadata.ownerReferences[?apiVersion == 'batch/v1' && kind == 'CronJob' &&
+               controller == `true` && uid != null && uid != ''] || `[]`) > `0`) ||
+              (request."object".kind == 'Pod' && contains(`["Succeeded", "Failed"]`, request."object".status.phase || '') &&
+               length(request."object".metadata.ownerReferences[?controller == `true` && uid != null && uid != '' &&
+               ((apiVersion == 'batch/v1' && kind == 'Job') ||
+               (apiVersion == 'apps/v1' && contains(`["ReplicaSet", "StatefulSet", "DaemonSet"]`, kind)) ||
+               (apiVersion == 'v1' && kind == 'ReplicationController'))] || `[]`) > `0`)
+            default: false
+        - name: providerManagedSystemDefaults
+          variable:
+            # Respect DOKS-owned budgets only during background assessment.
+            # Inspect controller metadata itself, not its autogen Pod template.
+            jmesPath: >-
+              request."object".metadata.namespace == 'kube-system' &&
+              request."object".metadata.labels."doks.digitalocean.com/managed" == 'true'
+            default: false
+      preconditions:
+        any:
+          - key: "{{ request.uid || '' }}"
+            operator: NotEquals
+            value: ""
+          - key: "{{ retiredWorkloadHistory || providerManagedSystemDefaults }}"
+            operator: Equals
+            value: false
+      skipBackgroundRequests: true
       validate:
+        allowExistingViolations: true
         message: "Containers must set resources.requests.cpu, resources.requests.memory and resources.limits.memory."
         pattern:
           spec:
@@ -112,7 +232,9 @@ metadata:
     policies.kyverno.io/description: >-
       Namespaces must carry onemind.io/layer with one of sense, make-sense, decide, act, data, guard, system.
 spec:
-  validationFailureAction: Audit
+  admission: true
+  emitWarning: false
+  validationFailureAction: Enforce
   failurePolicy: Ignore
   background: true
   rules:
@@ -129,7 +251,9 @@ spec:
                 - kube-system
                 - kube-public
                 - kube-node-lease
+      skipBackgroundRequests: true
       validate:
+        allowExistingViolations: true
         message: "Namespace needs the label onemind.io/layer with a value in: sense, make-sense, decide, act, data, guard, system."
         pattern:
           metadata:
@@ -151,6 +275,8 @@ metadata:
       Privileged containers and hostPath volumes give a workload the node. System namespaces and the named
       node-level monitoring agents are excluded.
 spec:
+  admission: true
+  emitWarning: false
   validationFailureAction: Audit
   failurePolicy: Ignore
   background: true
@@ -178,7 +304,9 @@ spec:
               names: &monitoring-node-agents
                 - "monitoring-prometheus-node-exporter*"
                 - "otel-collector-opentelemetry-collector-agent*"
+      skipBackgroundRequests: true
       validate:
+        allowExistingViolations: true
         message: "Privileged containers are not allowed."
         pattern:
           spec:
@@ -205,7 +333,9 @@ spec:
               namespaces:
                 - monitoring
               names: *monitoring-node-agents
+      skipBackgroundRequests: true
       validate:
+        allowExistingViolations: true
         message: "hostPath volumes are not allowed."
         pattern:
           spec:

@@ -1,54 +1,67 @@
-# OneTAK STAC pilot: observe, diagnose and recover
+# STAC imagery catalog: observe, diagnose and recover
 
-> **Status: backend removed.** `onetak/stac-api` and `onetak/onetak-geo-db` (with their
-> catalog entries, volume and backup source) were removed from Git because STAC was never
-> set up: the `stac` database has no `pgstac` schema. STAC Browser has no live catalog
-> behind it until a backend is deliberately re-added. The former portal operations code
-> has also been removed. The text below describes the former
-> setup and is kept as history.
+The current application is `platform-stac` in namespace `stac`. Its PostgreSQL
+backend is database/role `stac` on the shared CNPG cluster `onemind-data`.
+The former `onetak/stac-api` and `onetak-geo-db` were retired; do not restore their
+configuration as a shortcut.
 
-## Ownership and request path
+## Request path and acceptance
 
-`onetak/stac-api` uses `onetak/onetak-geo-db`; both are owned by Argo application
-`platform-onetak`. Never let two controllers own the same workload.
+- `stac-api`: read/search API, tailnet ingress `stac.tail717ba0.ts.net`.
+- `stac-api-writer`: transactions enabled, no ingress; only the WebODM sync pod
+  selector may reach it through the writer NetworkPolicy.
+- `stac-browser`: static browser, tailnet ingress `stac-browser.tail717ba0.ts.net`.
+- `webodm-stac-sync`: every-ten-minute ingestion job; it needs existing Spaces
+  credentials and a reviewed WebODM source credential. An empty catalog is valid
+  API acceptance, but does not prove imagery was ingested.
 
-The catalog contract `api:default/onetak-stac-readonly` documents only the reviewed
-landing/collection/search subset. It is not a full upstream conformance claim.
+Check both API Services have ready endpoints. A green browser pod or Argo Healthy
+alone is insufficient: during the contained October 24 incident both API
+Deployments were absent while the browser remained Ready.
 
-## Do not confuse these signals
+Verify landing, collection listing and bounded search return valid JSON. Read API
+collection/item writes must return 405/404. Check generated links use the intended
+tailnet origin. Verify actual asset access separately; private Spaces URLs do not
+become public merely because an Item contains them.
 
-- Kubernetes readiness and observed generation: container/controller state.
-- API landing HTTP 200: the landing document responds; it may not query the DB.
-- Collections/search HTTP 200 plus valid JSON: those particular read paths work.
-- Item `datetime`: acquisition/phenomenon time, not ingestion completion time.
-- Prometheus values: scoped Deployment-pod queries, with query evaluation times;
-  not proof of raw scrape recency, data delivery or an ingestion SLA.
-- Argo Healthy/Synced: shared configuration application, not every app transaction.
-- Volume sync or a ready DB pod: not an application-consistent restore test.
+## Known migration incident and narrow correction
 
-All unavailable sources stay unknown. No ingestion SLA is currently configured.
-Collection results can be paginated; the one-item sorted search is bounded.
-No object/asset URLs, coordinates, credentials or raw upstream error bodies are
-returned by the operational observation endpoint.
+The original migration crashed the shared PostgreSQL backend on October 24, 2026.
+STAC sync is manual, the migration Job has zero retries and a ten-minute deadline.
+Do not repeat a failed production migration to diagnose it.
 
-## Finding observed 2026-10-20
+Controlled exact-image tests on October 25 isolated the failure to the AGE library
+preloaded into the server. PgSTAC's `partition_sys_meta` view uses
+`JOIN LATERAL COALESCE(...)`; the pinned AGE parser mishandles that expression
+([upstream issue/fix](https://github.com/apache/age/pull/2259)). Without AGE preload
+the unmodified migration passed. With preload it produced signal 11. Creating an
+AGE extension in the STAC database did not fix it.
 
-The landing page returned 200 while collections/search returned 500. API logs
-reported `UndefinedFunctionError: function search(jsonb) does not exist`.
-Read-only inspection of database `stac` found no `pgstac` namespace. This explains
-why a green pod is insufficient; it is not authorization to install schema blindly.
+The reviewed STAC compatibility wrapper changes that one FROM expression into an
+equivalent one-row lateral SELECT. It preserves the original pypgstac CLI and full
+transaction, verifies exact SQL checksum/version, and rejects unreviewed upgrades.
+It changes no global preload, native library or production role privileges.
+The underlying AGE bug remains relevant to other callers using the problematic
+expression; any native-library repair needs its own shared-database review.
 
-Before a schema repair: inventory existing tables/ownership and exact image/schema
-compatibility, preserve an encrypted backup, verify isolated restoration, and
-review an Argo-owned initialization/migration Job in a separate PR. Do not run
-`DROP`, restore over production, switch the DB, or ingest invented demo data to
-manufacture a healthy result. Recheck collections and search after any approved
-repair, then test the real user browser path. Retain a rollback/recovery plan;
-an application rollback alone does not necessarily reverse a database migration.
+## Recovery procedure
 
-## Useful surfaces
+1. Inspect the failed Job, both container logs and current CNPG/client health.
+   Preserve original evidence. Distinguish a SQL error, native crash and missing
+   API Deployment; restarting a browser cannot fix a missing schema.
+2. Use `platform-stac-validation` only for synthetic tests. It has loopback-only
+   PostgreSQL, emptyDir storage, deny-all networking and no production credentials.
+   Save logs/status before replacing failed disposable Jobs through Argo CD.
+   A ConfigMap update alone does not rerun a failed Job.
+3. Verify the exact candidate on both native validation cases and confirm a fresh
+   recoverable shared-database backup. Review the scoped migration diff and role
+   impact before a single explicit production sync. Never delete production PVCs,
+   reset WAL, change shared credentials or disable AGE globally as a shortcut.
+4. During sync watch migration completion, all three CNPG instances and shared
+   database clients, then API rollout/endpoints and real collection/search paths.
+   Stop on failure; do not add retries. Keep automation disabled through acceptance.
+5. Record observed timestamps and remaining ingestion/imagery gaps. Retire temporary
+   diagnostics only after their evidence is saved; preserve backups and data.
 
-- [Backup/recovery runbook](backups.md)
-
-The page exposes no restart, write API, schema-initialization or promotion action.
-The existing machine access boundary stays read-only.
+Repository evidence and exact image/SQL pins: `platform/stac/INCIDENT-2026-10-25.md`.
+The source policy is Git and Argo CD; do not add imperative or Helm-owned workloads.

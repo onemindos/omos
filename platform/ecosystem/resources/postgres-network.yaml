@@ -23,6 +23,15 @@ spec:
     ports:
     - protocol: TCP
       port: 5432
+  # CNPG instance managers also need peer status/failsafe access during recovery.
+  # A podSelector without a namespaceSelector is confined to this namespace.
+  - from:
+    - podSelector:
+        matchLabels:
+          cnpg.io/cluster: onemind-data
+    ports:
+    - protocol: TCP
+      port: 8000
   - from:
     - namespaceSelector:
         matchLabels:
