@@ -21,7 +21,7 @@ def main():
     subprocess.run([driver, "--version"], check=True, timeout=20)
     # Import the actual authenticated WebSocket route; no websockify or VNC port needed.
     from hermes_cli.web_routers.display import router
-    assert any(route.path == "/api/display/ws" for route in router.routes)
+    assert any(getattr(route, "path", None) == "/api/display/ws" for route in router.routes)
     exe = browser.executable()
     assert exe and "headless" not in exe, "upstream headed Chromium required"
     started = False
@@ -32,6 +32,7 @@ def main():
         assert st.running and st.installed, st.as_dict()
         env = {**os.environ, **runtime.published_env()}
         subprocess.run(["xdpyinfo"], env=env, check=True, stdout=subprocess.DEVNULL, timeout=10)
+        assert st.socket is not None
         path = Path(st.socket)
         assert stat.S_IMODE(path.stat().st_mode) == 0o600
         with socket.socket(socket.AF_UNIX) as client:
