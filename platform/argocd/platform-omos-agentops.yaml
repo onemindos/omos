@@ -1,0 +1,35 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 4 — ACT (agent operations)                               sync-wave: "5"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-omos-agentops: omos-agentops (FEATURES I1, I3, D10), namespace omos.
+#
+# Covers: platform/omos/agentops/ (Deployment and ConfigMap; it reuses the
+# omos-nats-creds SealedSecret that platform-omos applies).
+#
+# MANUAL SYNC, zero retries. Do not sync until the prerequisites at the top of
+# platform/omos/agentops/deployment.yaml are met (image digest pin, site anchor).
+# Re-enable automation only after a first rollout has been observed.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-omos-agentops
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/omos/agentops
+    directory:
+      recurse: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: omos
+  syncPolicy:
+    retry:
+      limit: 0

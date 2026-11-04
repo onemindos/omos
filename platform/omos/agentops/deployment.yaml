@@ -1,0 +1,112 @@
+# omos-agentops (FEATURES I1, I3, D10): agent presence on the map, the ATAK GeoChat path to
+# agents, deterministic watch jobs and AOI briefs. services/agentops/README.md.
+# Applied only by the platform-omos-agentops Application (manual sync). platform-omos does
+# not read this directory (directory.recurse: false).
+#
+# Sync prerequisites, in order:
+#   1. The first build-agentops run on main pushed the image; replace the tag below with its
+#      digest (tag@sha256:...) from the workflow's image-digest artifact.
+#   2. The owner sets SITE_LAT/SITE_LON in configmap.yaml.
+#   3. For alerts to be stored: grammar register BUS-P5 (evt.entity.> in EVT). Until then
+#      alerts go out on core NATS only; geofence crossings (MISSION) and briefs (EVT) are
+#      stored today.
+#   4. The entity service (PR #552) runs, so agents become ent.agent.* and briefs can query.
+#      The policy service (PR #554) runs, so watch proposals are accepted; until then they are
+#      recorded on the alert as not_sent (policy unreachable).
+# Credentials: the existing omos-nats-creds SealedSecret (keys user/password); no new secret.
+# The least-privilege user `agentops` is proposed in
+# docs/proposals/2026-10-29-grammar-register/i1-agents-watch-briefs.md (I1-P6) for the
+# identities file of PR #562.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omos-agentops
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: omos-agentops
+    app.kubernetes.io/part-of: omos-platform
+spec:
+  replicas: 1 # one watch runner: a second replica would raise every alert twice
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: omos-agentops
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: omos-agentops
+        app.kubernetes.io/part-of: omos-platform
+    spec:
+      # Ecosystem pool, as the entity service: hub-core is memory-saturated (cluster review H1).
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 20
+      containers:
+        - name: agentops
+          # Pin digest after first CI build (.github/workflows/build-agentops.yml).
+          image: ghcr.io/onemindos/omos-agentops:0.1.0
+          ports:
+            - name: http
+              containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: omos-agentops
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+            - name: WATCH_FILE
+              value: /config/watches.yaml
+            - name: PUBLISH_MODE
+              value: auto
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 20
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "20m"
+              memory: "48Mi"
+            limits:
+              cpu: "300m"
+              memory: "192Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+      volumes:
+        - name: config
+          configMap:
+            name: omos-agentops
+            items:
+              - key: watches.yaml
+                path: watches.yaml
