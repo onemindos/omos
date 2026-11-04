@@ -34,9 +34,12 @@ func (h ForbiddenHit) String() string {
 // follow-ups, not accepted vocabulary: JADC2-MAP section 6 F1 (the command envelope names
 // cmd.intercept.* as a protected class) and the registry example rule
 // 'rule.hostile-drone-critical'. Any extra occurrence, including in these files, fails.
+// entity/entity.v1.schema.json carries one description sentence that states stop-line SL9
+// ("disposition has no hostile value"): a prohibition, not a value, mirrored from the XR contract.
 var forbiddenBaseline = map[string]int{
 	"command/envelope.schema.json|intercept": 1,
 	"registry/workflow.schema.json|hostile":  2,
+	"entity/entity.v1.schema.json|hostile":   1,
 }
 
 // NewForbiddenHits returns the hits beyond the baseline count for their file|word. When a
