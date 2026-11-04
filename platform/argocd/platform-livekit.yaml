@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-livekit
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '5'
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/livekit
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: livekit
+  # Batch launch is manual: API keys and direct RTC connectivity are prerequisites.
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
