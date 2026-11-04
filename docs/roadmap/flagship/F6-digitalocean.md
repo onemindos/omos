@@ -14,7 +14,7 @@ Program index: [README](README.md).
   - Snapshots: count, size, age, the oldest and the largest
   - Load balancers, firewalls, VPCs
   - Spaces buckets: size, object count, if the API allows
-  - Container registry, domains and DNS records, uptime checks and their state
+  - Domains and DNS records, uptime checks and their state
   - Monitoring alert policies
 - **In the catalog**: every DO resource is a catalog entity under
   `resource:default/do-*`, linked to the app that uses it. The Argo CD app page
@@ -26,18 +26,21 @@ Program index: [README](README.md).
 
 - No DigitalOcean plugin exists in the Backstage plugin directory (checked
   2026-10-21). This must be custom.
-- `/today` shows a DO cost card waiting for a `billing:read` token.
-- Read-only inventory today (`doctl`): 1 DOKS cluster `omos-cloud` (1.36.5) with
-  4 droplets (3× s-8vcpu-16gb, 1× s-8vcpu-32gb-amd), 98 volumes (all bound to
-  PVCs), 58 volume snapshots, 2 load balancers, 3 firewalls, 4 VPCs, 1 uptime
-  check, 1 project. No managed databases, no App Platform apps, no DOCR registry.
+- `/today` shows a DO cost card waiting for a `billing:read` token. Secret
+  `backstage-billing` does not exist (checked 2026-11-04).
+- Hatch credits hide the real bill: October 2026 usage was $776.67 and the invoice
+  was $0.03. The page must show usage before credits as well as the amount due.
+- Read-only inventory on 2026-11-04 (`doctl`): 1 DOKS cluster `omos-cloud` with
+  4 droplets (3× s-8vcpu-16gb, 1× s-8vcpu-32gb-amd), 73 volumes, 53 snapshots,
+  1 load balancer, 3 firewalls, 4 VPCs and 1 uptime check. No managed databases
+  or DOCR registry.
 
 ## Build
 
 1. **Token (Zeus).** Create a DigitalOcean custom-scoped token with read-only
    scopes only (account, billing, droplet, kubernetes, block_storage, snapshot,
    load_balancer, firewall, vpc, domain, monitoring, uptime, spaces/read where
-   offered, registry). Zeus seals it as SealedSecret `backstage-digitalocean`,
+   offered). Zeus seals it as SealedSecret `backstage-digitalocean`,
    key `DIGITALOCEAN_TOKEN`, namespace `backstage`. The agent writes the
    manifest reference and waits; it never handles the token value.
 2. **Backend plugin** `plugins/plugin-onemind-digitalocean-backend`:
@@ -61,8 +64,7 @@ Program index: [README](README.md).
 
 ## Out of scope
 
-Creating, resizing or deleting any DO resource. Terraform keeps ownership of
-infrastructure (`infra/`).
+Creating, resizing or deleting any DO resource. The page is read-only.
 
 ## Files
 
