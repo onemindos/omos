@@ -50,9 +50,6 @@ export const mapping: InventoryMapping = {
     'karakeep/chrome': 'component:default/karakeep',
     'karakeep/meilisearch': 'component:default/karakeep',
     'karakeep/web': 'component:default/karakeep',
-    'keda/keda-admission-webhooks': 'component:default/keda',
-    'keda/keda-operator': 'component:default/keda',
-    'keda/keda-operator-metrics-apiserver': 'component:default/keda',
     'kube-system/clickhouse-operator': 'component:default/clickhouse',
     'kube-system/coredns': 'component:default/kubernetes-system',
     'kube-system/hubble-relay': 'component:default/hubble-ui',
@@ -283,12 +280,6 @@ export const mapping: InventoryMapping = {
       system: 'personal-tools',
       pillar: 'shared',
       review: 'approved',
-    },
-    keda: {
-      title: 'KEDA',
-      system: 'infrastructure',
-      pillar: 'so',
-      review: 'proposed',
     },
     'kubernetes-system': {
       title: 'Kubernetes system services',

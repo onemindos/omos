@@ -157,7 +157,6 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 | `ecosystem-litellm` | onemind-ai | litellm-helm 1.104.2 (OCI) | Model gateway | PostgreSQL (CNPG) | `Velero`, `Barman` | internal. `/metrics` scrape returns 401 (A6) |
 | `ecosystem-ollama` | onemind-ai | ollama 1.86.0 | Local model runtime | 20 GiB models | `Velero` (`onemind-ai`), `VolSync` | internal |
 | `ecosystem-dapr` | dapr-system | dapr 1.18.5 | Dapr runtime | 15 GiB | `VolSync` | internal |
-| `ecosystem-keda` | keda | keda 2.21.0 | Event-driven autoscaling | none | Git | internal |
 | `ecosystem-kyverno` | kyverno | kyverno 3.9.1 | Policy engine | none | Git | internal |
 | `ecosystem-falco` | falco | falco 9.2.0 | Runtime security | none | Git | internal |
 | `ecosystem-opencost` | opencost | opencost 2.5.32 | Cost metrics. Duplicates kube-state-metrics series (M2) | none | Git | internal |

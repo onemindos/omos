@@ -177,10 +177,6 @@ apps:
     title: Tailscale operator and proxies
     system: infrastructure
     description: Tailscale Kubernetes operator and the per-service tailnet proxies it creates.
-  - name: keda
-    title: KEDA
-    system: infrastructure
-    description: Event-driven autoscaling.
   - name: dapr
     title: Dapr
     system: infrastructure

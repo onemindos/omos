@@ -37,9 +37,6 @@ workloads:
   hermes/onemind-hermes: component:default/onemind-hermes
   hermes/onemind-mcp: component:default/onemind-mcp
   ingress-nginx/ingress-nginx-controller: component:default/ingress-nginx
-  keda/keda-admission-webhooks: component:default/keda
-  keda/keda-operator: component:default/keda
-  keda/keda-operator-metrics-apiserver: component:default/keda
   kube-system/clickhouse-operator: component:default/clickhouse
   kube-system/coredns: component:default/kubernetes-system
   kube-system/hubble-relay: component:default/hubble-ui
@@ -158,7 +155,6 @@ argoApplications:
   ecosystem-cnpg: component:default/cloudnative-pg
   ecosystem-dapr: component:default/dapr
   ecosystem-falco: component:default/falco
-  ecosystem-keda: component:default/keda
   ecosystem-kyverno: component:default/kyverno
   ecosystem-litellm: component:default/litellm
   ecosystem-ollama: component:default/ollama

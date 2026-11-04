@@ -7356,40 +7356,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: keda
-  tags:
-    - kubernetes
-  title: KEDA
-  description: Event-driven autoscaling.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-keda
-    argocd/instance-name: onemind-cloud
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: keda
-    backstage.io/kubernetes-namespace: keda
-    backstage.io/kubernetes-label-selector: app in
-      (keda-admission-webhooks,keda-operator,keda-operator-metrics-apiserver)
-    grafana/alert-label-selector: namespace=keda
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=keda
-    onemind.io/logs-query: '{k8s_namespace_name="keda"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/keda/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: keda/keda-admission-webhooks,keda/keda-operator,keda/keda-operator-metrics-apiserver
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: dapr
   tags:
     - kubernetes
