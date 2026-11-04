@@ -3023,51 +3023,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: mcp-adapter-paperclip
-  title: 'MCP adapter: paperclip'
-  description: Companies, issues and backlog task creation. Adapter implemented but disabled in apps.yaml until
-    the blocker is cleared.
-  tags:
-  - plugin
-  - mcp-adapter
-  - parked
-  - cluster
-  - mcp
-  labels:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: parked
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/pillar: so
-  annotations:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: parked
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/plugin-subtype: paperclip
-    onemind.io/connects-to: paperclip,onemind-mcp,litellm
-    onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
-    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
-    onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
-    onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
-      not probed
-    onemind.io/mcp-app-id: paperclip
-    onemind.io/mcp-url-env: PAPERCLIP_URL
-    onemind.io/blocked-reason: Dedicated company-scoped Paperclip agent API token and authenticated acceptance required;
-      do not reuse browser sessions or provider keys.
-spec:
-  type: mcp-adapter
-  lifecycle: parked
-  owner: group:default/onemind-admins
-  system: onemind-plugin-ecosystem
-  subcomponentOf: component:default/onemind-mcp
-  dependsOn:
-  - component:default/k8s-hermes-onemind-mcp-07887746
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: mcp-adapter-grafana
   title: 'MCP adapter: grafana'
   description: Dashboard discovery and observability navigation. Read-only adapter served by onemind-mcp and reached
@@ -3108,50 +3063,6 @@ spec:
   dependsOn:
   - component:default/k8s-hermes-onemind-mcp-07887746
   - component:default/grafana
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: mcp-adapter-tempo
-  title: 'MCP adapter: tempo'
-  description: Distributed traces by trace identifier. Read-only adapter served by onemind-mcp and reached by Hermes
-    through the LiteLLM MCP hub.
-  tags:
-  - plugin
-  - mcp-adapter
-  - live
-  - cluster
-  - mcp
-  labels:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/pillar: so
-  annotations:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/plugin-subtype: tempo
-    onemind.io/connects-to: tempo,onemind-mcp,litellm
-    onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
-    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
-    onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
-    onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
-      not probed
-    onemind.io/mcp-app-id: tempo
-    onemind.io/mcp-url-env: TEMPO_URL
-spec:
-  type: mcp-adapter
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: onemind-plugin-ecosystem
-  subcomponentOf: component:default/onemind-mcp
-  dependsOn:
-  - component:default/k8s-hermes-onemind-mcp-07887746
-  - component:default/tempo
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component

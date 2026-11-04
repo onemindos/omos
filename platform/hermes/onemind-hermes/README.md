@@ -20,7 +20,7 @@ separate agents here.
 - Private dashboard: `https://onemind-hermes.tail717ba0.ts.net` once the
   Tailscale operator provisions it. Use the existing Hermes dashboard username
   and password.
-- Image: official Hermes v0.22.5, pinned to the verified multi-architecture digest.
+- Image: official Hermes v0.22.7 (`nousresearch/hermes-agent:v0.22.7`), pinned by the multi-architecture index digest in all three containers (see [Upgrading Hermes](#upgrading-hermes)).
 - New 25 GiB PVC `onemind-hermes-data` on `do-block-storage-retain`, so deleting
   the claim keeps the volume. No old volume is mounted or cloned; the unused
   `hermes-fresh-data` claim is not carried over.
@@ -61,7 +61,7 @@ exclusions (`GetUsageAndQuota` and three more, in CamelCase) matched no tool.
 
 ## Worker roles and the tool gateway
 
-Hermes v0.22.5 always multiplexes profiles: `gateway.multiplex_profiles: false` is retired and is rewritten to
+Hermes v0.22.7 always multiplexes profiles: `gateway.multiplex_profiles: false` is retired and is rewritten to
 `true` at start (`hermes_cli/gateway_multiplex_mode.py`), and `auto_multiplex_migration` only matters for a
 single-profile install. So it cannot be turned off, and under it a role profile resolves `${ONEMIND_GATEWAY_KEY}`
 in MCP headers from its own `.env` only (`agent/secret_scope.py`); the container environment is the default
@@ -129,7 +129,7 @@ instance. Keep new selectors on `app.kubernetes.io/name`.
 The init container copies it once into the empty PVC with exclusive creation.
 Later pod starts keep configuration authored through Hermes, so changing this
 file after first start has no effect on the running instance. Every key was
-checked against the v0.22.5 code in the image and passed its
+checked against the v0.22.7 code in the image and passed its
 `validate_config_structure`:
 
 | Key | Value | Why |
@@ -282,7 +282,7 @@ command. A flagged command would be denied, not asked.
 
 ### Codex usage per credential
 
-`hermes usage --json` only reports the active credential. In Hermes v0.22.5
+`hermes usage --json` only reports the active credential. In Hermes v0.22.7
 `agent/account_usage.fetch_account_usage(provider, base_url=, api_key=, read_only=)` queries
 the ChatGPT usage endpoint for an explicit token, and `hermes_cli.auth.read_credential_pool()`
 lists the pool entries (`codex-1`, `codex-2`). `legacy_codex_usage.py` calls the first for each
@@ -369,7 +369,7 @@ tokens than before); the role definitions are `roles/roles.yaml`.
 Models are those `provider_models_cache.json` lists for `openai-codex` in the pod. `terra` is the cheaper tier
 (about half of `sol` per token in the models.dev cache); `luna` is cheaper still but too weak for review.
 
-### What Hermes v0.22.5 actually supports (read from `/opt/hermes`)
+### What Hermes v0.22.7 actually supports (read from `/opt/hermes`)
 
 - **`delegate_task` has no named roles.** The bundled `default` backend gives every child one route: the
   `delegation.provider` / `delegation.model` section or the parent's own (`plugins/delegation/default/__init__.py`
@@ -439,7 +439,7 @@ Inventory of what Legacy does on NATS, what was ported and the switch order are 
 
 - Identity `agents.{prompt,status,hb}.hermes.zeus.legacy` through the Synadia agent protocol plugin
   `nats-platform` (vendored in `platform/hermes/onemind-hermes/plugins/nats-platform/`; no start-up hot-patch, because
-  Hermes v0.22.5 has no native NATS platform and the one line the patch fixed is now in the vendored file).
+  Hermes v0.22.7 has no native NATS platform and the one line the patch fixed is now in the vendored file).
 - Connection settings are in `deployment.yaml` (URL `tls://nats.nats.svc.cluster.local:4222`, user and password from
   Secret `omos-nats-creds`, CA from Secret `hermes-nats-ca`, identity, `HERMES_NATS_REFUSE_DUPLICATE=true`). They are
   inert until the plugin is listed in `plugins.enabled`.
@@ -458,6 +458,165 @@ Inventory of what Legacy does on NATS, what was ported and the switch order are 
 - `HERMES_NATS_REFUSE_DUPLICATE=true` stays: if another process ever holds the identity, onemind-hermes connects, sees it,
   and waits instead of registering. It held that guard while `hermes-legacy` still ran, which made enabling it first safe.
 - `tak-platform` is not ported; PR #585 replaces it with a TAK-native client.
+
+## Hermes Desktop: feature status
+
+Audit of 2026-11-04 for the Mac app (`/Applications/Hermes.app`) connected to this instance. The app's
+`connection.json` and `connections.json` point at `https://onemind-hermes.tail717ba0.ts.net` (OAuth mode) and agree
+with each other. Method: the endpoints the app calls were extracted from its bundle and called in-process against this
+pod's real data (`desktop/apply.sh --check`: status codes and key names only), and the pod logs were read. The UI itself
+was not clicked, so "WORKS" means the server side answers and has a provider behind it, not that every screen was seen.
+Re-run `desktop/apply.sh --check` after any change.
+
+| Feature | Status | Cause or action |
+|---|---|---|
+| Sign-in, connection | WORKS | The 502s and ticket errors at 21:18 to 21:20 EST on 2026-11-03 were the pod restart (new pod started 02:20 UTC). |
+| Chat, sessions, search, stats | WORKS | 497 sessions stored; every route answers 200. |
+| Profiles (roles) | WORKS | `default` plus the five roles. |
+| Skills (list, toggle, hub) | WORKS | 98 skills. Editing skills under `/opt/data/onemind-skills` FAILED (`PermissionError`): the tree was copied with Mac ownership (uid 501) and 120 AppleDouble `._*` files. Fixed by `desktop/apply.sh`. |
+| Skill lock | WORKS from v0.22.7 | `PUT /api/skills/lock` did not exist in v0.22.5; v0.22.6 added it (`hermes_cli/web_routers/skills.py`, `tools/skill_lock.py`). Route present in the v0.22.7 scratch run; the toggle itself was not clicked. |
+| Capabilities, dashboard plugins | WORKS | `kanban` and `hermes-achievements` are bundled dashboard plugins; they load whatever `plugins.enabled` says (that list gates agent plugins). |
+| Kanban board | WORKS | Board, stats and workflow answer; the dispatcher runs in the gateway (60 s tick). |
+| Mac-side plugins `hermes-project-stewardship`, `home-dashboard` | BROKEN (owner decision) | They live in `~/.hermes/desktop-plugins` on the Mac and call `/api/plugins/<name>/...`, which only exist if the matching server plugin is installed. The pod has none (404; the stewardship popups call is in the Desktop log). See decisions. `hermes-bots` only uses profile and cron routes, which work. |
+| Cron | WORKS | 4 jobs; `config-export` stays paused (deploy-key blocker above). |
+| Memory | WORKS | Built-in files only. `USER.md` is at 1353 of its 1375-character limit: a further addition will be refused. |
+| Models, credentials | WORKS | `openai-codex` / `gpt-6.1-sol`, fallback `ollama-cloud`. |
+| MCP management | WORKS | 16 servers listed; `ops`, `data`, `tak` answer `hermes mcp test`. `whop` OAuth re-prompts now and then and recovers by itself; Todoist reported its daily MCP call limit once (2026-11-03). |
+| Files, image upload, git panel | WORKS | `git` is installed. `gh` is not, so "create PR" has no GitHub login to use (decision below). |
+| Terminal | WORKS | Local backend only; Docker, Modal, Daytona and SSH backends are unavailable by design. |
+| Usage, insights, logs, curator | WORKS | |
+| Messaging platforms | WORKS | Telegram, Matrix, NATS, API server and webhook connected. Discord and Slack have no token and are not enabled; the `discord` toolsets are in `agent.disabled_toolsets`. |
+| Image generation | WORKS (not exercised) | Provider `openai-codex` (gpt-image-2 through the signed-in Codex login); spends Codex quota. |
+| Text-to-speech | FIXED, pending apply | Edge TTS needs the `edge_tts` package, which the image lacks and the read-only venv cannot install. Added to `nats/gateway-deps.txt` (hash-pinned; installed in a scratch directory in the pod and streamed audio on 2026-11-04). |
+| Speech-to-text (dictation, wake word) | BROKEN (needs a key or a decision) | No provider: no `faster-whisper` and no OpenAI, Groq, Mistral, xAI or ElevenLabs key. Gateway log 2026-11-02: "Wake word needs speech-to-text configured". |
+| Realtime voice (`voice-live`) | BROKEN (needs a key) | Wants `OPENAI_API_KEY`; the Codex login does not cover it. |
+| Computer use | DISABLED BY DESIGN | `agent.disabled_toolsets: computer_use`. A headless Linux pod has no desktop. |
+| Browser automation | DISABLED BY DESIGN | `agent.disabled_toolsets: browser` (no browser backend or key). |
+| Video generation, X search, Discord, Feishu, Yuanbao | DISABLED BY DESIGN | Same list. |
+| Local models | DISABLED BY DESIGN | A cloud pod has no GPU; `local-models` is off. |
+| Approvals | WORKS, differs from the seed | Live `approvals.mode` is `smart` (the seed says `manual`) with a three-entry `command_allowlist`; set from outside Git. See decisions. |
+| Updates | MANAGED | The pod updates by image bump, not from the app (`/api/hermes/update/check`). |
+
+**Version skew.** Closed by the v0.22.7 image bump (see [Upgrading Hermes](#upgrading-hermes)). The installed Desktop was
+rebuilt on 2026-11-02 from the Mac's `~/.hermes/hermes-agent` at commit `f0d94882e89` (tag `v0.22.6`). Against v0.22.5 only
+`PUT /api/skills/lock` was missing among the calls its Electron paths make; v0.22.7 has it. Still answering 404 on
+v0.22.7 (checked with `desktop/apply.sh --check` logic in a scratch container): `/api/desktop-plugins/*`,
+`/api/ui-preferences` and `/api/webapp-access/status`. They belong to the browser and web-app transport (`hermes webapp`,
+Web Access), which is opt-in and not enabled here, so they are not regressions. The app's `update-check-cache.json`
+was last written 2026-09-25 and is stale. The Mac also runs its own old gateway (`ai.hermes.gateway`, platform NATS only,
+identity `legacy-edge`) and a stale `~/.hermes` profile; neither touches this instance.
+
+**Owner decisions**
+
+1. Speech-to-text: give the pod a cloud key (Groq or OpenAI; seal it like the other secrets) or approve local
+   `faster-whisper` (about 200 MB of packages plus a model download, and CPU/memory on a memory-saturated node).
+2. `OPENAI_API_KEY` for realtime voice, only if wanted.
+3. Install the server halves of the Mac plugins? `hermes-project-stewardship` adds a `pre_llm_call` hook on every
+   turn and writes `kanban.db`; both are third-party community code. Not installed without an audit.
+4. Server image bump `v0.22.5` to `v0.22.7`: done (this change; see [Upgrading Hermes](#upgrading-hermes)).
+5. `approvals.mode`: `smart` (live) or `manual` (seed). `manual` makes flagged commands wait for a person, which the
+   Desktop approval prompt serves but Telegram, NATS and cron sessions cannot answer.
+6. `gh` in the image plus a fine-grained GitHub token, only if Desktop "create PR" from the pod is wanted.
+7. Mac app update to `v0.22.7-desktop`: report only, nothing was installed.
+
+`desktop/apply.sh` is the only thing here that changes the live volume; `desktop/apply.sh --check` is read-only.
+
+## Upgrading Hermes
+
+How the image is bumped, what to check, and how to go back. Last done: v0.22.5 to v0.22.7 (2026-11-04).
+
+**Where the version is pinned.** `deployment.yaml` (init containers `initial-config` and `install-gateway-deps`, and the
+`hermes` container: all three must match) by the multi-architecture **index** digest, never a bare tag. The inert
+`onepassword/` draft carries its own pins (`proposal/deployment.yaml`, `proposal/prepare_image.py`,
+`runtime-fix/Dockerfile`, `runtime-fix/apply_source_patch.py`); keep them on the same version. The Hermes version is
+also written in this README, `MIGRATION.md`, `config.defaults.yaml` comments, `docs/STACK.md` and the portal and
+Backstage catalog descriptions.
+
+**What to compare between versions** (do this against the two images, not the release notes: the v0.22.6 and v0.22.7
+notes say only that the full notes ship with v0.23.0). Extract `/opt/hermes` from both images and diff what Legacy
+depends on:
+
+- plugin API used by `plugins/nats-platform`, `plugins/nats-context` and `roles/plugin/legacy-roles`
+  (`PluginContext.register_platform/register_hook/register_tool/register_delegation_provider`,
+  `gateway.run._profile_runtime_scope`, `_resolve_runtime_agent_kwargs`, `tools.approval_context`,
+  `agent.delegation_provider`, `gateway.platforms.base`); an AST pass that imports every `hermes*`, `gateway`, `tools`
+  and `agent` symbol the repo uses finds renamed or removed ones;
+- `hermes_cli.config.atomic_config_write/atomic_config_replace/read_user_config_raw` (the apply scripts), `cron.jobs`
+  (`apply_jobs.py`), `hermes mcp ...` (the three MCP reconcilers in the init container);
+- the venv's Python (3.14.9 in both; the wheels in `nats/gateway-deps.txt` must still install), `/opt/hermes/tools/uv-*/uv`
+  (the `install-gateway-deps` path) and the s6 service names (`gateway-default`, used by `nats/apply.sh --restart`);
+- one-way migrations on `/opt/data` (below).
+
+**v0.22.5 to v0.22.7: breaking changes found.** None that touches Legacy's code, config keys or the apply scripts.
+Specifics, all read from the two images on 2026-11-04:
+
+| Area | Change | Effect here |
+|---|---|---|
+| Config schema | 51 to 52, run by the image's own boot hook (`docker/stage2-hook.sh` calling `scripts/docker_config_migrate.py` as the `hermes` user) before the gateway starts. It drops `browser.backend` and `browser.extension_control` and moves `AGENT_BROWSER_*` settings from `.env` into `browser.*`. | Legacy sets none of those. In the scratch run the only change to `config.yaml` was `_config_version: 51` to `52`. The hook writes `config.yaml.pre-docker-migrate.<stamp>` and `.env.pre-docker-migrate.<stamp>` to `/opt/data/backups/config/` first. |
+| Browser | `agent-browser` and the built-in `browser_*` tools are gone; `browser_exec` is the only browser. The toolset is still called `browser`. | `agent.disabled_toolsets: browser` keeps it off. No key to change. |
+| Features moved out of core | Camofox and GitHub Copilot left core in this window (Home Assistant, Spotify, Langfuse, `mcp serve`, Singularity and `import-agent` already had in v0.22.5). At start Hermes installs the plugin from the catalog **only for a home that uses the feature** (`hermes_cli/left_core_migration.py`). | Legacy uses none (Home Assistant stays an edge bridge on the bus), so nothing is fetched. If a boot ever logs a catalog install, a feature is in use that this list did not expect. |
+| Delegation | A session now routes on the backend its `delegate_task` schema was built from, pinned to the session row; a config change applies from `/new` (or `/delegation <backend> --now`). The per-session override API (`set_session_backend`) is removed. | `legacy-roles` does not use it. After `roles/apply.sh` changes `delegation.backend`, a running chat keeps its old backend until `/new`. Route resolution for `worker: checker` returned the same profile home and credentials on both versions. |
+| Cron | Additive: per-job `timezone`, `grace_minutes`, `catch_up`, `hermes cron cancel`, a `missed` and `cancelled` run status. The executions ledger table is rebuilt once to widen its status check. | `apply_jobs.py` passes only the fields it always did; its dry run and idempotent second run printed the same lines on both versions. |
+| Plugin API | `PluginContext.has_capability` moved into a mixin (`PluginCapabilityCtxMixin`); `register_hook` gained a keyword; the `skill_namespace` manifest field became `data_namespace`. | The repo's plugins call only `register_platform`, `register_hook` and `register_tool`. `legacy-roles` logs a `capability_check ... tools.override decision=deny` line at load: expected, it overrides nothing. |
+| MCP | Stdio children get `HERMES_HOME` pinned; large SSE events no longer fail; a parked server reports `needs_auth`. OAuth token files are read by a content digest, not only mtime. | No config key changed. `mcp_servers` keys the reconcilers write are unchanged. |
+| Multiplex | Unchanged: `gateway.multiplex_profiles: false` is still rewritten to `true`. | None. |
+| Security | The approval gate now asks for each content-level finding (credential upload, invisible Unicode) in a command as well as the first match, and redacts approval displays with a new helper. | Stricter prompts for flagged commands; `approvals.mode` unchanged. |
+| Launcher, s6, uv | Byte-identical: `bin/hermes`, `hermes_bootstrap.py`, `entrypoint-dispatch.sh`, the s6 service tree, `container_boot.py`, Python 3.14.9, uv 0.13.5 at `tools/uv-0.13.5-linux-x64/uv`. | The init container paths and `nats/apply.sh --restart` (`/run/service/gateway-default`) are unchanged. |
+| Python packages | `pydantic` 2.13.4 to 2.14.1, `aiohttp-socks` 0.11.0 to 0.12.0 in the image venv. | The four hash-pinned NATS wheels plus `edge-tts` and `tabulate` install and import unchanged. |
+| Bundled skills | The boot hook re-syncs bundled skills into `/opt/data/skills` (about a dozen updated, `microsoft-office` added). | Own skills live in `/opt/data/onemind-skills` and are untouched. |
+
+Not changed by the bump, found along the way: `plugins/nats-platform/adapter.py` imports `_get_approval_config` from
+`tools.approval`, which has lived in `tools.approval_context` since before v0.22.5. The import fails inside a
+`try`, so the approval round-trip timeout is the 300 s default instead of `approvals.gateway_timeout`. Same on both
+versions; left alone here.
+
+Also unchanged and visible only on the NATS surface: a background `delegate_task` finishing after the NATS prompt
+returned cannot be delivered back (`Watch notification not admitted for nats chat=legacy: not_found`, then
+"exhausted its 8 delivery attempts"). It reproduces on v0.22.5; the result stays queryable (`tools.async_delegation`).
+
+**One-way state on `/opt/data`.** Two things change on the first start of the new image and neither blocks going back:
+
+- `config.yaml` is stamped `_config_version: 52` after the backup above. v0.22.5 started and ran normally on a volume
+  stamped 52 (checked in a scratch rollback run).
+- The cron executions table is rebuilt wider; v0.22.5 read it and ran its scheduler fine in the same run.
+- `state.db` keeps schema 32 in both versions (`hermes_state_common.SCHEMA_VERSION`), so session history is not migrated.
+
+**Rollback.** Take a fresh snapshot before merging, then:
+
+1. Before merging, take a snapshot that outlives the daily one. `onemind-hermes-data` is backed up by the VolSync source
+   `onemind-hermes-data` (`backup.yaml`, daily 01:25 UTC; last sync before this PR: 2026-11-04T01:25:36Z, 36 s), so a restore
+   point exists already; the pre-merge snapshot is the fresh one:
+
+   ```sh
+   kubectl --context do-nyc3-omos-cloud -n hermes apply -f - <<'EOF'
+   apiVersion: snapshot.storage.k8s.io/v1
+   kind: VolumeSnapshot
+   metadata: {name: onemind-hermes-data-pre-v0-22-7}
+   spec:
+     volumeSnapshotClassName: onemind-backup-retain
+     source: {persistentVolumeClaimName: onemind-hermes-data}
+   EOF
+   kubectl -n hermes get volumesnapshot onemind-hermes-data-pre-v0-22-7 -o jsonpath='{.status.readyToUse}'   # wait for true
+   ```
+
+   (`onemind-backup-retain` keeps the underlying snapshot if the object is deleted.) Delete it after the bump has run clean
+   for a few days.
+2. Revert: `git revert` the merge commit (it restores the v0.22.5 digest in all three containers); Argo rolls the pod.
+   The PV is `Retain`, the data is reused as is. No volume restore is needed for an image-only revert.
+3. Only if the volume itself is damaged: scale `onemind-hermes` to 0 and restore `onemind-hermes-data` from the snapshot
+   taken in step 1 (or the latest VolSync restic snapshot, `docs/portability/REBUILD-FROM-ZERO.md` step 9), then scale back
+   up. Restoring is a last resort; it discards sessions written after the snapshot. Never recreate the live claim without
+   owner approval (`CLAUDE.md`, deployment pattern item 6).
+4. After a revert, `config.yaml` stays stamped 52 (harmless on v0.22.5). To put the pre-migration file back anyway, copy
+   `/opt/data/backups/config/config.yaml.pre-docker-migrate.<stamp>` over `config.yaml` with the gateway stopped.
+
+**Smoke test without the cluster.** The checks above were run in throwaway containers from the pinned images with a scratch
+data volume, a local NATS server and a mock OpenAI-compatible model: the shipped init containers, every `*/apply.sh`
+Python applier (dry run, apply, second run), real plugin discovery, the s6 start, `/health`, the dashboard status
+route, `hermes mcp|cron|profile|config`, a NATS prompt and heartbeat, a model reply, a `delegate_task` with
+`worker: checker` that ran a tool call in the child, and then v0.22.5 started again on the migrated volume. Not
+covered there: real model providers, the tool gateway (`ops`, `data`, `tak`, `hermes mcp test`), Telegram and Matrix, the
+Zoho, Whop and Todoist services, TLS to the cluster NATS, and Desktop's UI. Those are the post-merge checks.
 
 ## Notes
 
@@ -494,7 +653,7 @@ Still pending:
 ## Agent name
 
 The agent is called **Legacy** everywhere she is shown. `onemind-hermes` is only the
-instance and infrastructure name. Hermes v0.22.5 has no agent-name config key, so the
+instance and infrastructure name. Hermes v0.22.7 has no agent-name config key, so the
 name is set in three places: `SOUL.md` (identity), `API_SERVER_MODEL_NAME: Legacy` in
 `config.yaml` (the id on `/v1/models`) and the Matrix display name of
 `@legacy:onemindos.dev` (set once through the Synapse profile API). The Telegram bot

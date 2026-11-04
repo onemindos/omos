@@ -4,29 +4,11 @@ This repo is the infrastructure-as-code and GitOps source of truth for the OneMi
 
 Read `docs/MISSION.md` before architecture, product, AI or infrastructure decisions. Live state is in `docs/STACK.md` (tiered inventory, generated from the cluster); directory purposes are in `docs/REPO-LAYOUT.md`. Distinguish verified live state from intent: verify against the cluster (read-only) before writing "live" in docs.
 
-The platform plan (four layers, AI trust model, OpenChoreo migration phases and their tracker) is in `PLATFORM-ROADMAP.md` at the repository root. Read it before platform or AI-operations work, and update its tracker in the same PR when you complete roadmap work.
-
-## Owner-approved merge batch — 2026-10-27
-
-Zeus approved all owner decisions for dcarku's 46 PRs #495–#540, retained
-Telegram, and authorized Claude Code to review, fix, validate and execute those
-merges on his behalf, including this batch's foundation PRs. See the exact
-[approval, decisions and continuation](docs/roadmap/2026-10-27-owner-merge-preparation.md#owner-authorization--2026-10-27)
-in PR #542. This satisfies the default human-merge/owner-approval requirement
-only for this batch; technical checks, credential and release prerequisites
-remain. Do not request the settled approvals again. Hold an actually blocked PR,
-continue the queue and report remaining blockers together at the end.
-
-**Latest owner direction (2026-10-27): Codex merges all four remaining original
-PRs: #505, #535, #533 and #532.** This supersedes the earlier #505-only and
-Hermes-only assignments. Read the [current continuation](docs/operations/2026-10-27-claude-merge-continuation.md).
-Other harnesses must not edit or merge these branches concurrently. Keep
-current-main review, final CI, Telegram and all settled approvals. Do not run
-Terraform apply or proposed storage patches merely because their docs merged.
+The platform plan (four layers, AI trust model and phase tracker) is in `PLATFORM-ROADMAP.md` at the repository root. OpenChoreo has been retired, so its migration phases there are history. Read it before platform or AI-operations work, and update its tracker in the same PR when you complete roadmap work.
 
 ## What This Repo Is
 
-If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 59 Argo Applications reconcile from `main` (2026-10-27). Of the 11 Helm releases first installed by hand, 8 are adopted into Argo: `edge-cert-manager`, `edge-ingress-nginx`, `edge-nack`, `edge-tailscale-operator` (PR #176) and `monitoring-kube-prometheus-stack`, `monitoring-loki`, `monitoring-tempo`, `monitoring-otel-collector` (2026-10-17). **3 are still Helm CLI only**: nats, takserver and argocd. Never `helm upgrade` an adopted release, and do not run `platform/install.sh`, which still upgrades all of them; see `docs/gitops/HELM-ADOPTION.md`. Also a few namespaces (`matrix`, the NATS web UIs) have no Application. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
+If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 58 Argo Applications reconcile from `main` (2026-11-04). Of the 11 Helm releases first installed by hand, 7 are adopted into Argo: `edge-cert-manager`, `edge-ingress-nginx`, `edge-nack`, `edge-tailscale-operator` (PR #176) and `monitoring-kube-prometheus-stack`, `monitoring-loki`, `monitoring-otel-collector` (2026-10-17). Tempo was removed on 2026-11-03. **3 are still Helm CLI only**: nats, takserver and argocd. Never `helm upgrade` an adopted release, and do not run `platform/install.sh`, which still upgrades all of them; see `docs/gitops/HELM-ADOPTION.md`. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
 
 The platform is a NATS-native C2/ISR system. NATS is the nervous system, TAK (ATAK/iTAK/WebTAK) is the tactical display, and Hermes ("Legacy") is the AI agent.
 
@@ -48,17 +30,17 @@ Edge (Mac / home server)   MAVLink, HA, cameras ── NATS leaf ──►  K8s 
 
 ```
 platform/      Everything Argo CD syncs. argocd/ holds the Application CRs; the rest is grouped by layer
-  argocd/      App-of-apps + 25 platform-* Applications
+  argocd/      App-of-apps + 39 platform-* Applications, plus edge-* and monitoring-*
   core/        sealed-secrets controller, GitHub runner, Tailscale policy
   nats/        NATS manifests, TLS, 39 Stream/KeyValue CRs in streams/, Helm values templates
   auth/        Authentik infra (Postgres, Redis, ingress); the chart is in argocd/platform-auth-helm.yaml
   backups/     PG/NATS backup CronJobs, cluster-recovery export, VolSync sources (volsync/)
-  hermes/      Hermes agent (agent/) and its sealed secrets (bridge/)
+  hermes/      Hermes agent (onemind-hermes/), shared objects (base/), app tools (mcp/); doctrine/ is history
   security/    Zero-trust layer (platform-security): Kyverno, Falco, OpenFGA apps + labelled namespaces
   takserver/   TAK Server: Helm chart (chart/) + values-onemind.yaml (Helm CLI), Argo overlays deploy/ and fedhub/, runbook
   onetak/ omos/ data/ takml/ n8n/ backstage/ monitoring/ kube/ ops/ ...
   ecosystem/   Argo-managed "ecosystem" stack: applications/, foundation-applications/, values/, charts/
-  values/      Helm values for the add-ons (Argo-adopted: cert-manager, ingress-nginx, tailscale-operator, kube-prometheus-stack, loki, tempo, otel-collector; Helm CLI: argocd)
+  values/      Helm values for the add-ons (Argo-adopted: cert-manager, ingress-nginx, tailscale-operator, kube-prometheus-stack, loki, otel-collector; Helm CLI: argocd)
 infra/         Terraform: DO VPC + DOKS cluster, NOT matching live, do not apply (infra/README.md); ecosystem-workers/ is a separate root; edge/ holds Mac leaf config (not deployed)
 services/ docs/ scripts/                                code (built into images) and bus contracts (services/schemas/), docs, CI helpers
 ```

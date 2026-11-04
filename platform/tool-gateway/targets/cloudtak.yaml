@@ -1,0 +1,14 @@
+# CloudTAK API through OpenAPI (design row 15): nine parameterless GET operations, trimmed in Git (openapi/cloudtak.recipe.yaml).
+# Credential: a CloudTAK API token for the Machine User Legacy uses (the keys session can reuse hermes/cloudtak-agent-token).
+name: cloudtak
+groups: [tak]
+enabled_by: [gateway-target-cloudtak]
+env:
+  TARGET_CLOUDTAK_TOKEN: {secret: gateway-target-cloudtak, key: token}
+target:
+  openapi:
+    schema: {file: /specs/cloudtak/openapi.yaml}
+    host: cloudtak-api.cloudtak.svc.cluster.local:5000
+  policies:
+    backendAuth:
+      key: "${TARGET_CLOUDTAK_TOKEN}"

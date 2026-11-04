@@ -70,7 +70,7 @@ def trim(src: dict, keep: list[dict]) -> dict:
             if desc:
                 q["description"] = desc.split("\n")[0][:120]
             outp.append(q)
-        op = {"operationId": k["id"], "summary": (orig.get("summary") or k["id"]).strip()[:200], "responses": {"200": {"description": "OK"}}}
+        op = {"operationId": k["id"], "summary": (k.get("summary") or orig.get("summary") or k["id"]).strip()[:200], "responses": {"200": {"description": "OK"}}}
         if outp:
             op["parameters"] = outp
         out["paths"].setdefault(path, {})[method] = op

@@ -118,21 +118,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "keda",
-      "name": "keda-admission-webhooks"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "keda",
-      "name": "keda-operator"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "keda",
-      "name": "keda-operator-metrics-apiserver"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "kube-system",
       "name": "coredns"
     },
@@ -545,11 +530,6 @@
       "kind": "StatefulSet",
       "namespace": "monitoring",
       "name": "prometheus-monitoring-kube-prometheus-prometheus"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "monitoring",
-      "name": "tempo"
     },
     {
       "kind": "StatefulSet",
@@ -1003,21 +983,6 @@
     },
     {
       "kind": "Service",
-      "namespace": "keda",
-      "name": "keda-admission-webhooks"
-    },
-    {
-      "kind": "Service",
-      "namespace": "keda",
-      "name": "keda-operator"
-    },
-    {
-      "kind": "Service",
-      "namespace": "keda",
-      "name": "keda-operator-metrics-apiserver"
-    },
-    {
-      "kind": "Service",
       "namespace": "kube-system",
       "name": "cilium-agent"
     },
@@ -1200,11 +1165,6 @@
       "kind": "Service",
       "namespace": "monitoring",
       "name": "prometheus-operated"
-    },
-    {
-      "kind": "Service",
-      "namespace": "monitoring",
-      "name": "tempo"
     },
     {
       "kind": "Service",

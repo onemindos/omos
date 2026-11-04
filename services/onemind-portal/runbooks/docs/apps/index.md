@@ -28,7 +28,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Hubble UI](hubble-ui.md) | observability |
 | [ingress-nginx](ingress-nginx.md) | infrastructure |
 | [Karakeep](karakeep.md) | personal-tools |
-| [KEDA](keda.md) | infrastructure |
 | [Kubernetes system services](kubernetes-system.md) | infrastructure |
 | [Kyverno](kyverno.md) | identity-access |
 | [LiteLLM](litellm.md) | ai-agents |
@@ -56,7 +55,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Tailscale operator and proxies](tailscale-operator.md) | infrastructure |
 | [TAK Server](tak-server.md) | tak-ecosystem |
 | [TAK-ML](takml.md) | tak-ecosystem |
-| [Tempo](tempo.md) | observability |
 | [TileServer GL](tileserver-gl.md) | geospatial |
 | [Vaultwarden](vaultwarden.md) | identity-access |
 | [Velero](velero.md) | data-storage |

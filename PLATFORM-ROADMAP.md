@@ -1,5 +1,8 @@
 # OneMind platform roadmap: layers, OpenChoreo and AI operations
 
+> **2026-11-04:** OpenChoreo has been retired. The phases below that depend on it are
+> history, and this plan needs revisiting before they are treated as current work.
+
 Living document. Started 2026-10-18. Owner: Zeus. Kept at the repository root so any
 agent (Claude Code, Codex or another) can pick up the work where the last one stopped.
 
@@ -1427,3 +1430,30 @@ a completed fresh volume snapshot plus private database/config exports.
 Provider deletion and recovery verification must be recorded from live evidence;
 this source change alone does not certify either. Preserve device originals and
 existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
+
+## Deferred Mattermost + TAK evaluation — 2026-11-01
+
+Zeus requested a detailed future plan and explicitly deferred deployment. The
+[research, edition boundaries, proposed integration and acceptance gates](docs/roadmap/mattermost-tak-future-integration.md)
+are recorded for serious reconsideration. No Application, plugin, secret, bus
+contract or live setting is added. TAK artifact availability/rights and actual
+free-versus-commercial requirements remain unresolved. Implementation/adoption
+needs a later decision; this entry changes no phase completion or deployment state.
+
+## User-directed Trivy scanning pilot — 2026-10-24
+
+Zeus requested an implementation PR for a limited Trivy Operator pilot.
+The [runbook](docs/operations/trivy-image-scan-pilot.md) records the read-only
+capacity/monitoring preflight, pinned chart/images, scoped RBAC, resource cap,
+namespace-only image scans and Grafana view. The pilot creates reports, not
+deployment blocking or automatic remediation. Authentik work is separate.
+
+| Work | Status | Next gate |
+|---|---|---|
+| Argo-owned Trivy image-only pilot in `auth,nats,onetak,n8n` | Retargeted 2026-11-04 (Nextcloud retired); owner approved deploy; [PR #442](https://github.com/onemindos/omos/pull/442) awaits merge, which auto-syncs via `platform-security`; not live-accepted. Private `ghcr.io/onemindos` images (`heynats`, `nats-dashboard`, `tak-portal`) are not scanned | Merge, actual Argo rollout, per-container digest/report coverage (21 controllers, 3 expected gaps) and deny tests |
+| One scan Job, bounded resources and Grafana visibility | 96 GitOps tests pass, including six rendered Trivy safety contracts; live acceptance pending | Scan resource measurements, metric/CRD parity, 24-hour refresh and safe pause acceptance |
+
+This user-directed security slice does not close portal phases, reverse approved
+retirements, grant broader agent write rights or change application identities.
+Only report reads are added to the chart's standard aggregated viewer roles;
+application Secrets remain inaccessible to the scanner.

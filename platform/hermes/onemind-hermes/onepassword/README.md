@@ -22,7 +22,7 @@ The current Git manifest uses the official image for the gateway and all init
 containers, unchanged:
 
 ```
-nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+nousresearch/hermes-agent:v0.22.7@sha256:e6d81ae52ebf6a43efa529701405509f20054ba818f179ddd748bed4f8af584c
 ```
 
 The manual-only [runtime build workflow](../../../../../.github/workflows/build-hermes-runtime.yml)

@@ -177,10 +177,6 @@ apps:
     title: Tailscale operator and proxies
     system: infrastructure
     description: Tailscale Kubernetes operator and the per-service tailnet proxies it creates.
-  - name: keda
-    title: KEDA
-    system: infrastructure
-    description: Event-driven autoscaling.
   - name: dapr
     title: Dapr
     system: infrastructure
@@ -204,7 +200,7 @@ apps:
   - name: kyverno
     title: Kyverno
     system: identity-access
-    description: Admission and background policy engine; also carries the platform-security Argo application (Kyverno, Falco and OpenFGA wiring).
+    description: Admission and background policy engine; also carries the platform-security Argo application (Kyverno, Falco, OpenFGA and Trivy image-scan pilot wiring).
   - name: falco
     title: Falco
     system: identity-access
@@ -217,10 +213,6 @@ apps:
     title: Backstage portal
     system: developer-platform
     description: The OneMind developer portal and its PostgreSQL database.
-  - name: tempo
-    title: Tempo
-    system: observability
-    description: Distributed tracing backend.
   - name: opentelemetry-collector
     title: OpenTelemetry Collector
     system: observability
@@ -280,7 +272,7 @@ apps:
   - name: onemind-hermes
     title: Legacy (onemind-hermes)
     system: ai-agents
-    description: Hermes v0.22.5 instance with the single Legacy soul in the hermes namespace (Argo application platform-onemind-hermes); no NATS sidecar, no imported Legacy data.
+    description: Hermes v0.22.7 instance with the single Legacy soul in the hermes namespace (Argo application platform-onemind-hermes); no NATS sidecar, no imported Legacy data.
   - name: onemind-mcp
     title: OneMind internal app MCP
     system: ai-agents
@@ -308,6 +300,20 @@ apps:
     system: personal-tools
     description: Native bookmark and read-later workspace prepared with manual Argo and zero replicas; first start, owner enrollment and recovery acceptance are pending.
 placement:
+  google-earth: geospatial
+  cesium-native: geospatial
+  3d-tiles: geospatial
+  cesium-unreal: geospatial
+  cesium-unity: geospatial
+  cesium-omniverse: geospatial
+  whop: business-operations
+  mediamtx-upstream: tak-ecosystem
+  hermes-atlas: ai-agents
+  hermes-bible: ai-agents
+  oh-my-hermes: ai-agents
+  hermes-official-plugins: ai-agents
+  hermes-skills: ai-agents
+  hermes-documentation: ai-agents
   osiris: intelligence
   worldwideview: intelligence
   worldmonitor: intelligence

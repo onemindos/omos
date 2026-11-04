@@ -1,7 +1,7 @@
 # onemind-hermes initial configuration (agent persona: Legacy, single soul).
 # Copied once into the empty PVC by the init container; later edits made through
 # Hermes win. No Legacy state, custom plugins, jobs or connectors.
-# Every key below was checked against Hermes v0.22.5 (/opt/hermes); see README.md.
+# Every key below was checked against Hermes v0.22.7 (/opt/hermes); see README.md.
 # Select/authenticate the model from the instance before using chat.
 # The agent's name is Legacy. Hermes has no agent-name key: the persona is SOUL.md
 # (seed/onemind-hermes/), and the id advertised on the API server's /v1/models comes
@@ -114,10 +114,10 @@ MATRIX_USER_ID: '@legacy:onemindos.dev'
 # and physical tools are on /execute, which is not deployed, so it is not listed here.
 # ONEMIND_GATEWAY_KEY comes from the onemind-gateway-client SealedSecret (deployment.yaml).
 # Every route runs apiKey.mode strict: without the Authorization header it answers 401.
-# gateway.multiplex_profiles cannot be switched off in Hermes v0.22.5 (an explicit false is rewritten to
+# gateway.multiplex_profiles cannot be switched off in Hermes v0.22.7 (an explicit false is rewritten to
 # true at start), and under it a ROLE profile resolves ${VAR} in headers only from its own .env, never from
 # the container env. roles/apply.sh therefore writes ONEMIND_GATEWAY_KEY into each role's .env. Keys checked
-# against v0.22.5 tools/mcp_tool_*.py: url,
+# against v0.22.7 tools/mcp_tool_*.py: url,
 # headers (${VAR} rendered from env), lazy, trust, timeout, connect_timeout. Unset: lazy
 # (connect at start, so tool counts are known) and trust (default full).
 mcp_servers:
@@ -360,6 +360,16 @@ mcp_servers:
     url: http://agentgateway.tool-gateway.svc.cluster.local:8080/tak/mcp
     headers:
       Authorization: Bearer ${ONEMIND_GATEWAY_KEY}
+  # Destructive and physical tools (gateway /execute route, gated by execute-gate: the owner types `execute <id>` or
+  # `override <id>` in the Matrix room `approvals`). HELD: mcp/apply.sh skips it until run with `--include execute`,
+  # after the live verification in docs/operations/tool-gateway.md ("Execute gate"). trust: untrusted makes Hermes ask
+  # first for every tool that is not readOnly (gateway tools carry no hints, so every call asks).
+  execute:
+    url: http://agentgateway.tool-gateway.svc.cluster.local:8080/execute/mcp
+    headers:
+      Authorization: Bearer ${ONEMIND_GATEWAY_KEY}
+    trust: untrusted
+    lazy: true
   # Hosted OAuth servers, managed here so their filters are applied by mcp/apply.sh. Reads and normal writes
   # stay; anything that deletes, restores over, or cancels is excluded (names are the upstream tool names,
   # globs allowed). Dropbox: the four request/quota tools were excluded by the owner earlier, under names that

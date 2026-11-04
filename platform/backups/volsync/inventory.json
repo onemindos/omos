@@ -42,12 +42,6 @@
     "size": "20Gi"
   },
   {
-    "namespace": "monitoring",
-    "pvc": "storage-tempo-0",
-    "source": "volume-bec6172775e6",
-    "size": "20Gi"
-  },
-  {
     "namespace": "n8n",
     "pvc": "data-postgres-0",
     "source": "volume-e0d2f2fea651",

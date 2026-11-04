@@ -50,9 +50,6 @@ export const mapping: InventoryMapping = {
     'karakeep/chrome': 'component:default/karakeep',
     'karakeep/meilisearch': 'component:default/karakeep',
     'karakeep/web': 'component:default/karakeep',
-    'keda/keda-admission-webhooks': 'component:default/keda',
-    'keda/keda-operator': 'component:default/keda',
-    'keda/keda-operator-metrics-apiserver': 'component:default/keda',
     'kube-system/clickhouse-operator': 'component:default/clickhouse',
     'kube-system/coredns': 'component:default/kubernetes-system',
     'kube-system/hubble-relay': 'component:default/hubble-ui',
@@ -80,7 +77,6 @@ export const mapping: InventoryMapping = {
     'monitoring/monitoring-kube-state-metrics': 'component:default/prometheus',
     'monitoring/prometheus-monitoring-kube-prometheus-prometheus':
       'component:default/prometheus',
-    'monitoring/tempo': 'component:default/tempo',
     'n8n/n8n': 'component:default/n8n',
     'n8n/postgres': 'component:default/n8n',
     'nats/agent-web-ui': 'component:default/agent-web-ui',
@@ -285,12 +281,6 @@ export const mapping: InventoryMapping = {
       pillar: 'shared',
       review: 'approved',
     },
-    keda: {
-      title: 'KEDA',
-      system: 'infrastructure',
-      pillar: 'so',
-      review: 'proposed',
-    },
     'kubernetes-system': {
       title: 'Kubernetes system services',
       system: 'infrastructure',
@@ -444,12 +434,6 @@ export const mapping: InventoryMapping = {
     takml: {
       title: 'TAK-ML',
       system: 'tak-ecosystem',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    tempo: {
-      title: 'Tempo',
-      system: 'observability',
       pillar: 'so',
       review: 'proposed',
     },

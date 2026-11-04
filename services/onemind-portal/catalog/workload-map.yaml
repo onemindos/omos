@@ -37,9 +37,6 @@ workloads:
   hermes/onemind-hermes: component:default/onemind-hermes
   hermes/onemind-mcp: component:default/onemind-mcp
   ingress-nginx/ingress-nginx-controller: component:default/ingress-nginx
-  keda/keda-admission-webhooks: component:default/keda
-  keda/keda-operator: component:default/keda
-  keda/keda-operator-metrics-apiserver: component:default/keda
   kube-system/clickhouse-operator: component:default/clickhouse
   kube-system/coredns: component:default/kubernetes-system
   kube-system/hubble-relay: component:default/hubble-ui
@@ -64,7 +61,6 @@ workloads:
   monitoring/monitoring-kube-prometheus-operator: component:default/prometheus
   monitoring/monitoring-kube-state-metrics: component:default/prometheus
   monitoring/prometheus-monitoring-kube-prometheus-prometheus: component:default/prometheus
-  monitoring/tempo: component:default/tempo
   n8n/n8n: component:default/n8n
   n8n/postgres: component:default/n8n
   nats/agent-web-ui: component:default/agent-web-ui
@@ -159,13 +155,13 @@ argoApplications:
   ecosystem-cnpg: component:default/cloudnative-pg
   ecosystem-dapr: component:default/dapr
   ecosystem-falco: component:default/falco
-  ecosystem-keda: component:default/keda
   ecosystem-kyverno: component:default/kyverno
   ecosystem-litellm: component:default/litellm
   ecosystem-ollama: component:default/ollama
   ecosystem-onemind-core: component:default/onemind-core
   ecosystem-opencost: component:default/opencost
   ecosystem-openfga: component:default/openfga
+  ecosystem-trivy-operator: component:default/kyverno
   ecosystem-velero: component:default/velero
   edge-cert-manager: component:default/cert-manager
   edge-ingress-nginx: component:default/ingress-nginx
@@ -174,7 +170,6 @@ argoApplications:
   monitoring-kube-prometheus-stack: component:default/prometheus
   monitoring-loki: component:default/loki
   monitoring-otel-collector: component:default/opentelemetry-collector
-  monitoring-tempo: component:default/tempo
   platform-agent-fabric: component:default/agent-web-ui
   platform-auth-helm: component:default/authentik
   platform-auth-infra: component:default/authentik
@@ -201,14 +196,17 @@ argoApplications:
   platform-nats-tools: component:default/nats
   platform-observability: component:default/clickhouse
   platform-omos: component:default/omos-data-pipeline
+  platform-omos-entity: component:default/omos-data-pipeline
   platform-onetak: component:default/onetak
   platform-ops: component:default/health-keeper
+  platform-policy: component:default/onemind-core
   platform-redpanda-connect: component:default/redpanda-connect
   platform-security: component:default/kyverno
   platform-stac: component:default/stac
   platform-stac-validation: component:default/stac
   platform-takml: component:default/takml
   platform-takserver: component:default/tak-server
+  platform-takserver-tak-client: component:default/tak-server
   platform-tool-gateway: component:default/agentgateway
   platform-vaultwarden: component:default/vaultwarden
   platform-volsync: component:default/volsync

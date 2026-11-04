@@ -1,7 +1,7 @@
 """Idempotent applier for the `mcp_servers` section of the live Hermes config.yaml.
 Runs inside the onemind-hermes pod, as the `hermes` user (mcp/apply.sh starts it).
 
-    python3 apply_mcp.py [--dry-run] [--defaults config.defaults.yaml] [--config /opt/data/config.yaml]
+    python3 apply_mcp.py [--dry-run] [--include execute] [--defaults config.defaults.yaml] [--config /opt/data/config.yaml]
 
 config.defaults.yaml is only copied into an EMPTY volume, so the live config must be changed in
 place. The desired `mcp_servers` entries are read from the defaults file (one source of truth).
@@ -26,6 +26,10 @@ from ruamel.yaml import YAML  # noqa: E402  (PyYAML is not in Hermes' venv)
 
 # Retired: the LiteLLM MCP hub entry (replaced by the tool gateway, Phase 5).
 REMOVE = ["onemind"]
+
+# Servers in the defaults that are NOT applied unless named with `--include <name>`: `execute` (destructive and physical
+# tools) goes live only after the execute gate is verified (docs/operations/tool-gateway.md).
+HOLD = ["execute"]
 
 # Old seed comments about the LiteLLM MCP hub, left in the live config.yaml after the hub was retired: one block of
 # consecutive comment lines, from the first line below to the line ending "(Legacy's 401)."
@@ -56,6 +60,7 @@ def arg(flag, default):
 
 
 DRY = "--dry-run" in sys.argv
+INCLUDE = [sys.argv[i + 1] for i, a in enumerate(sys.argv[:-1]) if a == "--include"]
 DEFAULTS = arg("--defaults", "/tmp/mcp-apply/config.defaults.yaml")
 CONFIG = arg("--config", "/opt/data/config.yaml")
 
@@ -93,6 +98,9 @@ def main():
     if live is None:
         live = conf["mcp_servers"] = {}
     for name, spec in desired.items():
+        if name in HOLD and name not in INCLUDE:
+            print("held %s (not applied; pass --include %s once the execute gate is verified)" % (name, name))
+            continue
         if name in live and plain(live[name]) == plain(spec):
             print("unchanged %s" % name)
             continue
