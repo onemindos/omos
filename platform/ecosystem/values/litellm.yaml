@@ -32,18 +32,35 @@ proxy_config:
   model_list:
   - model_name: onemind-chat
     litellm_params:
-      model: ollama_chat/qwen3:8b
+      model: ollama_chat/qwen3:4b
       api_base: http://onemind-cpu-model.onemind-ai.svc.cluster.local:11434
       num_ctx: 8192
       extra_body:
         think: false
   - model_name: onemind-fast
     litellm_params:
-      model: ollama_chat/qwen3:8b
+      model: ollama_chat/qwen3:4b
       api_base: http://onemind-cpu-model.onemind-ai.svc.cluster.local:11434
       num_ctx: 8192
       extra_body:
         think: false
+  # Local models served by ecosystem-ollama (CPU, in-cluster). Call these by name
+  # from Hermes / OneMind Core through LiteLLM; do not talk to Ollama directly.
+  - model_name: local-tools
+    model_info:
+      supports_function_calling: true
+    litellm_params:
+      model: ollama_chat/qwen3:4b
+      api_base: http://onemind-cpu-model.onemind-ai.svc.cluster.local:11434
+      num_ctx: 8192
+      extra_body:
+        think: false
+  - model_name: local-embed
+    model_info:
+      mode: embedding
+    litellm_params:
+      model: ollama/bge-m3
+      api_base: http://onemind-cpu-model.onemind-ai.svc.cluster.local:11434
   general_settings:
     master_key: os.environ/PROXY_MASTER_KEY
     store_model_in_db: true

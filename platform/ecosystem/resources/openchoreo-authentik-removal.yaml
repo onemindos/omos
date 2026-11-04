@@ -1,0 +1,94 @@
+# Removes the Authentik side of OpenChoreo, which the (now deleted) auth-provider-bootstrap and
+# ai-operator-identity Jobs created. Same pattern as fedhub-authentik-provider.yaml: a Sync hook that calls
+# the Authentik API and is safe to run on every sync. Each object is fetched first and deleted only when it
+# exists, so a second run, or a run after someone removed it by hand, changes nothing:
+#   - the application `onemind-openchoreo` (slug), then its OAuth2 provider (client id `onemind-openchoreo`)
+#   - the two service accounts the identity Job made, `ai-operator` and `backstage-catalog`, and their app-password
+#     tokens `ai-operator-openchoreo` and `backstage-catalog-openchoreo`
+# Nothing else is touched: the shared "OneMind groups" scope mapping, the other providers and every other user stay.
+# The Jobs that used to (re)create these objects are gone (auth-provider-bootstrap no longer lists `openchoreo`,
+# ai-operator-identity.yaml was deleted), so nothing recreates them. Once this has succeeded once, this file can be
+# deleted in a later PR. Lookups use the object's own path (slug, identifier) and then check the name, never a list
+# filter alone, because Authentik's `?slug=` filter returned unrelated rows before (see fedhub-authentik-provider.yaml).
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: openchoreo-authentik-removal-v1
+  namespace: auth
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/hook: Sync
+    # Keep the finished Job so its log stays readable; the next sync replaces it.
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  ttlSecondsAfterFinished: 86400
+  template:
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: removal
+          image: ghcr.io/onemindos/onemind-core@sha256:667f9836cda15e3aadd51c6186eb80839946a0d1c76fc26fcb367e81cbc6ff9a
+          command: [python, -c]
+          args:
+            - |
+              import os, httpx
+              base = "http://platform-auth-helm-authentik-server.auth.svc.cluster.local/api/v3/"
+              headers = {"Authorization": "Bearer " + os.environ["AUTH_TOKEN"]}
+              APP = "onemind-openchoreo"
+              ACCOUNTS = {"ai-operator": "ai-operator-openchoreo", "backstage-catalog": "backstage-catalog-openchoreo"}
+              with httpx.Client(headers=headers, timeout=30) as client:
+                  def request(method, path, missing_ok=False):
+                      response = client.request(method, base + path)
+                      if missing_ok and response.status_code == 404:
+                          return None
+                      if not response.is_success:
+                          raise RuntimeError("Identity API " + method + " " + path.split("?")[0] + " failed with status " +
+                                             str(response.status_code) + ": " + response.text[:300])
+                      return response.json() if response.content else {}
+
+                  app = request("GET", "core/applications/" + APP + "/", missing_ok=True)
+                  if app and app.get("slug") == APP:
+                      request("DELETE", "core/applications/" + APP + "/")
+                      print("application " + APP + ": deleted")
+                  else:
+                      print("application " + APP + ": already absent")
+
+                  providers = [p for p in request("GET", "providers/oauth2/?page_size=100")["results"] if p["client_id"] == APP]
+                  if len(providers) > 1:
+                      raise RuntimeError("More than one provider has client id " + APP)
+                  if providers:
+                      request("DELETE", "providers/oauth2/" + str(providers[0]["pk"]) + "/")
+                      print("provider " + APP + ": deleted")
+                  else:
+                      print("provider " + APP + ": already absent")
+
+                  for username, token_id in ACCOUNTS.items():
+                      if request("GET", "core/tokens/" + token_id + "/", missing_ok=True):
+                          request("DELETE", "core/tokens/" + token_id + "/")
+                          print("token " + token_id + ": deleted")
+                      users = [u for u in request("GET", "core/users/?username=" + username)["results"]
+                               if u["username"] == username and u.get("type") in ("service_account", "internal_service_account")]
+                      if users:
+                          request("DELETE", "core/users/" + str(users[0]["pk"]) + "/")
+                          print("service account " + username + ": deleted")
+                      else:
+                          print("service account " + username + ": already absent")
+                  print("OpenChoreo identity objects removed from Authentik")
+          env:
+            - name: AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: AUTHENTIK_BOOTSTRAP_TOKEN
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi

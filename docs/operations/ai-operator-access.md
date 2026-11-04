@@ -10,9 +10,8 @@ ServiceAccount, its token Secret and two ClusterRoleBindings.
 
 | MCP server | Source | Sees | Cannot |
 |---|---|---|---|
-| `onemind-kubernetes` | [kubernetes-mcp-server](https://github.com/containers/kubernetes-mcp-server) 0.0.67, `--read-only` | Every namespace: workloads, pods, logs, events, nodes, ConfigMaps, and the platform CRDs (Argo CD Applications, OpenChoreo, CNPG, NATS JetStream, Gateway API, Prometheus, KEDA, Velero, VolSync, Tailscale, Cilium, Dapr, SPIRE, ClickHouse, Kyverno reports) | Read Secrets, create, patch, delete, exec, port-forward |
+| `onemind-kubernetes` | [kubernetes-mcp-server](https://github.com/containers/kubernetes-mcp-server) 0.0.67, `--read-only` | Every namespace: workloads, pods, logs, events, nodes, ConfigMaps, and the platform CRDs (Argo CD Applications, CNPG, NATS JetStream, Gateway API, Prometheus, KEDA, Velero, VolSync, Tailscale, Cilium, Dapr, ClickHouse, Kyverno reports) | Read Secrets, create, patch, delete, exec, port-forward |
 | `onemind-backstage` | Portal MCP actions (`/api/mcp-actions/v1`) | Catalog entities and relations, OneMind health checks, runbooks | Any mutation (machine identity is restricted by the portal) |
-| `onemind-openchoreo` | OpenChoreo control-plane API (`http://onemind-openchoreo-api.tail717ba0.ts.net/mcp`, tailnet only) | Namespaces, projects, components, workloads, releases and bindings, environments, planes, component and resource types, traits, workflows and runs, resource logs and events, authorization roles | Create, update, delete, deploy, trigger builds, read secret values. Write tools are not listed for this account and are refused if called |
 
 Two layers of protection apply to the Kubernetes server: the MCP server only exposes
 tools marked read-only, and the ServiceAccount has no write permissions anyway.
@@ -49,43 +48,23 @@ The script:
 1. Writes `~/.kube/ai-operator.kubeconfig` (mode 600) from the ServiceAccount token.
 2. Checks that the identity can list pods and Argo Applications, and cannot read
    Secrets, delete pods, exec or patch deployments. It stops if any check fails.
-3. Writes the OpenChoreo credential and checks it: reads work, `create_namespace` is refused.
-4. Registers the three MCP servers in Claude Code at user scope.
-5. Adds the three servers to `~/.codex/config.toml` for Codex, replacing earlier copies.
+3. Registers the two MCP servers in Claude Code at user scope.
+4. Adds the two servers to `~/.codex/config.toml` for Codex, replacing earlier copies.
 
 Start a new Claude Code or Codex session afterwards. `claude mcp list` should show both
 servers as connected.
-
-## OpenChoreo identity
-
-The Authentik service account `ai-operator` (created by the hook Job in
-`platform/ecosystem/resources/ai-operator-identity.yaml`) is allowed on the
-`onemind-openchoreo` application. Its app password is in Secret `auth/ai-operator-openchoreo`
-(not in Git). OpenChoreo authorizes it through `ClusterAuthzRoleBinding`
-`ai-operator-read-binding` (claim `sub`) to `ClusterAuthzRole` `ai-operator-read`: every
-`:view` action except secrets (`platform/openchoreo/platform/`).
-
-- **Claude Code** runs `scripts/ai-operator/openchoreo-token.sh` as a `headersHelper` and gets
-  a fresh one-hour token on every connect; it retries once on 401.
-- **Codex** has no token helper: `export OPENCHOREO_MCP_TOKEN="$(scripts/ai-operator/openchoreo-token.sh --raw)"`
-  before starting it. The token expires after an hour.
-- The credential sits at `~/.config/onemind/openchoreo-mcp.cred` (mode 600), written by
-  `setup.sh` from the cluster Secret.
 
 ## Rotating or revoking
 
 - Rotate the Kubernetes token: delete the Secret `kube/ai-operator-token` (Argo CD
   recreates it and the cluster issues a new token), then re-run the script.
-- Rotate the OpenChoreo password: delete the token `ai-operator-openchoreo` in Authentik
-  (Directory, Tokens) and the Secret `auth/ai-operator-openchoreo`, sync
-  `platform-ecosystem-resources` to re-run the Job, then re-run the script.
-- Revoke OpenChoreo access: delete `ai-operator-read-binding`.
 - Revoke completely: remove `platform/kube/ai-operator.yaml` in a PR. Argo CD prunes the
   ServiceAccount and bindings.
 - The portal token is managed as described in `platform/backstage/README.md`.
 
 ## Not included yet
 
-- **OpenChoreo observer MCP** (logs, metrics, traces, incidents, costs): phase 5, when the
-  observability plane exists. It needs the same subject-type setting on that plane.
+- **OpenChoreo MCP and Observer MCP:** removed on 2026-10-23 with OpenChoreo. Remove the
+  `onemind-openchoreo` and `onemind-openchoreo-obs` entries from your own Claude Code and
+  Codex settings if they are still there.
 - **Write access of any kind.** Changes go through pull requests and Argo CD.

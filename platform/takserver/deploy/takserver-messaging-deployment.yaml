@@ -1,0 +1,255 @@
+# Adopt the existing live messaging tier into platform-takserver; preserve its Recreate rollout.
+# The only runtime additions are the existing-CA signing JKS projection and current-image digest pin.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: takserver-messaging
+  namespace: takserver
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    meta.helm.sh/release-name: takserver
+    meta.helm.sh/release-namespace: takserver
+    onemind.io/gitops-owner: platform-takserver
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+    argocd.argoproj.io/sync-wave: '1'
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: takserver-messaging
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: '2026-09-13T00:51:39-04:00'
+      labels:
+        app: takserver-messaging
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - . /setenv.sh; cp /keystores/* /certs/files/ 2>/dev/null; cp /userauth-input/UserAuthenticationFile.xml /UserAuthenticationFile.xml
+          2>/dev/null; exec java -server -XX:+AlwaysPreTouch -XX:+UseG1GC -XX:+ScavengeBeforeFullGC -XX:+DisableExplicitGC
+          -XX:MaxRAMPercentage=${MAX_HEAP_PERCENT} -Dspring.profiles.active=messaging,consolelog -Dkeystore.pkcs12.legacy
+          -jar takserver.war
+        env:
+        - name: MAX_HEAP_PERCENT
+          value: '75.0'
+        - name: spring_profiles_active
+          value: k8cluster
+        - name: POSTGRES_HOST
+          value: takserver-postgresql
+        - name: POSTGRES_PORT
+          value: '5432'
+        image: ghcr.io/onemindos/takserver-base@sha256:b4f5d8c522bb9620e87de444b32fc0824d4b6c0d58622138f1730bbff046ba77
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 6
+          initialDelaySeconds: 480
+          periodSeconds: 30
+          successThreshold: 1
+          tcpSocket:
+            port: 8089
+          timeoutSeconds: 1
+        name: takserver-messaging
+        ports:
+        - containerPort: 8089
+          name: tls-8089
+          protocol: TCP
+        - containerPort: 9000
+          name: fedv1-9000
+          protocol: TCP
+        - containerPort: 9001
+          name: fedv2-9001
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 80
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 8089
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: '2'
+            memory: 2560Mi
+          requests:
+            cpu: '1'
+            memory: 1536Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /certs-configmap/
+          name: config
+        - mountPath: /userauth-input/UserAuthenticationFile.xml
+          name: tak-keystores
+        - mountPath: /UserAuthenticationFile.xml
+          name: tak-userauth
+          subPath: UserAuthenticationFile.xml
+        - mountPath: /opt/tak/TAKIgniteConfig.xml
+          name: tak-ignite-config
+          subPath: TAKIgniteConfig.xml
+        - mountPath: /opt/tak/conf/CoreConfig.xml
+          name: tak-conf
+          subPath: CoreConfig.xml
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: ghcr
+      initContainers:
+      - name: copy-coreconfig
+        # Substitutes the three password placeholders of CoreConfig.xml from Secrets (never from Git).
+        # awk reads values from ENVIRON, so nothing secret is on a command line and no character in a
+        # password needs escaping. A missing value or a leftover placeholder fails the pod start.
+        command:
+        - sh
+        - -c
+        - |
+          set -eu
+          : "${CA_KEY_PASS:?}" "${TAK_STORE_PASS:?}" "${LDAP_BIND_PASS:?}"
+          awk 'function rep(s, k, v,   i) { while ((i = index(s, k)) > 0) s = substr(s, 1, i - 1) v substr(s, i + length(k)); return s }
+               { $0 = rep($0, "__CA_KEY_PASS__", ENVIRON["CA_KEY_PASS"]);
+                 $0 = rep($0, "__TAK_STORE_PASS__", ENVIRON["TAK_STORE_PASS"]);
+                 $0 = rep($0, "__LDAP_BIND_PASS__", ENVIRON["LDAP_BIND_PASS"]);
+                 print }' /tmp/cm/CoreConfig.xml > /tak-conf/CoreConfig.xml
+          if grep -q '__[A-Z_]*__' /tak-conf/CoreConfig.xml; then
+            echo "unreplaced placeholder in CoreConfig.xml" >&2
+            rm -f /tak-conf/CoreConfig.xml
+            exit 1
+          fi
+        env:
+        - name: CA_KEY_PASS
+          valueFrom:
+            secretKeyRef:
+              name: tak-ca-credentials
+              key: ca-key-password
+        - name: TAK_STORE_PASS
+          valueFrom:
+            secretKeyRef:
+              name: tak-server-stores
+              key: keystore-password
+        - name: LDAP_BIND_PASS
+          valueFrom:
+            secretKeyRef:
+              name: tak-ldap-creds
+              key: LDAP_ADMIN_PASSWORD
+        image: busybox:1.36
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 50m
+            memory: 32Mi
+          requests:
+            cpu: 10m
+            memory: 16Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /tmp/cm/CoreConfig.xml
+          name: core-config-cm
+          subPath: CoreConfig.xml
+        - mountPath: /tak-conf
+          name: tak-conf
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccountName: takserver-ignite
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: config
+        projected:
+          defaultMode: 420
+          sources:
+          - configMap:
+              name: cert-migration
+              items:
+              - key: admin-trusted.pem
+                path: admin-trusted.pem
+              - key: admin.csr
+                path: admin.csr
+              - key: admin.jks
+                path: admin.jks
+              - key: admin.key
+                path: admin.key
+              - key: admin.p12
+                path: admin.p12
+              - key: admin.pem
+                path: admin.pem
+              - key: ca-trusted.pem
+                path: ca-trusted.pem
+              - key: ca.crl
+                path: ca.crl
+              - key: ca.pem
+                path: ca.pem
+              - key: config-takserver.cfg
+                path: config-takserver.cfg
+              - key: crl_index.txt
+                path: crl_index.txt
+              - key: crl_index.txt.attr
+                path: crl_index.txt.attr
+              - key: root-ca-trusted.pem
+                path: root-ca-trusted.pem
+              - key: root-ca.pem
+                path: root-ca.pem
+              - key: takserver-trusted.pem
+                path: takserver-trusted.pem
+              - key: takserver.csr
+                path: takserver.csr
+              - key: takserver.key
+                path: takserver.key
+              - key: takserver.p12
+                path: takserver.p12
+              - key: takserver.pem
+                path: takserver.pem
+              - key: truststore-root.p12
+                path: truststore-root.p12
+              - key: user-trusted.pem
+                path: user-trusted.pem
+              - key: user.csr
+                path: user.csr
+              - key: user.jks
+                path: user.jks
+              - key: user.key
+                path: user.key
+              - key: user.p12
+                path: user.p12
+              - key: user.pem
+                path: user.pem
+          - secret:
+              name: tak-server-stores
+              items:
+              - key: takserver.jks
+                path: takserver.jks
+              - key: truststore-root.jks
+                path: truststore-root.jks
+              - key: fed-truststore.jks
+                path: fed-truststore.jks
+          - secret:
+              name: tak-ca-credentials
+              items:
+              - key: ca-signing.jks
+                path: ca-signing.jks
+                mode: 256
+      - configMap:
+          defaultMode: 420
+          name: tak-ignite-config
+        name: tak-ignite-config
+      - name: tak-keystores
+        secret:
+          defaultMode: 420
+          secretName: tak-keystores
+      - configMap:
+          defaultMode: 420
+          name: tak-userauth
+        name: tak-userauth
+      - configMap:
+          defaultMode: 420
+          name: core-config-v2
+        name: core-config-cm
+      - emptyDir: {}
+        name: tak-conf

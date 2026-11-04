@@ -85,7 +85,7 @@ spec:
             claimName: synapse-data
       initContainers:
         - name: fix-permissions
-          image: busybox:latest
+          image: busybox:1.38.0@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
           command: ['sh', '-c', 'chown -R 991:991 /data && chmod -R 755 /data']
           volumeMounts:
             - name: data

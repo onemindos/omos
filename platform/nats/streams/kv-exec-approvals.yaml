@@ -1,0 +1,15 @@
+# Pending and granted approvals of the tool gateway's execute-gate (services/execute-gate, design section 5.3). A record lives at
+# most as long as its 10 minute request TTL plus a retry window; ttl is a backstop for records that nobody reads again.
+# history 1: the gate uses compare-and-set on the revision, never old values.
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-exec-approvals
+  namespace: nats
+spec:
+  bucket: exec-approvals
+  storage: file
+  replicas: 3
+  history: 1
+  ttl: 1h
+  preventDelete: true

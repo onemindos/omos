@@ -4,7 +4,7 @@
 # Meant to run as an init container before Hermes starts (see README.md in this directory; it is not wired into the
 # Deployment yet). It never overwrites anything that already exists, so a normal restart does nothing.
 #
-#   SEED_DIR   where the identity files are mounted, laid out like platform/hermes/agent (default /seed)
+#   SEED_DIR   where the identity files are mounted, laid out like the table in platform/hermes/seed/README.md (default /seed)
 #   DATA_DIR   the Hermes data volume (default /opt/data)
 #   HERMES_RESEED=1  overwrite the seeded files that already exist (a deliberate reset)
 set -eu

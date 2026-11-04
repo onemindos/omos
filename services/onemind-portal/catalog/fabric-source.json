@@ -120,19 +120,6 @@
     ]
   },
   {
-    "Page": "STAC Browser",
-    "Description": "Browse STAC catalogs visually",
-    "Category": "🌍 Geo",
-    "Host": "☁️ DOKS Cluster",
-    "Status": "✅ Live",
-    "userDefined:URL": "http://development-default.apps.openchoreo.100-110-185-30.nip.io/stac-browser-http",
-    "url": "https://app.notion.com/3b9d0cf70a7e8124a3eed9d89f3a0a5c",
-    "Last edited time": "2026-09-03 07:00:34Z",
-    "Tags": [
-      "Geo"
-    ]
-  },
-  {
     "Page": "cert-manager",
     "Description": "Automated TLS via Let's Encrypt",
     "Category": "🏗️ Infrastructure",
@@ -1624,17 +1611,6 @@
     "userDefined:URL": "https://github.com/onemindos/nats-android",
     "url": "https://app.notion.com/3d0d0cf70a7e81aa96c9c94ec8575773",
     "Last edited time": "2026-09-03 08:13:41Z",
-    "Tags": []
-  },
-  {
-    "Page": "Paperclip",
-    "Description": "Open-source app for managing AI agents at work — 79.9k stars, most popular agent UI. Reference for OneMind agent management UI.",
-    "Category": "🧠 Agents",
-    "Host": "🐳 Docker Local",
-    "Status": "✅ Live",
-    "userDefined:URL": "https://github.com/paperclipai/paperclip",
-    "url": "https://app.notion.com/3d0d0cf70a7e81ada22bc5a0b2164e0b",
-    "Last edited time": "2026-09-03 21:27:33Z",
     "Tags": []
   },
   {

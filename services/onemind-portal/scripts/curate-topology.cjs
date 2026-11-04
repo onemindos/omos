@@ -85,6 +85,8 @@ function curateTopology(entities) {
       resource.metadata.annotations = { ...old.metadata.annotations, ...resource.metadata.annotations };
       resource.metadata.links = [...(old.metadata.links || []).filter(l => !titles.has(l.title)), ...resource.metadata.links];
       resource.spec.dependsOn = [...new Set([...(old.spec.dependsOn || []), ...resource.spec.dependsOn])];
+      // Keep the System the structure review assigned; a new volume gets cluster-<namespace>, which curate-structure maps to the app's System.
+      resource.spec.system = old.spec.system || resource.spec.system;
       docs[docs.indexOf(old)] = { ...old, metadata: { ...old.metadata, ...resource.metadata }, spec: { ...old.spec, ...resource.spec } };
     }
     else docs.push(resource);

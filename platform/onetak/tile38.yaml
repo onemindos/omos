@@ -29,7 +29,7 @@ spec:
                       - onemind-ecosystem-cpu
       containers:
         - name: tile38
-          image: tile38/tile38:latest
+          image: tile38/tile38@sha256:5b61c6f3b32e508bf447b61b53320b3e524a6d9679782730fd8c930451b53e36
           ports:
             - containerPort: 9851
               name: tile38

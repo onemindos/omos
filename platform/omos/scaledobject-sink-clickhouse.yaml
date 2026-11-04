@@ -1,0 +1,40 @@
+# KEDA ScaledObject for sink-clickhouse, driven by the INTEL/sink-clickhouse JetStream consumer lag.
+#
+# OBSERVE-ONLY on purpose: min 1 / max 1 keeps the Deployment at exactly one replica, same as
+# the Deployment's own `replicas: 1`, so Argo CD and KEDA do not fight. What this buys today is
+# proof that KEDA can read the NATS monitoring endpoint and see the consumer lag (check
+# `kubectl -n omos get scaledobject,hpa`). See docs/operations/keda-scalers.md before changing it.
+#
+# Why not scale to zero:
+#   * sink-clickhouse also holds a core-NATS subscription (ent.*.*.state). Core NATS is not
+#     durable, so every message published while the pod is at 0 is lost.
+#   * It is a push consumer with no deliver group; a second replica cannot bind, so max is 1.
+#   * INTEL carries constant traffic (consumer last_active within seconds), so there is no idle
+#     window to save, and the sink writes to onemind.events ("NEVER DROP").
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: sink-clickhouse
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: sink-clickhouse
+    app.kubernetes.io/part-of: omos-platform
+spec:
+  scaleTargetRef:
+    name: sink-clickhouse
+  minReplicaCount: 1
+  maxReplicaCount: 1
+  pollingInterval: 30
+  triggers:
+    - type: nats-jetstream
+      metadata:
+        # Headless service so KEDA can reach each server (nats-0/1/2.nats-headless) and find
+        # the consumer leader; /jsz on a follower does not report authoritative lag.
+        natsServerMonitoringEndpoint: nats-headless.nats.svc.cluster.local:8222
+        account: ONEMIND
+        stream: INTEL
+        consumer: sink-clickhouse
+        # lag = num_pending + num_ack_pending
+        lagThreshold: "100"
+        activationLagThreshold: "1"
+        useHttps: "false"

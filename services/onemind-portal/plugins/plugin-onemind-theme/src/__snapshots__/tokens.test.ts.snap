@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`token values matches the token snapshot 1`] = `
+{
+  "dark": {
+    "accent": {
+      "base": "#d9c5a0",
+      "on": "#17140d",
+    },
+    "border": {
+      "strong": "#4d4d52",
+      "subtle": "#2e2e31",
+    },
+    "brand": {
+      "base": "#ff333a",
+      "hover": "#ff5258",
+      "on": "#120305",
+      "press": "#f0272e",
+      "subtle": "#2a1316",
+      "text": "#ff6b70",
+    },
+    "focus": "#ff6b70",
+    "nav": {
+      "bg": "#0a0a0b",
+      "hover": "#1c1c1e",
+      "selected": "#ffffff",
+      "text": "#c4c4c9",
+    },
+    "shadow": "#00000066",
+    "status": {
+      "critical": {
+        "bg": "#2f1224",
+        "fg": "#ff5fa0",
+      },
+      "info": {
+        "bg": "#14212f",
+        "fg": "#6cb6ff",
+      },
+      "ok": {
+        "bg": "#12261a",
+        "fg": "#3ecf72",
+      },
+      "unknown": {
+        "bg": "#232325",
+        "fg": "#9a9aa0",
+      },
+      "warn": {
+        "bg": "#2b2210",
+        "fg": "#f5b83d",
+      },
+    },
+    "surface": {
+      "0": "#0e0e0f",
+      "1": "#151516",
+      "2": "#1c1c1e",
+      "3": "#252527",
+    },
+    "text": {
+      "1": "#f3f3f4",
+      "2": "#b8b8bd",
+      "3": "#93939a",
+    },
+  },
+  "light": {
+    "accent": {
+      "base": "#7a5f2e",
+      "on": "#ffffff",
+    },
+    "border": {
+      "strong": "#77777d",
+      "subtle": "#d9d9dd",
+    },
+    "brand": {
+      "base": "#d4151c",
+      "hover": "#b8121a",
+      "on": "#ffffff",
+      "press": "#9c0f16",
+      "subtle": "#fdeaeb",
+      "text": "#b8121a",
+    },
+    "focus": "#b8121a",
+    "nav": {
+      "bg": "#111112",
+      "hover": "#222224",
+      "selected": "#ffffff",
+      "text": "#c4c4c9",
+    },
+    "shadow": "#00000024",
+    "status": {
+      "critical": {
+        "bg": "#fde4ef",
+        "fg": "#b0105a",
+      },
+      "info": {
+        "bg": "#e2eefa",
+        "fg": "#1b5fa8",
+      },
+      "ok": {
+        "bg": "#e4f5ea",
+        "fg": "#167a3e",
+      },
+      "unknown": {
+        "bg": "#ececee",
+        "fg": "#5f5f65",
+      },
+      "warn": {
+        "bg": "#fbefd2",
+        "fg": "#8a5a00",
+      },
+    },
+    "surface": {
+      "0": "#f4f4f5",
+      "1": "#ffffff",
+      "2": "#ececee",
+      "3": "#e4e4e6",
+    },
+    "text": {
+      "1": "#19191b",
+      "2": "#4b4b50",
+      "3": "#5f5f65",
+    },
+  },
+}
+`;

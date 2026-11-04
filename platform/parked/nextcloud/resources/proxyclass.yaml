@@ -1,0 +1,26 @@
+# Nextcloud file transfers reached the shared 256Mi proxy cap and were OOM-killed.
+# Keep the larger budget scoped to this ingress; other proxies use their defaults.
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyClass
+metadata:
+  name: tailscale-nextcloud
+  annotations:
+    argocd.argoproj.io/sync-wave: '-2'
+spec:
+  statefulSet:
+    pod:
+      tailscaleInitContainer:
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi
+          limits:
+            memory: 32Mi
+      tailscaleContainer:
+        resources:
+          requests:
+            cpu: 25m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi

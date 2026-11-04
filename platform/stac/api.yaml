@@ -1,0 +1,237 @@
+# stac-fastapi-pgstac, two Deployments of the same image that differ in exactly one setting:
+#   stac-api         ENABLE_TRANSACTIONS_EXTENSIONS=false. Read and search only. Behind the Tailscale Ingress.
+#   stac-api-writer  ENABLE_TRANSACTIONS_EXTENSIONS=true.  Adds POST/PUT/PATCH/DELETE on collections and items.
+#                    ClusterIP only, and a NetworkPolicy lets only the WebODM sync CronJob reach it.
+# stac-fastapi has no authentication, so which pods can reach the writer is the whole access control for writes.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stac-api
+  namespace: stac
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  labels: &read-labels
+    app.kubernetes.io/name: stac
+    app.kubernetes.io/component: api
+    app.kubernetes.io/part-of: stac
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: stac
+      app.kubernetes.io/component: api
+  template:
+    metadata:
+      labels: *read-labels
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values: [onemind-ecosystem-cpu]
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: stac-api
+          image: ghcr.io/stac-utils/stac-fastapi-pgstac:7.1.0@sha256:8d546f480e46e6dff8d94ee697aabf306bb0870fba5c1cde33449fe3ffbbb9c1
+          ports:
+            - name: http
+              containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: stac-config
+          env:
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: stac-db
+                  key: username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: stac-db
+                  key: password
+            - name: ENABLE_TRANSACTIONS_EXTENSIONS
+              value: "false"
+            # The browser is the only cross-origin caller. Methods default to GET, POST (search) and OPTIONS.
+            - name: CORS_ORIGINS
+              value: https://stac-browser.tail717ba0.ts.net
+            - name: DB_MAX_CONN_SIZE
+              value: "5"
+          resources:
+            requests:
+              cpu: 25m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          startupProbe:
+            httpGet:
+              path: /_mgmt/ping
+              port: http
+            periodSeconds: 5
+            failureThreshold: 24
+          readinessProbe:
+            httpGet:
+              path: /_mgmt/health
+              port: http
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /_mgmt/ping
+              port: http
+            periodSeconds: 20
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 64Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stac-api
+  namespace: stac
+  labels:
+    app.kubernetes.io/name: stac
+    app.kubernetes.io/component: api
+spec:
+  selector:
+    app.kubernetes.io/name: stac
+    app.kubernetes.io/component: api
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stac-api-writer
+  namespace: stac
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  labels: &write-labels
+    app.kubernetes.io/name: stac
+    app.kubernetes.io/component: api-writer
+    app.kubernetes.io/part-of: stac
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: stac
+      app.kubernetes.io/component: api-writer
+  template:
+    metadata:
+      labels: *write-labels
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values: [onemind-ecosystem-cpu]
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: stac-api
+          image: ghcr.io/stac-utils/stac-fastapi-pgstac:7.1.0@sha256:8d546f480e46e6dff8d94ee697aabf306bb0870fba5c1cde33449fe3ffbbb9c1
+          ports:
+            - name: http
+              containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: stac-config
+          env:
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: stac-db
+                  key: username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: stac-db
+                  key: password
+            - name: ENABLE_TRANSACTIONS_EXTENSIONS
+              value: "true"
+            - name: DB_MAX_CONN_SIZE
+              value: "3"
+          resources:
+            requests:
+              cpu: 10m
+              memory: 96Mi
+            limits:
+              cpu: 500m
+              memory: 384Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          startupProbe:
+            httpGet:
+              path: /_mgmt/ping
+              port: http
+            periodSeconds: 5
+            failureThreshold: 24
+          readinessProbe:
+            httpGet:
+              path: /_mgmt/health
+              port: http
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /_mgmt/ping
+              port: http
+            periodSeconds: 20
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 64Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stac-api-writer
+  namespace: stac
+  labels:
+    app.kubernetes.io/name: stac
+    app.kubernetes.io/component: api-writer
+spec:
+  selector:
+    app.kubernetes.io/name: stac
+    app.kubernetes.io/component: api-writer
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

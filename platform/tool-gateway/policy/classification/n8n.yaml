@@ -1,0 +1,12 @@
+# Tool classification for target `n8n` (built-in instance MCP server): conservative start. search_workflows and get_workflow_details only
+# read. execute_workflow runs a workflow whose side effects the gateway cannot see, so it is gated until the owner has reviewed which
+# workflows are marked "Available in MCP". Newer n8n versions add workflow-authoring tools; they stay unlisted (hidden) until classified:
+#   python scripts/gateway/classify_tools.py --target n8n --url <port-forward n8n>/mcp-server/http --key-env N8N_MCP_TOKEN
+target: n8n
+read:
+- get_workflow_details
+- search_workflows
+write: []
+destructive:
+- execute_workflow
+physical: []

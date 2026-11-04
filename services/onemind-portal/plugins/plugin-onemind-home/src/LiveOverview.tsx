@@ -1,71 +1,16 @@
-import { useEffect, useState } from 'react';
-import {
-  discoveryApiRef,
-  fetchApiRef,
-  useApi,
-} from '@backstage/core-plugin-api';
+import { useState } from 'react';
 import { Box, Button, Typography, useTheme } from '@material-ui/core';
+import { alpha } from '@material-ui/core/styles';
 import { ActivityInbox } from './ActivityInbox';
+import { backupNeedsReview, isStale, useOperationsStatus } from './status';
 
-type Observation = {
-  observedAt: string;
-  partial: boolean;
-  totalWorkloads: number;
-  unavailable: string[];
-  unavailableSources?: string[];
-  deployments: { name: string; health: string; sync: string }[];
-  backups: { name: string; lastSuccess: string | null; suspended: boolean }[];
-  serviceHealth?: { checks: { state: string }[] };
-};
 export function LiveOverview() {
-  const discovery = useApi(discoveryApiRef);
-    const api = useApi(fetchApiRef);
-    const theme = useTheme();
-  const [data, setData] = useState<Observation>();
-    const [error, setError] = useState(false);
-    const [inbox, setInbox] = useState(false);
-  useEffect(() => {
-    let active = true;
-      let pending = false;
-    const controller = new AbortController();
-    const refresh = async () => {
-      if (pending) return;
-      pending = true;
-      try {
-        const base = await discovery.getBaseUrl('onemind');
-        const response = await api.fetch(`${base  }/status`, {
-          signal: controller.signal,
-        });
-        if (!response.ok) throw new Error();
-        const value = await response.json();
-        if (active) {
-          setData(value);
-          setError(false);
-        }
-      } catch {
-        if (active) setError(true);
-      } finally {
-        pending = false;
-      }
-    };
-    refresh();
-    const timer = setInterval(refresh, 60000);
-    return () => {
-      active = false;
-      controller.abort();
-      clearInterval(timer);
-    };
-  }, [discovery, api]);
-  const stale =
-    !!data && (error || Date.now() - Date.parse(data.observedAt) > 180000);
+  const theme = useTheme();
+  const { data, error } = useOperationsStatus();
+  const [inbox, setInbox] = useState(false);
+  const stale = !!data && (error || isStale(data));
   const unavailable = new Set(data?.unavailableSources ?? []);
-  const backup = data?.backups.filter(
-    item =>
-      item.suspended ||
-      !item.lastSuccess ||
-      (item.name === 'backstage/backstage-backup' &&
-        Date.now() - Date.parse(item.lastSuccess) > 129600000),
-  ).length;
+  const backup = data?.backups.filter(item => backupNeedsReview(item)).length;
   const cards = [
     {
       title: 'Workloads not ready',
@@ -76,26 +21,26 @@ export function LiveOverview() {
       detail: data
         ? `of ${data.totalWorkloads} observed workloads`
         : 'Waiting for observation',
-      color: '#237f91',
+      color: theme.palette.primary.main,
     },
     {
       title: 'Deployments to review',
       value: unavailable.has('Argo CD') ? 'Unknown' : data?.deployments.length,
       detail: 'Argo health or sync needs review',
-      color: '#7858b5',
+      color: theme.palette.secondary.main,
     },
     {
       title: 'Backup schedules to review',
       value: unavailable.has('Backup schedules') ? 'Unknown' : backup,
       detail: 'Activity only; not proof of restoration',
-      color: '#a76d17',
+      color: theme.palette.warning.main,
     },
     {
       title: 'Service checks to review',
       value: data?.serviceHealth?.checks.filter(item => item.state !== 'up')
         .length,
       detail: 'Point-in-time checks; not uptime history',
-      color: '#287756',
+      color: theme.palette.success.main,
     },
   ];
   return (
@@ -151,7 +96,7 @@ export function LiveOverview() {
             style={{
               borderTop: `3px solid ${card.color}`,
               borderRadius: 12,
-              background: `${card.color}18`,
+              background: alpha(card.color, 0.09),
             }}
           >
             <Typography variant="subtitle2">{card.title}</Typography>

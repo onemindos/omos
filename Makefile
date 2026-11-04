@@ -40,10 +40,12 @@ init: ## Initialize Terraform providers in infra/
 	@terraform -chdir=$(TF_DIR) init -input=false
 
 plan: ## Terraform plan (requires DIGITALOCEAN_TOKEN)
+	@echo "⚠ infra/ does not match the live cluster; see infra/README.md before running plan."
 	@terraform -chdir=$(TF_DIR) init -input=false
 	@terraform -chdir=$(TF_DIR) plan
 
 apply: ## Terraform apply (requires DIGITALOCEAN_TOKEN)
+	@echo "⚠ infra/ does not match the live cluster; see infra/README.md before running apply."
 	@terraform -chdir=$(TF_DIR) init -input=false
 	@terraform -chdir=$(TF_DIR) apply
 

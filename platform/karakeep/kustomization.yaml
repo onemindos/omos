@@ -1,0 +1,50 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Resources carry their own namespace: the app owns its dedicated auth bootstrap.
+resources:
+- namespace.yaml
+- web-deployment.yaml
+- web-service.yaml
+- chrome-deployment.yaml
+- chrome-service.yaml
+- meilisearch-deployment.yaml
+- meilisearch-service.yaml
+- data-pvc.yaml
+- meilisearch-pvc.yaml
+- ingress.yaml
+- network.yaml
+- karakeep-secrets.sealedsecret.yaml
+- oidc.sealedsecret.yaml
+- auth-oidc.sealedsecret.yaml
+- auth-provider.yaml
+- backup.yaml
+- backup-data.sealedsecret.yaml
+- backup-meilisearch.sealedsecret.yaml
+configMapGenerator:
+- name: karakeep-configuration
+  namespace: karakeep
+  literals:
+  - NEXTAUTH_URL=https://karakeep.tail717ba0.ts.net
+  - AUTH_TRUSTED_ORIGINS=
+  # v0.34.1 also blocks first OIDC enrollment when DISABLE_SIGNUPS=true.
+  # Password signup/login remain disabled; Authentik admits only the existing owner.
+  - DISABLE_SIGNUPS=false
+  - DISABLE_PASSWORD_AUTH=true
+  - OAUTH_AUTO_REDIRECT=true
+  - OAUTH_CLIENT_ID=onemind-karakeep
+  - OAUTH_WELLKNOWN_URL=https://auth.onemindos.dev/application/o/onemind-karakeep/.well-known/openid-configuration
+  - OAUTH_PROVIDER_NAME=OneMind
+  - OAUTH_SCOPE=openid email profile
+  - OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING=false
+  - DISABLE_NEW_RELEASE_CHECK=true
+  - LOG_LEVEL=warn
+  - INFERENCE_ENABLE_AUTO_TAGGING=false
+  - INFERENCE_ENABLE_AUTO_SUMMARIZATION=false
+  - EMBEDDING_ENABLE_AUTO_INDEXING=false
+  - SEMANTIC_SEARCH_ENABLED=false
+  - OCR_LANGS=
+  - CRAWLER_NUM_WORKERS=1
+  - CRAWLER_FULL_PAGE_ARCHIVE=false
+  - CRAWLER_VIDEO_DOWNLOAD=false
+  - SEARCH_NUM_WORKERS=2
+  - DB_WAL_MODE=true

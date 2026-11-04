@@ -19,7 +19,7 @@ spec:
         - name: ghcr
       containers:
         - name: nats-dashboard
-          image: ghcr.io/onemindos/nats-dashboard:latest
+          image: ghcr.io/onemindos/nats-dashboard@sha256:bccc7a25725540d7db4147544bf25d45716fdce86b269ec3c9aa87ca3e00da38
           imagePullPolicy: Always
           ports:
             - name: http
