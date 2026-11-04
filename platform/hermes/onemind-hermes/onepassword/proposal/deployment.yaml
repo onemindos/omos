@@ -39,7 +39,7 @@ spec:
                       - onemind-ecosystem-cpu
       initContainers:
         - name: initial-config
-          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          image: nousresearch/hermes-agent:v0.22.7@sha256:e6d81ae52ebf6a43efa529701405509f20054ba818f179ddd748bed4f8af584c
           command:
             - /opt/hermes/.venv/bin/python3
             - -c
@@ -138,7 +138,7 @@ spec:
               mountPath: /onepassword
               readOnly: true
         - name: install-onepassword-cli
-          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          image: nousresearch/hermes-agent:v0.22.7@sha256:e6d81ae52ebf6a43efa529701405509f20054ba818f179ddd748bed4f8af584c
           command:
             - /opt/hermes/.venv/bin/python3
             - /onepassword/install_cli.py
@@ -165,7 +165,7 @@ spec:
         # A failed install does not stop the pod (Telegram, Matrix and the dashboard do not need it);
         # the NATS plugin simply cannot load and says so in the gateway log.
         - name: install-gateway-deps
-          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          image: nousresearch/hermes-agent:v0.22.7@sha256:e6d81ae52ebf6a43efa529701405509f20054ba818f179ddd748bed4f8af584c
           command:
             - sh
             - -c
@@ -213,7 +213,7 @@ spec:
               mountPath: /tmp
       containers:
         - name: hermes
-          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          image: nousresearch/hermes-agent:v0.22.7@sha256:e6d81ae52ebf6a43efa529701405509f20054ba818f179ddd748bed4f8af584c
           args: [gateway, run]
           securityContext:
             allowPrivilegeEscalation: false
@@ -304,9 +304,8 @@ spec:
               value: onemind-hermes-nats-platform
             - name: NATS_CONTEXT_CLIENT_NAME
               value: onemind-hermes-nats-context
-            # Identity on the fabric: agents.{prompt,status,hb}.hermes.zeus.legacy, the one hermes-legacy
-            # holds today. REFUSE_DUPLICATE keeps this instance down while hermes-legacy still holds it
-            # (MIGRATION.md, "NATS cutover").
+            # Identity on the fabric: agents.{prompt,status,hb}.hermes.zeus.legacy. This instance is the only
+            # holder since the old Hermes was retired (2026-11-03).
             - name: HERMES_NATS_AGENT
               value: hermes
             - name: HERMES_NATS_OWNER

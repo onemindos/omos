@@ -51,6 +51,9 @@ SCAN_RULES = {
     "aws access key": re.compile(r"\b(AKIA|ASIA)[0-9A-Z]{16}\b"),
     "private key block": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
     "jwt": re.compile(r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}"),
+    "url with credentials": re.compile(r"\b[a-z][a-z0-9+.-]*://[^/\s@:]+:[^/\s@]{3,}@", re.I),
+    "url secret query param": re.compile(r"(?i)[?&](api[_-]?key|key|token|access[_-]?token|secret|sig|signature|password)=[^&\s]{8,}"),
+    "bearer token": re.compile(r"(?i)\bbearer\s+(?!\$|<redacted>)[A-Za-z0-9._~+/=-]{20,}"),
     "telegram bot token": re.compile(r"\b\d{8,10}:[A-Za-z0-9_-]{35}\b"),
     "credential assignment": re.compile(
         r"(?i)\b(password|passwd|secret|api[_-]?key|access[_-]?token|auth[_-]?token)\b[\"']?\s*[:=]\s*[\"']?"
@@ -63,13 +66,27 @@ def die(msg, code=1):
     sys.exit(code)
 
 
-def redact(node, key=""):
+# Containers whose string values are blanked whatever the key is called (MCP server headers and env).
+BLANKET_KEYS = {"headers", "env", "environment", "http_headers", "env_vars"}
+URL_USERINFO = re.compile(r"(?i)(\b[a-z][a-z0-9+.-]*://)[^/\s@]+@")
+URL_QUERY = re.compile(r"(?i)(\bhttps?://[^\s?#\"']+)\?[^\s#\"']*")
+
+
+def redact_str(val):
+    """Strip credentials embedded in URLs: userinfo, and the whole query string (keys, tokens)."""
+    val = URL_USERINFO.sub(r"\1<redacted>@", val)
+    return URL_QUERY.sub(r"\1?<redacted>", val)
+
+
+def redact(node, key="", blanket=False):
     if isinstance(node, dict):
-        return {k: redact(v, str(k)) for k, v in node.items()}
+        return {k: redact(v, str(k), blanket or str(k).lower() in BLANKET_KEYS) for k, v in node.items()}
     if isinstance(node, list):
-        return [redact(v, key) for v in node]
-    if isinstance(node, str) and node and SECRET_KEY.search(key) and not ENV_REF.match(node.strip()):
-        return "<redacted>"
+        return [redact(v, key, blanket) for v in node]
+    if isinstance(node, str) and node:
+        if (blanket or SECRET_KEY.search(key)) and not ENV_REF.match(node.strip()):
+            return "<redacted>"
+        return redact_str(node)
     return node
 
 
@@ -202,6 +219,10 @@ def push(snap, files):
         target = clone / DEST
         shutil.rmtree(target, ignore_errors=True)
         shutil.copytree(snap, target)
+        # last gate before anything is committed: scan exactly the tree that will be pushed
+        hits = scan(target)
+        if hits:
+            die("ABORTED before commit, pre-push secret scan found %d problem(s); nothing was pushed:\n  %s" % (len(hits), "\n  ".join(hits)))
         run(["git", "-C", str(clone), "add", "-A", DEST], env=env)
         if not run(["git", "-C", str(clone), "status", "--porcelain", DEST], env=env).stdout.strip():
             return None  # nothing changed: silent

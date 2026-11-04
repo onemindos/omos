@@ -5216,33 +5216,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
-  name: mesh-ba87ad8cd961
-  title: hermes-agent
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
-  annotations:
-    onemind.io/inventory-source: tailscale
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.500Z
-    onemind.io/inventory-review: unreviewed
-    onemind.io/mesh-os: linux
-    onemind.io/mesh-dns: hermes-agent.tail717ba0.ts.net.
-    onemind.io/observed-online: "true"
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/pillar-review: proposed
-  tags:
-    - mesh
-    - unreviewed
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: mesh-endpoint
-  owner: group:default/onemind-admins
-  system: onemind-mesh
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
   name: mesh-5b1db5c25ca6
   title: onemind-preview
   description: linux mesh endpoint. Availability is a discovery snapshot, not a
@@ -8833,40 +8806,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
-  name: fabric-paperclip-670d47cc
-  title: Paperclip (registry)
-  description: Open-source app for managing AI agents at work — 79.9k stars, most
-    popular agent UI. Reference for OneMind agent management UI. — Notion
-    documentation; deployment and availability unverified.
-  tags:
-    - fabric-registry
-    - reference
-  annotations:
-    onemind.io/documented-purpose: Open-source app for managing AI agents at work —
-      79.9k stars, most popular agent UI. Reference for OneMind agent management
-      UI.
-    onemind.io/documented-host: 🐳 Docker Local
-    onemind.io/documented-status: ✅ Live
-    onemind.io/documented-category: 🧠 Agents
-    onemind.io/documented-at: 2026-09-03 21:27:33Z
-    onemind.io/registry-review: source-reviewed-runtime-unverified
-    onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
-    onemind.io/documented-address: https://github.com/paperclipai/paperclip
-    onemind.io/verification: reference
-    onemind.io/pillar-review: proposed
-  links:
-    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ada22bc5a0b2164e0b.md
-      title: "Archived registry: Paperclip"
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: reference
-  owner: group:default/onemind-admins
-  system: ai-agents
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
   name: fabric-redpandaconnectwombat-942cb146
   title: Redpanda Connect (Wombat)
   description: Data pipeline — Wombat/Redpanda Connect, bridges NATS → TAK,
@@ -10422,33 +10361,6 @@ metadata:
     onemind.io/inventory-review: unreviewed
     onemind.io/mesh-dns: hermes-omos-dell-zeus.tail717ba0.ts.net.
     onemind.io/observed-online: "true"
-    onemind.io/inventory-state: missing-review-required
-    onemind.io/inventory-missing-observations: "1"
-    onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
-    onemind.io/pillar-review: proposed
-  tags:
-    - mesh
-    - unreviewed
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: mesh-endpoint
-  owner: group:default/onemind-admins
-  system: onemind-mesh
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
-  name: mesh-eb4bcd2d04aa
-  title: hermes-legacy
-  description: Not observed in the latest inventory; review required. linux mesh
-    endpoint. Availability is a discovery snapshot, not a live health check.
-  annotations:
-    onemind.io/inventory-source: tailscale
-    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
-    onemind.io/inventory-review: unreviewed
-    onemind.io/mesh-dns: hermes-legacy.tail717ba0.ts.net.
-    onemind.io/observed-online: "false"
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z

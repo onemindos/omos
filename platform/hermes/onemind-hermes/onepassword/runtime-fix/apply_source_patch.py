@@ -1,4 +1,4 @@
-"""Build-time, hash-locked correction for the pinned Hermes v0.22.5 source.
+"""Build-time, hash-locked correction for the pinned Hermes v0.22.7 source.
 
 Never run against a live installation. Apply to a scratch source copy or during
 an image build; unknown source fails closed before any write.
@@ -8,7 +8,7 @@ import hashlib
 from pathlib import Path
 
 RELATIVE_PATH = Path('tools/environments/local_env_policy.py')
-SOURCE_SHA256 = '4429af03406ead5e79e5cfe711787030f40d42bf50c6253b4abc6ee0154a77d4'
+SOURCE_SHA256 = 'd8b3a8941dcbd85bc1f195ce4bd4e47f2a6fa9913a62dd3d702fd035cefab5a3'
 OLD = '''    upper = key.upper()
     if upper.startswith("AUXILIARY_") and upper.endswith(("_API_KEY", "_BASE_URL")):
 '''

@@ -13,19 +13,7 @@ spec:
   - Ingress
   - Egress
   ingress:
-  # LiteLLM MCP gateway (platform/hermes/mcp/HUB.md); its egress is unrestricted.
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: onemind-ai
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: litellm
-          app.kubernetes.io/instance: litellm
-    ports:
-    - protocol: TCP
-      port: 8000
-  # Tool gateway (platform/tool-gateway), target `onemind`; replaces the LiteLLM rule in Phase 6.
+  # Tool gateway (platform/tool-gateway), target `onemind`. The LiteLLM MCP hub that used to call this pod was retired in Phase 6 (LiteLLM has 0 MCP servers and no call came from it).
   - from:
     - namespaceSelector:
         matchLabels:

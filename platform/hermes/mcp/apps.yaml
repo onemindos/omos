@@ -49,14 +49,6 @@ apps:
   url_env: N8N_URL
   token_env: N8N_API_TOKEN
   auth_header: X-N8N-API-KEY
-- id: paperclip
-  description: Companies, issues and backlog task creation
-  enabled: false
-  blocked_reason: Dedicated company-scoped Paperclip agent API token and authenticated acceptance required; do not reuse browser sessions or provider
-    keys.
-  adapter: paperclip
-  url_env: PAPERCLIP_URL
-  token_env: PAPERCLIP_API_TOKEN
 - id: grafana
   description: Dashboard discovery and observability navigation
   adapter: grafana

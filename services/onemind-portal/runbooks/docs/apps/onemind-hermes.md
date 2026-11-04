@@ -2,7 +2,7 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Hermes v0.22.5 instance with the single Legacy soul in the hermes namespace (Argo application platform-onemind-hermes); no NATS sidecar, no imported Legacy data.
+Hermes v0.22.7 instance with the single Legacy soul in the hermes namespace (Argo application platform-onemind-hermes); no NATS sidecar, no imported Legacy data.
 
 ## Where it runs
 

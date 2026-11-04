@@ -202,12 +202,13 @@ that all applications are integrated. Nextcloud, Matrix, TAK HTTP, portal federa
 WebODM and other adapters remain explicit implementation work. Existing Legacy
 bus/TAK tools remain separate. No user-file scraping or database backdoor is added.
 
-Karakeep bookmark read/search/save, n8n workflow/execution summaries, Paperclip
-company/issue read and backlog creation, Grafana dashboard search
+Karakeep bookmark read/search/save, n8n workflow/execution summaries and Grafana dashboard search
 have adapters in source. They are blocked pending the requirements recorded
 on each catalog entry. Dedicated user/service identities are required; the registry
 pull PAT, app admin credentials and model provider keys are not app API identities.
 For n8n the transport uses `X-N8N-API-KEY`, not Bearer authentication.
+The Paperclip adapter was removed on 2026-11-03 with the platform's Paperclip
+retirement (it was disabled, so the tool list did not change).
 
 Write tools are omitted unless the administrator explicitly sets `allow_writes:
 true` on that app, supplies its dedicated credentials, and verifies network ingress

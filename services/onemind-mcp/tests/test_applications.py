@@ -25,19 +25,6 @@ def test_blocked_apps_visible_without_credentials():
         assert 'blocked' in json.dumps(result)
 
 
-def test_writes_opt_in_annotations_and_http201(monkeypatch):
-    for enabled in (False, True):
-        with TestClient(build(catalog(monkeypatch, 'paperclip', enabled), lambda _: httpx.Response(201, json={'id': 'new'}))) as client:
-            tools = {t['name']: t for t in rpc(client, 'tools/list')['result']['tools']}
-            assert ('app_create_issue' in tools) == enabled
-            if enabled:
-                assert not tools['app_create_issue']['annotations']['readOnlyHint']
-                assert not tools['app_create_issue']['annotations']['idempotentHint']
-                result = rpc(client, 'tools/call', {'name': 'app_create_issue', 'arguments': {
-                    'company_id': '9b1d58fe-8d58-4b18-b336-8acb8439d05e', 'title': 'Review', 'description': 'Review the plan'}})
-                assert not result['result'].get('isError')
-
-
 def test_stac_invalid_bbox_makes_no_request(monkeypatch):
     with TestClient(build(catalog(monkeypatch, 'stac'), lambda _: pytest.fail('Invalid bbox made request'))) as client:
         for bbox in ([0, 0, 181, 20], [5, 0, 1, 20], [0, -91, 20, 0]):
@@ -168,7 +155,7 @@ def test_production_catalog_boots_and_does_not_expose_blocked_apps(monkeypatch):
                 monkeypatch.setenv(app.token_env, 'user:' + secrets.token_urlsafe(24))
     with TestClient(build(cat, lambda _: pytest.fail('Discovery must not probe apps'))) as client:
         tools = rpc(client, 'tools/list')['result']['tools']
-        assert len(tools) == 27  # 20 read adapters + 6 tile38 reads + tile38_set_point
+        assert len(tools) == 26  # 19 read adapters + 6 tile38 reads + tile38_set_point
         # The one write is the tile38 point SET (allow_writes); destructive tile38 tools are not registered.
         assert [t['name'] for t in tools if not t['annotations']['readOnlyHint']] == ['tile38_set_point']
         assert not any(t['name'] in ('tile38_delete_object', 'tile38_drop_collection') for t in tools)

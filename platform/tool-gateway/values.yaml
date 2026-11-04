@@ -41,7 +41,10 @@ extraVolumes:
   configMap: {name: gateway-openapi-stac}
 - name: openapi-core
   configMap: {name: gateway-openapi-core}
+- name: openapi-cloudtak
+  configMap: {name: gateway-openapi-cloudtak}
 extraVolumeMounts:
 - {name: openapi-mediamtx, mountPath: /specs/mediamtx, readOnly: true}
 - {name: openapi-stac, mountPath: /specs/stac, readOnly: true}
 - {name: openapi-core, mountPath: /specs/core, readOnly: true}
+- {name: openapi-cloudtak, mountPath: /specs/cloudtak, readOnly: true}

@@ -1,0 +1,14 @@
+# Argo CD MCP server (argoproj-labs/mcp-for-argocd v0.9.0) in tool-gateway: pending/argocd/ until the `legacy` account token is sealed.
+# The server refuses to listen on 0.0.0.0 without inbound auth, so the gateway sends a generated bearer (key mcp_auth, created by the
+# keys session, never shown). Read-only start (MCP_READ_ONLY) and the `legacy` account has no sync or delete permission (platform/values/argocd.yaml).
+name: argocd
+groups: [ops]
+enabled_by: [gateway-target-argocd]
+env:
+  TARGET_ARGOCD_MCP_AUTH: {secret: gateway-target-argocd, key: mcp_auth}
+target:
+  mcp:
+    host: http://mcp-argocd.tool-gateway.svc.cluster.local:3000/mcp
+  policies:
+    backendAuth:
+      key: "${TARGET_ARGOCD_MCP_AUTH}"

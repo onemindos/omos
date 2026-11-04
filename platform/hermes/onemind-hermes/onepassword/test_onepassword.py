@@ -79,11 +79,11 @@ class NativeTests(unittest.TestCase):
         self.assertFalse((destination / 'op').exists())
 
     def test_active_gitops_is_unchanged_source_only(self):
-        # Exact bytes from original base 85a52b599b1b18b8f4b6a38cee9040c195ee3c9b.
+        # Exact bytes of the active files (refreshed for the v0.22.7 bump; refresh them again whenever these files change on purpose). The point is that no 1Password wiring reaches them.
         hashes = {
-            'deployment.yaml': '2e4212f88053d899d039eb0a496c15f9ee096f460c22c7127b701e78578d284d',
-            'config.defaults.yaml': '271af0fa4a9a207045f4e0cfdebe52d9c5f9d21c10b3e47a1cb7f17c7f4d73f6',
-            'kustomization.yaml': 'ab9740b777cea039d8b08c44a8a12cdeb896285d7ac41fadec18c392e49a1630',
+            'deployment.yaml': 'cef87bcd0457caec53ad4607a480757284d41041d92e9219a634780700f73de1',
+            'config.defaults.yaml': '3d83fc973ee6595bf968d341c54c1a57ec7b54fea59c0b10940fe831185f29e5',
+            'kustomization.yaml': '596ab726214bcea71ddd87a0944cb18dc1a336bd9c39bd36947d91de4769a5bc',
         }
         for name, digest in hashes.items():
             content = (BASE / name).read_bytes()
@@ -92,8 +92,8 @@ class NativeTests(unittest.TestCase):
             self.assertNotIn(b'OP_SERVICE_ACCOUNT_TOKEN', content, name)
             self.assertNotIn(b'install_cli.py', content, name)
         spec = yaml.safe_load((BASE / 'deployment.yaml').read_text())['spec']['template']['spec']
-        expected = ('nousresearch/hermes-agent:v0.22.5@sha256:'
-                    '9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d')
+        expected = ('nousresearch/hermes-agent:v0.22.7@sha256:'
+                    'e6d81ae52ebf6a43efa529701405509f20054ba818f179ddd748bed4f8af584c')
         self.assertEqual(spec['containers'][0]['image'], expected)
         self.assertNotIn('install-onepassword-cli', [c['name'] for c in spec['initContainers']])
         self.assertNotIn('onepassword', yaml.safe_load(
