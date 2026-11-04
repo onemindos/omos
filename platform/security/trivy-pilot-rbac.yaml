@@ -1,6 +1,6 @@
 # Namespace-bound workloads/reports; scan Jobs and transient configuration only
 # in trivy-system. No application Secret access, workload writes or node access.
-# v0.35.0 always watches exposedsecretreports/sbomreports even with scanners off.
+# v0.35.0 always watches configauditreports/exposedsecretreports/sbomreports even with scanners off.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -89,6 +89,7 @@ rules:
 - apiGroups:
   - aquasecurity.github.io
   resources:
+  - configauditreports
   - exposedsecretreports
   - sbomreports
   verbs:
