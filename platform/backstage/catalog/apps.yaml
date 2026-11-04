@@ -7967,6 +7967,7 @@ metadata:
       platform/omos/feed-scripts.yaml (feed-satellites publishes
       tak.cot.inject); platform/omos/intel-scripts.yaml (publishes intel.* and
       tel.feed.*.status)
+    onemind.io/argocd-apps: platform-omos,platform-omos-entity
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8655,6 +8656,35 @@ spec:
   system: data-storage
   dependencyOf:
     - component:default/clickhouse
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-omos-entity
+  title: Argo CD application platform-omos-entity
+  description: Argo CD application platform-omos-entity, one of the applications
+    that deploy OMOS data pipeline (component:default/omos-data-pipeline, whose
+    primary application is platform-omos).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-omos-entity
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-omos-entity
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: messaging-nats
+  dependencyOf:
+    - component:default/omos-data-pipeline
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
