@@ -1,7 +1,3 @@
-import openchoreoPlugin, {
-  openChoreoEntityGroupsModule,
-} from '@openchoreo/backstage-plugin/alpha';
-import observabilityPlugin from '@openchoreo/backstage-plugin-openchoreo-observability/alpha';
 import githubActionsPlugin from '@backstage-community/plugin-github-actions/alpha';
 import githubPullRequestsPlugin from '@roadiehq/backstage-plugin-github-pull-requests/alpha';
 import grafanaPlugin from '@backstage-community/plugin-grafana/alpha';
@@ -20,6 +16,8 @@ import { oneMindRadar } from '@internal/plugin-onemind-radar';
 import {
   servicesModule,
   accessModule,
+  standardAppPageModule,
+  githubGateModules,
 } from '@internal/plugin-onemind-services';
 import { systemsPlugin } from '@internal/plugin-onemind-systems';
 import { designModule } from '@internal/plugin-onemind-theme';
@@ -27,21 +25,15 @@ import '@internal/plugin-onemind-theme/brand.css';
 import { createApp } from '@backstage/frontend-defaults';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import { homeModule, todayPlugin } from '@internal/plugin-onemind-home';
-import { componentOverviewModule } from './componentOverviewModule';
+import { livePlugin } from '@internal/plugin-onemind-live';
 import { prometheusPlugin, prometheusApiModule } from './prometheusPlugin';
-import {
-  catalogCompositionModule,
-  graphCompositionModule,
-} from './catalogCompositionModules';
+import { catalogCompositionModule } from './catalogCompositionModules';
+import { systemRedirectsModule } from './systemRedirects';
 
 export default createApp({
   features: [
-    openchoreoPlugin,
-    componentOverviewModule,
     catalogCompositionModule,
-    graphCompositionModule,
-    openChoreoEntityGroupsModule,
-    observabilityPlugin,
+    systemRedirectsModule,
     githubActionsPlugin,
     githubPullRequestsPlugin,
     grafanaPlugin,
@@ -58,10 +50,13 @@ export default createApp({
     navModule,
     homeModule,
     todayPlugin,
+    livePlugin,
     authModule,
     systemsPlugin,
     servicesModule,
     accessModule,
+    standardAppPageModule,
+    ...githubGateModules,
     assistantPlugin,
     offlinePlugin,
     missionsPlugin,

@@ -120,6 +120,25 @@ class GrafanaStateTests(unittest.TestCase):
             self.assertNotIn('grafana/overview-dashboard', matches[0]['metadata']['annotations'])
             self.assertNotIn('grafana/alert-label-selector', matches[0]['metadata']['annotations'])
 
+    def test_generic_workload_dashboard_is_variable_driven_and_provisioned_like_the_others(self):
+        import json
+        cm = yaml.safe_load((ROOT / 'platform/monitoring/grafana-dashboard-onemind-workload.yaml').read_text())
+        # Same sidecar label and folder annotation as the three bespoke boards, so no new provisioning path.
+        self.assertEqual(cm['metadata']['labels'], {'grafana_dashboard': '1'})
+        self.assertEqual(cm['metadata']['annotations']['onemind.io/grafana-folder'], '/tmp/dashboards/OneMind')
+        self.assertEqual(sorted(cm['data']), ['onemind-workload.json'])
+        board = json.loads(cm['data']['onemind-workload.json'])
+        self.assertEqual(board['uid'], 'onemind-workload')
+        self.assertEqual([v['name'] for v in board['templating']['list']], ['namespace', 'workload'])
+        for variable in board['templating']['list']:
+            self.assertTrue(variable['multi'] and variable['includeAll'])
+        for panel in board['panels']:
+            self.assertEqual(panel['datasource']['uid'], 'prometheus')
+            expr = panel['targets'][0]['expr']
+            # Scoped only through the variables: no hard-coded namespace or workload.
+            self.assertIn('namespace=~"$namespace"', expr)
+            self.assertNotRegex(expr, r'namespace="[a-z]')
+
     def test_native_dashboard_folder_is_provisioned_without_changing_root_default(self):
         cm = yaml.safe_load((ROOT / 'platform/monitoring/grafana-dashboards-onemind-services.yaml').read_text())
         grafana = yaml.safe_load((ROOT / 'platform/values/kube-prometheus-stack.yaml').read_text())['grafana']

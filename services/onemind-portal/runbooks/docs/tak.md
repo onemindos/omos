@@ -14,7 +14,7 @@ kubectl -n argocd get application platform-takserver
 kubectl -n takserver get cronjob backup-takserver-postgres
 ```
 
-Separate certificate/enrollment issues, message routing issues, database/storage issues and map/geo service problems. For a degraded application, inspect the specific workload's readiness and events. Confirm client endpoint and certificate validity against the deployed configuration. The database is `takserver-postgresql`; OneTAK PostGIS is `onetak-postgis`. Do not infer connectivity from a website or repository being present.
+Separate certificate/enrollment issues, message routing issues, database/storage issues and map/geo service problems. For a degraded application, inspect the specific workload's readiness and events. Confirm client endpoint and certificate validity against the deployed configuration. The database is `takserver-postgresql`. Do not infer connectivity from a website or repository being present.
 
 ## Recovery and backups
 

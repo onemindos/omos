@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: takserver-nats-headless
+  namespace: takserver
+  labels:
+    app.kubernetes.io/component: nats
+    app.kubernetes.io/instance: takserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: nats
+    app.kubernetes.io/version: 2.9.21
+    helm.sh/chart: nats-1.0.1
+  annotations:
+    meta.helm.sh/release-name: takserver
+    meta.helm.sh/release-namespace: takserver
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    argocd.argoproj.io/sync-wave: '0'
+spec:
+  clusterIP: None
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - appProtocol: tcp
+    name: nats
+    port: 4222
+    protocol: TCP
+    targetPort: nats
+  - appProtocol: http
+    name: monitor
+    port: 8222
+    protocol: TCP
+    targetPort: monitor
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/component: nats
+    app.kubernetes.io/instance: takserver
+    app.kubernetes.io/name: nats
+  sessionAffinity: None
+  type: ClusterIP

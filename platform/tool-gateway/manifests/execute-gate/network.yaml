@@ -1,0 +1,57 @@
+# execute-gate: ingress from the gateway pod only (Hermes has no route to it), egress to DNS, the Synapse client port and the
+# NATS client port. The gateway-side egress rule is manifests/egress-execute-gate.yaml; the NATS-side ingress rule is in
+# platform/nats/network-policy.yaml (nats-clients). Synapse's namespace has no ingress policy for pods, so it needs no rule.
+# Egress ports are destination pod ports.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: execute-gate
+  namespace: tool-gateway
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: execute-gate
+  policyTypes: [Ingress, Egress]
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: agentgateway-standalone
+          app.kubernetes.io/instance: agentgateway
+    ports:
+    - {protocol: TCP, port: 8080}
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - {protocol: UDP, port: 53}
+    - {protocol: TCP, port: 53}
+  # Matrix client API: the bot syncs the approvals room and posts requests.
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: matrix
+      podSelector:
+        matchLabels:
+          app: synapse
+    ports:
+    - {protocol: TCP, port: 8008}
+  # NATS: KV bucket exec-approvals and evt.toolgw.approval.* audit events.
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: nats
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/component: nats
+          app.kubernetes.io/instance: nats
+          app.kubernetes.io/name: nats
+    ports:
+    - {protocol: TCP, port: 4222}

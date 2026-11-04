@@ -54,6 +54,7 @@ Not covered: provider Droplet/volume snapshots, the laptop recovery mirror
 
 - The CronJob is named `backup-offsite-copy`, so the existing `ScheduledBackupOverdue`
   alert (no successful run within 30 h, while not suspended) covers it unchanged.
+  While it is suspended, `CriticalBackupScheduleSuspended` fires after 7 days instead.
 - `OffsiteBackupCopyFailed` (added to `platform/monitoring/backup-health.yaml`) fires
   5 minutes after any failed Job; finished Jobs are garbage-collected after 24 h.
 - A successful run proves presence and size, not restorability. Periodically run
@@ -169,3 +170,25 @@ Point the original tooling at `onemind-backups-sfo3` with prefix `mirror/`. Rest
 (locks are not copied, so no `restic unlock` is needed). Velero: create a BSL with
 `bucket: onemind-backups-sfo3`, `prefix: mirror/velero/cloud`, `region: sfo3`,
 `s3Url: https://sfo3.digitaloceanspaces.com`, `accessMode: ReadOnly`.
+
+## Verification reliability — 2026-10-26
+
+The job selects eligible object paths once and uses that same literal manifest
+for both copy and verification. Re-evaluating a relative age cutoff during a long
+copy could previously select newer objects during verification that were absent
+from the copy selection. The job now also compares the complete selected path
+list against rclone's verified-match report; disappeared source objects cannot
+produce a false successful receipt. Empty selections and listing/copy/check
+failures preserve the previous success receipt. Source deletions still never
+propagate, and replaced destination objects still go to `_overwritten/<run>`.
+
+Nine local-remotes regression cases run the real pinned rclone 1.75.2 engine in CI.
+Verification remains size-only for each selected object; an independent restore
+and authenticated archive-decryption test is required after initial seeding.
+A successful size check is not a complete recovery drill.
+
+Current deployment remains suspended: no independent destination credentials are
+configured. The source's existing SFO3 example is regional redundancy within
+DigitalOcean, not protection against provider/account loss. Do not enable the job
+until the owner selects a destination, scoped credentials are sealed, initial
+copy passes, and recovery from that destination is verified.

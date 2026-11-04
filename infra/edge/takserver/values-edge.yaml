@@ -1,7 +1,8 @@
 # OneMind Forward Edge TAK Server — minimal footprint for field deployments.
 #
-# This is a lightweight TAK Server for edge/field locations that federates back
-# to the HQ FedHub (fedhub.onemindos.dev ports 9101/9102).
+# This is a lightweight TAK Server for edge/field locations. It used to federate back
+# to the HQ FedHub, but the HQ federation ports (9101/9102) are no longer exposed
+# publicly (2026-10-23). Federation needs the HQ FedHub reachable over the tailnet first.
 #
 # DEPLOY:
 #   helm upgrade --install takserver-edge ./chart \
@@ -9,11 +10,10 @@
 #     -f infra/edge/takserver/values-edge.yaml
 #
 # AFTER DEPLOY — connect to HQ FedHub:
-#   1. Get the FedHub external LB IP:
-#        kubectl -n takserver get svc fedhub-fed-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+#   1. (Obsolete) The fedhub-fed-external LB no longer exists; there is no public FedHub address.
 #   2. In this edge TAK Server's WebTAK UI:
 #        Configuration → Manage Federates → Edit Configuration → Enable federation
-#        Then: Create Outgoing Connection → <FedHub LB IP> : 9102 (v2)
+#        Then: Create Outgoing Connection → <FedHub address reachable from this edge> : 9102 (v2)
 #   3. Upload the FedHub CA cert (from fedhub-certs secret, ca.pem file)
 #        Configuration → Federation Certificate Authorities → Upload
 #   4. Configure groups (Inbound/Outbound) for data sharing

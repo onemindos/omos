@@ -1,4 +1,4 @@
 # REMOVED 2026-09-29: fedhub-fed-external LB merged into tak-external (tak-lb-proxy.yaml).
-# Federation ports 9101/9102 now served by the shared DO LB at 152.42.155.95 via nginx
-# stream passthrough → fedhub-fed:9101/9102. Edge servers should point their
-# CoreConfig.xml federation_server host at 152.42.155.95.
+# REMOVED 2026-10-23: tak-external (public DO LB 152.42.155.95) deleted. Federation ports
+# 9101/9102 are no longer reachable from outside the cluster (fedhub-fed is ClusterIP only).
+# There are no federation partners. To federate again, expose them over the tailnet only.

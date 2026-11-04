@@ -1,0 +1,119 @@
+# App-specific Authentik provider; global login/enrollment flows are unchanged.
+# Web starts in wave 2 only after this hook confirms the sole owner binding.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: karakeep-authentik-oidc-v1
+  namespace: auth
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  ttlSecondsAfterFinished: 86400
+  template:
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      imagePullSecrets:
+      - name: ghcr
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: provider
+        image: ghcr.io/onemindos/onemind-core@sha256:667f9836cda15e3aadd51c6186eb80839946a0d1c76fc26fcb367e81cbc6ff9a
+        command: [python, -c]
+        args:
+        - |
+          import os, httpx
+
+          base = "http://platform-auth-helm-authentik-server.auth.svc.cluster.local/api/v3/"
+          slug = "onemind-karakeep"
+          launch = "https://karakeep.tail717ba0.ts.net"
+          owner_uid = "f73e10d872325ed63330a138782f12d3e8252e00a05466e2f0180bcc885a42c4"
+          headers = {"Authorization": "Bearer " + os.environ["AUTH_TOKEN"]}
+          with httpx.Client(headers=headers, timeout=30) as client:
+              def request(method, path, body=None, missing_ok=False):
+                  response = client.request(method, base + path, json=body)
+                  if missing_ok and response.status_code == 404:
+                      return None
+                  if not response.is_success:
+                      # Identity API bodies may echo submitted credentials.
+                      raise RuntimeError("Identity API " + method + " " + path.split("?")[0]
+                                         + " failed with status " + str(response.status_code))
+                  return response.json() if response.content else {}
+
+              def listed(path):
+                  page = request("GET", path + ("&" if "?" in path else "?") + "page_size=200")
+                  if page.get("pagination", {}).get("next"):
+                      raise RuntimeError("Identity inventory exceeds one page; refusing partial reconciliation")
+                  return page["results"]
+
+              owners = [u for u in listed("core/users/?username=akadmin")
+                        if u["username"] == "akadmin" and u["uid"] == owner_uid and u["is_active"]]
+              if len(owners) != 1:
+                  raise RuntimeError("The existing registered OneMind owner identity must be restored first")
+              owner = owners[0]["pk"]
+              providers = listed("providers/oauth2/")
+              originals = [p for p in providers if p["client_id"] == "onemind-backstage"]
+              if len(originals) != 1 or not originals[0].get("signing_key"):
+                  raise RuntimeError("The established OneMind OIDC template/signing key is unavailable")
+              original = originals[0]
+              matches = [p for p in providers if p["client_id"] == slug]
+              if len(matches) > 1:
+                  raise RuntimeError("Duplicate Karakeep OIDC providers require review")
+              body = {k: original[k] for k in ["authorization_flow", "invalidation_flow", "signing_key",
+                                              "property_mappings", "sub_mode", "issuer_mode", "access_token_validity"]}
+              body.update(name="OneMind Karakeep", client_type="confidential", client_id=slug,
+                          client_secret=os.environ["OAUTH_CLIENT_SECRET"], include_claims_in_id_token=True,
+                          grant_types=["authorization_code", "refresh_token"],
+                          redirect_uris=[{"matching_mode": "strict", "url": launch + "/api/auth/callback/custom",
+                                          "redirect_uri_type": "authorization"}])
+              provider = (request("PATCH", "providers/oauth2/" + str(matches[0]["pk"]) + "/", body)
+                          if matches else request("POST", "providers/oauth2/", body))
+              existing = request("GET", "core/applications/" + slug + "/", missing_ok=True)
+              app_body = {"name": "Karakeep", "slug": slug, "provider": provider["pk"],
+                          "policy_engine_mode": "all", "meta_launch_url": launch}
+              app = (request("PATCH", "core/applications/" + slug + "/", app_body) if existing
+                     else request("POST", "core/applications/", app_body))
+              bindings = listed("policies/bindings/?target=" + app["pk"])
+              if any(b.get("user") != owner or b.get("group") or b.get("policy") or not b["enabled"]
+                     or b.get("negate", False) for b in bindings):
+                  raise RuntimeError("Unexpected Karakeep application bindings; refusing to widen access")
+              if not bindings:
+                  request("POST", "policies/bindings/", {"target": app["pk"], "user": owner,
+                                                         "enabled": True, "negate": False, "order": 0})
+              verified = listed("policies/bindings/?target=" + app["pk"])
+              if len(verified) != 1 or verified[0].get("user") != owner or not verified[0]["enabled"]:
+                  raise RuntimeError("Karakeep owner-only application binding was not verified")
+          print("Karakeep OIDC ready for the existing registered OneMind owner only")
+        env:
+        - name: AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: authentik-secret
+              key: AUTHENTIK_BOOTSTRAP_TOKEN
+        - name: OAUTH_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: karakeep-oidc-bootstrap
+              key: OAUTH_CLIENT_SECRET
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: '1'
+            memory: 256Mi

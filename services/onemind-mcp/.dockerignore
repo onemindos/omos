@@ -1,0 +1,6 @@
+*
+!Dockerfile
+!requirements.lock
+!onemind_mcp/
+!onemind_mcp/**
+**/__pycache__/

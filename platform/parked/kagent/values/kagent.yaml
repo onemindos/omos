@@ -63,7 +63,6 @@ kagent-tools:
   rbac:
     namespaces:
     - kagent
-    - onemind-jobs
     - onemind-core
     - onemind-ai
     readOnly: true

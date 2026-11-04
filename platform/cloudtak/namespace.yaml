@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cloudtak
+  labels:
+    app.kubernetes.io/name: cloudtak
+    onemind.io/layer: act
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted

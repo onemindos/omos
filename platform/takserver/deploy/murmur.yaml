@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: murmur
-          image: mumblevoip/mumble-server:latest
+          image: mumblevoip/mumble-server:v1.5.915@sha256:018ad3515932e513d8fdc970df918373a2664c4da32b09a89a4aaee28eb7507a
           imagePullPolicy: Always
           env:
             - name: MUMBLE_CONFIG_welcometext
