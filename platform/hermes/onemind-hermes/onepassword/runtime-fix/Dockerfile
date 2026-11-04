@@ -1,5 +1,5 @@
 # Build context: this directory. Manual-only build-hermes-runtime.yml runs this gate.
-FROM nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+FROM nousresearch/hermes-agent:v0.22.7@sha256:e6d81ae52ebf6a43efa529701405509f20054ba818f179ddd748bed4f8af584c
 USER root
 COPY apply_source_patch.py test_child_policy.py /opt/runtime-fix/
 RUN /opt/hermes/.venv/bin/python /opt/runtime-fix/apply_source_patch.py --source-root /opt/hermes \
