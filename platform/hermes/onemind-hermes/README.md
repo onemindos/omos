@@ -228,7 +228,6 @@ tools on the gateway's `/ops` route with `ONEMIND_GATEWAY_KEY` (`onemind_prometh
 `onemind_opencost_allocation`; the gateway is stateful, so `legacy_common.py` runs
 initialize and notifications/initialized before each call). Verified: Hermes' script runner passes that
 variable to scripts (`build_subprocess_env`). The export's SSH goes to `ssh.github.com:443`,
-which the public 443 rule already allows; the export's SSH goes to `ssh.github.com:443`,
 which the public 443 rule already allows. Prometheus has no cert-manager or Falco metrics, so
 the security scan reads Falco and certificate findings from Alertmanager only.
 
@@ -260,10 +259,17 @@ tarball of the whole home, with sessions, hub caches and bundled skills): `confi
 secret-looking keys blanked and `${ENV}` references kept, `SOUL.md`, `memories/MEMORY.md` and
 `USER.md`, `skills/index.json` (name, category, origin: bundled, user or external), the contents
 of user-created skills, and the job definitions without run history. The whole snapshot is then
-scanned: token shapes, private-key headers, credential assignments, and every secret value this
+scanned (and scanned again on the exact tree about to be committed): token shapes, private-key
+headers, credential assignments, URLs with embedded credentials or secret query parameters, bearer
+tokens, and every secret value this
 pod holds (environment and `auth.json`) verbatim. One hit aborts the run, names the file and rule
 (never the value) and commits nothing. Tested here with a fake key and token (aborted) and
 against a local bare repository (first run commits, second run is silent).
+
+**Blocker found 2026-11-03:** the private repository `onemindos/onemind-hermes-config` exists, but
+the GitHub organisation has deploy keys disabled (`deploy_keys_enabled_for_repositories: false`),
+so adding a deploy key returns 422. The job stays paused until the owner enables deploy keys
+for the organisation or chooses another credential.
 
 onemind-hermes has **no Git write credential** (no token variable, no SSH key, nothing under
 `HOME`), so `config-export` is created **paused** with that reason, and the pod mounts an
