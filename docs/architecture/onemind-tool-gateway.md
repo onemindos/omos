@@ -153,7 +153,7 @@ during the owning phase, from the gateway pod once the NetworkPolicy exists).
 |---|---|---|---|---|---|
 | 1 | Kubernetes API | `kube-apiserver` (in-cluster SA) | `containers/kubernetes-mcp-server` (release `v0.1.1`, 2026-10-29); HTTP mode with TOML (`read_only`, `toolsets`, `--config`); Helm chart `oci://ghcr.io/containers/charts/kubernetes-mcp-server` | Own Deployment in `tool-gateway`, ServiceAccount `k8s-operator`, toolsets `core,config` (+ `observability/*` optional). Not the Mac setup's `kube/ai-operator` token | ops |
 | 2 | Argo CD | `argocd/argocd-server` :80/:443 | `argoproj-labs/mcp-for-argocd` (npm `argocd-mcp`; image `argoprojlabs/mcp-for-argocd`, verify); HTTP `POST /mcp` on 3000, token per request header | Own Deployment. Token sent as the `x-argocd-api-token` header by the gateway (`requestHeaderModifier`). Argo RBAC denies `delete` for the account | ops |
-| 3 | Grafana (+ Prometheus, Loki, Tempo, Alertmanager datasources, alert rules) | `monitoring/monitoring-grafana` :80 (Grafana 13.1.0) | `grafana/mcp-grafana` v2.1.1; `-t streamable-http --address :8000`, `--disable-write`, `--enabled-tools`, `--allowed-hosts`; image `grafana/mcp-grafana` | Own Deployment, two instances if write is wanted: read (`--disable-write`) and write | ops |
+| 3 | Grafana (+ Prometheus, Loki, Alertmanager datasources, alert rules) | `monitoring/monitoring-grafana` :80 (Grafana 13.1.0) | `grafana/mcp-grafana` v2.1.1; `-t streamable-http --address :8000`, `--disable-write`, `--enabled-tools`, `--allowed-hosts`; image `grafana/mcp-grafana` | Own Deployment, two instances if write is wanted: read (`--disable-write`) and write | ops |
 | 4 | Backstage portal | `backstage/backstage` :7007 | Backstage MCP actions plugin (the portal already serves MCP; Secret `backstage-mcp` has `MCP_TOKEN`, `ONEMIND_MCP_HUB_TOKEN`) | Direct HTTP target, token resealed into `tool-gateway`. Read-only today (catalog, health, runbooks) | dev |
 | 5 | n8n | `n8n/n8n` :5678 (n8n 2.42.4) | **Built-in instance-level MCP server**, `/mcp-server/http`, access-token auth, per-workflow opt-in | Direct HTTP target (`backendAuth.key`). The public REST API is a second OpenAPI target (see 2.2 note) | work |
 | 6 | Karakeep | `karakeep/web` :3000 (0.34.1) | `@karakeep/mcp` (stdio; env `KARAKEEP_API_ADDR`, `KARAKEEP_API_KEY`; image `ghcr.io/karakeep-app/karakeep-mcp`, verify) | Own Deployment wrapping stdio with `mcp-proxy` | work |
@@ -196,7 +196,7 @@ go in the same package, one module each, plus a new `scope` field (read, write, 
 | 26 | Paperclip | `paperclip/paperclip` :3100 | disabled | company-scoped agent token; issues and backlog create. Check first whether Paperclip ships its own MCP server | work |
 | 27 | TAK-ML | `takml/takml-server` :8234 | disabled | needs a reviewed detection/query contract first | data |
 
-The existing read adapters for Prometheus, Alertmanager, Loki and Tempo (`onemind-mcp`) are superseded by Grafana's MCP datasource tools
+The existing read adapters for Prometheus, Alertmanager and Loki (`onemind-mcp`) are superseded by Grafana's MCP datasource tools
 (row 3) and are retired in the final phase; they are not counted again.
 
 ### 2.4 Skipped on purpose (13)
@@ -213,7 +213,7 @@ The existing read adapters for Prometheus, Alertmanager, Loki and Tempo (`onemin
 | 35 | NATS web UIs (`heynats`, `nats-dashboard`, `nats-ui`, `nats-surveyor`) | UIs and exporters |
 | 36 | Redpanda Connect (`omos`) | Internal pipeline; a streams REST API exists but offers nothing Legacy needs |
 | 37 | TAK internals (Ignite, messaging, plugins, config, LDAP, Mumble bridge, murmur) | Reached through TAK Server (row 25) and NATS; admin surface only |
-| 38 | Controllers: cert-manager, ingress-nginx, Tailscale operator, KEDA, Dapr, Kyverno, Falco, CNPG, Barman, Velero, VolSync, metrics-server | No app API; their custom resources are readable and patchable through row 1 |
+| 38 | Controllers: cert-manager, ingress-nginx, Tailscale operator, Dapr, Kyverno, Falco, CNPG, Barman, Velero, VolSync, metrics-server | No app API; their custom resources are readable and patchable through row 1 |
 | 39 | Databases: Postgres (authentik, backstage, matrix, n8n, paperclip, takml, TAK, WebODM, CNPG `onemind-data`), Redis, MongoDB | No raw SQL for the agent (existing rule in `apps.yaml`); app APIs instead |
 | 40 | GitHub runner, Hermes itself and its dashboard | CI and the agent are not tools for the agent |
 
@@ -492,8 +492,6 @@ extraEnv:                                  # one secretKeyRef per credential; al
 - {name: GITHUB_TOKEN, valueFrom: {secretKeyRef: {name: gateway-cloud-credentials, key: github, optional: true}}}
 # ...
 config:
-  frontendPolicies:
-    tracing: {host: "tempo.monitoring.svc.cluster.local:4317", randomSampling: true}
   binds:
   - port: 8080
     listeners:
@@ -553,11 +551,11 @@ The Hermes `${ONEMIND_GATEWAY_KEY}` equals the `hermes` entry of `gateway-client
 **Transition for `onemind-mcp`.** Gateway target `onemind` in the `ops` and `data` groups, bearer from a resealed `onemind-mcp-auth` token,
 `platform/hermes/mcp/network-policy.yaml` gets an ingress rule from the gateway (replacing the LiteLLM one in Phase 6). Both hubs run in
 parallel from Phase 1 to Phase 5, so Legacy never loses its current read adapters. Adapters are retired one by one after their replacement
-passes its Phase 3 check (Prometheus, Loki, Tempo, Alertmanager by Grafana; Argo CD, Backstage by their MCP servers). Kept long term: NATS, STAC (if
+passes its Phase 3 check (Prometheus, Loki, Alertmanager by Grafana; Argo CD, Backstage by their MCP servers). Kept long term: NATS, STAC (if
 OpenAPI is not worth it), Ollama, OpenCost, LiteLLM models, and the new write adapters.
 
 **Observability wiring.** Metrics: PodMonitor (`release: monitoring`) on `:15020`; chart dashboard JSON loaded into Grafana by the existing
-sidecar. Traces: OTLP to `tempo.monitoring.svc:4317`. Logs: JSON access log on stdout to Loki (per-call tool, target, client, outcome,
+sidecar. Traces: none (Tempo was removed 2026-11-03). Logs: JSON access log on stdout to Loki (per-call tool, target, client, outcome,
 duration; **argument values are not logged**). Alerts: gateway down, backend 5xx ratio, `execute-gate` pending approval older than 10 minutes.
 Audit of destructive attempts: bus `evt.toolgw.*` and Loki.
 

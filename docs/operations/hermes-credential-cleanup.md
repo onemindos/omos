@@ -1,5 +1,7 @@
 # Hermes credential cleanup guide
 
+> **Historical (2026-11-03).** Written for the retired `hermes-legacy` pod (`hermes-env`, `/opt/data`); those manifests and the Secret left Git on 2026-11-03. The credential list is still the rotation checklist for the old volume (`platform/hermes/onemind-hermes/RETIREMENT-AUDIT.md`, V04).
+
 **Status:** ready to do whenever you choose. Nothing here has been done. It is the last thing standing between the Hermes export (`hermes-export-rules.md`) and a first successful run, and it also removes real credentials from the model prompt and from the backups.
 **Written:** 2026-10-16. Counts come from a read-only scan of the live pod. No secret values appear in this document.
 

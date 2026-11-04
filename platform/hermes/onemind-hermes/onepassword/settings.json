@@ -1,0 +1,11 @@
+{
+  "enabled": true,
+  "env": {
+    "CLICKUP_API_TOKEN": "op://aaeyris5z44pdqspk277u2oppi/q3jm77jbor2ymoc5xlyltrv7ue/credential"
+  },
+  "account": "",
+  "service_account_token_env": "OP_SERVICE_ACCOUNT_TOKEN",
+  "binary_path": "/opt/onepassword/op",
+  "cache_ttl_seconds": 0,
+  "override_existing": true
+}

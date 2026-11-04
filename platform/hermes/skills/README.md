@@ -58,6 +58,14 @@ Rules used for curation:
 | ocr-and-documents | `productivity/ocr-and-documents` | upstream Hermes (merged into bundled `pdf` in v0.22.5) | Imported 2026-10-30. Current upstream text and both scripts, plus a verified list of what the image lacks (no pymupdf, marker, poppler, tesseract, ocrmypdf, pip or uv). |
 | nano-pdf | `productivity/nano-pdf` | upstream Hermes (merged into bundled `pdf` in v0.22.5) | Imported 2026-10-30. Current upstream usage, plus the gaps: CLI not installed and no model key provisioned; data-leaving and edit-a-copy rules added. |
 
+## Copying skills into the pod
+
+`/opt/data/onemind-skills` must belong to the agent user (`hermes`, uid 10000), or `skill_manage` and Desktop cannot edit
+what Legacy learns there. On 2026-10-30 the tree was copied from a Mac with macOS `tar`, which left every entry owned
+by uid 501 and added 120 AppleDouble `._*` files; on 2026-11-04 `skill_manage` failed with `PermissionError`. When
+copying again set `COPYFILE_DISABLE=1` for `tar`, extract with `--no-same-owner` (or `chown -R hermes:hermes` afterwards),
+and run `platform/hermes/onemind-hermes/desktop/apply.sh` to repair or confirm (`unchanged` means it is clean).
+
 ## Decision table
 
 Counts (69 candidates, as first reviewed; ten NEEDS-OWNER items and, on 2026-10-29, seven former DROP items, two upstream skills and merges, now listed under "Shipped here" were later imported): KEEP 20 (nine role skills merged into one, forge into

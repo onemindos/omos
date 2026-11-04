@@ -17,8 +17,8 @@ unexecuted acceptance tests, not authorization to deploy or replace services.
 Preserve unrelated local changes. Later explicit user instructions take precedence.
 
 The platform plan is in `PLATFORM-ROADMAP.md` at the repository root: the four layers,
-what an AI may do in each, the namespace map and the OpenChoreo migration phases. Work
-the first unfinished phase, one PR at a time, and update the roadmap's tracker in the
+what an AI may do in each and the namespace map. OpenChoreo was retired, so its migration
+phases are history. Work the first unfinished phase, one PR at a time, and update the roadmap's tracker in the
 same PR. Any agent (Claude Code, Codex or another) follows the same tracker.
 
 Current cluster state, tiers, exposure and GitOps gaps are in `docs/STACK.md`; the

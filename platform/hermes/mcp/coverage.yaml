@@ -16,10 +16,6 @@ applications:
     apps:
     - onemind_core
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  ecosystem-keda:
-    apps:
-    - onemind_core
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   ecosystem-litellm:
     apps:
     - litellm
@@ -66,11 +62,7 @@ applications:
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   monitoring-otel-collector:
     apps:
-    - tempo
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  monitoring-tempo:
-    apps:
-    - tempo
+    - loki
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-agent-fabric:
     apps:
@@ -124,7 +116,15 @@ applications:
     apps:
     - fedhub
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-hermes-base:
+    apps:
+    - agent_fabric
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-onemind-hermes:
+    apps:
+    - agent_fabric
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-onemind-mcp:
     apps:
     - agent_fabric
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
@@ -135,10 +135,6 @@ applications:
   platform-kube:
     apps:
     - kubernetes
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  platform-legacy:
-    apps:
-    - agent_fabric
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-matrix:
     apps:
@@ -176,6 +172,10 @@ applications:
     apps:
     - onemind_core
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-omos-entity:
+    apps:
+    - onemind_core
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-onetak:
     apps:
     - mediamtx
@@ -188,10 +188,10 @@ applications:
     apps:
     - kubernetes
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  platform-paperclip:
+  platform-policy:
     apps:
-    - paperclip
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+    - onemind_core
+    reason: Policy and audit service beside OpenFGA in onemind-core. Agents reach it only as proposers over svc.policy.*.propose; no MCP admin tools, and never svc.policy.*.confirm.
   platform-redpanda-connect:
     apps:
     - onemind_core
@@ -213,6 +213,10 @@ applications:
     - takml
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-takserver:
+    apps:
+    - tak
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-takserver-tak-client:
     apps:
     - tak
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.

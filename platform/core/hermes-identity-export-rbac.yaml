@@ -1,11 +1,12 @@
-# Read-only access for the Hermes identity export (.github/workflows/hermes-identity-export.yml).
+# Read-only pod access in the hermes namespace for the dedicated runner github-runner-hermes
+# (platform/core/github-runner-hermes.yaml, label onemind-hermes-readonly).
 #
-# The export runs `kubectl exec` into the hermes-legacy pod to read an allow-listed set of files and to run
-# scripts/hermes_identity_export.py, which never writes to the volume. `pods/exec` cannot be limited to one
-# command, so this role can read anything in the pod: keep it bound only to the dedicated export ServiceAccount.
-#
-# The runner that uses this ServiceAccount (label onemind-hermes-readonly, with kubectl) is not deployed yet.
-# Until it is, nothing uses this ServiceAccount and the role is inert.
+# Kept after the old hermes-legacy instance was retired (2026-11): the runner Deployment uses this ServiceAccount, and
+# the preflight job of .github/workflows/onemind-mcp.yml runs `kubectl exec` into the onemind-hermes pod with it.
+# The hermes-identity-export workflow that originally needed it was removed (the nightly `config-export` cron of
+# onemind-hermes replaces it). `pods/exec` cannot be limited to one command, so this role can read anything in the
+# namespace's pods: keep it bound only to this ServiceAccount, and narrow or delete it with the runner.
+# The names still say "identity-export" because renaming a ServiceAccount means re-creating the runner.
 apiVersion: v1
 kind: ServiceAccount
 metadata:

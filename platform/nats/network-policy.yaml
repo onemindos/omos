@@ -67,14 +67,6 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: tailscale
-        # Hermes Legacy's nats-leaf sidecar (hermes-legacy-leaf). Not onemind-hermes or onemind-mcp.
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: hermes
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: hermes
-              onemind.io/agent: legacy
         # TAK's leaf. The NatsBridgePlugin connects to it, not to the bus.
         - namespaceSelector:
             matchLabels:
@@ -128,6 +120,22 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: agent-fabric
+        # onemind-hermes (Legacy): a direct client of the bus (no leaf sidecar since the 2026-11 cutover).
+        # Not onemind-mcp or the other pods in `hermes`.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: hermes
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: onemind-hermes
+        # execute-gate (tool gateway approval service): KV bucket exec-approvals and evt.toolgw.approval.*.
+        # Not the gateway or the MCP backends in `tool-gateway`.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tool-gateway
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: execute-gate
       ports:
         - protocol: TCP
           port: 4222
@@ -192,13 +200,6 @@ spec:
           podSelector:
             matchLabels:
               app.kubernetes.io/name: onemind-mcp
-        # KEDA: ScaledObject omos/sink-clickhouse reads /jsz every 30 s.
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: keda
-          podSelector:
-            matchLabels:
-              app: keda-operator
         # Backstage: the operations fabric card reads /varz and /jsz.
         - namespaceSelector:
             matchLabels:

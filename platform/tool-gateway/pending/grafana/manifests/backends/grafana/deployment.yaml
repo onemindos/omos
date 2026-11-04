@@ -1,0 +1,74 @@
+# Grafana MCP server (grafana/mcp-grafana 2.2.0, index digest read 2026-11-04). Token: Grafana service account with role Editor (Viewer is enough while -disable-write is set).
+# In pending/: not deployed until scripts/gateway/keys-session.sh seals gateway-target-grafana and moves this tree into manifests/.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-grafana
+  namespace: tool-gateway
+  labels:
+    app.kubernetes.io/name: mcp-grafana
+    app.kubernetes.io/part-of: tool-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mcp-grafana
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mcp-grafana
+        app.kubernetes.io/part-of: tool-gateway
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+      - name: mcp-grafana
+        image: grafana/mcp-grafana:2.2.0@sha256:697336440e34878f8e0b26a69675db8d7e97b4d0daec25ec5441c85ac6c60e81
+        imagePullPolicy: IfNotPresent
+        args: [-transport, streamable-http, -address, "0.0.0.0:8000", -disable-write,
+               -allowed-hosts, "mcp-grafana.tool-gateway.svc.cluster.local,mcp-grafana.tool-gateway.svc.cluster.local:8000"]
+        ports:
+        - {name: mcp, containerPort: 8000}
+        env:
+        - {name: HOME, value: /tmp}
+        - {name: GRAFANA_URL, value: "http://monitoring-grafana.monitoring.svc.cluster.local:80"}
+        - name: GRAFANA_SERVICE_ACCOUNT_TOKEN
+          valueFrom: {secretKeyRef: {name: gateway-target-grafana, key: token}}
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: {drop: [ALL]}
+        readinessProbe:
+          httpGet: {path: /healthz, port: mcp}
+          periodSeconds: 10
+        livenessProbe:
+          httpGet: {path: /healthz, port: mcp}
+          initialDelaySeconds: 20
+          periodSeconds: 20
+        resources:
+          requests: {cpu: 25m, memory: 64Mi}
+          limits: {cpu: 500m, memory: 256Mi}
+        volumeMounts:
+        - {name: tmp, mountPath: /tmp}
+      volumes:
+      - name: tmp
+        emptyDir: {sizeLimit: 64Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-grafana
+  namespace: tool-gateway
+  labels:
+    app.kubernetes.io/name: mcp-grafana
+spec:
+  selector:
+    app.kubernetes.io/name: mcp-grafana
+  ports:
+  - {name: mcp, port: 8000, targetPort: mcp}

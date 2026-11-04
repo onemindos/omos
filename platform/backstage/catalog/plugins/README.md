@@ -61,7 +61,7 @@ A plugin that uses a subject not yet in `subjects:` needs one new entry (slug, s
 
 - Not in the repo, so not catalogued: any OneMind-built ATAK plugin, an Obsidian plugin (Obsidian is a Nextcloud-synced vault, plus a Hermes `obsidian` skill), VR-TAK (only docs mention a distribution server that is not in the tree), a Home Assistant plugin beyond the omos-bridge Go adapter. iTAK has no plugin API; its host entry exists so it shows what feeds it.
 - `onemind-maven` was renamed `onemind-vision`; the live volume holds only the latter.
-- The Hermes volume also holds `hermes-project-stewardship`, which `platform/hermes/agent/plugins/README.md` does not list. `nats-context` and `tak-platform` have no source in this repo.
+- The Hermes volume also holds `hermes-project-stewardship`, which `platform/hermes/onemind-hermes/plugins/README.md` does not list. `nats-context` and `tak-platform` have no source in this repo.
 - Off-grammar subjects (`voice.transcript`, the Matrix bridge's `alerts.*` / `infra.health.*` / `legacy.*`, the omos-bridge `omos.*` family) are tagged `off-grammar`; the omos-bridge Home Assistant adapter and the `ha-nats-bridge` skill disagree on subjects.
 - `cot-tap` has no Argo manifest or pod; the NATS-to-Matrix bridge is in `platform/matrix/base` but not in the Argo overlay and has no pod.
 - Third-party ATAK plugins (32) come from the July 2026 adb inventory and were not re-checked; `com.atak.nightvision` is tagged `flagged`.

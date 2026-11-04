@@ -16,6 +16,7 @@ file, with --check to fail when the committed file is stale (CI runs this throug
 """
 from __future__ import annotations
 
+import hashlib
 import re
 import sys
 from pathlib import Path
@@ -41,6 +42,56 @@ HEADER = (
 
 class RenderError(classification.PolicyError):
     pass
+
+
+# Phase 4 execute gate. Verified against the pinned v1.7.0 image on 2026-11-03 (docs/operations/tool-gateway.md):
+# the AuthZEN body reaches the gate as {"subject":{"id":"hermes"},"resource":{"id":"<target>/<tool>"},"action":
+# {"name":"tools/call"},"context":{"arguments":{...}}}; a call without `arguments` needs the has() fallback or the
+# CEL errors and the call is denied before the gate is asked; with the gate unreachable a call returns 403 and the
+# backend is never reached, while initialize and tools/list are unaffected.
+GATE_REQUIRE = 'mcp.methodName != "tools/call" || extauthz.decision == true'
+GATE_BODY = (
+    '{"subject": {"type": "agent", "id": apiKey.client}, '
+    '"resource": {"type": "tool", "id": mcp.tool.target + "/" + mcp.tool.name}, '
+    '"action": {"name": "tools/call"}, '
+    '"context": {"arguments": has(mcp.tool.arguments) ? mcp.tool.arguments : {}}}'
+)
+HOST_RE = re.compile(r"^[a-z0-9]([a-z0-9.-]*[a-z0-9])?:[0-9]{2,5}$")
+GATE_DIR = BASE / "manifests/execute-gate"
+GATE_POLICY_CM = GATE_DIR / "policy.configmap.yaml"
+GATE_DEPLOYMENT = GATE_DIR / "deployment.yaml"
+POLICY_SHA_RE = re.compile(r'(onemind\.io/policy-sha256: )"[0-9a-f]*"')
+
+
+def _ext_authz(gname: str, authz: dict) -> dict:
+    if not isinstance(authz, dict) or set(authz) != {"host"} or not HOST_RE.match(str(authz["host"])):
+        raise RenderError(f"group {gname}: authz must be {{host: <dns-name>:<port>}}")
+    return {
+        "conditional": [{
+            "condition": "has(mcp.tool)",  # only tools/call carries a tool; initialize and tools/list skip the gate
+            "host": authz["host"],
+            # Gate unreachable or erroring: deny. Without this the failure mode is not stated in Git.
+            "failureMode": {"denyWithStatus": 403},
+            "protocol": {"http": {
+                "path": '"/access/v1/evaluation"',
+                "addRequestHeaders": {"content-type": '"application/json"', ":method": '"POST"'},
+                "body": GATE_BODY,
+                "metadata": {"decision": "json(response.body).decision"},
+            }},
+        }],
+    }
+
+
+def sealed_exists(secret: str) -> bool:
+    return (BASE / "manifests" / f"{secret}.sealedsecret.yaml").is_file()
+
+
+def is_active(t: dict) -> bool:
+    """A fragment with `enabled_by: [<secret>, ...]` is rendered only while each SealedSecret file is committed."""
+    names = t.get("enabled_by") or []
+    if not isinstance(names, list) or not all(isinstance(n, str) and re.fullmatch(r"[a-z0-9][a-z0-9-]*", n) for n in names):
+        raise RenderError(f"{t.get('_file')}: enabled_by must be a list of Secret names")
+    return all(sealed_exists(n) for n in names)
 
 
 def _walk(node):
@@ -107,6 +158,7 @@ def render(gw: dict, targets: list[dict], classes: dict[str, dict]) -> dict:
     by_group: dict[str, list[dict]] = {g: [] for g in groups}
     gated_targets: list[dict] = []
     seen: set[str] = set()
+    seen_env: list[set[str]] = []
     for t in targets:
         f = t["_file"]
         name = t.get("name", "")
@@ -117,7 +169,7 @@ def render(gw: dict, targets: list[dict], classes: dict[str, dict]) -> dict:
         if name in seen:
             raise RenderError(f"{f}: duplicate target {name}")
         seen.add(name)
-        unknown = set(t) - {"name", "groups", "env", "target", "_file"}
+        unknown = set(t) - {"name", "groups", "env", "target", "enabled_by", "_file"}
         if unknown:
             raise RenderError(f"{f}: unknown keys {sorted(unknown)}")
         if not t.get("groups") or not isinstance(t.get("target"), dict):
@@ -129,15 +181,20 @@ def render(gw: dict, targets: list[dict], classes: dict[str, dict]) -> dict:
         for var, ref in t_env.items():
             if not ENV_RE.match(var) or not var.startswith(prefix):
                 raise RenderError(f"{f}: env {var} must start with {prefix}")
-            if var in env:
+            if var in env or any(var in other for other in seen_env):
                 raise RenderError(f"{f}: env {var} defined twice")
             if set(ref) != {"secret", "key"}:
                 raise RenderError(f"{f}: env {var} needs exactly secret and key")
-            env[var] = ref
+        seen_env.append(set(t_env))
         _check_dollars(f, t["target"], set(t_env) | {c["env"] for c in clients.values()})
         if name not in classes:
             raise RenderError(f"{f}: no policy/classification/{name}.yaml; an unclassified target exposes nothing "
                               "and is rejected")
+        if not is_active(t):
+            # Disabled: its SealedSecret(s) are not committed yet. It is validated above but contributes no route, no
+            # tool and no Secret reference, so an absent key cannot take the gateway pod or any route down.
+            continue
+        env.update(t_env)
         for g in t["groups"]:
             if g not in groups:
                 raise RenderError(f"{f}: unknown group {g}")
@@ -175,25 +232,38 @@ def render(gw: dict, targets: list[dict], classes: dict[str, dict]) -> dict:
         keys = [
             {"key": "${%s}" % clients[c]["env"], "metadata": {"client": c}} for c in g["clients"]
         ]
+        ext_authz = None
         if kind == "group" and not anchored:
             allows = [e for e in (classification.allow_expr(classes[t["name"]]) for t in by_group[gname]) if e]
             # Visibility comes only from allow rules: unlisted, destructive and physical tools are not listed and
             # not callable. No allow rule at all must still mean "nothing", never "everything".
             authz = {"rules": [{"allow": e} for e in allows]} if allows else _deny_all()
+        elif kind == "execute" and "authz" in g and not anchored:
+            # Phase 4. Visibility: one allow rule per target for its destructive and physical tools (nothing else is
+            # listed or callable). Gate: extAuthz asks the execute-gate on every tools/call; the require rule enforces
+            # the answer on calls only. A rule on extauthz.decision that also ran for tools/list would empty the list
+            # (no decision exists there, spike A5), so it is keyed on mcp.methodName.
+            allows = [e for e in (classification.gated_allow_expr(classes[t["name"]]) for t in by_group[gname]) if e]
+            authz = ({"rules": [{"allow": e} for e in allows] + [{"require": GATE_REQUIRE}]}
+                     if allows else _deny_all())
+            if allows:
+                ext_authz = _ext_authz(gname, g["authz"])
         else:
-            # execute: closed until Phase 4 wires extAuthz (visibility allow rules + a call-only PDP rule, A5);
-            # deferred (identity): off until asked for.
+            # execute without `authz`: closed; deferred (identity): off until asked for.
             authz = _deny_all()
         for rule in authz["rules"]:
             _check_dollars(f"group {gname}", rule, {c["env"] for c in clients.values()})
+        policies = {
+            # strict: the default mode lets requests without a key through (spike A2/A7).
+            "apiKey": {"mode": "strict", "keys": keys},
+        }
+        if ext_authz:
+            policies["extAuthz"] = ext_authz
+        policies["mcpAuthorization"] = authz
         routes.append({
             "name": gname,
             "matches": [{"path": {"exact": g["path"]}}],
-            "policies": {
-                # strict: the default mode lets requests without a key through (spike A2/A7).
-                "apiKey": {"mode": "strict", "keys": keys},
-                "mcpAuthorization": authz,
-            },
+            "policies": policies,
             "backends": [{
                 "mcp": {
                     "prefixMode": g.get("prefixMode", "always"),
@@ -216,21 +286,71 @@ def dump(values: dict) -> str:
     return HEADER + yaml.safe_dump(values, sort_keys=False, default_flow_style=False, width=120)
 
 
+class _BlockDumper(yaml.SafeDumper):
+    """Multi-line strings as `|` blocks, so the embedded policy file stays readable in the ConfigMap."""
+
+
+_BlockDumper.add_representer(
+    str, lambda d, v: d.represent_scalar("tag:yaml.org,2002:str", v, style="|" if "\n" in v else None))
+
+
+def gate_policy_text(targets: list[dict], classes: dict[str, dict]) -> str:
+    """The policy file of the execute-gate (resource ids are "<target>/<tool>"), from the same classification files.
+
+    The gate treats anything that is not `physical` as destructive, so only the physical list changes behaviour (the
+    owner must type `override`, not `execute`); `destructive` documents intent.
+    """
+    names = sorted(t["name"] for t in targets if is_active(t) and classification.has_gated(classes[t["name"]]))
+    pol = {cls: sorted(f"{n}/{tool}" for n in names for tool in classes[n][cls]) for cls in classification.GATED}
+    body = yaml.safe_dump({"physical": pol["physical"], "destructive": pol["destructive"]}, sort_keys=False)
+    cm = {
+        "apiVersion": "v1", "kind": "ConfigMap",
+        "metadata": {"name": "execute-gate-policy", "namespace": "tool-gateway",
+                     "labels": {"app.kubernetes.io/name": "execute-gate", "app.kubernetes.io/part-of": "tool-gateway"}},
+        "data": {"policy.yaml": body},
+    }
+    return (
+        "# GENERATED by scripts/gateway/render_gateway_config.py from policy/classification/*.yaml. Do not edit.\n"
+        "# The execute-gate reads this once at start: the pod template carries the file's sha256 (deployment.yaml) so a\n"
+        "# change rolls the pod.\n" + yaml.dump(cm, Dumper=_BlockDumper, sort_keys=False, width=120)
+    )
+
+
+def gate_files(targets: list[dict], classes: dict[str, dict]) -> dict[Path, str]:
+    """Generated execute-gate files: the policy ConfigMap, and deployment.yaml with its policy-sha256 annotation."""
+    cm_text = gate_policy_text(targets, classes)
+    sha = hashlib.sha256(cm_text.encode()).hexdigest()
+    dep = GATE_DEPLOYMENT.read_text() if GATE_DEPLOYMENT.is_file() else ""
+    if not POLICY_SHA_RE.search(dep):
+        raise RenderError(f"{GATE_DEPLOYMENT.relative_to(ROOT)}: missing the onemind.io/policy-sha256 annotation")
+    return {GATE_POLICY_CM: cm_text,
+            GATE_DEPLOYMENT: POLICY_SHA_RE.sub(lambda m: f'{m.group(1)}"{sha}"', dep, count=1)}
+
+
+def outputs() -> dict[Path, str]:
+    gw, targets, classes = load()
+    files = {OUT: dump(render(gw, targets, classes))}
+    files.update(gate_files(targets, classes))
+    return files
+
+
 def main(argv: list[str]) -> int:
     try:
-        text = dump(render(*load()))
+        files = outputs()
     except classification.PolicyError as e:
         print(f"render error: {e}", file=sys.stderr)
         return 1
     if "--check" in argv:
-        if not OUT.is_file() or OUT.read_text() != text:
-            print("platform/tool-gateway/values.generated.yaml is stale: run "
-                  "python scripts/gateway/render_gateway_config.py", file=sys.stderr)
+        stale = [p for p, text in files.items() if not p.is_file() or p.read_text() != text]
+        if stale:
+            print("stale generated file(s): " + ", ".join(str(p.relative_to(ROOT)) for p in stale) +
+                  ": run python scripts/gateway/render_gateway_config.py", file=sys.stderr)
             return 1
-        print("values.generated.yaml is up to date")
+        print("generated files are up to date")
         return 0
-    OUT.write_text(text)
-    print(f"wrote {OUT.relative_to(ROOT)}")
+    for p, text in files.items():
+        p.write_text(text)
+        print(f"wrote {p.relative_to(ROOT)}")
     return 0
 
 
