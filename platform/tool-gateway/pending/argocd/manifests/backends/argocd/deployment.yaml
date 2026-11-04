@@ -1,0 +1,77 @@
+# Argo CD MCP server (ghcr.io/argoproj-labs/mcp-for-argocd v0.9.0, index digest read 2026-11-04). Token: account `legacy`, API key.
+# In pending/: not deployed until scripts/gateway/keys-session.sh seals gateway-target-argocd and moves this tree into manifests/.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-argocd
+  namespace: tool-gateway
+  labels:
+    app.kubernetes.io/name: mcp-argocd
+    app.kubernetes.io/part-of: tool-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mcp-argocd
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mcp-argocd
+        app.kubernetes.io/part-of: tool-gateway
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+      - name: mcp-argocd
+        image: ghcr.io/argoproj-labs/mcp-for-argocd:v0.9.0@sha256:dffc6c719d8635be2d5f2c8ad1c0178540325da4b40da0b373307e12b4c48f86
+        imagePullPolicy: IfNotPresent
+        args: [http]
+        ports:
+        - {name: mcp, containerPort: 3000}
+        env:
+        - {name: HOME, value: /tmp}
+        - {name: ARGOCD_BASE_URL, value: "http://argocd-server.argocd.svc.cluster.local"}
+        - {name: MCP_READ_ONLY, value: "true"}
+        - {name: MCP_BIND_ADDRESS, value: 0.0.0.0}
+        - name: ARGOCD_API_TOKEN
+          valueFrom: {secretKeyRef: {name: gateway-target-argocd, key: token}}
+        - name: MCP_AUTH_TOKEN
+          valueFrom: {secretKeyRef: {name: gateway-target-argocd, key: mcp_auth}}
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: {drop: [ALL]}
+        readinessProbe:
+          tcpSocket: {port: mcp}
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket: {port: mcp}
+          initialDelaySeconds: 20
+          periodSeconds: 20
+        resources:
+          requests: {cpu: 25m, memory: 96Mi}
+          limits: {cpu: 500m, memory: 256Mi}
+        volumeMounts:
+        - {name: tmp, mountPath: /tmp}
+      volumes:
+      - name: tmp
+        emptyDir: {sizeLimit: 64Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-argocd
+  namespace: tool-gateway
+  labels:
+    app.kubernetes.io/name: mcp-argocd
+spec:
+  selector:
+    app.kubernetes.io/name: mcp-argocd
+  ports:
+  - {name: mcp, port: 3000, targetPort: mcp}

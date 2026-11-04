@@ -4,7 +4,7 @@
 # (nats_core_account_leaf_count); neither the deployed v0.9.11 nor v0.9.12 has a leafz
 # option. prometheus-nats-exporter -leafz reads /leafz on the hub's monitor port (8222) and
 # exports one gnatsd_leafz_info series per connected leaf, labelled with the server name the
-# leaf presents (name="hermes-legacy-leaf", name="zeus-mac", ...).
+# leaf presents (name="zeus-mac", name="tak-nats-leaf-...", ...).
 #
 # A hub server lists only the leaves connected to it, so each pod is polled by its
 # nats-headless DNS name; the nats-monitor Service would answer from one random pod. The

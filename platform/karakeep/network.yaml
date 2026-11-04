@@ -58,6 +58,17 @@ spec:
     ports:
     - protocol: TCP
       port: 3000
+  # onemind-mcp (read-only API with a dedicated key; platform/hermes/mcp).
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: hermes
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: onemind-mcp
+    ports:
+    - protocol: TCP
+      port: 3000
   egress:
   - to:
     - podSelector:
