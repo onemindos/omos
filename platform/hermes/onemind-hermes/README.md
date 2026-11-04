@@ -35,14 +35,44 @@ separate agents here.
 Legacy gets its tools from the agentgateway tool gateway (`platform/tool-gateway`, runbook
 [`docs/operations/tool-gateway.md`](../../../docs/operations/tool-gateway.md)): servers `ops`, `data` and `tak`,
 tools named `<target>_<tool>`. The Deployment passes `ONEMIND_GATEWAY_KEY` from Secret `onemind-gateway-client`;
-`config.defaults.yaml` references it as `${ONEMIND_GATEWAY_KEY}` in the `Authorization` header. Keep
-`gateway.multiplex_profiles` off, or `${VAR}` in headers is not filled.
+`config.defaults.yaml` references it as `${ONEMIND_GATEWAY_KEY}` in the `Authorization` header. The default
+profile reads it from the container environment; role profiles read it from their own `.env` (see
+[Worker roles and the tool gateway](#worker-roles-and-the-tool-gateway)).
 
 `config.defaults.yaml` only seeds an empty volume. To change the live `/opt/data/config.yaml` run
-`mcp/apply.sh` (add `--dry-run` first): it sets `ops`, `data` and `tak` exactly as in the defaults, removes the
-old LiteLLM `onemind` entry, writes `config.yaml.bak-mcp-<timestamp>` before changing anything and touches no other
-key. A second run prints only `unchanged`. Hermes reads `mcp_servers` at start, so restart the pod afterwards.
-Check with `hermes mcp test ops|data|tak` inside the pod.
+`mcp/apply.sh` (add `--dry-run` first): it sets every server in the defaults (`ops`, `data`, `tak`, `dropbox`,
+`clickup`, `whop` and the nine Zoho entries) exactly as there, removes the old LiteLLM `onemind` entry and the
+retired LiteLLM comment block, writes `config.yaml.bak-mcp-<timestamp>` before changing anything and touches no
+other key. A second run prints only `unchanged`. Hermes reads `mcp_servers` at start, so restart the gateway
+(`nats/apply.sh --restart`) afterwards. Check with `hermes mcp test ops|data|tak` inside the pod.
+
+**Tool filters on the hosted servers.** `hermes mcp test` lists everything the server offers; the filters below
+decide what the agent can call (`hermes mcp list` shows `N excluded` / `N selected`). Filter names are the
+upstream tool names, exact or globs, and a name that does not match filters nothing: the earlier Dropbox
+exclusions (`GetUsageAndQuota` and three more, in CamelCase) matched no tool.
+
+| Server | Filter | Effect |
+|---|---|---|
+| `dropbox` | `exclude` | Reads and normal writes stay. Excluded: `delete*`, `restore_*`, `sign_cancel_*`, `run_write_dropbox_operation` (a generic writer that could reach a delete), plus the four quota/file-request tools the owner excluded before. |
+| `clickup` | `exclude` | Everything except `clickup_delete_*` and `clickup_merge_tasks` (merging removes the source tasks). |
+| `whop` | `include` (200 of 464) | Reads, plus low-risk writes (messages, forum posts, reactions, notifications, course content, leads, notes, experiences, products, files and exports). Not listed: delete/remove, creating or changing payments, payouts, transfers, fees and refunds, cards and bank accounts, account and user changes, tokens and API keys. The reconciler refuses any such name in `mcp/whop/server.json`. |
+| `zoho-*` | `include` | Read-only lists, unchanged (checked: no delete, remove, void or cancel tool). |
+| `ops`, `data`, `tak` | gateway allowlist | `platform/tool-gateway`. `ops` includes two write tools by owner decision: `kubernetes_resources_create_or_update` and `onemind_tile38_set_point`. |
+
+## Worker roles and the tool gateway
+
+Hermes v0.22.5 always multiplexes profiles: `gateway.multiplex_profiles: false` is retired and is rewritten to
+`true` at start (`hermes_cli/gateway_multiplex_mode.py`), and `auto_multiplex_migration` only matters for a
+single-profile install. So it cannot be turned off, and under it a role profile resolves `${ONEMIND_GATEWAY_KEY}`
+in MCP headers from its own `.env` only (`agent/secret_scope.py`); the container environment is the default
+profile's. Without the key every role logged `${ONEMIND_GATEWAY_KEY} ... is not set in this profile's .env` for
+`ops`, `data` and `tak` about every ten minutes, and the role children had no gateway tools.
+
+`roles/apply.sh` therefore gives each role (`roles/roles.yaml`, `mcp:` list) only its servers in `mcp_servers` and
+the matching `mcp-<server>` entries in `platform_toolsets.cli` (Hermes accepts `mcp-<name>` or the bare name; a
+listed name makes the list an allowlist of servers), and copies `ONEMIND_GATEWAY_KEY` from the pod environment
+into the role's `.env` (mode 0600, never printed, no backup copy). After a key rotation run `roles/apply.sh`
+again. ops-cluster gets ops and data, tak-mission tak and data, builder ops, researcher data, checker all three.
 
 ## Permanent Zoho MCP connections
 
@@ -96,7 +126,7 @@ checked against the v0.22.5 code in the image and passed its
 |---|---|---|
 | `model.provider` / `model.default` | `openai-codex` / `gpt-6.1-sol` | Same route as Legacy |
 | `credential_pool_strategies.openai-codex` | `least_used` | Spread turns across signed-in Codex credentials instead of draining the first (`fill_first` default) |
-| `fallback_providers` | `ollama-cloud` / `glm-5.3` | Used only if the primary fails. Needs `OLLAMA_API_KEY`, not provisioned yet (see TODO) |
+| `fallback_providers` | `ollama-cloud` / `glm-5.3` | Used only if the primary fails. Served by the `ollama-pro` credential in Hermes' auth pool (`hermes auth list`), not by an `OLLAMA_API_KEY` variable; cron `infra-health` runs on it (`glm-5.3`, 2026-11-03) |
 | `agent.disabled_toolsets` | `computer_use`, `browser`, `discord`, `discord_admin`, `yuanbao`, `feishu_doc`, `feishu_drive`, `x_search`, `video_gen` | Desktop, browser, chat-platform and media tools a cloud agent does not need |
 | `approvals.mode` | `manual` | Dangerous commands wait for a human instead of the LLM judge (`smart` default) |
 | `approvals.cron_mode`, `single_query_mode`, `unattended_mode` | `deny` | Cron, one-shot and API-server sessions never run flagged commands (matches the default; pinned) |
@@ -409,10 +439,12 @@ Inventory of what Legacy does on NATS, what was ported and the switch order are 
   and waits instead of registering. It held that guard while `hermes-legacy` still ran, which made enabling it first safe.
 - `tak-platform` is not ported; PR #585 replaces it with a TAK-native client.
 
-## TODO
+## Notes
 
-- Ollama Cloud fallback: seal `OLLAMA_API_KEY` into `onemind-hermes-runtime` (or
-  a new namespace-wide SealedSecret) before relying on the fallback.
+- Ollama Cloud fallback: the key lives in the credential pool (`ollama-pro`), so no `OLLAMA_API_KEY` is needed in
+  `onemind-hermes-runtime`. Add a second pool entry if a spare key is wanted.
+- `ONEMIND_LITELLM_MCP_KEY` is still in the sealed `onemind-hermes-runtime` Secret and the pod environment. Nothing
+  reads it since the LiteLLM MCP hub was retired (Phase 6); drop it at the next re-seal of that Secret.
 
 ## Cleanup after cutover
 

@@ -41,7 +41,8 @@ class ReconcileTests(unittest.TestCase):
         self.assertEqual(json.loads(argv[4]), {
             'url': 'https://mcp.whop.com/mcp', 'auth': 'oauth',
             'connect_timeout': 300, 'oauth': {'timeout': 300},
-            'sampling': {'enabled': False}})
+            'sampling': {'enabled': False},
+            'tools': {'include': json.loads((HERE / 'server.json').read_text())['tools']['include']}})
         self.assertEqual(kwargs['env']['HERMES_HOME'], '/isolated-home')
         self.assertTrue(kwargs['capture_output'])
 
@@ -84,6 +85,25 @@ class ReconcileTests(unittest.TestCase):
             self.assertEqual(updated, original)
             self.assertEqual(private.read_bytes(), b'opaque-fixture-not-a-credential')
             self.assertEqual(private.stat().st_mode & 0o777, 0o600)
+
+
+class AllowlistTests(unittest.TestCase):
+    def test_committed_allowlist_is_reads_and_low_risk_writes(self):
+        tools = json.loads((HERE / 'server.json').read_text())['tools']
+        self.assertTrue(load().valid_allowlist(tools))
+        self.assertLess(len(tools['include']), 300)  # the server offers 464
+        for name in ('delete', 'payout', 'transfer', 'refund', 'accounts_update', 'api-keys', 'cards_'):
+            self.assertFalse([n for n in tools['include'] if name in n], name)
+
+    def test_destructive_or_money_names_rejected_before_cli(self):
+        base = json.loads((HERE / 'server.json').read_text())
+        for bad in ('ads_delete', 'payouts_create', 'transfers_create', 'accounts_fees_update', 'payments_refund'):
+            manifest = stage_directory() / 'bad.json'
+            manifest.write_text(json.dumps(dict(base, tools={'include': ['users_get', bad]})))
+            def runner(*args, **kwargs):
+                self.fail('Forbidden tool reached CLI')
+            with self.assertRaisesRegex(ValueError, 'public Whop OAuth'):
+                load().reconcile(manifest, '/isolated-home', '/hermes', runner)
 
 
 class GitOpsTests(unittest.TestCase):

@@ -10,10 +10,13 @@ place. The desired `mcp_servers` entries are read from the defaults file (one so
 - Servers in REMOVE are deleted from the live config.
 - Other servers and every other key are left alone; comments and layout are kept (round-trip YAML).
 - Before the first change a copy is written next to the config: config.yaml.bak-mcp-<UTC timestamp>.
+- The retired LiteLLM comment block (the "One MCP endpoint for all OneMind apps" notes inside plugins.enabled)
+  is removed from the live file; nothing else in the comments is touched.
 - A second run with no drift writes nothing and prints only "unchanged" lines.
 """
 
 import datetime
+import io
 import os
 import shutil
 import sys
@@ -23,6 +26,29 @@ from ruamel.yaml import YAML  # noqa: E402  (PyYAML is not in Hermes' venv)
 
 # Retired: the LiteLLM MCP hub entry (replaced by the tool gateway, Phase 5).
 REMOVE = ["onemind"]
+
+# Old seed comments about the LiteLLM MCP hub, left in the live config.yaml after the hub was retired: one block of
+# consecutive comment lines, from the first line below to the line ending "(Legacy's 401)."
+STALE_START = "# One MCP endpoint for all OneMind apps: the LiteLLM gateway"
+STALE_END = "(Legacy's 401)."
+
+
+def strip_stale_comments(text):
+    """(text without the retired block, number of blocks removed). Only whole comment lines are removed."""
+    lines = text.splitlines(keepends=True)
+    out, removed, i = [], 0, 0
+    while i < len(lines):
+        if lines[i].lstrip().startswith(STALE_START):
+            j = i
+            while j < len(lines) and lines[j].lstrip().startswith("#") and STALE_END not in lines[j]:
+                j += 1
+            if j < len(lines) and lines[j].lstrip().startswith("#") and STALE_END in lines[j]:
+                removed += 1
+                i = j + 1
+                continue
+        out.append(lines[i])
+        i += 1
+    return "".join(out), removed
 
 
 def arg(flag, default):
@@ -54,11 +80,18 @@ def main():
         print("ERROR: no mcp_servers in %s" % DEFAULTS)
         return 1
     with open(CONFIG, encoding="utf-8") as fh:
-        conf = yaml.load(fh)
+        text = fh.read()
+    cleaned, stale = strip_stale_comments(text)
+    changed = False
+    if stale:
+        print("%s retired LiteLLM comment block (%d)" % ("WOULD remove" if DRY else "DO remove", stale))
+        changed = True
+    else:
+        print("unchanged LiteLLM comment block (absent)")
+    conf = yaml.load(io.StringIO(cleaned))
     live = conf.get("mcp_servers")
     if live is None:
         live = conf["mcp_servers"] = {}
-    changed = False
     for name, spec in desired.items():
         if name in live and plain(live[name]) == plain(spec):
             print("unchanged %s" % name)

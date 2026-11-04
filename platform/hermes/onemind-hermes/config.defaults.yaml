@@ -114,11 +114,16 @@ MATRIX_USER_ID: '@legacy:onemindos.dev'
 # and physical tools are on /execute, which is not deployed, so it is not listed here.
 # ONEMIND_GATEWAY_KEY comes from the onemind-gateway-client SealedSecret (deployment.yaml).
 # Every route runs apiKey.mode strict: without the Authorization header it answers 401.
-# Keep gateway.multiplex_profiles off: with it on, ${VAR} in headers is not filled from
-# container env (Legacy's 401). Keys checked against v0.22.5 tools/mcp_tool_*.py: url,
+# gateway.multiplex_profiles cannot be switched off in Hermes v0.22.5 (an explicit false is rewritten to
+# true at start), and under it a ROLE profile resolves ${VAR} in headers only from its own .env, never from
+# the container env. roles/apply.sh therefore writes ONEMIND_GATEWAY_KEY into each role's .env. Keys checked
+# against v0.22.5 tools/mcp_tool_*.py: url,
 # headers (${VAR} rendered from env), lazy, trust, timeout, connect_timeout. Unset: lazy
 # (connect at start, so tool counts are known) and trust (default full).
 mcp_servers:
+  # Hosted Whop MCP (mcp/whop/README.md): an allowlist of reads plus low-risk writes. Not listed on purpose:
+  # delete/remove, creating or changing payments, payouts, transfers, fees and refunds, cards and bank
+  # accounts, account/user changes, tokens and API keys. mcp/whop/server.json is the single source; keep the two identical.
   whop:
     url: https://mcp.whop.com/mcp
     auth: oauth
@@ -127,6 +132,208 @@ mcp_servers:
       timeout: 300
     sampling:
       enabled: false
+    tools:
+      include:
+        - accounts_customer_tracking
+        - accounts_get
+        - accounts_list
+        - accounts_me
+        - accounts_reserves
+        - accounts_search
+        - ad-campaigns_get
+        - ad-campaigns_list
+        - ad-groups_get
+        - ad-groups_list
+        - ad-pixels_get
+        - ad-pixels_list
+        - ads_get
+        - ads_list
+        - ads_report-stats
+        - affiliates_get
+        - affiliates_list
+        - affiliates_list-overrides
+        - affiliates_overrides
+        - ai-chats_create
+        - ai-chats_get
+        - ai-chats_list
+        - ai-chats_update
+        - api-logs_list
+        - app-builds_get
+        - app-builds_list
+        - app-installations_get
+        - app-installations_list
+        - apps_get
+        - apps_list
+        - ask_question
+        - audiences_create
+        - audiences_list
+        - audiences_update
+        - bounties_get
+        - bounties_get-submission
+        - bounties_list
+        - bounties_submissions
+        - bounty-submissions_create
+        - bounty-submissions_get
+        - bounty-submissions_list
+        - bounty-submissions_submit
+        - chat-channels_get
+        - chat-channels_list
+        - chat-channels_update
+        - checkout-configurations_get
+        - checkout-configurations_list
+        - connection_status
+        - course-chapters_create
+        - course-chapters_get
+        - course-chapters_list
+        - course-chapters_update
+        - course-lesson-interactions_get
+        - course-lesson-interactions_list
+        - course-lessons_create
+        - course-lessons_get
+        - course-lessons_list
+        - course-lessons_mark_as_completed
+        - course-lessons_start
+        - course-lessons_update
+        - course-students_get
+        - course-students_list
+        - courses_create
+        - courses_get
+        - courses_list
+        - courses_update
+        - dispute-alerts_get
+        - dispute-alerts_list
+        - disputes_get
+        - disputes_list
+        - disputes_summary
+        - dm-channels_create
+        - dm-channels_get
+        - dm-channels_list
+        - dm-channels_update
+        - dm-members_create
+        - dm-members_get
+        - dm-members_list
+        - dm-members_update
+        - docs_query
+        - docs_search
+        - domains_check
+        - domains_get
+        - domains_list
+        - economic-intelligence_list
+        - events_list
+        - events_pulse
+        - experiences_attach
+        - experiences_create
+        - experiences_detach
+        - experiences_duplicate
+        - experiences_get
+        - experiences_list
+        - experiences_update
+        - experiments_exposures
+        - experiments_get
+        - experiments_list
+        - exports_create
+        - exports_get
+        - exports_list
+        - fetch
+        - files_complete
+        - files_create
+        - files_get
+        - files_list
+        - forum-posts_create
+        - forum-posts_get
+        - forum-posts_list
+        - forum-posts_update
+        - forums_get
+        - forums_list
+        - forums_update
+        - invoices_get
+        - invoices_list
+        - leads_create
+        - leads_get
+        - leads_list
+        - leads_update
+        - ledgers_breakdown
+        - ledgers_list
+        - ledgers_report
+        - livestreams_get
+        - livestreams_list
+        - media_get
+        - members_get
+        - members_list
+        - members_logs
+        - members_notes_create
+        - members_notes_list
+        - memberships_get
+        - memberships_list
+        - messages_create
+        - messages_get
+        - messages_list
+        - messages_update
+        - notifications_badges
+        - notifications_create
+        - notifications_get
+        - notifications_list
+        - notifications_mark_read
+        - notifications_topics
+        - partners_earnings
+        - partners_leaderboard
+        - partners_referred_users
+        - payment-rules_get
+        - payment-rules_list
+        - payments_get
+        - payments_list
+        - payments_status
+        - payments_summary
+        - people_get
+        - people_list
+        - permissions_check
+        - plans_calculate_tax
+        - plans_get
+        - plans_list
+        - product-affiliates_list
+        - products_create
+        - products_get
+        - products_list
+        - products_update
+        - promo-codes_get
+        - promo-codes_list
+        - reactions_create
+        - reactions_get
+        - reactions_list
+        - report_feedback
+        - resolution-center-cases_events
+        - resolution-center-cases_get
+        - resolution-center-cases_list
+        - resolution-center-cases_summary
+        - reviews_get
+        - reviews_list
+        - search
+        - shipments_get
+        - shipments_list
+        - shipments_lookup
+        - social-accounts_list
+        - stats_get
+        - stats_list
+        - stats_reports_list
+        - stats_reports_platform_trends
+        - stats_time-series_get
+        - stats_time-series_list
+        - support-channels_create
+        - support-channels_get
+        - support-channels_list
+        - team-members_get
+        - team-members_list
+        - users_access
+        - users_get
+        - users_list
+        - users_me
+        - users_preferences_get
+        - users_recommend_actions
+        - variants_calculate_tax
+        - variants_get
+        - variants_list
+        - waitlist-entries_get
+        - waitlist-entries_list
   ops:
     url: http://agentgateway.tool-gateway.svc.cluster.local:8080/ops/mcp
     headers:
@@ -139,6 +346,33 @@ mcp_servers:
     url: http://agentgateway.tool-gateway.svc.cluster.local:8080/tak/mcp
     headers:
       Authorization: Bearer ${ONEMIND_GATEWAY_KEY}
+  # Hosted OAuth servers, managed here so their filters are applied by mcp/apply.sh. Reads and normal writes
+  # stay; anything that deletes, restores over, or cancels is excluded (names are the upstream tool names,
+  # globs allowed). Dropbox: the four request/quota tools were excluded by the owner earlier, under names that
+  # never matched; they are kept here under the real names.
+  dropbox:
+    url: https://mcp.dropbox.com/mcp
+    auth: oauth
+    enabled: true
+    tools:
+      exclude:
+        - delete
+        - delete_*
+        - restore_*
+        - sign_cancel_*
+        - run_write_dropbox_operation
+        - get_usage_and_quota
+        - create_file_request
+        - get_file_request
+        - list_file_requests
+  clickup:
+    url: https://mcp.clickup.com/mcp
+    auth: oauth
+    enabled: true
+    tools:
+      exclude:
+        - clickup_delete_*
+        - clickup_merge_tasks
   zoho-ops:
     url: ${ZOHO_OPS_MCP_URL}
     connect_timeout: 60
