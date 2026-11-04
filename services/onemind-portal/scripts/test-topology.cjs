@@ -69,6 +69,8 @@ require('./test-catalog-structure.cjs');
 require('./test-intelligence-references.cjs');
 // Hermes Home cards remain external references, not installations.
 require('./test-hermes-ecosystem.cjs');
+// Geospatial and commerce references reuse existing canonical systems.
+require('./test-geospatial-commerce-references.cjs');
 require('./test-snapshot-cluster.cjs');
 // F11 live inventory guards (mapping bundle, flag default, RBAC) ride the same gate and image-build step.
 require('./test-live-inventory.cjs');

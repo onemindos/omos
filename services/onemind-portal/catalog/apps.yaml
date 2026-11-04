@@ -7419,6 +7419,230 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: google-earth
+  title: Google Earth
+  description: "External reference: Google globe exploration, geospatial data
+    layers and project sharing. No OneMind installation, hosting or integration
+    verified."
+  tags:
+    - reference
+    - geospatial
+  links:
+    - url: https://earth.google.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://earth.google.com
+    onemind.io/launcher-category: Geospatial
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cesium-native
+  title: Cesium Native
+  description: "External reference: C++ libraries for 3D geospatial applications,
+    including 3D Tiles runtime streaming. No OneMind installation, hosting or
+    integration verified."
+  tags:
+    - reference
+    - geospatial
+    - cesium
+    - 3d-tiles
+  links:
+    - url: https://github.com/CesiumGS/cesium-native
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/CesiumGS/cesium-native
+    onemind.io/launcher-category: Geospatial
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: 3d-tiles
+  title: 3D Tiles
+  description: "External reference: Open specification for streaming and
+    visualizing massive heterogeneous 3D geospatial datasets. No OneMind
+    installation, hosting or integration verified."
+  tags:
+    - reference
+    - geospatial
+    - cesium
+    - 3d-tiles
+  links:
+    - url: https://github.com/CesiumGS/3d-tiles
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/CesiumGS/3d-tiles
+    onemind.io/launcher-category: Geospatial
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cesium-unreal
+  title: Cesium for Unreal
+  description: "External reference: Cesium plugin for 3D geospatial content and 3D
+    Tiles in Unreal Engine. No OneMind installation, hosting or integration
+    verified."
+  tags:
+    - reference
+    - geospatial
+    - cesium
+    - 3d-tiles
+    - unreal
+  links:
+    - url: https://github.com/CesiumGS/cesium-unreal
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/CesiumGS/cesium-unreal
+    onemind.io/launcher-category: Geospatial
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cesium-unity
+  title: Cesium for Unity
+  description: "External reference: Cesium plugin for 3D geospatial applications
+    with 3D Tiles in Unity. No OneMind installation, hosting or integration
+    verified."
+  tags:
+    - reference
+    - geospatial
+    - cesium
+    - 3d-tiles
+    - unity
+  links:
+    - url: https://github.com/CesiumGS/cesium-unity
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/CesiumGS/cesium-unity
+    onemind.io/launcher-category: Geospatial
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cesium-omniverse
+  title: Cesium for Omniverse
+  description: "External reference: Cesium extension for 3D geospatial content and
+    3D Tiles in NVIDIA Omniverse Kit applications. No OneMind installation,
+    hosting or integration verified."
+  tags:
+    - reference
+    - geospatial
+    - cesium
+    - 3d-tiles
+    - omniverse
+  links:
+    - url: https://github.com/CesiumGS/cesium-omniverse
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/CesiumGS/cesium-omniverse
+    onemind.io/launcher-category: Geospatial
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: whop
+  title: Whop
+  description: "External reference: Business platform for selling digital products
+    and managing online commerce. No OneMind installation, hosting or
+    integration verified."
+  tags:
+    - reference
+    - business
+    - commerce
+  links:
+    - url: https://whop.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://whop.com
+    onemind.io/launcher-category: Business & Commerce
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: ge
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: business-operations
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: platform-core
   tags:
     - kubernetes
