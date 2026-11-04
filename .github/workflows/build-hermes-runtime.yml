@@ -3,6 +3,13 @@ name: Build corrected Hermes runtime
 # Deliberate dispatch only: never grant package credentials to PR-triggered code.
 on:
   workflow_dispatch:
+    inputs:
+      variant:
+        description: Runtime variant (both preserve the upstream s6 UID contract)
+        required: true
+        default: runtime-fix
+        type: choice
+        options: [runtime-fix, bot-screen]
 
 permissions:
   contents: read
@@ -29,12 +36,13 @@ jobs:
       - name: Build hash-locked correction (includes synthetic regression gate)
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
-          context: platform/hermes/onemind-hermes/onepassword/runtime-fix
+          context: platform/hermes/onemind-hermes/${{ inputs.variant == 'bot-screen' && 'bot-screen' || 'onepassword/runtime-fix' }}
           platforms: linux/amd64
           load: true
           push: false
           tags: ${{ env.IMAGE }}
       - name: Exercise actual filters as gateway UID without network or credentials
+        if: inputs.variant != 'bot-screen'
         shell: bash
         run: |
           set -euo pipefail
@@ -44,6 +52,19 @@ jobs:
             --env TMPDIR=/opt/runtime-fix/scratch --env PYTHONPATH=/opt/hermes \
             --entrypoint /opt/hermes/.venv/bin/python "$IMAGE" \
             /opt/runtime-fix/test_child_policy.py --runtime-root /opt/hermes -v
+      - name: Exercise Bot Screen as gateway UID without network or credentials
+        if: inputs.variant == 'bot-screen'
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm --platform linux/amd64 --network none --memory 3g \
+            --user 10000:10000 --cap-drop ALL --security-opt no-new-privileges \
+            --tmpfs /opt/bot-screen/scratch:rw,uid=10000,gid=10000,mode=0700 \
+            --env TMPDIR=/opt/bot-screen/scratch --env PYTHONPATH=/opt/hermes \
+            --env HERMES_HOME=/opt/bot-screen/scratch/home \
+            --env HOME=/opt/bot-screen/scratch/home \
+            --entrypoint /opt/hermes/.venv/bin/python "$IMAGE" \
+            /opt/bot-screen/smoke_test.py
       - name: Authenticate only after image tests pass
         uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
         with:
@@ -68,7 +89,7 @@ jobs:
             printf 'Source commit: `%s`\n\n' "$GITHUB_SHA"
             printf 'Tested tag: `%s`\n\n' "$IMAGE"
             printf 'Verified registry reference: `%s`\n\n' "$pinned"
-            printf 'Synthetic filters passed; no native authentication or cluster activation performed.\n'
+            printf 'Variant: `%s`. Its isolated runtime gate passed; no cluster activation performed.\n' '${{ inputs.variant }}'
           } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
