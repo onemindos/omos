@@ -7,7 +7,7 @@ OneMind core API and ingestion services (Argo application ecosystem-onemind-core
 ## Where it runs
 
 - Catalog entity: `component:default/onemind-core` in System `infrastructure`
-- Argo CD application: `ecosystem-onemind-core`
+- Argo CD applications: `ecosystem-onemind-core`, `platform-policy`
 - Namespace: `onemind-core`
 
 ## Workloads

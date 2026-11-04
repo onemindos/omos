@@ -1,0 +1,59 @@
+# OneMind actions authorization model (PROPOSAL, FEATURES I4). Not applied by any Application.
+# Extends the live "OneMind Operations" model written by
+# platform/ecosystem/resources/authorization-context.yaml (user, group#member, capability#runner),
+# which this file keeps unchanged. onemind-actions.json is the same model in the OpenFGA API form;
+# services/policy loads that JSON for its in-process evaluator and its tests.
+#
+# Rules this model encodes (onemind-xr docs/design/ONTOLOGY.md section 7.2):
+#   - agents may be proposers, never approvers, second approvers or operators (type restriction);
+#   - approvers and second approvers are humans (user or group member);
+#   - executor is a service (the policy service), never a person or an agent;
+#   - an operator grant can be time-boxed with the within_window condition.
+model
+  schema 1.1
+
+type user
+
+type agent
+
+type service
+
+type group
+  relations
+    define member: [user]
+
+type capability
+  relations
+    define runner: [group#member]
+
+type site
+  relations
+    define operator: [user, group#member]
+
+type asset
+  relations
+    define site: [site]
+    define operator: [user, group#member, user with within_window] or operator from site
+    define viewer: [user, group#member, agent] or operator
+
+type action_type
+  relations
+    define proposer: [user, group#member, agent, service]
+    define approver: [user, group#member]
+    define second_approver: [user, group#member]
+    define executor: [service]
+
+type mission
+  relations
+    define owner: [user, group#member]
+    define member: [user, group#member, agent] or owner
+    define viewer: [user, group#member, agent] or member
+
+type team
+  relations
+    define leader: [user]
+    define member: [user, group#member] or leader
+
+condition within_window(current_time: timestamp, grant_time: timestamp, grant_duration: duration) {
+  current_time < grant_time + grant_duration
+}
