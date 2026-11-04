@@ -1,0 +1,23 @@
+# DET: detections on the locked grammar det.{domain}.{type}.{id} (BUS-DESIGN section 4.1, D-row
+# "DET (new)"). No stream binds det.> today, so detections from edge detectors and Remote ID
+# receivers are core-only and lost on any consumer restart. 7 d, 2 GiB per replica, R3.
+# Owner proposal A22-P3 in docs/proposals/2026-10-29-stream-caps.md.
+apiVersion: jetstream.nats.io/v1beta2
+kind: Stream
+metadata:
+  name: det
+  namespace: nats
+  annotations:
+    description: "Detections — onboard/edge detectors, Remote ID (det.{domain}.{type}.{id})"
+spec:
+  name: DET
+  subjects:
+    - "det.>"
+  storage: file
+  replicas: 3
+  retention: limits
+  discard: old
+  maxAge: 168h
+  maxBytes: 2147483648
+  duplicateWindow: 2m
+  preventDelete: true
