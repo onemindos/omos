@@ -1251,6 +1251,7 @@ metadata:
     onemind.io/api-relationship-source: services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml
       (natsConsumerSubject tak.cot.inject, natsProducerSubject tak.cot.out);
       platform/takserver/deploy/tak-nats-leaf.yaml
+    onemind.io/argocd-apps: platform-takserver,platform-takserver-tak-client
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9015,6 +9016,35 @@ spec:
   system: geospatial
   dependencyOf:
     - component:default/stac
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-takserver-tak-client
+  title: Argo CD application platform-takserver-tak-client
+  description: Argo CD application platform-takserver-tak-client, one of the
+    applications that deploy TAK Server (component:default/tak-server, whose
+    primary application is platform-takserver).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-takserver-tak-client
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-takserver-tak-client
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+  dependencyOf:
+    - component:default/tak-server
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource

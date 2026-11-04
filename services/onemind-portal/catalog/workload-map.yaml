@@ -196,9 +196,9 @@ argoApplications:
   platform-nats-tools: component:default/nats
   platform-observability: component:default/clickhouse
   platform-omos: component:default/omos-data-pipeline
+  platform-omos-entity: component:default/omos-data-pipeline
   platform-onetak: component:default/onetak
   platform-ops: component:default/health-keeper
-  platform-omos-entity: component:default/omos-data-pipeline
   platform-policy: component:default/onemind-core
   platform-redpanda-connect: component:default/redpanda-connect
   platform-security: component:default/kyverno
@@ -206,6 +206,7 @@ argoApplications:
   platform-stac-validation: component:default/stac
   platform-takml: component:default/takml
   platform-takserver: component:default/tak-server
+  platform-takserver-tak-client: component:default/tak-server
   platform-tool-gateway: component:default/agentgateway
   platform-vaultwarden: component:default/vaultwarden
   platform-volsync: component:default/volsync

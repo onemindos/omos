@@ -1,5 +1,6 @@
 name: Build policy service
-# FEATURES I4: tests on every PR that touches the service, its schemas or the OpenFGA model;
+# FEATURES I4 and I6: tests (including the red-team suite and the forbidden-name check over
+# all of services/schemas) on every PR that touches the service, any schema or the OpenFGA model;
 # image to GHCR (ghcr.io/onemindos/policy:sha-<commit>) on main. The manifest in
 # platform/policy/ references the tag; pin its digest from this run's image-digest artifact.
 on:
@@ -7,20 +8,14 @@ on:
     branches: [main]
     paths:
       - services/policy/**
-      - services/schemas/actions/**
-      - services/schemas/tasks/**
-      - services/schemas/command/**
-      - services/schemas/envelope/**
+      - services/schemas/**
       - platform/security/openfga/**
       - .github/workflows/build-policy.yml
   pull_request:
     branches: [main]
     paths:
       - services/policy/**
-      - services/schemas/actions/**
-      - services/schemas/tasks/**
-      - services/schemas/command/**
-      - services/schemas/envelope/**
+      - services/schemas/**
       - platform/security/openfga/**
       - .github/workflows/build-policy.yml
   workflow_dispatch:
