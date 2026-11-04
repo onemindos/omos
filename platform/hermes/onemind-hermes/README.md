@@ -93,6 +93,16 @@ configuration or login is included. See [Whop MCP startup and recovery](mcp/whop
 Source tests do not establish live backup/restore success or authorize financial
 actions.
 
+## Permanent hosted Todoist MCP
+
+Todoist is a major operational integration. The supported Hermes config CLI
+reconciles only `mcp_servers.todoist` on every default-home startup, including
+existing PVCs; empty PVCs also receive matching public defaults. OAuth stays
+private on the existing PVC. Sampling is disabled, the working exclusions are
+preserved, and no new tool allowlist, task migration or ClickUp replacement is
+introduced. See [Todoist startup, recovery and pending backup acceptance](mcp/todoist/README.md).
+Source tests are not deployment or restore acceptance.
+
 ## Native 1Password app credentials
 
 **Source-only draft — NOT DEPLOYED.** Proposed native-source settings, pinned

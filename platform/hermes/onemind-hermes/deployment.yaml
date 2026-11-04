@@ -78,6 +78,13 @@ spec:
                   '--manifest', '/whop/server.json',
               ], check=True)
 
+              # Todoist owns only its public OAuth definition; never read or replace tokens.
+              # Keep this outside the empty-volume seed guard, after ownership repair.
+              subprocess.run([
+                  sys.executable, '/todoist/reconcile.py', '--home', '/opt/data',
+                  '--manifest', '/todoist/server.json',
+              ], check=True)
+
               # Cron assets are Git-owned, so unlike config.yaml they are refreshed on every
               # start: job scripts go to $HERMES_HOME/scripts (the only place the cron runner
               # accepts them), the job list and its applier to cron-defs/.
@@ -123,6 +130,9 @@ spec:
               readOnly: true
             - name: whop-config
               mountPath: /whop
+              readOnly: true
+            - name: todoist-config
+              mountPath: /todoist
               readOnly: true
         # Python packages the NATS gateway platform needs and the Hermes image lacks (nats-py,
         # nkeys and the Synadia agent SDK; pydantic and pynacl are already in the venv, so
@@ -334,6 +344,9 @@ spec:
         - name: whop-config
           configMap:
             name: onemind-hermes-whop
+        - name: todoist-config
+          configMap:
+            name: onemind-hermes-todoist
         - name: export
           secret:
             secretName: onemind-hermes-export

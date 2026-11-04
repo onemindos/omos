@@ -69,6 +69,15 @@ synthetic regressions are in
 [runtime-fix](platform/hermes/onemind-hermes/onepassword/runtime-fix/README.md).
 See [startup prerequisites and recovery](platform/hermes/onemind-hermes/onepassword/README.md).
 
+2026-11-04 owner-requested Todoist permanence: public hosted OAuth definition,
+default-home startup reconciliation and isolated recovery contracts prepared in
+Git using the existing Whop pattern. Todoist is a major operational integration,
+not a ClickUp migration or a new primary task authority. Existing exclusions are
+preserved; remote sampling is disabled. Rollout, a post-authorization successful
+backup and authorized restore acceptance remain pending; see
+[Todoist recovery](platform/hermes/onemind-hermes/mcp/todoist/README.md).
+No broader Phase 8 completion or deployment is claimed.
+
 ## How to work on this roadmap (any agent)
 
 1. Read this file, `CLAUDE.md` (operating rules) and `docs/MISSION.md` first.
