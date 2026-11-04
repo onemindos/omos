@@ -79,7 +79,7 @@ self-deleting (`hook-delete-policy`), so they appear as short-lived Jobs during 
 | `nack` | nats | nack-0.34.0 | Adopted in #176 | `edge-nack` | `platform/nats/nack-values.yaml` |
 | `nats` | nats | nats-2.14.2 | Remaining | none | `platform/nats/values.template.yaml` plus gitignored `values.secret.yaml` |
 | `takserver` | takserver | takserver-4.6.0 | Remaining | none | `platform/takserver/values-onemind.yaml`, chart `platform/takserver/chart` |
-| `argocd` | argocd | argo-cd-10.1.2 | Remaining | none | `platform/values/argocd.yaml` |
+| `argocd` | argocd | argo-cd-10.1.2 | Defined, not yet adopted (manual sync only; see `ARGOCD-SELF-MANAGEMENT.md`) | `platform-argocd` | `platform/values/argocd.yaml` |
 
 ### Notes for this PR
 
@@ -97,10 +97,16 @@ self-deleting (`hook-delete-policy`), so they appear as short-lived Jobs during 
   renders identically (it always mounts `operator-oauth`). The Secret is referenced by name
   only. The seven tailscale CRDs come from templates and match live.
 - **nack**: live values equal `platform/nats/nack-values.yaml`, including
-  `jetstream.nats.url: null`. The controller therefore has no server URL and logs
-  reconcile timeouts today (also noted in `docs/STACK.md`). Adoption keeps that as is; the
-  follow-up fix must supply the connection through an existing Secret rather than a URL with
-  an embedded password. The nack chart has no CRDs (they live in `platform/nats/`).
+  `jetstream.nats.url: null`. The controller is nonetheless connected. It runs with
+  `-crd-connect`, so each Stream/KeyValue CR supplies its own `spec.servers`. That field was
+  set on every live CR with `kubectl patch` and is not in Git. All 38 CRs report `Ready=True`
+  with `observedGeneration` current (checked 2026-10-27). The only NACK errors are
+  `context deadline exceeded` during the 03:30 UTC `backup-nats-streams` window: 5 in
+  the 48h before 2026-10-27, all between 03:30:30 and 03:30:49. NACK retries after the
+  window. Outstanding: `spec.servers` embeds a password in the CR spec, readable by anyone
+  who can read these CRs. Rotate it, then supply the connection through an existing Secret
+  instead. The nack chart has no CRDs (they live in `platform/nats/`). The CRs are applied
+  by `platform-nats-streams` with `preventDelete: true`.
 
 ### Why the last three are last
 
@@ -114,7 +120,7 @@ self-deleting (`hook-delete-policy`), so they appear as short-lived Jobs during 
   CA, Postgres data and certificates. Needs volume snapshots (and a restore drill) first, a
   render diff against the live manifest, and a freeze on `helm upgrade` from the existing
   deploy scripts before Argo takes over.
-- **argocd**: Argo cannot safely adopt itself in one step. Needs a self-management approach
+- **argocd**: Argo cannot safely adopt itself in one step. The Application and the step-by-step plan are in `ARGOCD-SELF-MANAGEMENT.md`; the pending #392 `helm upgrade` goes first. Needs a self-management approach
   (an Application for the `argocd` release with `prune: false`, manual sync only at first,
   `Replace` forbidden, and CRDs kept out of sync scope), a break-glass path that restores
   Argo with `helm` if a bad sync takes it down, and a maintenance window. Do it last so a
@@ -126,3 +132,76 @@ Each Application should show `Synced` after the first sync, with no pod restarts
 render equals the live manifest apart from Helm hook Jobs (which run once) and server-side
 apply ownership metadata. If a workload restarts on the first sync, treat it as a defect and
 stop: it means the render differs from live.
+
+
+## TAK partial ownership — 2026-10-26
+
+The existing `platform-takserver` Application now owns the exact existing
+`takserver-postgresql` and `takserver-nats` StatefulSets and `cot-retention` CronJob.
+The first sync must preserve all three server-defaulted specs byte-for-byte; resource
+budgets are a separate follow-up. Namespace, source claims, PVC templates, images,
+selectors, credentials, schedules and workload names are preserved. Prune/Delete/
+Replace/Force are explicitly disabled for the adopted resources. Existing Helm
+revision34 and ownership labels are retained as history.
+
+Do not run whole-release Helm upgrades, rollbacks or uninstalls on `takserver`;
+they would compete with these resources and the already owned overlay Deployments.
+No repository shell script upgrades that release; legacy commands in the upstream
+chart README are not instructions for this live cluster. Full remaining release
+adoption is a different task. The old bootstrap script must not be run on this
+Argo-managed cluster.
+
+See [recovery preflight and evidence](../operations/2026-10-26-tak-policy-preflight.md)
+for fresh encrypted CSI-backed snapshots, PostgreSQL isolated logical restoration
+and the bounded internal NATS archive/server test. No source claim is deleted,
+recreated or shrunk; the live PostgreSQL claim remains20Gi even though its existing
+immutable StatefulSet claim template is8Gi.
+
+### TAK API/config/Ignite follow-through — 2026-10-26
+
+Adopt these three exact observed workload specs through `platform-takserver`,
+without rendering/reapplying the historical whole release. Each server dry-run
+spec matches live exactly, including Recreate strategies, pod annotations,
+commands, mounts, image references and existing budgets. All three objects have
+Prune/Delete/Replace/Force disabled. Ignite has no volume claims; all running
+pod identities must remain unchanged after adoption.
+
+Recovery preflight authenticated, decrypted in memory and digest-verified the
+04:00:19Z remote cluster-recovery archive. All 11 referenced TAK ConfigMaps/Secrets
+are present and their data matches current live objects. This is archive recovery
+verification, not a claim that recovery objects were applied to another cluster.
+The fresh PostgreSQL/NATS volume archives from the prior preflight remain intact.
+
+Supporting legacy Services, RBAC and configuration are not all Git-owned yet.
+Some legacy ConfigMaps hold credential/private-key/keystore data: never copy their
+contents into plaintext Git. A later encrypted-source migration must preserve
+those payloads and mounts. Whole-release Helm operations remain frozen.
+
+All eight TAK Deployment budgets match live after server normalization. Remove the
+Application's blanket Deployment budget/annotation exceptions, keeping only the
+operator restart timestamp on `takserver/tak-lb-proxy`. Future budget drift is now
+visible to Argo; adoption itself changes no budget.
+
+### TAK support-resource follow-through — 2026-10-26
+
+Nineteen additional existing resources are captured without changing runtime
+payloads: eight Services, Ignite ServiceAccount/ClusterRole/ClusterRoleBinding,
+storage LimitRange, internal NATS PDB, five nonsensitive ConfigMaps and the active
+one-replica NATS box Deployment. All have protected sync options. Normal allocated
+Service addresses are omitted from source so new-cluster recovery can allocate
+valid addresses; server dry-run preserves current addresses. Headless intent is
+retained. RBAC permissions, selectors, ports, configuration and pod budgets are
+unchanged. NATS box is running; do not describe it as a dormant deployment.
+
+One deliberate metadata correction removes the Ignite ServiceAccount's reference
+to absent `registry-onemind-hub`. Every current consumer has explicit working
+`ghcr`/`ghcr-onemindos` pull secrets in its pod template. This does not change or
+copy credentials or restart current pods. The remaining ServiceAccount payload is
+identical after server dry-run.
+
+The authenticated remote cluster-recovery archive additionally matches all 14
+required TAK runtime configuration/credential objects including NATS box contexts,
+NATS and PostgreSQL configuration. No sensitive payload is exported into Git.
+Legacy `cert-migration`, `core-config`, `tak-userauth` ConfigMaps and remaining
+unadopted runtime Secrets need an encrypted-source/mount migration; that is still
+an open ownership gap. Preserve their current bytes and never commit plaintext.

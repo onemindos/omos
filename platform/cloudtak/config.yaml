@@ -1,0 +1,21 @@
+# Shared, non-secret CloudTAK settings (envFrom in all four Deployments).
+# Per-Deployment values (API_URL, StackName, geofence settings) are inline in each Deployment.
+# A ConfigMap change does not restart pods: run `kubectl -n cloudtak rollout restart deploy` after a sync.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudtak-config
+  namespace: cloudtak
+  labels:
+    app.kubernetes.io/name: cloudtak
+data:
+  # DigitalOcean Spaces over the S3 protocol. CloudTAK's AWS_S3_* names are S3-protocol settings, not AWS.
+  # Bucket: create it in the DigitalOcean control panel (README, "Spaces bucket and key").
+  ASSET_BUCKET: onemind-cloudtak
+  AWS_S3_Endpoint: https://nyc3.digitaloceanspaces.com
+  # DigitalOcean's SDK guidance for Spaces is to sign with us-east-1 and let the endpoint choose nyc3.
+  AWS_REGION: us-east-1
+  # Never probe the instance-metadata service for credentials (nothing here uses AWS).
+  AWS_EC2_METADATA_DISABLED: "true"
+  # Browser-facing tile server, served by the cloudtak-tiles Tailscale Ingress.
+  PMTILES_URL: https://cloudtak-tiles.tail717ba0.ts.net

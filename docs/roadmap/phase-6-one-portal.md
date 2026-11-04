@@ -11,8 +11,10 @@ Detailed evidence/rollback: [integration runbook](../operations/phase6-portal-in
 - Pinned OpenChoreo **1.3.1** core/catalog/scaffolder and observability plugins add
   real Definition, Deploy, Logs and Metrics views. No workflow plane or assistant
   pack was silently enabled.
-- Authentik `openchoreo-auth` retains verified signed-subject catalog mapping and
-  existing operator membership, with one intersected host/OpenChoreo policy.
+- Sign-in now uses Backstage's `oidc` provider against the Authentik application
+  `onemind-backstage`, keeping verified signed-subject catalog mapping and existing
+  operator membership (the earlier `openchoreo-auth` provider and its policy
+  intersection were removed; see `feat/portal-authentik-signin`).
 - Shared capability caching in the managed permission DB fixes cross-replica
   requests. Keys are SHA-256, values are authorization results, TTL follows the
   upstream token expiration, DB failures deny closed; raw tokens are not stored.

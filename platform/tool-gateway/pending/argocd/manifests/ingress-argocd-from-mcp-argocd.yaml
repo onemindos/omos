@@ -1,0 +1,24 @@
+# argocd-server admits the Argo CD MCP backend (the existing argocd-server policy does not).
+# NetworkPolicies are additive: this adds one allowed source and does not change the existing policies in argocd.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-tool-gateway-mcp-argocd
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-server
+  policyTypes: [Ingress]
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: tool-gateway
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: mcp-argocd
+    ports:
+    - {protocol: TCP, port: 8080}

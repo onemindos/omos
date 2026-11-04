@@ -1,0 +1,5 @@
+name: legacy-roles
+version: 1.0.0
+description: "Delegation backend for Legacy: delegate_task takes an optional `worker` role that runs as a Hermes profile. No worker = the delegation section."
+author: OneMind
+kind: backend

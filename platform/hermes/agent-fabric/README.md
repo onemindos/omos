@@ -2,7 +2,7 @@
 
 Tools that watch and talk to the agent protocol on NATS (`agents.*`). They belong with
 Hermes in Git and run in their own namespace, `agent-fabric` (label
-`onemind.io/layer: agents`), applied by the `platform-agent-fabric` Application.
+`onemind.io/layer: decide`), applied by the `platform-agent-fabric` Application.
 
 | App | Tailnet URL | What it does |
 |---|---|---|

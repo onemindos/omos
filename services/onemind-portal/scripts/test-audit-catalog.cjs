@@ -299,3 +299,94 @@ test('reviewed service Prometheus scopes survive inventory curation', () => {
     assert.equal(entry.metadata.annotations['prometheus.io/labels'], undefined);
   }
 });
+
+// --- F5 coverage contract guard -------------------------------------------------------------
+const { auditCoverage, kubernetesApps, COVERAGE } = require('./audit-catalog.cjs');
+const fullAnnotations = () => ({
+  'argocd/app-name': 'platform-x',
+  'backstage.io/kubernetes-label-selector': 'app=x',
+  'grafana/dashboard-selector': "uid == 'onemind-workload'",
+  'grafana/alert-label-selector': 'namespace=x',
+  'onemind.io/logs-query': '{k8s_namespace_name="x"}',
+  'onemind.io/recovery-runbook': 'apps/x/',
+  'github.com/project-slug': 'onemindos/omos',
+});
+const app = (name, annotations = fullAnnotations()) => ({
+  kind: 'Component',
+  metadata: { name, labels: { 'onemind.io/catalog-role': 'app' }, annotations },
+  spec: {},
+});
+// A workload that belongs to the app keeps it in scope even when its Argo annotation is the missing one.
+const owned = name => ({ kind: 'Component', metadata: { name: `${name}-workload` }, spec: { subcomponentOf: `component:default/${name}` } });
+const without = (...keys) => {
+  const a = fullAnnotations();
+  for (const key of keys) delete a[key];
+  return a;
+};
+const reason = 'Deployed by a shared Argo application that the reviewed map attributes to another app.';
+
+test('coverage: a fully annotated Kubernetes app passes', () => {
+  const result = auditCoverage([app('x')]);
+  assert.equal(result.kubernetesApps, 1);
+  assert.equal(result.fullyCovered, 1);
+  assert.deepEqual(result.missing, []);
+});
+test('coverage: a missing annotation is reported with its capability, never silently skipped', () => {
+  for (const capability of COVERAGE) {
+    const result = auditCoverage([app('x', without(...capability.keys)), owned('x')]);
+    assert.deepEqual(result.missing, [{ app: 'component:default/x', capability: capability.id }], capability.id);
+    assert.equal(result.byCapability[capability.id].missing, 1);
+  }
+  const report = auditCatalog([app('x', without('onemind.io/recovery-runbook')), owned('x')], now);
+  assert.equal(report.coverage.missing.length, 1);
+});
+test('coverage: either Kubernetes selector or kubernetes-id satisfies the Kubernetes capability', () => {
+  const a = without('backstage.io/kubernetes-label-selector');
+  a['backstage.io/kubernetes-id'] = 'x';
+  assert.deepEqual(auditCoverage([app('x', a)]).missing, []);
+});
+test('coverage: a reviewed exception with a reason allows exactly one missing capability', () => {
+  const entities = [app('x', without('argocd/app-name', 'onemind.io/logs-query')), owned('x')];
+  const result = auditCoverage(entities, [{ app: 'component:default/x', capability: 'argocd', reason }]);
+  assert.deepEqual(result.missing, [{ app: 'component:default/x', capability: 'logs' }]);
+  assert.deepEqual(result.excepted, [{ app: 'component:default/x', capability: 'argocd' }]);
+});
+test('coverage: exceptions without a real reason, unknown capability or no app are invalid', () => {
+  const entities = [app('x', without('argocd/app-name')), owned('x')];
+  for (const bad of [
+    { app: 'component:default/x', capability: 'argocd', reason: 'todo' },
+    { app: 'component:default/x', capability: 'argocd' },
+    { app: 'component:default/x', capability: 'colour', reason },
+    { capability: 'argocd', reason },
+  ]) {
+    const result = auditCoverage(entities, [bad]);
+    assert.equal(result.invalidExceptions.length, 1);
+    assert.equal(result.missing.length, 1, 'an invalid exception grants nothing');
+  }
+});
+test('coverage: stale exceptions (annotation present, or app gone) are reported for deletion', () => {
+  const result = auditCoverage([app('x')], [
+    { app: 'component:default/x', capability: 'argocd', reason },
+    { app: 'component:default/gone', capability: 'logs', reason },
+  ]);
+  assert.deepEqual(result.staleExceptions.map(s => s.app), ['component:default/x', 'component:default/gone']);
+});
+test('coverage: only cluster apps are in scope, found by Argo name or by owning workloads', () => {
+  const launcher = app('saas', {});
+  const workload = { kind: 'Component', metadata: { name: 'w' }, spec: { subcomponentOf: 'component:default/owner' } };
+  const owner = app('owner', {});
+  const entities = [launcher, owner, workload, { kind: 'Resource', metadata: { name: 'r' } }, app('argo-app', { 'argocd/app-name': 'a' })];
+  assert.deepEqual(kubernetesApps(entities).map(e => e.metadata.name).sort(), ['argo-app', 'owner']);
+});
+test('coverage: counts distinct linked Argo applications, including the extra ones on an app', () => {
+  const a = app('x', { ...fullAnnotations(), 'onemind.io/argocd-apps': 'platform-x,platform-y' });
+  assert.equal(auditCoverage([a]).argoApplicationsLinked, 2);
+});
+test('coverage: CLI exits 1 on a missing annotation and 0 when everything is present', () => {
+  const { spawnSync } = require('node:child_process');
+  const run = entities => spawnSync(process.execPath, [require.resolve('./audit-catalog.cjs'), '-'], { input: JSON.stringify(entities), encoding: 'utf8', env: { ...process.env, ONEMIND_COVERAGE_EXCEPTIONS: '/nonexistent/coverage-exceptions.yaml' } });
+  assert.equal(run([app('x')]).status, 0);
+  const failed = run([app('x', without('grafana/dashboard-selector')), owned('x')]);
+  assert.equal(failed.status, 1);
+  assert.match(failed.stdout, /grafana-dashboard/);
+});

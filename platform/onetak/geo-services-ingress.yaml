@@ -2,11 +2,7 @@
 # All routes are Cloudflare-proxied → ingress-nginx LB 143.244.220.155
 #
 # Add DNS A records (Cloudflare-proxied) pointing to 143.244.220.155:
-#   valhalla.onemindos.dev
-#   nominatim.onemindos.dev
-#   overpass.onemindos.dev
 #   tileserver.onemindos.dev
-#   maputnik.onemindos.dev
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -20,36 +16,6 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: valhalla.onemindos.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: valhalla
-                port:
-                  number: 8002
-    - host: nominatim.onemindos.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: nominatim
-                port:
-                  number: 8090
-    - host: overpass.onemindos.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: overpass
-                port:
-                  number: 12345
     - host: tileserver.onemindos.dev
       http:
         paths:
@@ -60,13 +26,3 @@ spec:
                 name: tileserver-gl
                 port:
                   number: 8080
-    - host: maputnik.onemindos.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: maputnik
-                port:
-                  number: 8088

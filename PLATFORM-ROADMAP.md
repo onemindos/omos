@@ -3,11 +3,80 @@
 Living document. Started 2026-10-18. Owner: Zeus. Kept at the repository root so any
 agent (Claude Code, Codex or another) can pick up the work where the last one stopped.
 
+2026-10-27 user-directed merge preparation: [portal alias #524](https://github.com/onemindos/omos/pull/524)
+keeps `onemind-preview` canonical and only redirects the proposed `portal` hostname.
+The current alias requires no new OIDC callback; a later canonical-host change
+does. Source/review preparation is separate from hostname registration, Argo
+rollout and browser acceptance. Phase 6 remains In progress; Phases 7/8 stay
+Not started. No identity-provider mutation or deployment is recorded here.
+
+2026-10-26 user-directed work: launch an independent `hermes-fresh` beside Legacy
+through `platform-hermes-fresh`, with new storage and no imported agent state or
+operational credentials. Source and isolated image smoke checks are prepared;
+cluster rollout, private access and model sign-in require live acceptance. This
+does not mark the broader agent migration or Phase 8 complete. See
+[`fresh Hermes`](platform/hermes/onemind-hermes/README.md); deployment PR records live evidence.
+2026-10-29: renamed to `onemind-hermes` (Application `platform-onemind-hermes`,
+persona Legacy as a single soul) with new retain-class storage and hardened
+initial config; the `hermes-fresh` resources were removed the same day except the PVC `hermes-fresh-data`, kept pending owner approval.
+
+2026-10-31: Legacy's "How you work" doctrine (one soul, four modes, delegate when big or parallel, checker gate)
+and five Codex worker roles (`ops-cluster`, `tak-mission`, `builder`, `researcher`, `checker`) prepared as a
+`legacy-roles` delegation backend plus kanban-swarm profiles; applied to the live pod by
+`platform/hermes/onemind-hermes/roles/apply.sh` after merge, live verification recorded in the PR.
+See the [README section](platform/hermes/onemind-hermes/README.md#how-legacy-works-doctrine-and-worker-roles).
+
+2026-11-03: the old Hermes instance (`hermes-legacy`, Application `platform-legacy`) was removed from Git after the owner approved
+retiring it without a soak: `onemind-hermes` holds the Legacy NATS identity. Merging deletes the 24 resources `platform-legacy`
+still tracked, never the `hermes` Namespace or anything of `onemind-hermes`, `onemind-mcp` or `platform-hermes-base`. The old
+volume `hermes-data` goes with the claim but its PV is `Retain`, so the volume stays until a separate delete. Evidence and
+leftovers: [RETIREMENT-AUDIT.md](platform/hermes/onemind-hermes/RETIREMENT-AUDIT.md).
+
+2026-11-01: Legacy's NATS presence (step 7 of the Legacy to onemind-hermes migration) prepared in Git, not applied:
+onemind-hermes as a direct client of the cluster bus with no leaf sidecar, `nats-platform` vendored without the
+start-up hot-patch, a duplicate-identity guard so it can be enabled before `hermes-legacy` is stopped, and the
+`nats-clients` ingress rule. `platforms/tak-platform` is not ported (PR #585 replaces it). Inventory, order,
+checks and rollback: [MIGRATION.md](platform/hermes/onemind-hermes/MIGRATION.md#nats-inventory-and-cutover-step-7).
+Phase 8 stays Not started; live cutover is recorded in the PR after merge.
+
+2026-10-24 sprint: prepared a dedicated read-only Hermes cluster observer identity
+and sanitized readiness collector for the owner's Paperclip status-report task.
+Argo activation, RBAC acceptance and the agent-written report remain unverified.
+
 This is a plan, not a record of live state. Live state is in [`docs/STACK.md`](docs/STACK.md);
 the mission it serves is in [`docs/MISSION.md`](docs/MISSION.md).
 
 > Taking over from another agent? Start with [`docs/roadmap/HANDOFF.md`](docs/roadmap/HANDOFF.md)
 > (state, rules, prompt) and the phase briefs in `docs/roadmap/`.
+
+2026-11-01 owner-requested Zoho onboarding: nine Connections-mode MCP endpoints
+are prepared as SealedSecrets with environment-only URL references, exact read
+allowlists, and an on-start Hermes CLI reconciler for existing and clean PVCs.
+Canonical Projects name: `zoho-projects`; WorkDrive remains separate. No new
+workload or scheduler requests. Tests and source delivery do not establish live
+unsealing or app authorization; [acceptance and recovery](platform/hermes/onemind-hermes/mcp/zoho/README.md)
+remain deployment gates. Broader Phase 8 is not marked complete by this change.
+
+2026-11-01 owner-requested native 1Password access: **source-only draft, NOT
+DEPLOYED**. Default-home configuration, checksum-pinned CLI startup bootstrap,
+ClickUp environment scoping and proposed wiring are retained only in the non-active
+`onepassword/` directory. Production Deployment, defaults and Kustomization are
+restored to original base bytes; no installer/bootstrap/source activation is wired. The encrypted bootstrap SealedSecret, corrected Hermes runtime image (the
+pinned upstream filter leaks bootstrap to terminal children), and authorized
+runtime/recovery checks remain integration gates; no deployed access or broader
+Phase 8 completion is claimed. The local hash-locked runtime correction and
+synthetic regressions are in
+[runtime-fix](platform/hermes/onemind-hermes/onepassword/runtime-fix/README.md).
+See [startup prerequisites and recovery](platform/hermes/onemind-hermes/onepassword/README.md).
+
+2026-11-04 owner-requested Todoist permanence: public hosted OAuth definition,
+default-home startup reconciliation and isolated recovery contracts prepared in
+Git using the existing Whop pattern. Todoist is a major operational integration,
+not a ClickUp migration or a new primary task authority. Existing exclusions are
+preserved; remote sampling is disabled. Rollout, a post-authorization successful
+backup and authorized restore acceptance remain pending; see
+[Todoist recovery](platform/hermes/onemind-hermes/mcp/todoist/README.md).
+No broader Phase 8 completion or deployment is claimed.
 
 ## How to work on this roadmap (any agent)
 
@@ -52,6 +121,29 @@ Rule behind it: the thing that fixes problems must not depend on the thing it is
 If an AI could break Authentik, Tailscale, cert-manager, Velero or the policy engines,
 it could lock out both itself and the human who has to recover it.
 
+**Target clarification (2026-10-21):** the table above records the historical
+OpenChoreo baseline, not authorization for all listed AI actions. The user's
+selected future KubeVela/Crossplane ownership split is recorded in
+[decision 0002](docs/architecture/decisions/0002-application-delivery-and-infrastructure-boundaries.md);
+implementation/coexistence acceptance and per-app transfers remain pending.
+Current foundation/shared-service and machine read-only boundaries are unchanged.
+
+**Bounded owner authorization (2026-10-27):** Zeus approved the owner decisions
+for dcarku's 46 PRs **#495–#540**, retained Telegram and authorized Claude Code
+to execute these reviewed GitHub merges on his behalf, including foundation
+PRs. This satisfies the table's human-merge requirement for this batch only;
+it is not standing authority for unrelated changes. The
+[approval record and technical merge queue](docs/roadmap/2026-10-27-owner-merge-preparation.md)
+keep CI, credential, dependency and rollout gates explicit. Do not ask again for
+settled choices; continue past an actually blocked PR and report it at the end.
+
+**Latest merge coordination (2026-10-27): Hermes is the lead and sole merger.**
+The initial source-only queue is #542 → #504 → #497 → #498 → #496, with fresh
+review/current-main integration and final-head CI for each. The existing second
+harness prepares/tests #505 and application changes without merging. This initial
+batch does not authorize Terraform apply or execution of the proposed storage
+patches; Telegram remains selected. See the updated approval record below.
+
 ### Namespace map (live cluster, 2026-10-18)
 
 | Namespace | Main workloads | Layer | Target |
@@ -62,12 +154,10 @@ it could lock out both itself and the human who has to recover it.
 | `tailscale` | Tailscale operator and proxies | 1 | Argo CD |
 | `cert-manager` | cert-manager | 1 | Argo CD |
 | `ingress-nginx` | public ingress | 1 | Argo CD |
-| `cloudflare` | cloudflared (cold standby) | 1 | Argo CD |
-| `external-dns` | external-dns | 1 | Argo CD |
-| `kyverno`, `falco`, `spire-system` | policy, runtime security, workload identity | 1 | Argo CD |
+| `kyverno`, `falco` | policy, runtime security | 1 | Argo CD |
 | `velero`, `ops` | Velero, VolSync | 1 | Argo CD |
 | `github-runner` | CI runners | 1 | Argo CD |
-| `kube` | Headlamp, Kubernetes Dashboard (break-glass UIs) | 1 | Argo CD |
+| `kube` | Headlamp (break-glass UI) | 1 | Argo CD |
 | `backstage` | OneMind portal (the human home screen) | 1 | Argo CD |
 | `openchoreo-control-plane`, `openchoreo-data-plane`, `openchoreo-workflow-plane`, `openchoreo-observability-plane` | OpenChoreo itself | 1 | Argo CD |
 | `takserver` | TAK Server core | 1 for now | Argo CD; Helm CLI release today. Revisit after Phase 7 |
@@ -76,7 +166,6 @@ it could lock out both itself and the human who has to recover it.
 | `clickhouse` | ClickHouse | 2 | Argo CD; ResourceType later |
 | `onemind-search` | OpenSearch | 2 | Argo CD; also the observability plane's log store |
 | `onemind-ai` | LiteLLM, CPU model | 2 | Argo CD. LiteLLM stays the model gateway |
-| `onemind-registry` | Harbor | 2 | Argo CD |
 | `dapr-system` | Dapr | 2 | Argo CD |
 | `keda` | KEDA | 2 | Argo CD; OpenChoreo autoscaling module |
 | `monitoring` | Prometheus, Alertmanager, Grafana, Loki, Tempo, OTel collector | 2 | Argo CD; becomes the observability plane's metrics and events modules |
@@ -85,7 +174,6 @@ it could lock out both itself and the human who has to recover it.
 | `onetak` | 19 geo and mapping apps (Valhalla, Martin, Nominatim, WebODM, STAC, TileServer and others) | 3 | OpenChoreo Project `onetak` |
 | `takml` | takml-server, takml-vision-worker, takml-db | 3 | OpenChoreo Project `takml` |
 | `onemind-core` | onemind-core, onemind-ingestion, OpenFGA | 3 | OpenChoreo Project `onemind` |
-| `onemind-jobs`, `onemind-media` | empty today | 3 | OpenChoreo Project `onemind` |
 | `agent-fabric` | agent-console, agent-tap | 3 | OpenChoreo Project `agent-fabric` |
 | `n8n` | n8n | 3 | OpenChoreo Component |
 | `matrix` | Synapse, Element | 3 | OpenChoreo Project `matrix` (Argo Application `platform-matrix` is OutOfSync today) |
@@ -128,6 +216,32 @@ it could lock out both itself and the human who has to recover it.
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | In progress | Historical acceptance #282, #318, #319; reopened for [portal stabilization](docs/operations/portal-stabilization-2026-10-20.md) before migration (#322 source, #323 release, #324 inventory, #325 composition, #326 final image); 2/2 healthy, 715 processed entities; broader acceptance gaps remain documented | none |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
+| 8b | Retire the old Hermes (`hermes-legacy`, `platform-legacy`) from Git | In review: removal PR open, not merged. Merge cascades `platform-legacy`'s 24 tracked resources; PV `pvc-993e5ef7-9942-460b-801c-615eab02ae60` is `Retain` | [RETIREMENT-AUDIT.md](platform/hermes/onemind-hermes/RETIREMENT-AUDIT.md) | 8 |
+| 8a | Tool gateway for Legacy: agentgateway front door, tool groups, execute gate ([design](docs/architecture/onemind-tool-gateway.md), [runbook](docs/operations/tool-gateway.md)) | In progress; verified live read-only 2026-10-30 (Argo Synced and Healthy, backends Ready). **Phase 0 spike and 1 gateway core: Done. Phase 2 policy plane: Done. 3a Kubernetes: Done. 3d data (STAC, onemind-core, ClickHouse, Tile38): Done, keyless. 3e TAK: partial, MediaMTX only; CloudTAK, TAK Server, TAK Portal and NATS publish wait on owner credentials. 3b Argo CD and Grafana, 3c GitHub, DigitalOcean and Cloudflare, 3f Work, 3g Home: wait on owner keys. 4 Execute gate: code merged, not deployed (Matrix bot pending); `/execute/mcp` stays deny-all. 5 Hermes cutover: `ops`, `data` and `tak` wired in `onemind-hermes` (PR open 2026-10-31, live verification after merge); `dev`, `cloud`, `home`, `work` and `execute` pending their backends; cron scripts still use LiteLLM MCP. 6 Retire LiteLLM-as-hub: PR open 2026-10-31 (cron scripts moved to the gateway, LiteLLM `mcp_servers` and the Hermes egress/ingress rules removed; LiteLLM stays the model gateway).** | design [#591](https://github.com/onemindos/omos/pull/591), 0 and 1 [#593](https://github.com/onemindos/omos/pull/593), 2 [#594](https://github.com/onemindos/omos/pull/594), 3e MediaMTX [#595](https://github.com/onemindos/omos/pull/595), 3a [#596](https://github.com/onemindos/omos/pull/596), 3d [#597](https://github.com/onemindos/omos/pull/597) and Tile38 [#598](https://github.com/onemindos/omos/pull/598), 4 [#592](https://github.com/onemindos/omos/pull/592) | 6, 7 |
+
+### Application-lane catalog preparation — 2026-10-27
+
+Zeus's latest instruction assigns Codex all four remaining original PRs:
+#505, #535, #533 and #532. Catalog
+[PR #505](https://github.com/onemindos/omos/pull/505) was integrated with main `3495a614`; its portal image-build
+catalog/topology gate passes all 66 tests on supported Node 24. It repairs the
+stale generated mapping/runbook and covers all 60 source Argo Applications,
+with a 409-entity static inventory baseline. The
+[Claude continuation](docs/operations/2026-10-27-claude-merge-continuation.md)
+records 42 of the original 46 PRs merged and the specific technical gates for
+the final four. Source preparation does not publish an image
+or certify the catalog ConfigMap's later portal rollout. Phase 6 remains In
+progress; Phases 7/8 remain Not started.
+
+### Fresh application replacement source (2026-10-24)
+
+[PR #390](https://github.com/onemindos/omos/pull/390) is prepared against the current cleanup baseline, preserving
+fresh STAC source and the shared CNPG roles/databases. CloudTAK is a separate TAK client with pinned upstream
+images, a held database/role prerequisite on `onemind-data`, and private Tailscale ingress. The Application is manual
+with zero retries while shared PostgreSQL recovery and isolated migration validation are pending. Source validation
+is not live acceptance. Spaces credentials, first-run TAK configuration and runtime checks remain deployment gates;
+imported/hosted tile layers need a trusted internal tile origin, and media-infra replacement needs a reviewed
+reader/publisher lease migration. See [CloudTAK's runbook](platform/cloudtak/README.md).
 
 ### Migration readiness: core gate versus parallel follow-ups
 
@@ -223,7 +337,7 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
 | 1. External Secrets | 2.0.1, `installCRDs=true` | same, as `ecosystem-external-secrets` | Only stale v1beta1 CRDs existed, no controller and no objects |
 | 1. kgateway | install | skip; gateways use the Cilium class `onemind-private` (tailnet) | The data-plane chart supports `gateway.gatewayClassName`; the control plane already uses it |
 | 1. OpenBao + `ClusterSecretStore` `default` | dev-mode OpenBao | `default` store on ESO's Kubernetes provider, reading the `openchoreo-secrets` namespace, filled by SealedSecrets | The secret-management guide allows any ESO backend named `default`; the guide marks dev-mode OpenBao as not for production |
-| 2. `openchoreo-ca` ClusterIssuer | self-signed CA | not created yet | Gateways start with TLS off (the guide's first install also does). Later TLS uses the existing `letsencrypt-dns` issuer |
+| 2. `openchoreo-ca` ClusterIssuer | self-signed CA | not created yet | Gateways start with TLS off (the guide's first install also does). Later TLS needs a new ClusterIssuer: `letsencrypt-dns` was removed as unused (its Cloudflare token was invalid) |
 
 - [ ] New tree `platform/openchoreo/` with its Argo Application(s):
       `planes/` (charts and registration), `platform/` (environments, pipeline,
@@ -254,7 +368,7 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
       `secretStoreRef: default`, and the HTTP listener on the guide's nip.io domain built
       from the gateway's tailnet IP: `apps.openchoreo.100-110-185-30.nip.io` (resolves
       only to a tailnet address, so apps are tailnet-only). A real domain such as
-      `*.apps.onemindos.dev` with `letsencrypt-dns` TLS replaces it later. Verified
+      `*.apps.onemindos.dev` with TLS from a new DNS-01 ClusterIssuer replaces it later. Verified
       2026-10-18: agent connected (tunnel requests return 200), `ClusterDataPlane`
       `Created=True`, the three environments `EnvironmentReady`, and the `default`
       project's bindings `Ready` with namespaces `dp-default-default-{development,staging,production}-*`.
@@ -340,8 +454,8 @@ Findings to act on in later phases:
   configured entitlements, and Authentik tokens carry no `client_id`, so none of those match.
   They are inert, including `mcp-tryout-client-binding` (`admin` for `service_mcp_client`).
   Remove them with a `bootstrap` override when roles are reviewed (phase 6).
-- The Authentik providers made by `auth-provider-bootstrap.yaml` for `workflows`, `langfuse`
-  and `registry` were created with an empty grant type list, like `openchoreo` was, and
+- The Authentik provider made by `auth-provider-bootstrap.yaml` for `langfuse` (and `registry` and `workflows`,
+  deleted with Harbor and Argo Workflows by `authentik-registry-removal.yaml`) was created with an empty grant type list, like `openchoreo` was, and
   cannot complete a browser login until given `authorization_code`.
 - The ecosystem node is at about 99% CPU requested; the control plane now prefers it
   without requiring it. Capacity work is phase 5.
@@ -750,6 +864,18 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 
 ### Phase 8: Expand
 
+Explicit user scope, 2026-10-27: implement and deploy a small extensible internal
+application MCP for the existing Legacy Hermes agent. This request supersedes the
+earlier Hermes deferral for this bounded integration only; it does not start the
+broader home-runtime or application-migration phases. Source, tests, image build
+and manifests are in `services/onemind-mcp/` and `platform/hermes/mcp/`.
+[Live acceptance](docs/operations/onemind-mcp-acceptance-2026-10-27.json) passed
+2026-10-27: four authenticated read tools and app resource from Legacy, anonymous
+rejection, both workloads available and Argo Synced/Healthy. Native Tool Search is
+enabled. #487 implements the service; #491 supplies its dedicated pull credential;
+#492/#493 make acceptance compatible with the installed SDK. This bounded slice is
+delivered; the broader Phase 8/home-runtime work is not marked complete.
+
 - Planning scope requested 2026-10-20: [full Kubernetes operating structure and
   execution queue](docs/architecture/kubernetes-operating-structure.md), backed by
   the [read-only baseline](docs/operations/kubernetes-structure-baseline-2026-10-20.md).
@@ -772,10 +898,13 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 | 2026-10-18 | Claude Code is the AI operator. Hermes is deferred to Phase 8. |
 | 2026-10-18 | Keep the custom portal as the long-term home; use the built-in console only until Phase 6. |
 | 2026-10-18 | LiteLLM stays the model gateway. The tool gateway (LiteLLM MCP or agentgateway) is decided in phase 8, when an in-cluster agent needs it. |
+| 2026-10-30 | Owner chose **agentgateway** (standalone chart, no CRDs) as Legacy's tool front door, replacing the LiteLLM MCP hub of 2026-10-29; LiteLLM returns to model routing only. Destructive and physical tools sit on a separate `execute` route behind an out-of-band `execute <id>` approval. Design: [onemind-tool-gateway.md](docs/architecture/onemind-tool-gateway.md). |
 | 2026-10-18 | Cilium Gateway API backends need a component-scoped `fromEntities: ingress` policy; keep OpenChoreo's generated policy and add an opt-in trait rather than allowing all ingress. |
 | 2026-10-18 | AI read access to the cluster uses ServiceAccount `kube/ai-operator` (built-in `view` plus platform CRDs, no Secrets) through kubernetes-mcp-server in read-only mode. No separate Argo CD MCP. |
-| 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. |
+| 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. (KubeVela part superseded 2026-10-21, below.) |
 | 2026-10-20 | Zeus requested full Kubernetes/Backstage structure and linked PRs. Keep the installed stack and existing phase gates; permit planning and bounded comparison of KubeVela/Crossplane/fleet candidates without deploying or assigning a second owner to live resources. The new queue is a proposal, not a replacement approval or claim of verified integration. |
+| 2026-10-21 | Zeus selected Backstage → reviewed Git PR → Argo CD → KubeVela (app lifecycle) + Crossplane (app infrastructure) as the target; Terraform keeps its recorded infrastructure, NATS carries operational events. Recorded in [decision 0002](docs/architecture/decisions/0002-application-delivery-and-infrastructure-boundaries.md). Selection only: nothing installed, no version approved, no ownership transferred from Terraform or OpenChoreo, existing OpenChoreo workloads stay until a separately approved transition. kagent, Kratix and Humanitec stay not adopted. |
+| 2026-10-23 | Zeus approved retiring OpenChoreo, then OpenSearch and External Secrets. The portal no longer calls OpenChoreo. Teardown is a stacked PR series (observability modules, then CR-holding apps, then observability plane and data plane, prereqs and gateway, control plane, OpenSearch, External Secrets). Phases 2 to 6 above are historical. Stage 1 (observability modules) removes the logs, traces, FinOps and events apps. Stage 2 removes the custom-resource apps (projects, platform, defaults) including the STAC Browser; the data plane must still be running while they go. Stage 3 removes the observability plane (including the observer alert store and its VolSync source) and the data plane. Stage 4 removes the External Secrets prerequisites (`openchoreo-secrets`, `ClusterSecretStore default`) and the `onemind-private` GatewayClass manifests. Stage 5 removes the control plane, the OpenChoreo identity objects in Authentik, the OpenChoreo secrets and the last namespaces; no OpenChoreo object remains in Git. Stage 6 removes OpenSearch (20 GiB volume, snapshot and restic repository) once nothing queries it. Stage 7 removes External Secrets (operator, 23 CRDs, 2 webhooks); nothing used an ExternalSecret. |
 
 ## Incidents found while working the roadmap
 
@@ -1021,3 +1150,280 @@ verified. Existing native Grafana/Prometheus views and read-only denials retaine
 This is documented dependency metadata, not live traffic/all-app coverage.
 **Next: OpenCost**, separately scoped. Phase 6 stays In progress; Phase 7 Not
 started; #339 remains draft. Hosted CI billing and whole-tree YAML debt remain.
+
+### Eight-workstream parallel preparation run — 2026-10-21 UTC
+
+User authorized separate PRs and agent distribution for the remaining Backstage
+backlog. [Run index, owners, PRs and dependencies](docs/roadmap/backstage-parallel-run.md)
+tracks cost, coverage, catalog, trust, lifecycle, actions, agents and home/edge.
+Existing #339/#332/#284 are reused. Bounded source/test preparation runs in
+parallel; production review/rebase/merge/release remains one PR at a time.
+Correct the stale handoff prompt that claimed Phase 6 complete; reconcile scoped
+Grafana/Prometheus/topology acceptance without erasing the remaining gaps.
+No new permissions, storage, deployment, app cutover or phase completion.
+Phase 6 stays In progress; Phases 7/8 Not started.
+
+
+### Backstage capability and UI/layout foundation — 2026-10-21
+
+User requested a foundation review of the supplied application-flow/plugin list,
+not runtime implementation. Master #356 now includes the
+[experience foundation](docs/roadmap/backstage-experience-foundation.md): native
+feature/source matrix, proposed home/navigation/entity layout, evidence states,
+search/docs/events/AI integration gaps, dual MUI/BUI theming, accessibility,
+performance and U00–U06 future implementation/acceptance packages.
+[Decision 0002](docs/architecture/decisions/0002-application-delivery-and-infrastructure-boundaries.md)
+records user-selected KubeVela/Crossplane target boundaries, with Terraform, Argo,
+OpenChoreo, domain operators and NATS ownership explicit. No controller install,
+OpenChoreo removal, UI/dependency change or new AI permission is included.
+The eight existing workstream PRs remain drafts; no new UI implementation PR or
+production acceptance is claimed. Phase 6 In progress; Phases 7/8 Not started.
+
+
+### OneMind mission pillars in the catalog — 2026-10-21
+
+User explicitly requested SO / LE / HP / GE catalog structure as part of the
+foundation. [Specification](docs/roadmap/onemind-catalog-pillars.md) records
+Sovereign Operations, Legacy Evolution, Holistic Performance and Generational
+Empire using the existing doctrine, proposed native Domains/System mappings,
+shared/unclassified discovery and stable-reference/permissions/curation gates.
+Master #356 and the UI foundation are updated; no live catalog or workload is
+reclassified, no new identity permission or NATS routing is granted. Historical
+numeric ranges remain unconfirmed, not reordered with the requested UI order.
+Phase 6 In progress; Phases 7/8 Not started.
+
+### Flagship portal program — 2026-10-21
+
+Zeus asked for Backstage to become the single, organized front door for every
+OneMind service (Kubernetes and not), with live dashboards, DigitalOcean at a
+glance, add/remove lifecycle and a brand-correct theme. A signed-in review found
+7,750 unread notifications, an alphabetical sidebar, about 70 Systems under three
+naming schemes, 6 of 69 Argo apps linked, an empty Cost page, an unrequested
+GitHub OAuth pop-up on app pages, a navy/teal theme, and an offsite backup copy
+that has never run (two other "suspended" backup jobs are deliberate replacements). Eleven work orders, one draft PR each, for implementing
+agents: [index](docs/roadmap/flagship/README.md), F1–F11 =
+[#357](https://github.com/onemindos/omos/pull/357)–[#367](https://github.com/onemindos/omos/pull/367).
+This supersedes the U00–U06 order in #356. It is Phase 6 follow-through: no
+Phase 7 start, no app migration, no AI permission change. Work-order PRs do not
+edit this file; the coordinator records each merge here.
+
+### Parallel portal run — coverage
+
+User requested a separate draft workstream for coverage. Bounded offline source
+and regression contracts are prepared; see [scope and remaining gates](docs/operations/backstage-coverage-workstream.md).
+Tests join existing `test_gitops*.py` discovery; a source pass is not live acceptance.
+No new access, storage, controller, deployment or migration. Phase 6 In progress;
+Phase 7 Not started. Review/rebase and merge only one accepted PR at a time.
+
+### Parallel portal run — catalog
+
+User requested a separate draft workstream for catalog. Bounded offline source
+and regression contracts are prepared; see [scope and remaining gates](docs/operations/backstage-catalog-workstream.md).
+Tests join existing `test_gitops*.py` discovery; a source pass is not live acceptance.
+No new access, storage, controller, deployment or migration. Phase 6 In progress;
+Phase 7 Not started. Review/rebase and merge only one accepted PR at a time.
+
+### Parallel portal run — trust
+
+User requested a separate draft workstream for trust. Bounded offline source
+and regression contracts are prepared; see [scope and remaining gates](docs/operations/backstage-trust-workstream.md).
+Tests join existing `test_gitops*.py` discovery; a source pass is not live acceptance.
+No new access, storage, controller, deployment or migration. Phase 6 In progress;
+Phase 7 Not started. Review/rebase and merge only one accepted PR at a time.
+
+### Parallel portal run — cost
+
+User requested a separate draft workstream for cost. Bounded offline source
+and regression contracts are prepared; see [scope and remaining gates](docs/operations/backstage-cost-workstream.md).
+Tests join existing `test_gitops*.py` discovery; a source pass is not live acceptance.
+No new access, storage, controller, deployment or migration. Phase 6 In progress;
+Phase 7 Not started. Review/rebase and merge only one accepted PR at a time.
+
+### Flagship wave 1 released — 2026-10-22
+
+Merged and released as one verified portal image: F10 theme [#366](https://github.com/onemindos/omos/pull/366),
+F1 navigation and home [#357](https://github.com/onemindos/omos/pull/357), F2 catalog structure
+[#358](https://github.com/onemindos/omos/pull/358) (+ image-context test fix [#370](https://github.com/onemindos/omos/pull/370)),
+F3 alerts and notification triage [#359](https://github.com/onemindos/omos/pull/359). Source `7e2eea59`;
+image `sha256:37f17c546ffa4254363c003b7a8112dd1692567d40bbca92aca1b463616b0c3f`; previous image
+`sha256:e103bf7c0103b615bef2f4b9dfcb603ef952af7d9eb95d498117d1f48a5dc0e6` (rollback = reviewed revert of the pin).
+Pin PR [#371](https://github.com/onemindos/omos/pull/371) merged at `cf04980a`; `pipeline.py verify` passed (exact
+revision, digest, generation, 2/2 replicas). Signed-in checks passed: black/red theme in dark mode, grouped sidebar,
+home status strip and favorites, five pillar Domains with 24 Systems, old System URLs redirecting, ⌘K search, Pillar filter.
+Catalog data went live first (Argo applied #358 on 10-22 10:25Z, before the image carried the redirects); old System URLs
+returned not-found for about 17 minutes in between.
+
+Not yet done: the Pillars sidebar group and home tiles stay behind `onemind.features.pillars` (default off); the
+Alertmanager webhook is disabled until Zeus seals `onemind-alert-webhook` (monitoring + backstage) and the receiver is moved out of
+`platform/monitoring/pending/`; the 7,750-notification cleanup script has not been run; the home status strip still counts the
+two deliberately superseded backup jobs as "to review" (F4); offsite backup copy still has no credentials. Phase 6 In progress;
+Phase 7/8 Not started. GitHub-hosted CI remains billing-blocked; whole-tree YAML diagnostic debt unchanged.
+
+### Flagship wave 2 released — 2026-10-22
+
+Released as one verified portal image: F4 Live Operations [#360](https://github.com/onemindos/omos/pull/360), F5 standard app page
+and coverage contract [#361](https://github.com/onemindos/omos/pull/361), F11 live inventory [#367](https://github.com/onemindos/omos/pull/367),
+light-mode fix [#374](https://github.com/onemindos/omos/pull/374), alert-webhook sealing helper [#375](https://github.com/onemindos/omos/pull/375)
+and pillar tile counts [#376](https://github.com/onemindos/omos/pull/376). Source `d3195054`; image
+`sha256:5ae28ac6455bba5112090707ce9b9e6811e83a60d6a27a88e5a25444a5905f31`; previous image
+`sha256:37f17c546ffa4254363c003b7a8112dd1692567d40bbca92aca1b463616b0c3f` (rollback = reviewed revert of the pin). Pin PR
+[#377](https://github.com/onemindos/omos/pull/377) and the config PR [#373](https://github.com/onemindos/omos/pull/373) (pillar navigation and
+live inventory enabled through the mounted cluster config) were applied by Argo in one sync, one rollout, 2/2 on the new digest. The
+pipeline `verify` stopped on its source-changed guard (the config PR touched one portal test script after the image was built), so the
+same checks were made directly: Argo Synced/Healthy at `267831fa`, deployment image equals the release digest, 2/2 ready, no restarts,
+no error or warning logs, log line "Live inventory: 175 workloads tracked, 175 defined in catalog/cluster.yaml, 0 published".
+Signed-in checks passed: Live Ops (Alertmanager, Argo, workloads, storage, backups), Home status strip with "needs setup 1 · retired 2",
+pillar tiles SO 116 · LE 1 · HP 5 · GE 14, the standard app header and Logs/Cost/Runbook tabs, the generic OneMind workload dashboard,
+and no GitHub sign-in dialog (Connect GitHub prompt instead).
+Before the image: the three backup CronJob annotations, the F5 catalog annotations and the Grafana dashboard were applied by Argo on merge.
+Not yet done: offsite backup copy credentials; the 7,757-notification cleanup; alert webhook secrets (run `scripts/ops/seal-alert-webhook.sh`);
+F6 DigitalOcean, F7 non-Kubernetes apps and health checks, F8 add/retire templates, F9 plugin pack. Phase 6 In progress; Phase 7/8 Not started.
+
+## User-directed file synchronization — 2026-10-23
+
+Zeus requested immediate bidirectional Mac/Android Obsidian synchronization via
+Nextcloud, independently of the current portal phase. This change adds a Layer 2
+shared file service under Argo CD; it does not complete or bypass phase gates.
+
+| Work | Status | Evidence |
+|---|---|---|
+| Nextcloud GitOps deployment and full-library Mac/Android sync | Deployed and healthy; native client setup and acceptance in progress | [Runbook](platform/nextcloud/README.md); [PR #424](https://github.com/onemindos/omos/pull/424); [PR #425](https://github.com/onemindos/omos/pull/425) |
+
+Acceptance requires actual edits flowing in both directions, offline and conflict
+checks, a reviewed real-vault upload set, and a coordinated backup/restore drill.
+The native Mac upload has started. Full transfer, two-way device acceptance and
+recovery verification remain distinct from the observed healthy server deployment.
+
+## Paperclip retired — 2026-11-01
+
+The 2026-10-23 user-directed Paperclip installation was removed by owner decision on
+2026-11-01 after a final database dump and volume snapshots. See
+[Paperclip: retired](docs/STACK.md#paperclip-retired--2026-11-01) and the
+[retirement runbook](docs/operations/paperclip-retirement-2026-11-01.md). Phase 6 stays
+In progress; Phases 7/8 stay Not started.
+
+## User-directed personal Vaultwarden — 2026-10-25
+
+Zeus authorized a private personal password vault on the existing Kubernetes stack.
+This bounded Layer 2 deployment uses native Kustomize/Argo, one SQLite writer,
+protected storage, private HTTPS, closed registration and encrypted backups.
+It does not advance the portal migration. Phase 6 stays In progress; Phases 7/8
+stay Not started.
+
+| Work | Status | Evidence |
+|---|---|---|
+| Private personal Vaultwarden | Deployed and healthy; encrypted initial empty-vault archive restored and server started in isolation; owner enrollment/client acceptance pending | [Deployment and acceptance](platform/vaultwarden/README.md); [recovery receipt](platform/vaultwarden/BACKUP.md); [PR #466](https://github.com/onemindos/omos/pull/466); [PR #467](https://github.com/onemindos/omos/pull/467) |
+
+No 1Password migration, agent vault permission, user master password, model billing
+change or new Kubernetes authority is included. Owner login, client/passkey sync
+and future AI integration require separate authenticated acceptance.
+
+## User-directed policy warning cleanup — 2026-10-26
+
+Zeus requested repair of image-version/resource-budget and telemetry pull-secret
+warnings. Existing running app images are pinned; remaining background warnings
+include retained old revisions, alongside real budget gaps on TAK's legacy
+PostgreSQL/NATS workloads and retention CronJob. Keep all audit/admission checks
+for active workloads and preserve rollback history and source data.
+
+| Work | Status | Evidence |
+|---|---|---|
+| TAK stateful budget safety preflight | Fresh encrypted archives/recovery verified; no-op Argo adoption passed with unchanged pod/PVC UIDs; measured budgets and scoped history-aware scans prepared | `platform/backups/volsync/sources.yaml` |
+| Telemetry stale pull-secret reference | Root cause identified; guarded default-service-account repair and sequential provider telemetry pod replacement in verification | [Runbook](docs/operations/2026-10-26-telemetry-pull-secret.md) |
+
+This is bounded operational maintenance. Phase 6 stays In progress; Phases 7/8
+stay Not started. Source preparation and successful live verification remain
+separate. No node reduction, credential rotation or broad Helm upgrade is included.
+
+Runtime follow-through: TAK budget rollout is healthy and the original image/resource
+checks pass on active app controllers/pods. Correct the pre-existing security-parent
+ignore/prepatch interaction that left intended audit history guards unapplied; use
+explicit observed Kyverno defaults and verify live policy generation and guards.
+
+Final ownership boundary: keep provider-marked DOKS system agents under DigitalOcean
+budget management in background scans, while retaining image/admission/other security
+checks. Adopt the manually installed unlabelled metrics-server Deployment with a
+measured512Mi cap and unchanged image, requests, Services and RBAC. This adds an Argo
+ownership record for an existing workload; full live acceptance follows reconciliation.
+
+## User-directed cluster follow-through — 2026-10-26
+
+Zeus requested the remaining cluster findings be worked. This bounded maintenance
+keeps Phase 6 In progress and Phases 7/8 Not started.
+
+| Work | Status | Evidence |
+|---|---|---|
+| Namespace layer-label drift | Verified live: all12 corrected, every policy-covered namespace labelled, original namespace UIDs preserved | `platform/security/shared-namespaces.yaml`; server dry-run preserves namespace UIDs and all existing metadata; no live NetworkPolicy selects this label |
+| Failover memory headroom | Measured right-sizing and placement review in progress; keep four nodes | Live KubeMemoryOvercommit, no node pressure |
+| Independent backup copy | Destination/credential discovery in progress; do not unsuspend without working recovery credentials | `platform/backups/OFFSITE-COPY.md` |
+| Remaining TAK workload ownership and broad drift ignores | Verified live: API/config/Ignite adopted without pod/spec/restart changes; core/TAK broad ignores narrowed; supporting legacy resources remain separate | `docs/gitops/HELM-ADOPTION.md` |
+
+Namespace acceptance follow-through: Dapr's managed-namespace label remained absent
+following sync; use a protected explicit Namespace under security, preserving its
+VolSync annotation and existing SSA option, rather than claiming source metadata
+was applied. Existing namespace UIDs remain unchanged.
+
+Further acceptance: exact-live TAK API/config/Ignite specs pass server dry-run
+parity; protected metadata adoption and narrowed TAK ignores are merged for live
+verification. Measured Nextcloud OOM corrections are prepared with576Mi additional
+reservation; independent copy verification now has fixed-selection regression
+coverage. The reviewed five-worker alternative needs an owner cost decision
+(+$168/month); independent backup activation needs a destination and credentials.
+Neither unresolved dependency is represented as a completed repair.
+
+TAK support follow-through:19 existing Services/RBAC/configuration/helper objects
+prepared for protected adoption with server dry-run parity; remove only the
+Ignite ServiceAccount's missing legacy pull-secret reference. Sensitive legacy
+ConfigMaps/runtime Secrets remain explicitly outside plaintext Git and require
+an encrypted-source migration. No full-release Helm operation is authorized.
+
+Live scanner correction: fresh history warnings revealed native-int64 comparisons
+in the reports controller were not represented by JSON CLI fixtures. Numeric
+normalization and exact pinned native-JMESPath regression are prepared, preserving
+all real admission checks and fail-closed unknown history. Actual reports-controller
+skip metrics are required for live acceptance; prior CLI-only evidence was incomplete.
+
+Support adoption is verified live: all 19 original resource UIDs preserved, 18 runtime
+payloads identical, only the missing Ignite SA pull-secret reference removed; all
+running TAK pod UIDs and restart counts unchanged. Nextcloud app/proxy are Ready
+with 0 restarts after the measured memory corrections; original data/cache PVC/PV
+identities and capacity are preserved. Separate concurrent Hermes work added one
+healthy Application; the latest snapshot is 59 Synced/Healthy apps and 84 Bound PVCs.
+
+Scanner live acceptance verified after PR484: generations 3/4 and generated rules
+contain numeric normalization; the real reports controller records 9 skips per rule
+for retired Matrix ReplicaSets, with its old failure counter stable. No new image/
+resource warnings during 150 seconds after sync;815-resource live engine run yields
+1446 pass / 999 expected skips / 0 fail / 0 error.153 regression tests and CI pass. The privileged
+GitHub DinD runner is a separate real open risk; do not hide it with an audit exception.
+Capacity/independent recovery remain pending owner choices. Phase 6 stays In progress.
+
+## User-directed PR merge preparation — 2026-10-27
+
+Zeus initially delegated straightforward owner-item preparation, then approved
+all owner decisions and merge execution for dcarku's #495–#540 batch, retaining
+Telegram. [Merge queue, approval and evidence](docs/roadmap/2026-10-27-owner-merge-preparation.md)
+records the source candidates, approved 24-hour retention/read-only Headlamp/
+Telegram/enforcement choices, and #532/#535's remaining technical holds. The
+namespace-label bootstrap race must be fixed before enforcement. Technical
+credential, CI, image and rollout gates still apply; no approval is a claim that
+they passed. No merge or deployment is claimed by this recording task. Phase 6
+remains In progress; Phases 7/8 remain Not started.
+
+User-directed MCP coverage follow-through (2026-10-27): expansion prepared from the
+initial NATS/Prometheus slice to seven configured app integrations, 12 tools and an
+explicit 32-domain access catalog. CI requires coverage dispositions for all 56
+Git-declared Applications. Credential-gated and unimplemented app integrations
+remain blocked and visible; broad coverage is not claimed complete. No cluster
+administration, vault-content permission or physical actuation is added. Runtime
+acceptance must follow the pinned-image rollout; wider Phase 8 stays unfinished.
+
+## Nextcloud retirement — 2026-11-01
+
+Zeus authorized retiring Nextcloud and its 200 GiB file/1 GiB cache volumes
+to use Dropbox. Deployment manifests are archived under
+`platform/parked/nextcloud`; the Argo Application is removed. Execution requires
+a completed fresh volume snapshot plus private database/config exports.
+Provider deletion and recovery verification must be recorded from live evidence;
+this source change alone does not certify either. Preserve device originals and
+existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.

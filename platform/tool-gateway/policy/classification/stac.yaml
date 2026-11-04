@@ -1,0 +1,12 @@
+# Tool classification for gateway target 'stac' (OpenAPI, trimmed to GET in platform/tool-gateway/openapi/stac.recipe.yaml).
+# Schema and rules: scripts/gateway/classification.py.
+target: stac
+read:
+- get_collection
+- get_item
+- list_collections
+- list_items
+- search
+write: []
+destructive: []
+physical: []
