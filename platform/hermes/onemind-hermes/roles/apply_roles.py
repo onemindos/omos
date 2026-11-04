@@ -13,7 +13,8 @@ profile per role in roles.yaml, and the default profile's `delegation.backend` /
   the matching `mcp-<server>` toolsets. Hermes resolves ${VAR} in a routed profile's MCP headers from that
   profile's own .env only (agent/secret_scope.py), so ONEMIND_GATEWAY_KEY is copied from this pod's environment
   into each role's .env (mode 0600). The value is never printed or logged; a second run reports "unchanged".
-- Config goes through Hermes' own atomic_config_write (comments kept, existing keys never dropped).
+- Config goes through Hermes' own atomic_config_replace (comments kept). cfg is the complete current file with only
+  the wanted keys changed, so replacing is safe; atomic_config_write refuses it when a role's mcp_servers shrinks.
 """
 
 import datetime
@@ -25,7 +26,7 @@ import sys
 
 sys.path.insert(0, "/opt/hermes")
 from ruamel.yaml import YAML  # noqa: E402  (PyYAML is not in Hermes' venv)
-from hermes_cli.config import atomic_config_write, read_user_config_raw  # noqa: E402
+from hermes_cli.config import atomic_config_replace, read_user_config_raw  # noqa: E402
 
 DRY = "--dry-run" in sys.argv
 SRC = sys.argv[sys.argv.index("--src") + 1] if "--src" in sys.argv else "/opt/data/roles-defs"
@@ -93,7 +94,7 @@ def put_config(path, wanted, label):
     say("update", "%s (%s)" % (label, ", ".join(changed)))
     if not DRY:
         backup(path)
-        atomic_config_write(pathlib.Path(path), cfg)
+        atomic_config_replace(pathlib.Path(path), cfg)
 
 
 def ensure_env(pdir, name, label):
