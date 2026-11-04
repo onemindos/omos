@@ -74,6 +74,14 @@ two SealedSecrets, pinned image digest).
 
 ## Summary
 
+Trivy pilot, prepared 2026-10-24 and retargeted 2026-11-04: a bounded Argo-managed
+image-vulnerability pilot for `auth,nats,onetak,n8n` under `platform/security/`, with
+one concurrent scan Job, namespace-scoped operator permissions and a Grafana dashboard.
+Owner approved deploying it 2026-11-04; merging auto-syncs it through `platform-security`.
+It is not live-accepted yet, and the three private `ghcr.io/onemindos` images
+(`heynats`, `nats-dashboard`, `tak-portal`) are not scanned. No new PVC, node or public
+route is requested. See [capacity, scope and acceptance](operations/trivy-image-scan-pilot.md).
+
 | Item | Count / value |
 |------|---------------|
 | Argo CD Applications | 47 (45 Synced and Healthy; `app-of-apps` and `platform-ecosystem-resources` OutOfSync) |

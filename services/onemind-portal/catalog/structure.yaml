@@ -200,7 +200,7 @@ apps:
   - name: kyverno
     title: Kyverno
     system: identity-access
-    description: Admission and background policy engine; also carries the platform-security Argo application (Kyverno, Falco and OpenFGA wiring).
+    description: Admission and background policy engine; also carries the platform-security Argo application (Kyverno, Falco, OpenFGA and Trivy image-scan pilot wiring).
   - name: falco
     title: Falco
     system: identity-access

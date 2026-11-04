@@ -7778,13 +7778,14 @@ metadata:
     - kubernetes
   title: Kyverno
   description: Admission and background policy engine; also carries the
-    platform-security Argo application (Kyverno, Falco and OpenFGA wiring).
+    platform-security Argo application (Kyverno, Falco, OpenFGA and Trivy
+    image-scan pilot wiring).
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: ecosystem-kyverno
     argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: ecosystem-kyverno,platform-security
+    onemind.io/argocd-apps: ecosystem-kyverno,ecosystem-trivy-operator,platform-security
     backstage.io/kubernetes-namespace: kyverno
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=kyverno,app.kubernetes.io/part-of=kyverno
     onemind.io/pillar-review: proposed
@@ -8642,6 +8643,35 @@ spec:
   system: data-storage
   dependencyOf:
     - component:default/cloudnative-pg
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-ecosystem-trivy-operator
+  title: Argo CD application ecosystem-trivy-operator
+  description: Argo CD application ecosystem-trivy-operator, one of the
+    applications that deploy Kyverno (component:default/kyverno, whose primary
+    application is ecosystem-kyverno).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/ecosystem-trivy-operator
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: ecosystem-trivy-operator
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: identity-access
+  dependencyOf:
+    - component:default/kyverno
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
