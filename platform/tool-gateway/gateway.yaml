@@ -11,8 +11,9 @@ clients:
     secret: gateway-clients
     key: hermes
 # One MCP endpoint per group. kind: group (default) exposes the read and write tools of its targets; deferred is
-# deny-all with no targets (off until asked for); execute is deny-all until the Phase 4 gate wires extAuthz and
-# carries every target that has destructive or physical tools (derived, never listed in a fragment).
+# deny-all with no targets (off until asked for); execute carries every target that has destructive or physical tools
+# (derived, never listed in a fragment). Without `authz` the execute route is deny-all; with it, the gated tools are
+# listed and every tools/call is sent to the execute-gate (AuthZEN) and runs only on its decision (fails closed).
 groups:
   ops:
     path: /ops/mcp
@@ -57,5 +58,7 @@ groups:
     kind: execute
     path: /execute/mcp
     clients: [hermes]
+    authz:
+      host: execute-gate.tool-gateway.svc.cluster.local:8080
     prefixMode: always
     failureMode: failOpen

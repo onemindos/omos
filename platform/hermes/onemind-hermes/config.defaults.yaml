@@ -360,6 +360,16 @@ mcp_servers:
     url: http://agentgateway.tool-gateway.svc.cluster.local:8080/tak/mcp
     headers:
       Authorization: Bearer ${ONEMIND_GATEWAY_KEY}
+  # Destructive and physical tools (gateway /execute route, gated by execute-gate: the owner types `execute <id>` or
+  # `override <id>` in the Matrix room `approvals`). HELD: mcp/apply.sh skips it until run with `--include execute`,
+  # after the live verification in docs/operations/tool-gateway.md ("Execute gate"). trust: untrusted makes Hermes ask
+  # first for every tool that is not readOnly (gateway tools carry no hints, so every call asks).
+  execute:
+    url: http://agentgateway.tool-gateway.svc.cluster.local:8080/execute/mcp
+    headers:
+      Authorization: Bearer ${ONEMIND_GATEWAY_KEY}
+    trust: untrusted
+    lazy: true
   # Hosted OAuth servers, managed here so their filters are applied by mcp/apply.sh. Reads and normal writes
   # stay; anything that deletes, restores over, or cancels is excluded (names are the upstream tool names,
   # globs allowed). Dropbox: the four request/quota tools were excluded by the owner earlier, under names that
