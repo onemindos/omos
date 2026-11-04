@@ -179,6 +179,46 @@ through `/execute`; a request id appears in the room `approvals`; reply `execute
 changed argument are denied; scale `execute-gate` to 0 and calls are denied. Then add the Hermes server:
 `platform/hermes/onemind-hermes/mcp/apply.sh --include execute` (held back by default) and restart Hermes.
 
+## Owner key session (execute gate and key-based groups)
+
+Everything is in Git and switched on by sealing keys: no cluster command is typed by hand. The owner runs, in a terminal on a machine with
+`kubectl` (context `do-nyc3-omos-cloud`) and `kubeseal`, from the repo root on a fresh branch:
+
+```bash
+scripts/gateway/keys-session.sh list                          # steps, output files, what each needs
+scripts/gateway/keys-session.sh --dry-run all                 # rehearsal on a temp copy; nothing real is read or written
+scripts/gateway/keys-session.sh ghcr nats gate                # the execute gate
+scripts/gateway/keys-session.sh grafana github ...            # any subset; re-run one step to replace its key
+```
+
+Each step prints where to create the credential (UI path and the least-privilege scope), offers `s` to skip, reads the value with `read -s`
+(no echo, no history, no argv), pipes `kubectl create secret ... --dry-run=client -o json | kubeseal --scope namespace-wide` and prints only
+the file name and the length of each value. It never commits: review the diff, run the tests, commit, open the PR.
+
+**What "switch on" means.** A target fragment with `enabled_by: [gateway-target-<x>]` is not rendered while that SealedSecret file is absent,
+so a missing key cannot break a route or the pod. Its deployable manifests (backend Deployment, egress, rules in the app namespace) wait in
+`platform/tool-gateway/pending/<x>/manifests/`. Sealing the key makes the script move them into `manifests/`, re-render
+`values.generated.yaml` and (for the execute gate) set `replicas: 1` once `gate-matrix`, `gate-nats` and `ghcr` all exist. Unit tests fail
+when a pending directory and its sealed file disagree.
+
+The `gate` step runs `register_new_matrix_user` inside the Synapse pod for `@gate:onemindos.dev` (not admin, a random password that is never
+displayed, read from the pod's own `/config/homeserver.yaml`, so the rotated Matrix Postgres password does not matter), logs in, creates the
+private unencrypted room `approvals`, invites `@zeus:onemindos.dev` and seals `gate-matrix` (`token`, `room_id`). The owner then accepts the
+invitation in Element. Retry after a half-failed run with `GATE_USER=gate2`.
+
+Order of operations for the session:
+
+1. Merge the execute-gate PR, then the targets PR (it also adds Argo CD account `legacy`, applied by `platform-argocd`; wait for Synced).
+2. `keys-session.sh ghcr nats gate`, then the key-based steps the owner wants, in one branch; review the diff; run `python -m unittest discover -s scripts/tests`.
+3. Commit and merge that PR. Argo applies the sealed files, starts `execute-gate` and the activated backends.
+4. Verify the execute gate (section above, steps (a) to (h)), then `platform/hermes/onemind-hermes/mcp/apply.sh --include execute`, restart Hermes.
+5. For each activated target: port-forward its backend (or use its URL) and run
+   `python scripts/gateway/classify_tools.py --target <x> --url <mcp url> --key-env <VAR>`; review `proposed`, move tools to their class,
+   delete `proposed`, re-render, PR. The committed classification is a conservative read-only start; it is not final.
+
+Karakeep has a key step but no target: `@karakeep/mcp` is stdio-only and no image serves it over HTTP yet (`pending/karakeep/README.md`).
+TAK Portal and the TAK Server client certificate are stored only: the portal API has no read operations and there is no TAK Server adapter.
+
 ## Operate
 
 ```bash

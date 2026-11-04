@@ -62,7 +62,8 @@ class Renderer(unittest.TestCase):
         # extauthz.decision alone is evaluated for tools/list too, where no decision exists, and empties the list.
         self.assertEqual(rules[-1], {"require": 'mcp.methodName != "tools/call" || extauthz.decision == true'})
         self.assertTrue(all(set(r) == {"allow"} for r in rules[:-1]))
-        gated = {n for n, c in self.classes.items() if render.classification.has_gated(c)}
+        active = {t["name"] for t in self.targets if render.is_active(t)}
+        gated = {n for n, c in self.classes.items() if n in active and render.classification.has_gated(c)}
         self.assertEqual({re.search(r'target == "(\w+)"', r["allow"]).group(1) for r in rules[:-1]}, gated)
         for r in rules[:-1]:
             body = r["allow"]

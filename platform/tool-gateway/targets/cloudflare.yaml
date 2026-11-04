@@ -1,0 +1,14 @@
+# Cloudflare API MCP server (cloudflare/mcp, hosted, code mode): tools docs, search, execute, whoami. No pod.
+# The token scope is the only real limit on `execute`, so create a READ-ONLY API token. `execute` is classified destructive: it exists on
+# /execute only, one owner approval per call.
+name: cloudflare
+groups: [cloud]
+enabled_by: [gateway-target-cloudflare]
+env:
+  TARGET_CLOUDFLARE_TOKEN: {secret: gateway-target-cloudflare, key: token}
+target:
+  mcp:
+    host: https://mcp.cloudflare.com/mcp
+  policies:
+    backendAuth:
+      key: "${TARGET_CLOUDFLARE_TOKEN}"
