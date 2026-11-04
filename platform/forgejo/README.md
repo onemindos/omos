@@ -1,10 +1,10 @@
-# Private Forgejo secondary — prepared 2026-11-01
+# Private Forgejo secondary — launch-ready 2026-11-04
 
 User-selected route: **GitHub remains primary → Forgejo pull mirrors → independent
 versioned encrypted backups**. This directory is deployable source for a small
 private pilot, not a claim of deployment, owner enrollment, populated mirrors or
 proven disaster recovery. `platform-forgejo` is manual-sync, with no finalizer.
-Do not merge/sync until the credential and capacity gates below are complete.
+Sync only after the capacity and backup-window gates below are confirmed.
 
 ## Layout and scope
 
@@ -37,39 +37,78 @@ Secret reads, data mount, exec, workload-create or namespace-delete permission.
 
 ## Credentials and activation
 
-1. Review the exact-main diff, cluster capacity, Tailscale hostname availability,
-   storage/billing and a backup maintenance window. Supply a cluster public sealing
-   certificate and a **private mode0600 JSON** recovery input containing keys
-   `RESTIC_REPOSITORY`, `RESTIC_PASSWORD`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`.
-   Repository must be a dedicated HTTPS S3 path ending
-   `/backups/restic/forgejo/data`; use a new strong recovery password and preserve
-   it outside Kubernetes, including an offline copy. Supply existing approved
-   object-store credentials through a private file; do not paste them into Git,
-   command arguments, logs or chat.
-2. Run the helper with private file paths:
+**Launch state (2026-11-04):** both SealedSecrets are committed in `sealed/`,
+sealed namespace-wide against the live controller certificate with
+`scripts/prepare_forgejo_secrets.py` (generated from random values, never printed):
 
-   ```bash
-   python3 scripts/prepare_forgejo_secrets.py --cert "$SEAL_CERT" --backup-json "$PRIVATE_BACKUP_JSON"
-   ```
+| Secret | Keys |
+| --- | --- |
+| `forgejo-keys` | `FORGEJO__security__SECRET_KEY`, `FORGEJO__security__INTERNAL_TOKEN`, `FORGEJO__oauth2__JWT_SECRET`, `FORGEJO__server__LFS_JWT_SECRET` |
+| `forgejo-data-restic` | `RESTIC_REPOSITORY` (dedicated `.../backups/restic/forgejo/data` prefix), `RESTIC_PASSWORD` (fresh, unique), `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION` |
 
-   It creates only two strict-bound SealedSecrets and updates the
-   sealed Kustomization; it refuses to replace existing keys, writes no plaintext
-   and performs no cluster operation. Review the ciphertext, commit it and use Argo.
-   Missing SealedSecrets are an explicit launch blocker, not dummy credentials.
-3. Merge/sync the app through Argo. Verify PVC protection, SealedSecret status,
-   deployment readiness, HTTPS and rejected registration. Health checks prove
-   HTTP/DB startup, not useful mirror content. Run migrations only through the
-   pinned normal startup; do not recreate claims or reset SQLite to fix readiness.
-4. Create the first local administrator using the running image's native admin
-   CLI in a private operator terminal. `INSTALL_LOCK=true` intentionally disables
-   the web installer even before the first user. Use a generated password and
-   `--must-change-password`; capture it only in the approved private password store.
-   Inspect CLI help/version for exact arguments. Never print credentials into the
-   PR or use a public registration/bootstrap window. OIDC can be a later change;
-   do not mutate existing Authentik enrollment to accelerate this pilot.
-5. Sign in, confirm access boundaries and prepare **one** harmless private GitHub
-   repository as the first mirror. After backup and restore acceptance below,
-   expand the approved list. No account or repository enrollment has been performed.
+The Spaces access pair and region are the established platform backup storage
+credentials (same pattern as `platform/vaultwarden/BACKUP.md`); only the prefix and
+Restic password are new. The Restic password and application keys exist only as
+SealedSecret ciphertext and, after sync, as the live Secrets. Recovery depends on the
+sealed-secrets controller key backup (`backup-cluster-recovery`). **After the first sync the
+owner should copy `RESTIC_PASSWORD` from the live Secret into the approved private password
+store** (see below) so an offline copy exists. Never regenerate these: the application
+`SECRET_KEY` decrypts stored mirror credentials, and the Restic password opens the backups.
+
+Remaining gates before the first sync: confirm capacity (hub nodes had roughly 4 GiB
+unrequested memory on 2026-11-04; the pod prefers the `onemind-hub-core-v2` pool),
+the hostname, and a backup maintenance window. To regenerate for a different
+environment, supply a private mode-0600 JSON input and the cluster public cert:
+
+```bash
+python3 scripts/prepare_forgejo_secrets.py --cert "$SEAL_CERT" --backup-json "$PRIVATE_BACKUP_JSON"
+```
+
+The helper refuses to replace existing sealed keys, writes no plaintext and performs
+no cluster operation.
+
+### Activation (coordinator, after merge)
+
+```bash
+argocd app sync platform-forgejo            # manual sync; no automated policy
+kubectl --context do-nyc3-omos-cloud -n forgejo get sealedsecret,secret,pvc,pods,ingress
+kubectl --context do-nyc3-omos-cloud -n forgejo rollout status deploy/forgejo
+kubectl --context do-nyc3-omos-cloud -n forgejo get replicationsource forgejo-data
+```
+
+Verify PVC `Bound` on `do-block-storage-retain`, both SealedSecrets `Synced`, the
+Deployment ready, `https://forgejo.tail717ba0.ts.net/` answering over the tailnet and
+registration rejected. Health checks prove HTTP/DB startup, not mirror content. Do not
+recreate claims or reset SQLite to fix readiness.
+
+### Owner first sign-in
+
+No account exists after sync (`INSTALL_LOCK=true` disables the web installer). The
+owner creates the first administrator in a private operator terminal, so the generated
+password appears only there, never in chat, PRs or logs:
+
+```bash
+kubectl --context do-nyc3-omos-cloud -n forgejo exec -it deploy/forgejo -- \
+  forgejo admin user create --admin --username <owner> --email me@zeusdelacruz.com \
+  --random-password --must-change-password
+```
+
+Check `forgejo admin user create --help` first, as flags can differ by version. If
+`--random-password` is unavailable, generate a password in the terminal and pass it
+through a shell variable, never inline in shared output. Store the printed password
+directly in the approved password manager, open `https://forgejo.tail717ba0.ts.net/`
+on a tailnet device, sign in and change it at the forced prompt, then enable 2FA.
+No agent creates or holds this account.
+
+### GitHub read-only token for mirrors
+
+Create a GitHub **fine-grained personal access token** (owner: the organization or
+account, repository access limited to the approved repositories, permissions
+**Contents: Read-only** and **Metadata: Read-only** only; add **Issues/Pull requests: read**
+only if metadata migration is wanted). Authorize it for organization SSO where
+required. Enter it only in the Forgejo "New Migration → GitHub → Mirror" form
+(private repository, interval 8h) for **one** harmless repository first. Forgejo stores it
+encrypted with `SECRET_KEY`. Do not paste it into Git, chat or Kubernetes manifests.
 
 ## Mirror enrollment and coverage
 

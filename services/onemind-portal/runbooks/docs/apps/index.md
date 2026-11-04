@@ -20,6 +20,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Element Chat](element-chat.md) | communication |
 | [Falco](falco.md) | identity-access |
 | [FedHub](fedhub.md) | tak-ecosystem |
+| [Forgejo — independent code mirror](forgejo.md) | developer-platform |
 | [OneTAK geospatial services](geo-data-services.md) | geospatial |
 | [Grafana](grafana.md) | observability |
 | [Headlamp](headlamp.md) | developer-platform |

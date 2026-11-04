@@ -7419,6 +7419,36 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: forgejo
+  title: "Forgejo — independent code mirror"
+  description: Prepared private GitHub pull-mirror/standby forge with coordinated
+    encrypted backups; not deployed or enrolled. GitHub remains primary.
+  annotations:
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/forgejo
+    onemind.io/deployment-status: prepared-not-deployed
+    argocd/app-name: platform-forgejo
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/forgejo/
+    github.com/project-slug: onemindos/omos
+  tags:
+    - forgejo
+    - git
+    - backup
+    - planned
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: developer-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: platform-core
   tags:
     - kubernetes
@@ -9045,23 +9075,3 @@ spec:
   system: data-storage
   dependencyOf:
     - component:default/platform-backup-recovery
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: forgejo
-  title: "Forgejo \u2014 independent code mirror"
-  description: Prepared private GitHub pull-mirror/standby forge with coordinated encrypted backups; not deployed or enrolled. GitHub remains primary.
-  annotations:
-    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/forgejo
-    onemind.io/deployment-status: prepared-not-deployed
-  tags:
-    - forgejo
-    - git
-    - backup
-    - planned
-spec:
-  type: service
-  lifecycle: experimental
-  owner: group:default/onemind-admins
-  system: developer-platform

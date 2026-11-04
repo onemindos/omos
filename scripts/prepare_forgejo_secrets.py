@@ -1,4 +1,4 @@
-"""Create only strict-bound sealed payloads; never print or write plaintext keys.
+"""Create only namespace-wide sealed payloads; never print or write plaintext keys.
 
 The backup input is a private JSON file with RESTIC_REPOSITORY, RESTIC_PASSWORD,
 AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. Keep its recovery copy offline.
@@ -24,13 +24,16 @@ def payloads(backup):
             "FORGEJO__security__INTERNAL_TOKEN": secrets.token_hex(64),
             "FORGEJO__oauth2__JWT_SECRET": secrets.token_urlsafe(32),
             "FORGEJO__server__LFS_JWT_SECRET": secrets.token_urlsafe(32)}
-    return {"forgejo-keys": keys, "forgejo-data-restic": {key: backup[key] for key in required}}
+    restic = {key: backup[key] for key in required}
+    if isinstance(backup.get("AWS_DEFAULT_REGION"), str) and backup["AWS_DEFAULT_REGION"]:
+        restic["AWS_DEFAULT_REGION"] = backup["AWS_DEFAULT_REGION"]
+    return {"forgejo-keys": keys, "forgejo-data-restic": restic}
 
 
 def seal(name, values, cert):
     secret = {"apiVersion": "v1", "kind": "Secret", "metadata": {"name": name, "namespace": "forgejo"},
               "type": "Opaque", "stringData": values}
-    result = subprocess.run(["kubeseal", "--cert", str(cert), "--scope", "strict", "--format", "yaml"],
+    result = subprocess.run(["kubeseal", "--cert", str(cert), "--scope", "namespace-wide", "--format", "yaml"],
                             input=json.dumps(secret), text=True, capture_output=True)
     if result.returncode:
         raise RuntimeError("Sealing failed; no private subprocess diagnostics exposed")
@@ -59,7 +62,7 @@ def main():
         (args.output / "kustomization.yaml").write_text(
             "apiVersion: kustomize.config.k8s.io/v1beta1\nkind: Kustomization\nresources:\n" +
             "".join("- " + name + "\n" for name in names))
-        print("Two namespace-bound SealedSecrets written; review, commit and use Argo for activation")
+        print("Two namespace-wide SealedSecrets written; review, commit and use Argo for activation")
     except Exception as error:
         print("Secret preparation failed (" + type(error).__name__ + "); no private inputs printed", file=sys.stderr)
         return 1

@@ -24,6 +24,16 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       terminationGracePeriodSeconds: 60
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: doks.digitalocean.com/node-pool
+                operator: In
+                values:
+                - onemind-hub-core-v2
       containers:
       - name: forgejo
         image: codeberg.org/forgejo/forgejo:15.0.11-rootless@sha256:3cd6bc2b74c87cbde0a0fd527c9665cb416f5a0540dee54fe5afb3fa2df9f40c
