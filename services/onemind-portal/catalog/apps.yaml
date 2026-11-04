@@ -7059,6 +7059,195 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: hermes-atlas
+  title: Hermes Atlas
+  description: >-
+    External reference: Community-curated Hermes ecosystem directory with
+    guides, tools, skills and plugins. No OneMind installation or integration
+    verified.
+  tags:
+    - reference
+    - hermes
+    - community
+  links:
+    - url: https://hermesatlas.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://hermesatlas.com
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hermes-bible
+  title: Hermes Bible
+  description: >-
+    External reference: Unofficial community documentation and workflows for
+    Hermes Agent; not affiliated with Nous Research. No OneMind installation or
+    integration verified.
+  tags:
+    - reference
+    - hermes
+    - community
+  links:
+    - url: https://www.hermesbible.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://www.hermesbible.com
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: oh-my-hermes
+  title: Oh My Hermes
+  description: >-
+    External reference: Community coding harness for Hermes Agent with IDE
+    workflows. No OneMind installation or integration verified.
+  tags:
+    - reference
+    - hermes
+    - community
+  links:
+    - url: https://omher.app
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://omher.app
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hermes-official-plugins
+  title: Hermes Official Plugins
+  description: >-
+    External reference: Official Hermes Agent plugins built and maintained by
+    Nous Research. No OneMind installation or integration verified.
+  tags:
+    - reference
+    - hermes
+    - official
+  links:
+    - url: https://github.com/NousResearch/hermes-official-plugins/tree/main
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/NousResearch/hermes-official-plugins/tree/main
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hermes-skills
+  title: Hermes Skills
+  description: >-
+    External reference: Official Nous Research Hermes skills documentation entry
+    point, redirecting to the skills marketplace. No OneMind installation or
+    integration verified.
+  tags:
+    - reference
+    - hermes
+    - official
+  links:
+    - url: https://hermes-agent.nousresearch.com/docs/skills
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://hermes-agent.nousresearch.com/docs/skills
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hermes-documentation
+  title: Hermes Documentation
+  description: >-
+    External reference: Official Nous Research documentation for Hermes Agent.
+    No OneMind installation or integration verified.
+  tags:
+    - reference
+    - hermes
+    - official
+  links:
+    - url: https://hermes-agent.nousresearch.com/docs/
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://hermes-agent.nousresearch.com/docs/
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: osiris
   title: OSIRIS
   description: >-
