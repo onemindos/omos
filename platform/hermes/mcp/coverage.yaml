@@ -128,6 +128,10 @@ applications:
     apps:
     - agent_fabric
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-ingest:
+    apps:
+    - onemind_core
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-karakeep:
     apps:
     - karakeep

@@ -1,0 +1,124 @@
+# omos-ingest: the A0 collector framework (services/bridge/ingest). One process runs every
+# source in configmap.yaml; each source has one owner through the KV lease ingest-locks,
+# so a second replica is a hot standby, not a second writer.
+#
+# Image: built by .github/workflows/build-omos-ingest.yml. The tag below is the first
+# release; pin it to the digest from the workflow's omos-ingest-image artifact after the
+# first CI build (ghcr.io/onemindos/omos-ingest:0.1.0@sha256:...).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omos-ingest
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: omos-ingest
+    app.kubernetes.io/part-of: omos-feeds
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: omos-ingest
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: omos-ingest
+        app.kubernetes.io/part-of: omos-feeds
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 15
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      # New workloads go to the ecosystem pool; hub-core is memory-saturated (omos CLAUDE.md).
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values: [onemind-ecosystem-cpu]
+      containers:
+        - name: omos-ingest
+          image: ghcr.io/onemindos/omos-ingest:0.1.0  # pin digest after first CI build
+          args:
+            - -config=/etc/omos-ingest/sources.yaml
+            - -schemas=/schemas
+            - -listen=:9464
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+            # Same posture as feed-intel and omos-tak-projector (ssl.CERT_NONE). Replace
+            # with NATS_CA once the NATS CA is published to this namespace (README).
+            - name: NATS_TLS_INSECURE
+              value: "true"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            # Measured 2026-10-29 (omos-ingest -once, macOS arm64, cluster registry entry):
+            # live full-US active alerts, 1.56 MB / 356 alerts: 30 MiB RSS, 10 MB peak heap;
+            # 10x outbreak, 10 MB / 3560 alerts: 85 MiB RSS, 62 MB heap; at the 16 MiB
+            # maxBodyBytes cap, 16 MB / 5712 alerts: 122 MiB RSS, 98 MB heap (107 MiB RSS
+            # with GOMEMLIMIT=100MiB). The limit leaves headroom above the cap case.
+            - name: GOMEMLIMIT
+              value: "200MiB"
+          envFrom:
+            # Keys for keyed sources (none yet). SealedSecret steps: README "API keys".
+            - secretRef:
+                name: omos-ingest-keys
+                optional: true
+          ports:
+            - name: metrics
+              containerPort: 9464
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: metrics
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 20
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 20m
+              memory: 48Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: sources
+              mountPath: /etc/omos-ingest
+              readOnly: true
+      volumes:
+        - name: sources
+          configMap:
+            name: omos-ingest-sources

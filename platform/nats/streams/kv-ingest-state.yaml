@@ -1,0 +1,14 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-ingest-state
+  namespace: nats
+  annotations:
+    description: "omos-ingest checkpoints (ETag, Last-Modified, cursor, bounded seen set), written only after JetStream acks"
+spec:
+  bucket: ingest-state
+  storage: file
+  replicas: 3
+  history: 1
+  maxBytes: 67108864
+  preventDelete: true

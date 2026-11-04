@@ -1,0 +1,42 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 3 — FEEDS                                                sync-wave: "3"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-ingest: omos-ingest, the collector framework (feature A0;
+# services/bridge/ingest). First source: NWS alerts on intel.weather.noaa.alert,
+# beside the legacy feed-intel NOAA task (kept running, decision 0004 #18).
+#
+# Covers: platform/ingest/ (Deployment, ConfigMap feed registry, Service,
+# ServiceMonitor, PrometheusRule). Namespace omos, so it reuses the existing
+# omos-nats-creds SealedSecret and the nats NetworkPolicy allowance for omos.
+#
+# Manual sync. Before the first sync:
+#   1. platform-nats-streams has created KV ingest-locks and ingest-state and added
+#      tel.feed.> to TEL (platform/nats/streams/, same PR);
+#   2. the build-omos-ingest workflow has pushed the image and its digest is pinned in
+#      platform/ingest/deployment.yaml.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-ingest
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/ingest
+    directory:
+      recurse: false
+      exclude: "*.secret*,*.env,README.md"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: omos
+  syncPolicy:
+    # Manual: the owner syncs after the image digest is pinned (see header).
+    syncOptions:
+      - CreateNamespace=false

@@ -1,0 +1,15 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-ingest-locks
+  namespace: nats
+  annotations:
+    description: "omos-ingest leases: one key per source, value = owning instance. TTL must equal leaseTTL in platform/ingest/configmap.yaml"
+spec:
+  bucket: ingest-locks
+  storage: file
+  replicas: 3
+  history: 1
+  ttl: 10s
+  maxBytes: 8388608
+  preventDelete: true

@@ -1,0 +1,41 @@
+# Feed registry for omos-ingest in the cluster (services/bridge/ingest/README.md).
+# One entry per source; each has its terms of use, schema, subject and freshness limit.
+# Keys for keyed sources come from the optional Secret omos-ingest-keys (README "API keys"),
+# referenced here as ${VAR}; never write a key into this file.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omos-ingest-sources
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: omos-ingest
+    app.kubernetes.io/part-of: omos-feeds
+data:
+  sources.yaml: |
+    # leaseTTL must equal the TTL of KV ingest-locks (platform/nats/streams/kv-ingest-locks.yaml).
+    leaseTTL: 10s
+    statusInterval: 10s
+    defaults:
+      headers:
+        User-Agent: "(omos-ingest, https://github.com/onemindos/omos)"
+      rateLimit: {every: 5s, burst: 1}
+    sources:
+      # First migration (ingestion-platform.md migration step 1). Runs beside the legacy
+      # feed-intel NOAA task (intel.weather.noaa.alert.{state}.{event}), which stays on
+      # until this matches it for 7 days (decision 0004 #18).
+      - id: nws-alerts
+        registry: f094-noaa-nws-alerts
+        kind: rest_poll
+        parser: nws-alerts
+        url: https://api.weather.gov/alerts/active?status=actual
+        subject: intel.weather.noaa.alert
+        schema: intel/weather-alert.v1.schema.json
+        interval: 60s
+        staleAfter: 10m
+        maxBackoff: 10m
+        seenMax: 8192
+        headers: {Accept: application/geo+json}
+        terms:
+          licence: "open data, free to use for any purpose"
+          url: https://www.weather.gov/documentation/services-web-api
+          notes: "User-Agent with contact required; rate limit not public, retry after about 5 s"

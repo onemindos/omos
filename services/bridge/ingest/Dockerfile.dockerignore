@@ -1,0 +1,4 @@
+*
+!bridge/ingest/
+!schemas/
+bridge/ingest/test/chaos/out/

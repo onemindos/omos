@@ -1,0 +1,4 @@
+{"type":"FeatureCollection","metadata":{"title":"Synthetic USGS-style sample (test fixture)"},"features":[
+{"type":"Feature","id":"us7000abcd","properties":{"mag":4.6,"place":"Synthetic place A","time":1761728400000},"geometry":{"type":"Point","coordinates":[-117.5,35.7,8.2]}},
+{"type":"Feature","id":"nc75000001","properties":{"mag":2.1,"place":"Synthetic place B","time":1761729000000},"geometry":{"type":"Point","coordinates":[-122.8,38.8,2.1]}}
+]}

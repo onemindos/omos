@@ -1,0 +1,29 @@
+# Feed registry for the chaos test (test/chaos/chaos.sh). Synthetic upstreams only.
+leaseTTL: 10s
+statusInterval: 2s
+defaults:
+  headers:
+    User-Agent: "(omos-ingest chaos test, https://github.com/onemindos/omos)"
+  rateLimit: {every: 500ms, burst: 2}
+  seenMax: 8192
+sources:
+  - id: chaos-nws
+    kind: rest_poll
+    parser: nws-alerts
+    url: http://127.0.0.1:38180/alerts/active
+    subject: intel.weather.noaa.alert
+    schema: intel/weather-alert.v1.schema.json
+    interval: 1s
+    staleAfter: 5s
+    maxBackoff: 4s
+    terms: {licence: "synthetic test data", url: "https://github.com/onemindos/omos"}
+  - id: chaos-sse
+    kind: sse
+    parser: json
+    url: http://127.0.0.1:38180/sse
+    subject: intel.test.chaos-sse.event
+    schema: intel/generic-record.v1.schema.json
+    staleAfter: 5s
+    maxBackoff: 2s
+    options: {prefix: sse, idField: id}
+    terms: {licence: "synthetic test data", url: "https://github.com/onemindos/omos"}

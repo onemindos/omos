@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/intel/generic-record/v1",
+  "title": "Generic intel record (minimum contract)",
+  "description": "Minimum a generic omos-ingest source must carry: a string id and, when it has a position, a valid lat/lon pair. Sources with a known shape get their own schema.",
+  "type": "object",
+  "required": ["id"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {"type": "string", "minLength": 1, "maxLength": 512},
+    "lat": {"type": "number", "minimum": -90, "maximum": 90},
+    "lon": {"type": "number", "minimum": -180, "maximum": 180}
+  },
+  "dependentRequired": {"lat": ["lon"], "lon": ["lat"]}
+}

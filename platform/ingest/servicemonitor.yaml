@@ -1,0 +1,20 @@
+# Prometheus scrape of omos-ingest freshness and reliability metrics. The job label is the
+# Service name (omos-ingest), which prometheusrule.yaml relies on.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: omos-ingest
+  namespace: omos
+  labels:
+    release: monitoring
+    app.kubernetes.io/name: omos-ingest
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: omos-ingest
+      app.kubernetes.io/component: metrics
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
