@@ -10,7 +10,7 @@ practice `warn` is the signal you see.
 | Label | Value | Namespaces |
 |---|---|---|
 | `warn`, `audit` | `restricted` | Every application namespace whose Namespace manifest Argo CD applies, except those listed below |
-| `enforce` | `restricted` | `karakeep`, `n8n`, `paperclip`, `stac`, `stac-validation`, `vaultwarden` |
+| `enforce` | `restricted` | `karakeep`, `n8n`, `stac`, `stac-validation`, `vaultwarden` |
 | `enforce` | `baseline` | `nextcloud` |
 
 No `*-version` label is set, so each mode uses the profile of the cluster's Kubernetes version.
@@ -45,7 +45,7 @@ kubectl --context do-nyc3-omos-cloud -n ops logs deploy/platform-volsync | grep 
 - A namespace with the privileged-movers annotation can go no higher than `enforce: baseline`,
   as `nextcloud` does. Before it can take `enforce: restricted`, each of its ReplicationSources
   needs a non-root `moverSecurityContext` and the annotation must be removed, as in `karakeep`,
-  `n8n`, `paperclip` and `vaultwarden`. Otherwise admission rejects the mover pods and the
+  `n8n` and `vaultwarden`. Otherwise admission rejects the mover pods and the
   backups stop with no error at sync time; the `PortableVolumeBackupOutOfSync` alert is the
   first sign.
 - Any namespace label change, these included, gives every pod in that namespace a new Cilium

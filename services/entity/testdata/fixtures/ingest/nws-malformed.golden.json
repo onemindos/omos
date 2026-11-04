@@ -1,0 +1,202 @@
+[
+ {
+  "subject": "",
+  "msgId": "",
+  "ts": "",
+  "error": "feature has no properties"
+ },
+ {
+  "subject": "",
+  "msgId": "",
+  "ts": "",
+  "error": "alert has no properties.id"
+ },
+ {
+  "subject": "intel.weather.noaa.alert",
+  "msgId": "nws:urn:oid:test.badseverity",
+  "ts": "2026-10-29T10:21:00Z",
+  "data": {
+   "affectedZones": [
+    "https://api.weather.gov/zones/forecast/ANZ150"
+   ],
+   "areaDesc": "Coastal Waters from Stonington, ME to Port Clyde, ME out 25 NM",
+   "category": "Met",
+   "certainty": "Likely",
+   "description": "* WHAT...Southwest winds 15 to 20 kt with gusts up to 25 kt and\nseas 3 to 6 ft expected.\n\n* WHERE...Coastal Waters from Stonington, ME to Port Clyde, ME\nout 25 NM.\n\n* WHEN...From 2 PM Thursday to 5 AM EDT Friday.\n\n* IMPACTS...Conditions will be hazardous to small craft.",
+   "effective": "2026-10-29T06:21:00-04:00",
+   "ends": "2026-10-30T05:00:00-04:00",
+   "event": "Small Craft Advisory",
+   "expires": "2026-10-29T20:30:00-04:00",
+   "headline": "Small Craft Advisory issued October 29 at 6:21AM EDT until October 30 at 5:00AM EDT by NWS Gray ME",
+   "id": "urn:oid:test.badseverity",
+   "instruction": "Inexperienced mariners, especially those operating smaller\nvessels, should avoid navigating in hazardous conditions.",
+   "messageType": "Update",
+   "onset": "2026-10-29T14:00:00-04:00",
+   "references": [
+    "urn:oid:2.49.0.1.840.0.aa28f87f4c8b8159ad8483dab1e97a5be18f0fcb.001.1"
+   ],
+   "response": "Avoid",
+   "same": [
+    "073150"
+   ],
+   "senderName": "NWS Gray ME",
+   "sent": "2026-10-29T06:21:00-04:00",
+   "severity": "Catastrophic",
+   "status": "Actual",
+   "type": "weather_alert",
+   "ugc": [
+    "ANZ150"
+   ],
+   "urgency": "Expected",
+   "web": "http://www.weather.gov"
+  }
+ },
+ {
+  "subject": "intel.weather.noaa.alert",
+  "msgId": "nws:urn:oid:test.badlat",
+  "ts": "2026-10-29T01:56:00Z",
+  "data": {
+   "affectedZones": [
+    "https://api.weather.gov/zones/county/FLC069",
+    "https://api.weather.gov/zones/county/FLC127"
+   ],
+   "areaDesc": "Lake, FL; Volusia, FL",
+   "category": "Met",
+   "certainty": "Observed",
+   "description": "...The Flood Warning continues for the following rivers in Florida...\n\nSt Johns River Near Deland affecting Volusia and Lake Counties.\n\n.Persistent northeast winds and upstream tidal effects on the St John\nRiver are slowing flow. At Deland, the river is forecast to crest\nnear Minor Flood Stage, then begin a slow decline through Action\nStage late week into the weekend.\n\nFor the St. Johns River...including Deland...Minor flooding is\nforecast.\n\n* WHAT...Minor flooding is forecast.\n\n* WHERE...St Johns River near Deland.\n\n* WHEN...Until Thursday evening.\n\n* IMPACTS...At 4.0 feet, Docks and piers ar",
+   "effective": "2026-10-28T21:56:00-04:00",
+   "ends": "2026-10-29T20:00:00-04:00",
+   "event": "Flood Warning",
+   "expires": "2026-10-29T12:00:00-04:00",
+   "geometry": {
+    "coordinates": [
+     [
+      [
+       -75,
+       200
+      ],
+      [
+       -74,
+       201
+      ],
+      [
+       -74,
+       202
+      ],
+      [
+       -75,
+       200
+      ]
+     ]
+    ],
+    "type": "Polygon"
+   },
+   "headline": "Flood Warning issued October 28 at 9:56PM EDT until October 29 at 8:00PM EDT by NWS Melbourne FL",
+   "id": "urn:oid:test.badlat",
+   "instruction": "Motorists should not attempt to drive around barricades or drive cars\nthrough flooded areas.\n\nCaution is urged when walking near riverbanks.\n\nAdditional information is available at www.weather.gov.\n\nThe next statement will be issued Thursday afternoon at noon EDT.",
+   "lat": 201,
+   "lon": -74.333333,
+   "messageType": "Update",
+   "onset": "2026-10-28T21:56:00-04:00",
+   "references": [
+    "urn:oid:2.49.0.1.840.0.23453bbc5fff35f6df49fb765072b72d8cb5965d.001.1"
+   ],
+   "response": "Avoid",
+   "same": [
+    "012069",
+    "012127"
+   ],
+   "senderName": "NWS Melbourne FL",
+   "sent": "2026-10-28T21:56:00-04:00",
+   "severity": "Severe",
+   "status": "Actual",
+   "type": "weather_alert",
+   "ugc": [
+    "FLC069",
+    "FLC127"
+   ],
+   "urgency": "Immediate",
+   "web": "http://www.weather.gov"
+  }
+ },
+ {
+  "subject": "intel.weather.noaa.alert",
+  "msgId": "nws:urn:oid:test.badsent",
+  "ts": "",
+  "data": {
+   "affectedZones": [
+    "https://api.weather.gov/zones/forecast/ANZ150"
+   ],
+   "areaDesc": "Coastal Waters from Stonington, ME to Port Clyde, ME out 25 NM",
+   "category": "Met",
+   "certainty": "Likely",
+   "description": "* WHAT...Southwest winds 15 to 20 kt with gusts up to 25 kt and\nseas 3 to 6 ft expected.\n\n* WHERE...Coastal Waters from Stonington, ME to Port Clyde, ME\nout 25 NM.\n\n* WHEN...From 2 PM Thursday to 5 AM EDT Friday.\n\n* IMPACTS...Conditions will be hazardous to small craft.",
+   "effective": "2026-10-29T06:21:00-04:00",
+   "ends": "2026-10-30T05:00:00-04:00",
+   "event": "Small Craft Advisory",
+   "expires": "2026-10-29T20:30:00-04:00",
+   "headline": "Small Craft Advisory issued October 29 at 6:21AM EDT until October 30 at 5:00AM EDT by NWS Gray ME",
+   "id": "urn:oid:test.badsent",
+   "instruction": "Inexperienced mariners, especially those operating smaller\nvessels, should avoid navigating in hazardous conditions.",
+   "messageType": "Update",
+   "onset": "2026-10-29T14:00:00-04:00",
+   "references": [
+    "urn:oid:2.49.0.1.840.0.aa28f87f4c8b8159ad8483dab1e97a5be18f0fcb.001.1"
+   ],
+   "response": "Avoid",
+   "same": [
+    "073150"
+   ],
+   "senderName": "NWS Gray ME",
+   "sent": "yesterday",
+   "severity": "Minor",
+   "status": "Actual",
+   "type": "weather_alert",
+   "ugc": [
+    "ANZ150"
+   ],
+   "urgency": "Expected",
+   "web": "http://www.weather.gov"
+  }
+ },
+ {
+  "subject": "intel.weather.noaa.alert",
+  "msgId": "nws:urn:oid:2.49.0.1.840.0.2ae6599a096d368270ba354267308408782921d7.001.1",
+  "ts": "2026-10-29T10:21:00Z",
+  "data": {
+   "affectedZones": [
+    "https://api.weather.gov/zones/forecast/ANZ150"
+   ],
+   "areaDesc": "Coastal Waters from Stonington, ME to Port Clyde, ME out 25 NM",
+   "category": "Met",
+   "certainty": "Likely",
+   "description": "* WHAT...Southwest winds 15 to 20 kt with gusts up to 25 kt and\nseas 3 to 6 ft expected.\n\n* WHERE...Coastal Waters from Stonington, ME to Port Clyde, ME\nout 25 NM.\n\n* WHEN...From 2 PM Thursday to 5 AM EDT Friday.\n\n* IMPACTS...Conditions will be hazardous to small craft.",
+   "effective": "2026-10-29T06:21:00-04:00",
+   "ends": "2026-10-30T05:00:00-04:00",
+   "event": "Small Craft Advisory",
+   "expires": "2026-10-29T20:30:00-04:00",
+   "headline": "Small Craft Advisory issued October 29 at 6:21AM EDT until October 30 at 5:00AM EDT by NWS Gray ME",
+   "id": "urn:oid:2.49.0.1.840.0.2ae6599a096d368270ba354267308408782921d7.001.1",
+   "instruction": "Inexperienced mariners, especially those operating smaller\nvessels, should avoid navigating in hazardous conditions.",
+   "messageType": "Update",
+   "onset": "2026-10-29T14:00:00-04:00",
+   "references": [
+    "urn:oid:2.49.0.1.840.0.aa28f87f4c8b8159ad8483dab1e97a5be18f0fcb.001.1"
+   ],
+   "response": "Avoid",
+   "same": [
+    "073150"
+   ],
+   "senderName": "NWS Gray ME",
+   "sent": "2026-10-29T06:21:00-04:00",
+   "severity": "Minor",
+   "status": "Actual",
+   "type": "weather_alert",
+   "ugc": [
+    "ANZ150"
+   ],
+   "urgency": "Expected",
+   "web": "http://www.weather.gov"
+  }
+ }
+]

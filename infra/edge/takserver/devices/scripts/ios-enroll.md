@@ -37,7 +37,7 @@ Then:
   `cert/truststore.p12`) with **non-indexed** `caLocation`/`certificateLocation` in the
   `com.atakmap.app_preferences` block; `connectString0` stays indexed in `cot_streams`.
 - p12 files sit **flat at the zip root**; iTAK relocates them into its internal `cert/` dir on import.
-- p12 password is the TAK default `atakatak` (legacy-encrypted — read with `openssl ... -legacy`).
+- p12 password is the keystore password (TAK default until step-2 rotation; see Secret tak-keystores in ns takserver) (legacy-encrypted — read with `openssl ... -legacy`).
 
 Verify the cert authenticates *before* handing it to the user:
 ```bash
@@ -53,7 +53,7 @@ then import via ATAK Import Manager (ATAK also accepts the `MANIFEST/manifest.xm
 Requires the CA already in iTAK's store (i.e. after a Path 0 import). Standalone on a self-signed
 server it fails. In iTAK → add server → **Connect with Credentials**:
 - **Address:** `100.74.182.117`  **Port:** `8089`  **Protocol:** `SSL`
-- **Username:** `omos-iphone17` / `omos-ipad`   **Password:** `OneMind-TAK-2026`
+- **Username:** `omos-iphone17` / `omos-ipad`   **Password:** set per device; never commit
 
 ## Path A — HTTPS enrollment (no cables)
 1. Device on the same network (LAN or Tailscale).

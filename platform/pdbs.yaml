@@ -50,18 +50,6 @@ spec:
     matchLabels:
       app: takserver-config
 ---
-# ─── HERMES ──────────────────────────────────────────────────────────────────
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: hermes-legacy
-  namespace: hermes
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      onemind.io/agent: legacy
----
 # ─── MONITORING ──────────────────────────────────────────────────────────────
 apiVersion: policy/v1
 kind: PodDisruptionBudget

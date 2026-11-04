@@ -1,0 +1,113 @@
+# execute-gate (services/execute-gate): the AuthZEN decision point behind the gateway's /execute/mcp route (design section 5.3,
+# runbook docs/operations/tool-gateway.md "Execute gate"). It approves one exact destructive or physical call after the owner
+# types `execute <id>` or `override <id>` in the private Matrix room `approvals`.
+#
+# OFF until switched on: replicas is 0 because the pod cannot start without three SealedSecrets that the owner creates with
+# scripts/gateway/keys-session.sh (gate-matrix, gate-nats, ghcr). That script sets replicas to 1 in the same working tree as
+# the sealed files (CI fails if replicas is 1 while a file is missing, or 0 while all three exist). While it is off the
+# gateway's extAuthz call fails closed (403), exactly as the deny-all route did before: no effect on /ops, /data, /tak.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: execute-gate
+  namespace: tool-gateway
+  labels:
+    app.kubernetes.io/name: execute-gate
+    app.kubernetes.io/part-of: tool-gateway
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: execute-gate
+  strategy:
+    type: Recreate # one pod: two would each hold a Matrix sync loop and could both post an approval request
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: execute-gate
+        app.kubernetes.io/part-of: tool-gateway
+      annotations:
+        # Written by scripts/gateway/render_gateway_config.py: sha256 of policy.configmap.yaml, so a classification change rolls the pod.
+        onemind.io/policy-sha256: "c78e6d3dc92c70e1b6e9a6ddbc2701c0c1d94ee0dcbdd0b18547c8e7b07e2987"
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+      - name: ghcr
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+      - name: execute-gate
+        # Built by .github/workflows/build-execute-gate.yml from services/execute-gate at 203f3af6 (PR #592); index digest read from GHCR 2026-11-03.
+        image: ghcr.io/onemindos/execute-gate:sha-203f3af616c837e8b66ed71319c3186091937e91@sha256:4bce9bbbdad4bf5cedcc126c2e99567e7a9bf818f1d092b3355b31f58bd23c72
+        imagePullPolicy: IfNotPresent
+        ports:
+        - {name: http, containerPort: 8080}
+        env:
+        - {name: PORT, value: "8080"}
+        - {name: OWNER_MXID, value: "@zeus:onemindos.dev"}
+        - {name: MATRIX_HOMESERVER, value: http://synapse.matrix.svc.cluster.local:8008}
+        - name: MATRIX_ACCESS_TOKEN
+          valueFrom: {secretKeyRef: {name: gate-matrix, key: token}}
+        - name: APPROVALS_ROOM_ID
+          valueFrom: {secretKeyRef: {name: gate-matrix, key: room_id}}
+        - {name: ALLOWED_SUBJECTS, value: hermes}
+        - {name: APPROVAL_TTL_SECONDS, value: "600"}
+        - {name: POLICY_FILE, value: /etc/execute-gate/policy.yaml}
+        - {name: STORE, value: nats}
+        - {name: KV_BUCKET, value: exec-approvals}
+        # The bus listens with TLS on 4222 and the service has no CA option, so the CA goes into the default trust store
+        # (SSL_CERT_FILE is honoured by ssl.create_default_context). The host name matches the server certificate.
+        - {name: NATS_URL, value: "tls://nats.nats.svc.cluster.local:4222"}
+        - {name: SSL_CERT_FILE, value: /etc/nats-ca/ca.crt}
+        - name: NATS_USER
+          valueFrom: {secretKeyRef: {name: gate-nats, key: user}}
+        - name: NATS_PASSWORD
+          valueFrom: {secretKeyRef: {name: gate-nats, key: password}}
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: {drop: [ALL]}
+        readinessProbe:
+          httpGet: {path: /readyz, port: http}
+          periodSeconds: 10
+          failureThreshold: 3
+        livenessProbe:
+          httpGet: {path: /healthz, port: http}
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        resources:
+          requests: {cpu: 25m, memory: 64Mi}
+          limits: {cpu: 250m, memory: 192Mi}
+        volumeMounts:
+        - {name: policy, mountPath: /etc/execute-gate, readOnly: true}
+        - {name: nats-ca, mountPath: /etc/nats-ca, readOnly: true}
+        - {name: tmp, mountPath: /tmp}
+      volumes:
+      - name: policy
+        configMap: {name: execute-gate-policy}
+      - name: nats-ca
+        secret:
+          secretName: gate-nats
+          items:
+          - {key: ca.crt, path: ca.crt}
+      - name: tmp
+        emptyDir: {sizeLimit: 16Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: execute-gate
+  namespace: tool-gateway
+  labels:
+    app.kubernetes.io/name: execute-gate
+    app.kubernetes.io/part-of: tool-gateway
+spec:
+  selector:
+    app.kubernetes.io/name: execute-gate
+  ports:
+  - {name: http, port: 8080, targetPort: http}

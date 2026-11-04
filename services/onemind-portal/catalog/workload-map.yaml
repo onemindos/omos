@@ -34,13 +34,9 @@ workloads:
   dapr-system/dapr-sidecar-injector: component:default/dapr
   github-runner/github-runner: component:default/platform-core
   github-runner/github-runner-hermes: component:default/platform-core
-  hermes/hermes-fresh: component:default/hermes-fresh
-  hermes/hermes-legacy: component:default/hermes-legacy
+  hermes/onemind-hermes: component:default/onemind-hermes
   hermes/onemind-mcp: component:default/onemind-mcp
   ingress-nginx/ingress-nginx-controller: component:default/ingress-nginx
-  keda/keda-admission-webhooks: component:default/keda
-  keda/keda-operator: component:default/keda
-  keda/keda-operator-metrics-apiserver: component:default/keda
   kube-system/clickhouse-operator: component:default/clickhouse
   kube-system/coredns: component:default/kubernetes-system
   kube-system/hubble-relay: component:default/hubble-ui
@@ -65,7 +61,6 @@ workloads:
   monitoring/monitoring-kube-prometheus-operator: component:default/prometheus
   monitoring/monitoring-kube-state-metrics: component:default/prometheus
   monitoring/prometheus-monitoring-kube-prometheus-prometheus: component:default/prometheus
-  monitoring/tempo: component:default/tempo
   n8n/n8n: component:default/n8n
   n8n/postgres: component:default/n8n
   nats/agent-web-ui: component:default/agent-web-ui
@@ -77,8 +72,6 @@ workloads:
   nats/nats-metrics-scrape: component:default/nats
   nats/nats-surveyor: component:default/nats-surveyor
   nats/nats-ui: component:default/nats-ui
-  nextcloud/nextcloud: component:default/nextcloud
-  nextcloud/nextcloud-redis: component:default/nextcloud
   omos/feed-intel: component:default/omos-data-pipeline
   omos/feed-satellites: component:default/omos-data-pipeline
   omos/omos-mission-engine: component:default/omos-data-pipeline
@@ -111,7 +104,6 @@ workloads:
   tailscale/ts-cilium-gateway-gateway-default-hl5fh: component:default/tailscale-operator
   tailscale/ts-grafana-ksprn: component:default/tailscale-operator
   tailscale/ts-headlamp-4qwkc: component:default/tailscale-operator
-  tailscale/ts-hermes-dashboard-6thbx: component:default/tailscale-operator
   tailscale/ts-heynats-p5dmf: component:default/tailscale-operator
   tailscale/ts-hubble-tw85d: component:default/tailscale-operator
   tailscale/ts-n8n-pmtds: component:default/tailscale-operator
@@ -131,6 +123,9 @@ workloads:
   tailscale/ts-onemind-preview-shtd7: component:default/tailscale-operator
   tailscale/ts-opencost-rqpmq: component:default/tailscale-operator
   tailscale/ts-tak-tailnet-jtgn4: component:default/tailscale-operator
+  tool-gateway/agentgateway: component:default/agentgateway
+  tool-gateway/mcp-clickhouse: component:default/mcp-clickhouse
+  tool-gateway/mcp-kubernetes: component:default/mcp-kubernetes
   takml/takml-db: component:default/takml
   takml/takml-server: component:default/takml
   takml/takml-vision-worker: component:default/takml
@@ -160,7 +155,6 @@ argoApplications:
   ecosystem-cnpg: component:default/cloudnative-pg
   ecosystem-dapr: component:default/dapr
   ecosystem-falco: component:default/falco
-  ecosystem-keda: component:default/keda
   ecosystem-kyverno: component:default/kyverno
   ecosystem-litellm: component:default/litellm
   ecosystem-ollama: component:default/ollama
@@ -175,7 +169,6 @@ argoApplications:
   monitoring-kube-prometheus-stack: component:default/prometheus
   monitoring-loki: component:default/loki
   monitoring-otel-collector: component:default/opentelemetry-collector
-  monitoring-tempo: component:default/tempo
   platform-agent-fabric: component:default/agent-web-ui
   platform-auth-helm: component:default/authentik
   platform-auth-infra: component:default/authentik
@@ -189,9 +182,10 @@ argoApplications:
   platform-ecosystem-foundation: component:default/argocd
   platform-ecosystem-resources: component:default/argocd
   platform-fedhub: component:default/fedhub
-  platform-hermes-fresh: component:default/hermes-fresh
+  platform-hermes-base: component:default/onemind-hermes
+  platform-onemind-hermes: component:default/onemind-hermes
+  platform-onemind-mcp: component:default/onemind-mcp
   platform-kube: component:default/headlamp
-  platform-legacy: component:default/hermes-legacy
   platform-matrix: component:default/matrix-synapse
   platform-metrics-server: component:default/kubernetes-system
   platform-monitoring: component:default/grafana
@@ -199,11 +193,9 @@ argoApplications:
   platform-nats: component:default/nats
   platform-nats-streams: component:default/nats
   platform-nats-tools: component:default/nats
-  platform-nextcloud: component:default/nextcloud
   platform-observability: component:default/clickhouse
   platform-omos: component:default/omos-data-pipeline
   platform-onetak: component:default/onetak
-  platform-paperclip: component:default/paperclip
   platform-ops: component:default/health-keeper
   platform-redpanda-connect: component:default/redpanda-connect
   platform-security: component:default/kyverno
@@ -211,6 +203,7 @@ argoApplications:
   platform-stac-validation: component:default/stac
   platform-takml: component:default/takml
   platform-takserver: component:default/tak-server
+  platform-tool-gateway: component:default/agentgateway
   platform-vaultwarden: component:default/vaultwarden
   platform-volsync: component:default/volsync
   platform-volume-backups: component:default/platform-backup-recovery

@@ -108,11 +108,24 @@ spec:
       # 0 on reconcile and increments on each completed sync; sum drops the pod label so a
       # controller restart does not split the series. The offset guard skips sources
       # younger than the window.
+      # The VolSync controller never drops the series of a deleted ReplicationSource, so a
+      # retired source (nextcloud-files, hermes-fresh-data, paperclip-*, old volume-*) keeps
+      # a flat counter for as long as the pod lives and would alert forever. The last
+      # clause keeps only sources that still exist: every live ReplicationSource owns the
+      # mover cache PVC volsync-src-<name>-cache (storageClassName do-block-storage, so
+      # it is deleted with its source; see CLAUDE.md "Deployment Pattern" item 7). A
+      # source that has never completed a sync has no cache PVC and is not covered.
       expr: |
         (
           sum by (obj_namespace, obj_name) (increase(volsync_sync_duration_seconds_count{role="source"}[26h])) == 0
         ) and on(obj_namespace, obj_name)
           sum by (obj_namespace, obj_name) (volsync_sync_duration_seconds_count{role="source"} offset 26h)
+        and on(obj_namespace, obj_name)
+          label_replace(
+            label_replace(
+              kube_persistentvolumeclaim_info{job="kube-state-metrics",persistentvolumeclaim=~"volsync-src-.+-cache"},
+              "obj_name", "$1", "persistentvolumeclaim", "volsync-src-(.+)-cache"),
+            "obj_namespace", "$1", "namespace", "(.*)")
       for: 30m
       labels:
         severity: warning

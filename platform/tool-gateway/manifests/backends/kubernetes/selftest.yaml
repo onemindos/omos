@@ -1,0 +1,11 @@
+# Safe-write target for the Kubernetes backend check (docs/operations/tool-gateway-kubernetes.md): the verification adds a label with
+# resources_create_or_update. Holds no data. Argo CD does not revert labels another field manager added (server-side apply).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-selftest
+  namespace: tool-gateway
+  labels:
+    app.kubernetes.io/name: gateway-selftest
+data:
+  purpose: Safe write target for the tool gateway Kubernetes backend. Do not store anything here.

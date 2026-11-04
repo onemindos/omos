@@ -1,0 +1,25 @@
+# Gateway egress to target `core` (onemind-core API, read-only OpenAPI subset). The ingress rule is in
+# platform/ecosystem/charts/onemind-core/templates/network.yaml.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: agentgateway-egress-core
+  namespace: tool-gateway
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: agentgateway-standalone
+      app.kubernetes.io/instance: agentgateway
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: onemind-core
+      podSelector:
+        matchLabels:
+          app: onemind-core
+    ports:
+    - {protocol: TCP, port: 8080}
