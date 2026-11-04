@@ -1,0 +1,715 @@
+{
+ "header": {
+  "gtfsRealtimeVersion": "1",
+  "timestamp": "1793273442"
+ },
+ "entity": [
+  {
+   "id": "1211",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248387",
+     "routeId": "3",
+     "startTime": "07:00:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "108",
+      "arrival": {
+       "delay": 60,
+       "time": "1793271660"
+      },
+      "departure": {
+       "delay": 60,
+       "time": "1793271660"
+      }
+     },
+     {
+      "stopId": "106",
+      "arrival": {
+       "delay": 60,
+       "time": "1793271900"
+      },
+      "departure": {
+       "delay": 60,
+       "time": "1793271900"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1211"
+    },
+    "vehicle": {
+     "id": "1211",
+     "label": "1211"
+    },
+    "position": {
+     "latitude": 40.7802,
+     "longitude": -73.957214
+    },
+    "stopId": "1",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1221",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248388",
+     "routeId": "3",
+     "startTime": "07:28:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "112",
+      "arrival": {
+       "time": "1793273280"
+      },
+      "departure": {
+       "time": "1793273280"
+      }
+     },
+     {
+      "stopId": "111",
+      "arrival": {
+       "time": "1793273460"
+      },
+      "departure": {
+       "time": "1793273460"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1221"
+    },
+    "vehicle": {
+     "id": "1221",
+     "label": "1221"
+    },
+    "position": {
+     "latitude": 40.96978,
+     "longitude": -73.7113
+    },
+    "stopId": "112",
+    "currentStatus": "STOPPED_AT",
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1313",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248421",
+     "routeId": "3",
+     "startTime": "07:00:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "112",
+      "arrival": {
+       "delay": 120,
+       "time": "1793271720"
+      },
+      "departure": {
+       "delay": 120,
+       "time": "1793271720"
+      }
+     },
+     {
+      "stopId": "111",
+      "arrival": {
+       "delay": 120,
+       "time": "1793271960"
+      },
+      "departure": {
+       "delay": 120,
+       "time": "1793271960"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1313"
+    },
+    "vehicle": {
+     "id": "1313",
+     "label": "1313"
+    },
+    "position": {
+     "latitude": 40.847248,
+     "longitude": -73.89952
+    },
+    "stopId": "1",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1315",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248423",
+     "routeId": "3",
+     "startTime": "06:46:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "124",
+      "arrival": {
+       "time": "1793270760"
+      },
+      "departure": {
+       "time": "1793270760"
+      }
+     },
+     {
+      "stopId": "121",
+      "arrival": {
+       "time": "1793270940"
+      },
+      "departure": {
+       "time": "1793270940"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1315"
+    },
+    "vehicle": {
+     "id": "1315",
+     "label": "1315"
+    },
+    "position": {
+     "latitude": 40.847248,
+     "longitude": -73.89952
+    },
+    "stopId": "1",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1317",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248425",
+     "routeId": "3",
+     "startTime": "07:21:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "108",
+      "arrival": {
+       "time": "1793272860"
+      },
+      "departure": {
+       "time": "1793272860"
+      }
+     },
+     {
+      "stopId": "106",
+      "arrival": {
+       "time": "1793273100"
+      },
+      "departure": {
+       "time": "1793273100"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1317"
+    },
+    "vehicle": {
+     "id": "1317",
+     "label": "1317"
+    },
+    "position": {
+     "latitude": 40.91206,
+     "longitude": -73.83195
+    },
+    "stopId": "1",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1321",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248428",
+     "routeId": "3",
+     "startTime": "06:54:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "124",
+      "arrival": {
+       "time": "1793271240"
+      },
+      "departure": {
+       "time": "1793271240"
+      }
+     },
+     {
+      "stopId": "121",
+      "arrival": {
+       "time": "1793271420"
+      },
+      "departure": {
+       "time": "1793271420"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1321"
+    },
+    "vehicle": {
+     "id": "1321",
+     "label": "1321"
+    },
+    "position": {
+     "latitude": 40.91002,
+     "longitude": -73.80891
+    },
+    "stopId": "106",
+    "currentStatus": "STOPPED_AT",
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1408",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248494",
+     "routeId": "3",
+     "startTime": "06:35:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "1",
+      "arrival": {
+       "delay": 240,
+       "time": "1793270340"
+      },
+      "departure": {
+       "delay": 240,
+       "time": "1793270340"
+      }
+     },
+     {
+      "stopId": "4",
+      "arrival": {
+       "delay": 240,
+       "time": "1793270940"
+      },
+      "departure": {
+       "delay": 240,
+       "time": "1793270940"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1408"
+    },
+    "vehicle": {
+     "id": "1408",
+     "label": "1408"
+    },
+    "position": {
+     "latitude": 41.02951,
+     "longitude": -73.6012
+    },
+    "stopId": "124",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1417",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248498",
+     "routeId": "3",
+     "startTime": "06:48:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "131",
+      "arrival": {
+       "time": "1793270880"
+      },
+      "departure": {
+       "time": "1793270880"
+      }
+     },
+     {
+      "stopId": "129",
+      "arrival": {
+       "time": "1793271120"
+      },
+      "departure": {
+       "time": "1793271120"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1417"
+    },
+    "vehicle": {
+     "id": "1417",
+     "label": "1417"
+    },
+    "position": {
+     "latitude": 40.91002,
+     "longitude": -73.80891
+    },
+    "stopId": "1",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1419",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248499",
+     "routeId": "3",
+     "startTime": "06:30:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "140",
+      "arrival": {
+       "time": "1793269800"
+      },
+      "departure": {
+       "time": "1793269800"
+      }
+     },
+     {
+      "stopId": "188",
+      "arrival": {
+       "time": "1793270160"
+      },
+      "departure": {
+       "time": "1793270160"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1419"
+    },
+    "vehicle": {
+     "id": "1419",
+     "label": "1419"
+    },
+    "position": {
+     "latitude": 40.9123,
+     "longitude": -73.78325
+    },
+    "stopId": "1",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1427",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248500",
+     "routeId": "3",
+     "startTime": "06:57:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "140",
+      "arrival": {
+       "delay": 180,
+       "time": "1793271600"
+      },
+      "departure": {
+       "delay": 180,
+       "time": "1793271600"
+      }
+     },
+     {
+      "stopId": "188",
+      "arrival": {
+       "delay": 180,
+       "time": "1793271900"
+      },
+      "departure": {
+       "delay": 180,
+       "time": "1793271900"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1427"
+    },
+    "vehicle": {
+     "id": "1427",
+     "label": "1427"
+    },
+    "position": {
+     "latitude": 41.077595,
+     "longitude": -73.44425
+    },
+    "stopId": "1",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1429",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248501",
+     "routeId": "3",
+     "startTime": "07:16:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "131",
+      "arrival": {
+       "delay": 120,
+       "time": "1793272680"
+      },
+      "departure": {
+       "delay": 120,
+       "time": "1793272680"
+      }
+     },
+     {
+      "stopId": "129",
+      "arrival": {
+       "delay": 120,
+       "time": "1793272920"
+      },
+      "departure": {
+       "delay": 120,
+       "time": "1793272920"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1429"
+    },
+    "vehicle": {
+     "id": "1429",
+     "label": "1429"
+    },
+    "position": {
+     "latitude": 41.077015,
+     "longitude": -73.47165
+    },
+    "stopId": "128",
+    "currentStatus": "STOPPED_AT",
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1431",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248502",
+     "routeId": "3",
+     "startTime": "07:39:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "188",
+      "arrival": {
+       "time": "1793273940"
+      },
+      "departure": {
+       "time": "1793273940"
+      }
+     },
+     {
+      "stopId": "138",
+      "arrival": {
+       "time": "1793274120"
+      },
+      "departure": {
+       "time": "1793274120"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1431"
+    },
+    "vehicle": {
+     "id": "1431",
+     "label": "1431"
+    },
+    "position": {
+     "latitude": 41.16029,
+     "longitude": -73.23523
+    },
+    "stopId": "188",
+    "currentStatus": "STOPPED_AT",
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1225",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248389",
+     "routeId": "3",
+     "startTime": "07:46:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "108",
+      "arrival": {
+       "time": "1793274360"
+      },
+      "departure": {
+       "time": "1793274360"
+      }
+     },
+     {
+      "stopId": "106",
+      "arrival": {
+       "time": "1793274660"
+      },
+      "departure": {
+       "time": "1793274660"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1225"
+    },
+    "vehicle": {
+     "id": "1225",
+     "label": "1225"
+    },
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1229",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248390",
+     "routeId": "3",
+     "startTime": "08:17:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "108",
+      "arrival": {
+       "time": "1793276220"
+      },
+      "departure": {
+       "time": "1793276220"
+      }
+     },
+     {
+      "stopId": "106",
+      "arrival": {
+       "time": "1793276400"
+      },
+      "departure": {
+       "time": "1793276400"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1229"
+    },
+    "vehicle": {
+     "id": "1229",
+     "label": "1229"
+    },
+    "timestamp": "1793273442"
+   }
+  },
+  {
+   "id": "1231",
+   "tripUpdate": {
+    "trip": {
+     "tripId": "3248391",
+     "routeId": "3",
+     "startTime": "08:12:00",
+     "startDate": "20261029"
+    },
+    "stopTimeUpdate": [
+     {
+      "stopId": "112",
+      "arrival": {
+       "time": "1793275920"
+      },
+      "departure": {
+       "time": "1793275920"
+      }
+     },
+     {
+      "stopId": "111",
+      "arrival": {
+       "time": "1793276100"
+      },
+      "departure": {
+       "time": "1793276100"
+      }
+     }
+    ]
+   },
+   "vehicle": {
+    "trip": {
+     "tripId": "1231"
+    },
+    "vehicle": {
+     "id": "1231",
+     "label": "1231"
+    },
+    "timestamp": "1793273442"
+   }
+  }
+ ]
+}

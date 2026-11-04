@@ -11,6 +11,10 @@
 # Feed: Satellites — CelesTrak TLE + SGP4 (propagates every 30s)
 # Groups: stations (ISS), military, starlink — toggle via CELESTRAK_GROUP
 # SGP4 orbital mechanics requires the sgp4 Python library; not portable to Wombat.
+# LEGACY (FEATURES A1): publishes CoT straight to tak.cot.inject. Its replacement,
+# feed-satellites-grammar in platform/data/redpanda-connect, publishes raw TLEs on
+# intel.space.celestrak.tle. `replicas` below is this feed's off switch: it goes to 0 only in
+# Stage 2 of platform/data/redpanda-connect/CUTOVER.md, after the grammar pipeline has run.
 # -----------------------------------------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
