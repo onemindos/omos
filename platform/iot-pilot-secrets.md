@@ -20,12 +20,22 @@ No values or sample credentials are supplied in this guide:
 | ThingsBoard | `thingsboard-env` | `DB_PASSWORD`, `SYSADMIN_EMAIL`, `SYSADMIN_PASSWORD`, `JWT_TOKEN_SIGNING_KEY` |
 | ThingsBoard | `thingsboard-database-restic` | same four Restic keys |
 
+Restic Secrets may also carry `AWS_DEFAULT_REGION` (optional; existing
+VolSync repositories on DigitalOcean Spaces set `nyc3`).
+
 Each password must be random, at least24 characters. BCrypt accepts a maximum72
 UTF8 bytes for the ThingsBoard owner password. The JWT key must be Base64 encoding
 of at least32 random bytes. Each volume needs a distinct HTTPS S3 repository prefix
 and its own Restic password; choose backup credentials scoped to those prefixes.
 Do not point both volumes at one Restic repository. Do not reuse the app's admin
 credential as an API identity or backup encryption key.
+
+Status 2026-11-04: both apps' SealedSecrets are generated and committed (strict scope,
+namespace/name-bound, sealed against the live `kube-system` controller). Restic
+repositories use the existing Spaces bucket under `backups/restic/<namespace>/<pvc>`
+and reuse the existing bucket-wide access key (not prefix-scoped; replace it with a
+scoped key later). Plaintext inputs are kept only as 0600 files in
+`~/.config/onemind/recovery/iot-pilot/`.
 
 Run one app at a time, using your actual private paths:
 

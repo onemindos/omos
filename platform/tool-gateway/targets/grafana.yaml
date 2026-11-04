@@ -1,0 +1,8 @@
+# Grafana MCP server (grafana/mcp-grafana 2.2.0) in tool-gateway: pending/grafana/ until the service-account token is sealed.
+# The backend holds the token; the gateway reaches it over the NetworkPolicy only (no bearer). Read-only start (-disable-write).
+name: grafana
+groups: [ops]
+enabled_by: [gateway-target-grafana]
+target:
+  mcp:
+    host: http://mcp-grafana.tool-gateway.svc.cluster.local:8000/mcp

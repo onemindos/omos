@@ -254,9 +254,30 @@ config:
             - key: ${GATEWAY_KEY_HERMES}
               metadata:
                 client: hermes
+          extAuthz:
+            conditional:
+            - condition: has(mcp.tool)
+              host: execute-gate.tool-gateway.svc.cluster.local:8080
+              failureMode:
+                denyWithStatus: 403
+              protocol:
+                http:
+                  path: '"/access/v1/evaluation"'
+                  addRequestHeaders:
+                    content-type: '"application/json"'
+                    :method: '"POST"'
+                  body: '{"subject": {"type": "agent", "id": apiKey.client}, "resource": {"type": "tool", "id": mcp.tool.target
+                    + "/" + mcp.tool.name}, "action": {"name": "tools/call"}, "context": {"arguments": has(mcp.tool.arguments)
+                    ? mcp.tool.arguments : {}}}'
+                  metadata:
+                    decision: json(response.body).decision
           mcpAuthorization:
             rules:
-            - require: 'false'
+            - allow: mcp.tool.target == "kubernetes" && (mcp.tool.name in ["pods_delete", "resources_delete", "resources_scale"])
+            - allow: mcp.tool.target == "mediamtx" && (mcp.tool.name in ["hlssessionsKick", "recordingsSegmentsDelete", "rtmpConnsKick",
+                "rtmpsConnsKick", "rtspSessionsKick", "rtspsSessionsKick", "srtConnsKick", "webrtcSessionsKick"])
+            - allow: mcp.tool.target == "onemind" && (mcp.tool.name in ["tile38_delete_object", "tile38_drop_collection"])
+            - require: mcp.methodName != "tools/call" || extauthz.decision == true
         backends:
         - mcp:
             prefixMode: always

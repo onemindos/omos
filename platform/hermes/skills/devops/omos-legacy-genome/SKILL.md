@@ -25,9 +25,9 @@ Corrected 2026-10-29 from the earlier version, which described the archived repo
 | Memory seeds (environment facts, owner facts) | `platform/hermes/seed/onemind-hermes/MEMORY.md`, `USER.md` |
 | Instance manifests and initial config | `platform/hermes/onemind-hermes/` (`config.defaults.yaml`, `MIGRATION.md`) |
 | Skills this instance loads | `platform/hermes/skills/` (see its `README.md`) |
-| Doctrine (creed, pillars, profiles, evolution) | `platform/hermes/agent/doctrine/` |
-| Role definitions (SO, HP, LE, GE) and the older Legacy | `platform/hermes/agent/agents/` and `AGENTS.yaml` |
-| Runbook and architecture of the predecessor | `platform/hermes/agent/RUNBOOK.md`, `LEGACY-ARCHITECTURE.md`, `FABRIC-REFERENCE.md` |
+| Doctrine (creed, pillars, profiles, evolution) | `platform/hermes/doctrine/` |
+| Role definitions (SO, HP, LE, GE) and the older Legacy | `platform/hermes/doctrine/agents/` and `AGENTS.yaml` |
+| Runbook and architecture of the predecessor | `platform/hermes/doctrine/RUNBOOK.md`, `LEGACY-ARCHITECTURE.md`, `FABRIC-REFERENCE.md` |
 | Platform mission, live inventory, subject grammar | `docs/MISSION.md`, `docs/STACK.md`, `docs/NATS-DOCTRINE.md` |
 
 The doctrine files describe the older multi-agent fabric (overseers and
@@ -64,7 +64,7 @@ remote URL or a reply. CI (`quality.yml`) runs gitleaks on every PR.
 | NATS subject, stream or KV | a new CR in `platform/nats/streams/`; subjects follow the locked grammar |
 | New or changed agent behavior | `platform/hermes/seed/onemind-hermes/SOUL.md` |
 | Environment or owner fact | `MEMORY.md` / `USER.md` seeds (and the live memory tool) |
-| Recovery procedure | `platform/hermes/agent/RUNBOOK.md` or `docs/operations/` |
+| Recovery procedure | `platform/hermes/doctrine/RUNBOOK.md` or `docs/operations/` |
 | Reusable method | a skill under `platform/hermes/skills/` |
 
 ## Pitfalls

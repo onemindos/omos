@@ -1,0 +1,77 @@
+name: Build corrected Hermes runtime
+
+# Deliberate dispatch only: never grant package credentials to PR-triggered code.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: hermes-runtime-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    outputs:
+      image: ${{ steps.digest.outputs.image }}
+      digest: ${{ steps.digest.outputs.digest }}
+    env:
+      # A rerun cannot overwrite a previous run's tag. Deploy only by digest.
+      IMAGE: ghcr.io/onemindos/hermes-agent:sha-${{ github.sha }}-run-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Build hash-locked correction (includes synthetic regression gate)
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: platform/hermes/onemind-hermes/onepassword/runtime-fix
+          platforms: linux/amd64
+          load: true
+          push: false
+          tags: ${{ env.IMAGE }}
+      - name: Exercise actual filters as gateway UID without network or credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm --platform linux/amd64 --network none --read-only \
+            --user 10000:10000 --cap-drop ALL --security-opt no-new-privileges \
+            --tmpfs /opt/runtime-fix/scratch:rw,uid=10000,gid=10000,mode=0700 \
+            --env TMPDIR=/opt/runtime-fix/scratch --env PYTHONPATH=/opt/hermes \
+            --entrypoint /opt/hermes/.venv/bin/python "$IMAGE" \
+            /opt/runtime-fix/test_child_policy.py --runtime-root /opt/hermes -v
+      - name: Authenticate only after image tests pass
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push the tested image and verify its remote digest
+        id: digest
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker push "$IMAGE"
+          pinned=$(docker image inspect "$IMAGE" --format '{{json .RepoDigests}}' \
+            | jq -er '.[] | select(startswith("ghcr.io/onemindos/hermes-agent@sha256:"))')
+          digest=${pinned##*@}
+          [[ "$digest" =~ ^sha256:[0-9a-f]{64}$ ]]
+          docker buildx imagetools inspect "$pinned"
+          printf 'image=%s\ndigest=%s\n' "$pinned" "$digest" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$pinned" > hermes-runtime-image.txt
+          {
+            printf '## Corrected Hermes runtime (NOT DEPLOYED)\n\n'
+            printf 'Source commit: `%s`\n\n' "$GITHUB_SHA"
+            printf 'Tested tag: `%s`\n\n' "$IMAGE"
+            printf 'Verified registry reference: `%s`\n\n' "$pinned"
+            printf 'Synthetic filters passed; no native authentication or cluster activation performed.\n'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: hermes-runtime-image-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: hermes-runtime-image.txt
+          if-no-files-found: error

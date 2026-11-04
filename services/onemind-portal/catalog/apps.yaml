@@ -423,6 +423,131 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: tacsync
+  title: TacSync
+  description: >-
+    External tactical reference for team awareness in milsims, with private map
+    sessions joined by QR code and no TAK server setup. Listed by request in TAK
+    Ecosystem; no TAK interoperability or OneMind integration is claimed.
+  tags:
+    - tak-ecosystem
+    - reference
+  links:
+    - url: https://tacsync.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://tacsync.com
+    onemind.io/launcher-category: TAK Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cesium-ion-for-tak
+  title: Cesium ion for TAK
+  description: >-
+    External reference to Cesium ion for TAK plugins for 3D Tiles, imagery and
+    terrain from cloud or self-hosted Cesium ion sources. No OneMind deployment,
+    integration or tested compatibility is claimed.
+  tags:
+    - tak-ecosystem
+    - reference
+  links:
+    - url: https://github.com/CesiumGS/cesium-ion-for-TAK-plugins
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/CesiumGS/cesium-ion-for-TAK-plugins
+    onemind.io/launcher-category: TAK Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: district47
+  title: District47
+  description: >-
+    External reference for ATAK plugins and KMZ data packages, radios, mesh and
+    power hardware, and field training. No OneMind affiliation or integration
+    implied.
+  tags:
+    - tak-ecosystem
+    - reference
+  links:
+    - url: https://district47.us
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://district47.us
+    onemind.io/launcher-category: TAK Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: xmpp-for-tak
+  title: XMPP for TAK
+  description: >-
+    Self-hosted messaging for ATAK’s TAK Chat plugin and standard desktop/mobile
+    XMPP clients, with persistent rooms, direct messages and a future Hermes
+    bridge. Deferred; plugin compatibility and integration remain untested.
+  tags:
+    - tak-ecosystem
+    - planned
+  links:
+    - url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/xmpp-for-tak
+      title: Planning card
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/xmpp-for-tak
+    onemind.io/launcher-category: TAK Ecosystem
+    onemind.io/documented-status: Planned — deferred, not deployed; plugin
+      compatibility and integration untested
+    onemind.io/hosting: planned-not-deployed
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: argocd
   title: ArgoCD
   description: GitOps CD
@@ -439,6 +564,8 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8158815be14e14b0f162.md
       title: "Archived registry: ArgoCD"
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/argocd/
     onemind.io/access-points: |-
       [
         {
@@ -709,62 +836,6 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: infrastructure
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: hermes-legacy
-  title: Hermes (old Legacy instance, being retired)
-  description: Old Legacy instance (being retired)
-  tags:
-    - ai-agents
-  links:
-    - url: https://hermes-agent.tail717ba0.ts.net/login?next=%2F
-      title: Open application
-      icon: dashboard
-    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
-      title: Operations runbook
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/relationship-source: ingress-service-selector
-    onemind.io/inventory-review: imported-link
-    onemind.io/tech-stack-status: Active
-    onemind.io/tech-stack-category: AI / ML
-    onemind.io/license: Commercial
-    onemind.io/onemind-integration: "true"
-    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81f4b144f3e8313ce477
-    onemind.io/tech-stack-notes: OneMind's primary AI agent. Runs on NATS,
-      interfaces with Bedrock/Claude, manages state.db, handles voice + text
-      tasks.
-    onemind.io/supported-platforms: Linux,K8s
-    argocd/app-name: platform-legacy
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: hermes
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=hermes,onemind.io/agent=legacy
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: hermes
-    grafana/alert-label-selector: namespace=hermes
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=hermes-legacy
-    onemind.io/logs-query: '{k8s_namespace_name="hermes", k8s_pod_name=~"(hermes-legacy)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/hermes-legacy/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: hermes/hermes-legacy
-    onemind.io/api-relationship-source: platform/hermes/agent/deployment.yaml
-      (nats-platform plugin registers agents.prompt.hermes.zeus.legacy through
-      the nats-leaf sidecar)
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: ai-agents
-  dependsOn:
-    - component:default/k8s-hermes-hermes-legacy-1e93d498
-  consumesApis:
-    - api:default/nats-agent-protocol
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1156,6 +1227,8 @@ metadata:
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
       title: Operations runbook
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/tak-server/
     onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: certificate-untrusted-from-operator-mac
     onemind.io/inventory-review: imported-link
@@ -1178,6 +1251,7 @@ metadata:
     onemind.io/api-relationship-source: services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml
       (natsConsumerSubject tak.cot.inject, natsProducerSubject tak.cot.out);
       platform/takserver/deploy/tak-nats-leaf.yaml
+    onemind.io/argocd-apps: platform-takserver,platform-takserver-tak-client
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -4603,6 +4677,8 @@ metadata:
     - backup
     - recovery
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/backups-ops/
     argocd/app-name: platform-backups
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/backups
     onemind.io/verified-at: 2026-10-08
@@ -6990,6 +7066,359 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: hermes-atlas
+  title: Hermes Atlas
+  description: >-
+    External reference: Community-curated Hermes ecosystem directory with
+    guides, tools, skills and plugins. No OneMind installation or integration
+    verified.
+  tags:
+    - reference
+    - hermes
+    - community
+  links:
+    - url: https://hermesatlas.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://hermesatlas.com
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hermes-bible
+  title: Hermes Bible
+  description: >-
+    External reference: Unofficial community documentation and workflows for
+    Hermes Agent; not affiliated with Nous Research. No OneMind installation or
+    integration verified.
+  tags:
+    - reference
+    - hermes
+    - community
+  links:
+    - url: https://www.hermesbible.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://www.hermesbible.com
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: oh-my-hermes
+  title: Oh My Hermes
+  description: >-
+    External reference: Community coding harness for Hermes Agent with IDE
+    workflows. No OneMind installation or integration verified.
+  tags:
+    - reference
+    - hermes
+    - community
+  links:
+    - url: https://omher.app
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://omher.app
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hermes-official-plugins
+  title: Hermes Official Plugins
+  description: >-
+    External reference: Official Hermes Agent plugins built and maintained by
+    Nous Research. No OneMind installation or integration verified.
+  tags:
+    - reference
+    - hermes
+    - official
+  links:
+    - url: https://github.com/NousResearch/hermes-official-plugins/tree/main
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/NousResearch/hermes-official-plugins/tree/main
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hermes-skills
+  title: Hermes Skills
+  description: >-
+    External reference: Official Nous Research Hermes skills documentation entry
+    point, redirecting to the skills marketplace. No OneMind installation or
+    integration verified.
+  tags:
+    - reference
+    - hermes
+    - official
+  links:
+    - url: https://hermes-agent.nousresearch.com/docs/skills
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://hermes-agent.nousresearch.com/docs/skills
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hermes-documentation
+  title: Hermes Documentation
+  description: >-
+    External reference: Official Nous Research documentation for Hermes Agent.
+    No OneMind installation or integration verified.
+  tags:
+    - reference
+    - hermes
+    - official
+  links:
+    - url: https://hermes-agent.nousresearch.com/docs/
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://hermes-agent.nousresearch.com/docs/
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: osiris
+  title: OSIRIS
+  description: >-
+    External reference for a global OSINT dashboard combining flight tracking,
+    public CCTV, earthquakes, conflict mapping and news feeds. No OneMind
+    deployment, compatibility or integration verified.
+  tags:
+    - reference
+    - osint
+    - geospatial-intelligence
+    - situational-awareness
+  links:
+    - url: https://github.com/simplifaisoul/osiris
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/simplifaisoul/osiris
+    onemind.io/launcher-category: Intelligence
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: approved
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: worldwideview
+  title: WorldWideView (external reference)
+  description: >-
+    External reference for a plugin-driven geospatial intelligence engine
+    rendering data layers on a CesiumJS 3D globe. No OneMind deployment,
+    compatibility or integration verified.
+  tags:
+    - reference
+    - geospatial-intelligence
+    - situational-awareness
+  links:
+    - url: https://github.com/silvertakana/worldwideview
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/silvertakana/worldwideview
+    onemind.io/launcher-category: Intelligence
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: approved
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: worldmonitor
+  title: World Monitor
+  description: >-
+    External reference for global situational awareness across news,
+    geopolitics, infrastructure and other public-source signals, with map and
+    globe views. No OneMind deployment, compatibility or integration verified.
+  tags:
+    - reference
+    - osint
+    - situational-awareness
+  links:
+    - url: https://github.com/koala73/worldmonitor
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/koala73/worldmonitor
+    onemind.io/launcher-category: Intelligence
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: approved
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: argos-atlas
+  title: Argos Atlas
+  description: >-
+    External reference for a hosted public-source map with camera, flight, ship,
+    conflict and news layers. Provider data and hosting are unverified. No
+    OneMind deployment, compatibility or integration verified.
+  tags:
+    - reference
+    - osint
+    - geospatial-intelligence
+    - situational-awareness
+  links:
+    - url: https://argosatlas.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://argosatlas.com
+    onemind.io/launcher-category: Intelligence
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: approved
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: gods-eye-view
+  title: God's Eye View
+  description: >-
+    External reference for a 3D globe combining public aircraft, ship,
+    satellite, earthquake and camera data. Traffic is simulated; not all layers
+    are live observations. No OneMind deployment, compatibility or integration
+    verified.
+  tags:
+    - reference
+    - osint
+    - geospatial-intelligence
+    - situational-awareness
+  links:
+    - url: https://github.com/bilawalsidhu/gods-eye-view
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/bilawalsidhu/gods-eye-view
+    onemind.io/launcher-category: Intelligence
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: approved
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: platform-core
   tags:
     - kubernetes
@@ -6997,6 +7426,8 @@ metadata:
   description: Sealed Secrets controller, GitHub runner and Tailscale policy (Argo
     application platform-core).
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/sealed-secrets/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-core
@@ -7029,6 +7460,8 @@ metadata:
   title: cert-manager
   description: Certificate management for the cluster.
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/cert-manager/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: edge-cert-manager
@@ -7062,6 +7495,8 @@ metadata:
   title: ingress-nginx
   description: Public ingress controller.
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/ingress-nginx/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: edge-ingress-nginx
@@ -7110,41 +7545,7 @@ metadata:
     github.com/project-slug: onemindos/omos
     backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
     onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/operator,tailscale/ts-agent-console-8khxt,tailscale/ts-agent-tap-v7ktr,tailscale/ts-argocd-slkzh,tailscale/ts-cilium-gateway-gateway-default-bl4tw,tailscale/ts-cilium-gateway-gateway-default-hl5fh,tailscale/ts-grafana-ksprn,tailscale/ts-headlamp-4qwkc,tailscale/ts-hermes-dashboard-6thbx,tailscale/ts-heynats-p5dmf,tailscale/ts-hubble-tw85d,tailscale/ts-n8n-pmtds,tailscale/ts-nats-dashboard-242wv,tailscale/ts-nats-monitor-zh589,tailscale/ts-nats-ui-d6rrg,tailscale/ts-nats-ws-4q6bc,tailscale/ts-observer-pftsp,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-onemind-preview-shtd7,tailscale/ts-opencost-rqpmq,tailscale/ts-tak-tailnet-jtgn4
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: keda
-  tags:
-    - kubernetes
-  title: KEDA
-  description: Event-driven autoscaling.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-keda
-    argocd/instance-name: onemind-cloud
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: keda
-    backstage.io/kubernetes-namespace: keda
-    backstage.io/kubernetes-label-selector: app in
-      (keda-admission-webhooks,keda-operator,keda-operator-metrics-apiserver)
-    grafana/alert-label-selector: namespace=keda
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=keda
-    onemind.io/logs-query: '{k8s_namespace_name="keda"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/keda/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: keda/keda-admission-webhooks,keda/keda-operator,keda/keda-operator-metrics-apiserver
+    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/operator,tailscale/ts-agent-console-8khxt,tailscale/ts-agent-tap-v7ktr,tailscale/ts-argocd-slkzh,tailscale/ts-cilium-gateway-gateway-default-bl4tw,tailscale/ts-cilium-gateway-gateway-default-hl5fh,tailscale/ts-grafana-ksprn,tailscale/ts-headlamp-4qwkc,tailscale/ts-heynats-p5dmf,tailscale/ts-hubble-tw85d,tailscale/ts-n8n-pmtds,tailscale/ts-nats-dashboard-242wv,tailscale/ts-nats-monitor-zh589,tailscale/ts-nats-ui-d6rrg,tailscale/ts-nats-ws-4q6bc,tailscale/ts-observer-pftsp,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-onemind-preview-shtd7,tailscale/ts-opencost-rqpmq,tailscale/ts-tak-tailnet-jtgn4
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7253,6 +7654,7 @@ metadata:
     onemind.io/api-relationship-source: services/onemind-core/onemind/ingestion.py
       (subscribes tel.fleet.>, evt.world.>, evt.tak.cot.>), deployed as
       onemind-core/onemind-ingestion
+    onemind.io/argocd-apps: ecosystem-onemind-core,platform-policy
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7274,6 +7676,8 @@ metadata:
   title: Authentik
   description: Identity provider (server, worker, Redis, PostgreSQL).
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/authentik/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-auth-helm
@@ -7467,39 +7871,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: tempo
-  tags:
-    - kubernetes
-  title: Tempo
-  description: Distributed tracing backend.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: monitoring-tempo
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: monitoring
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=tempo,app.kubernetes.io/name=tempo
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: monitoring
-    grafana/alert-label-selector: namespace=monitoring
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=monitoring&var-workload=tempo
-    onemind.io/logs-query: '{k8s_namespace_name="monitoring", k8s_pod_name=~"(tempo)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/tempo/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: monitoring/tempo
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: observability
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: opentelemetry-collector
   tags:
     - kubernetes
@@ -7569,6 +7940,8 @@ metadata:
   title: Cluster health observer
   description: Read-only five-minute cluster health observer (platform-ops).
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/backups-ops/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-ops
@@ -7629,6 +8002,8 @@ metadata:
   title: Velero
   description: Cluster backup and restore.
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/backups-ops/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: ecosystem-velero
@@ -7662,6 +8037,8 @@ metadata:
   title: VolSync
   description: Volume replication and backup controller.
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/backups-ops/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-volsync
@@ -7696,6 +8073,8 @@ metadata:
   description: The authority message bus (3-node JetStream), the NACK controller
     and NATS tools.
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/nats/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-nats
@@ -7800,6 +8179,7 @@ metadata:
       platform/omos/feed-scripts.yaml (feed-satellites publishes
       tak.cot.inject); platform/omos/intel-scripts.yaml (publishes intel.* and
       tel.feed.*.status)
+    onemind.io/argocd-apps: platform-omos,platform-omos-entity
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7981,10 +8361,12 @@ metadata:
   tags:
     - kubernetes
   title: Legacy (onemind-hermes)
-  description: Hermes v0.22.5 instance with the single Legacy soul in the hermes
+  description: Hermes v0.22.7 instance with the single Legacy soul in the hermes
     namespace (Argo application platform-onemind-hermes); no NATS sidecar, no
     imported Legacy data.
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/hermes/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-onemind-hermes
@@ -8000,6 +8382,7 @@ metadata:
     grafana/alert-label-selector: namespace=hermes
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=onemind-hermes
     onemind.io/logs-query: '{k8s_namespace_name="hermes", k8s_pod_name=~"(onemind-hermes)-.*"}'
+    onemind.io/argocd-apps: platform-hermes-base,platform-onemind-hermes
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8019,10 +8402,12 @@ metadata:
   description: MCP server giving Hermes typed tools for in-cluster apps (NATS
     monitoring, Prometheus, Ollama, OpenCost, and the Tile38 adapter with one
     write, tile38_set_point); it is the onemind target behind the tool gateway;
-    manifests in platform/hermes/mcp (Argo application platform-legacy).
+    manifests in platform/hermes/mcp (Argo application platform-onemind-mcp).
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-onemind-mcp
+    argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: hermes
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=onemind-mcp
     onemind.io/pillar-review: proposed
@@ -8035,10 +8420,9 @@ metadata:
     onemind.io/recovery-runbook: apps/onemind-mcp/
     github.com/project-slug: onemindos/omos
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/services/onemind-mcp
-    onemind.io/deployment-source: platform/hermes/mcp; platform/argocd/platform-legacy.yaml
+    onemind.io/deployment-source: platform/hermes/mcp; platform/argocd/platform-onemind-mcp.yaml
     onemind.io/relationship-source: platform/hermes/mcp/deployment.yaml
-      (NATS_MONITOR_URL nats-0 monitoring port 8222, PROMETHEUS_URL);
-      platform/hermes/agent/onemind_mcp_config.py (Hermes Legacy client)
+      (NATS_MONITOR_URL nats-0 monitoring port 8222, PROMETHEUS_URL)
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8057,8 +8441,6 @@ spec:
   dependsOn:
     - component:default/nats
     - component:default/prometheus
-  dependencyOf:
-    - component:default/hermes-legacy
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -8138,33 +8520,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: paperclip
-  tags:
-    - kubernetes
-  title: Paperclip
-  description: Business agent workspace prepared in PR 438; owner setup and
-    runtime verification are pending.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: platform-paperclip
-    argocd/instance-name: onemind-cloud
-    onemind.io/pillar-review: proposed
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/paperclip/
-    github.com/project-slug: onemindos/omos
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: ai-agents
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: karakeep
   tags:
     - kubernetes
@@ -8196,6 +8551,80 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: openremote
+  tags:
+    - kubernetes
+  title: OpenRemote
+  description: Private OpenRemote IoT evaluation (manager, Keycloak, PostgreSQL,
+    same-origin proxy) prepared with a manual Argo Application; sealed
+    credentials, first sync, owner login, telemetry and restore acceptance are
+    pending.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-openremote
+    onemind.io/launcher-url: https://openremote.tail717ba0.ts.net
+    onemind.io/runtime-evidence: Prepared source only; manual Argo, no live
+      namespace or workload; no working-route or application acceptance
+      recorded.
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/openremote/
+    github.com/project-slug: onemindos/omos
+  links:
+    - url: https://openremote.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+  labels:
+    onemind.io/pillar: le
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: home-homestead
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: thingsboard
+  tags:
+    - kubernetes
+  title: ThingsBoard
+  description: Private ThingsBoard Community 4.3 IoT evaluation (application and
+    PostgreSQL, one-time schema bootstrap hook) prepared with a manual Argo
+    Application; sealed credentials, first sync, owner login, telemetry and
+    restore acceptance are pending.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-thingsboard
+    onemind.io/launcher-url: https://thingsboard.tail717ba0.ts.net
+    onemind.io/runtime-evidence: Prepared source only; manual Argo, no live
+      namespace or workload; no working-route or application acceptance
+      recorded.
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/thingsboard/
+    github.com/project-slug: onemindos/omos
+  links:
+    - url: https://thingsboard.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+  labels:
+    onemind.io/pillar: le
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: home-homestead
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -8403,6 +8832,35 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
+  name: argocd-app-platform-hermes-base
+  title: Argo CD application platform-hermes-base
+  description: Argo CD application platform-hermes-base, one of the applications
+    that deploy Legacy (onemind-hermes) (component:default/onemind-hermes, whose
+    primary application is platform-onemind-hermes).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-hermes-base
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-hermes-base
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: ai-agents
+  dependencyOf:
+    - component:default/onemind-hermes
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
   name: argocd-app-platform-nats-streams
   title: Argo CD application platform-nats-streams
   description: Argo CD application platform-nats-streams, one of the applications
@@ -8490,6 +8948,64 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
+  name: argocd-app-platform-omos-entity
+  title: Argo CD application platform-omos-entity
+  description: Argo CD application platform-omos-entity, one of the applications
+    that deploy OMOS data pipeline (component:default/omos-data-pipeline, whose
+    primary application is platform-omos).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-omos-entity
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-omos-entity
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: messaging-nats
+  dependencyOf:
+    - component:default/omos-data-pipeline
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-policy
+  title: Argo CD application platform-policy
+  description: Argo CD application platform-policy, one of the applications that
+    deploy OneMind core services (component:default/onemind-core, whose primary
+    application is ecosystem-onemind-core).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-policy
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-policy
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependencyOf:
+    - component:default/onemind-core
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
   name: argocd-app-platform-security
   title: Argo CD application platform-security
   description: Argo CD application platform-security, one of the applications that
@@ -8544,6 +9060,35 @@ spec:
   system: geospatial
   dependencyOf:
     - component:default/stac
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-takserver-tak-client
+  title: Argo CD application platform-takserver-tak-client
+  description: Argo CD application platform-takserver-tak-client, one of the
+    applications that deploy TAK Server (component:default/tak-server, whose
+    primary application is platform-takserver).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-takserver-tak-client
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-takserver-tak-client
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+  dependencyOf:
+    - component:default/tak-server
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource

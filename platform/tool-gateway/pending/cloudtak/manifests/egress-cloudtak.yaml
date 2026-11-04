@@ -1,0 +1,26 @@
+# Gateway egress to the CloudTAK API (:5000).
+# Activated (moved to manifests/) by scripts/gateway/keys-session.sh when gateway-target-cloudtak is sealed.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: agentgateway-egress-cloudtak
+  namespace: tool-gateway
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: agentgateway-standalone
+      app.kubernetes.io/instance: agentgateway
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: cloudtak
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/component: api
+          app.kubernetes.io/name: cloudtak
+    ports:
+    - {protocol: TCP, port: 5000}

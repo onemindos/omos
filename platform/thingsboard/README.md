@@ -48,6 +48,27 @@ schema or reset owner credentials. A failed/partial install stops for diagnosis;
 review the database and restore/recovery path rather than forcing the guard.
 Changing the sealed bootstrap file later is not a password rotation mechanism.
 
+## First login and owner credentials
+
+The system administrator email is `me@zeusdelacruz.com` (`SYSADMIN_EMAIL`). Only the
+BCrypt hash is sealed, so the plaintext **cannot be recovered from the cluster**. It
+exists solely in the owner-only (0600) file
+`~/.config/onemind/recovery/iot-pilot/thingsboard-2026-11-04.json` on Zeus's Mac (never
+printed or committed). Back it up to the owner's encrypted credential store. To put it
+on the clipboard without displaying it:
+
+```sh
+python3 -c "import json,sys; print(json.load(open(sys.argv[1]))[sys.argv[2]][sys.argv[3]], end='')" \
+  ~/.config/onemind/recovery/iot-pilot/thingsboard-2026-11-04.json thingsboard-env SYSADMIN_PASSWORD | pbcopy
+```
+Paste it into the login field, then clear the clipboard.
+
+After the bootstrap hook completes, open `https://thingsboard.tail717ba0.ts.net`, sign
+in with that email, confirm the upstream default `sysadmin@thingsboard.org` login fails,
+then create a tenant and a named tenant administrator and stop using the system
+administrator for daily work. Changing the password in the UI is allowed and supersedes
+the stored one (update the store); the sealed hash is not a rotation path.
+
 ## Before launch and acceptance
 
 - Review available ecosystem capacity. App/database steady requests are1792Mi

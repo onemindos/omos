@@ -37,7 +37,7 @@ spec:
                               "core": ["onemind-chat", "onemind-fast"],
                           }
                           if os.environ.get("hermes", "").strip():
-                              names_and_models["hermes"] = ["hermes-agent", "local-tools", "local-embed"]
+                              names_and_models["hermes"] = ["local-tools", "local-embed"]
                           else:
                               print("Hermes credential absent; existing clients only")
                           for name, models in names_and_models.items():

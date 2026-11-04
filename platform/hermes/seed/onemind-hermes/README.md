@@ -12,8 +12,8 @@ Entries in the memory files are separated by a line containing `§`, the Hermes 
 
 ## Sources merged
 
-- Git: `platform/hermes/agent/agents/{legacy,legacy-edge,ge,hp,le,so,_template,planned}`, `doctrine/{CREED,PILLARS,PROFILES,EVOLUTION}.md`, `AGENTS.yaml`, `README.md`, `docs/MISSION.md`, `CLAUDE.md`.
-- Live pod `hermes-legacy` (read-only `cat`, 2026-10-29): `/opt/data/SOUL.md`, the four profile souls, `memories/MEMORY.md` and `USER.md`.
+- Git: `platform/hermes/doctrine/agents/{legacy,legacy-edge,ge,hp,le,so,_template,planned}`, `doctrine/{CREED,PILLARS,PROFILES,EVOLUTION}.md`, `AGENTS.yaml`, `README.md`, `docs/MISSION.md`, `CLAUDE.md`.
+- Live pod `hermes-legacy`, since retired (read-only `cat`, 2026-10-29): `/opt/data/SOUL.md`, the four profile souls, `memories/MEMORY.md` and `USER.md`.
 
 ## Drift: live versus Git
 

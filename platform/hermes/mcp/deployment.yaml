@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: onemind-mcp
   annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
     argocd.argoproj.io/sync-wave: "-1"
 spec:
   replicas: 1
@@ -78,8 +79,6 @@ spec:
               value: http://loki-gateway.monitoring.svc.cluster.local
             - name: OPENCOST_URL
               value: http://opencost.opencost.svc.cluster.local:9003
-            - name: TEMPO_URL
-              value: http://tempo.monitoring.svc.cluster.local:3200
             - name: GRAFANA_URL
               value: http://monitoring-grafana.monitoring.svc.cluster.local
             - name: GRAFANA_API_TOKEN

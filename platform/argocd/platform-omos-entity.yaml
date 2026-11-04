@@ -1,0 +1,36 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 3 — MAKE SENSE (entity service)                          sync-wave: "4"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-omos-entity: the OneMind entity service (FEATURES A4), namespace omos.
+#
+# Covers: platform/omos/entity/ (Deployment only; it reuses the omos-nats-creds
+# SealedSecret that platform-omos applies).
+#
+# MANUAL SYNC, zero retries. Do not sync until the prerequisites at the top of
+# platform/omos/entity/deployment.yaml are met (owner approval of the ENT stream and
+# kv-entity-correlation proposal, first image build and digest pin). Re-enable
+# automation only after a first rollout has been observed.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-omos-entity
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/omos/entity
+    directory:
+      recurse: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: omos
+  syncPolicy:
+    retry:
+      limit: 0

@@ -3,6 +3,7 @@
 #
 #   mcp/apply.sh [--dry-run]    set the live mcp_servers (ops, data, tak on the tool gateway), remove the old
 #                               LiteLLM `onemind` entry, keep every other key; backs up config.yaml first
+#   mcp/apply.sh --include execute   also add the `execute` server (held back by default until the execute gate works)
 #
 # config.defaults.yaml only seeds an empty volume, so after the first start the live file must be changed in place.
 # Run it after the deployment carries ONEMIND_GATEWAY_KEY. Hermes reads mcp_servers at start, so restart it

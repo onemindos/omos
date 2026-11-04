@@ -127,8 +127,10 @@ class Renderer(unittest.TestCase):
         for gw, targets, classes in ((render.load()),
                                      (GW, [frag()], {"grafana": klass(read=["a"], destructive=["delete_x"])})):
             routes = routes_of(render.render(gw, targets, classes))
-            for name in ("execute", "identity"):
-                self.assertEqual(routes[name]["policies"]["mcpAuthorization"], {"rules": [{"require": "false"}]}, name)
+            self.assertEqual(routes["identity"]["policies"]["mcpAuthorization"], {"rules": [{"require": "false"}]})
+            # execute is deny-all without `authz`; with it, see test_gitops_tool_gateway_execute.py
+            if "authz" not in gw["groups"]["execute"]:
+                self.assertEqual(routes["execute"]["policies"]["mcpAuthorization"], {"rules": [{"require": "false"}]})
 
     def test_unlisted_destructive_and_physical_tools_are_not_listed(self):
         c = klass(read=["get_*", "list"], write=["create_note"], destructive=["delete_note"], physical=["unlock_door"])

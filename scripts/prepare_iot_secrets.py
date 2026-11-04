@@ -30,7 +30,8 @@ def validate(app: str, supplied: dict) -> dict:
     payloads = {}
     for name, required in REQUIRED[app].items():
         values = supplied[name]
-        if set(values) != required or not all(isinstance(v, str) and v.strip() for v in values.values()):
+        optional = {'AWS_DEFAULT_REGION'} if 'RESTIC_REPOSITORY' in required else set()
+        if not required <= set(values) <= required | optional or not all(isinstance(v, str) and v.strip() for v in values.values()):
             raise ValueError('Private input has missing, extra or empty keys')
         for key in required & {'DB_PASSWORD', 'ADMIN_PASSWORD', 'SYSADMIN_PASSWORD', 'RESTIC_PASSWORD'}:
             if len(values[key]) < 24:

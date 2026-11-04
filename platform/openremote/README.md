@@ -43,6 +43,27 @@ is configured. Native rules operate only on assets you deliberately create.
    probes; inspect sanitized logs. The manager bootstraps the empty schema/realm
    using the sealed administrator password. It must not clean an existing schema.
 
+## First login and owner credentials
+
+Credentials were generated on 2026-11-04 and sealed against the live controller. The
+plaintext exists only in an owner-only (0600) JSON file at
+`~/.config/onemind/recovery/iot-pilot/openremote-2026-11-04.json` on Zeus's Mac (it also
+holds the Restic repositories and passwords); it was never printed or committed. Copy it
+to the owner's encrypted credential store and keep an offline copy. To put the
+administrator password on the clipboard without displaying it:
+
+```sh
+python3 -c "import json,sys; print(json.load(open(sys.argv[1]))[sys.argv[2]][sys.argv[3]], end='')" \
+  ~/.config/onemind/recovery/iot-pilot/openremote-2026-11-04.json openremote-env ADMIN_PASSWORD | pbcopy
+```
+Paste it into the login field, then clear the clipboard.
+
+Open `https://openremote.tail717ba0.ts.net` from a tailnet device and sign in to the
+`master` realm as `admin` with that password (the manager and the bundled Keycloak
+share it; confirm the username at first login). Then create a named owner user in a
+new evaluation realm and change or retire the `admin` password in the store and in
+Keycloak. Nothing creates owner accounts beyond this bootstrap administrator.
+
 ## Acceptance before real use
 
 - Open the private HTTPS origin on two authorized tailnet clients. Verify login,
