@@ -32,7 +32,7 @@ EXCLUDE = (
     re.compile(r"(^|/)values[^/]*\.(ya?ml)$"),
     re.compile(r"(^|/)(kustomization|Chart|chart-lock|foundation-lock)\.(ya?ml|json)$"),
     re.compile(r"^platform/values/"),
-    re.compile(r"^platform/ecosystem/(values|charts|openchoreo-overrides)/"),
+    re.compile(r"^platform/ecosystem/(values|charts)/"),
     re.compile(r"^platform/matrix/"),  # Synapse/ESS config and scripts, not cluster manifests
 )
 CRD_SCHEMA = (

@@ -235,81 +235,6 @@ spec:
 apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshot
 metadata:
-  name: readiness-20261008-93cec0eff115
-  namespace: onetak
-  labels:
-    onemind.io/backup-set: readiness-20261008
-  annotations:
-    onemind.io/source-pvc: nominatim-data
-    onemind.io/consistency: crash-consistent
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: nominatim-data
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
-  name: readiness-20261008-50fb74ff16c6
-  namespace: onetak
-  labels:
-    onemind.io/backup-set: readiness-20261008
-  annotations:
-    onemind.io/source-pvc: onetak-geo-db-data
-    onemind.io/consistency: crash-consistent
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: onetak-geo-db-data
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
-  name: readiness-20261008-b455a3425ad0
-  namespace: onetak
-  labels:
-    onemind.io/backup-set: readiness-20261008
-  annotations:
-    onemind.io/source-pvc: onetak-minio-data
-    onemind.io/consistency: crash-consistent
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: onetak-minio-data
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
-  name: readiness-20261008-76694cc119e9
-  namespace: onetak
-  labels:
-    onemind.io/backup-set: readiness-20261008
-  annotations:
-    onemind.io/source-pvc: onetak-pgdata
-    onemind.io/consistency: crash-consistent
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: onetak-pgdata
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
-  name: readiness-20261008-76d69bd17963
-  namespace: onetak
-  labels:
-    onemind.io/backup-set: readiness-20261008
-  annotations:
-    onemind.io/source-pvc: overpass-data
-    onemind.io/consistency: crash-consistent
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: overpass-data
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
   name: readiness-20261008-adf3fcd472a7
   namespace: onetak
   labels:
@@ -340,21 +265,6 @@ spec:
 apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshot
 metadata:
-  name: readiness-20261008-edfbac6aab24
-  namespace: onetak
-  labels:
-    onemind.io/backup-set: readiness-20261008
-  annotations:
-    onemind.io/source-pvc: valhalla-data
-    onemind.io/consistency: crash-consistent
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: valhalla-data
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
   name: readiness-20261008-e0dfcd35f5a7
   namespace: onetak
   labels:
@@ -381,21 +291,6 @@ spec:
   volumeSnapshotClassName: onemind-backup-retain
   source:
     persistentVolumeClaimName: webodm-media
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
-  name: readiness-20261008-708da2be53bb
-  namespace: openclaw
-  labels:
-    onemind.io/backup-set: readiness-20261008
-  annotations:
-    onemind.io/source-pvc: openclaw-home-pvc
-    onemind.io/consistency: crash-consistent
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: openclaw-home-pvc
 ---
 apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshot

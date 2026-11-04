@@ -55,6 +55,8 @@ try {
   }
   fs.writeFileSync(repositoryFile, JSON.stringify(repositories, null, 2) + '\n');
   cp.execFileSync(process.execPath, ['scripts/verify-inventory.cjs'], { stdio: 'inherit' });
+  // Last: re-parent every entity into the reviewed SO/LE/HP/GE structure (verify and enrich re-add legacy Systems).
+  cp.execFileSync(process.execPath, ['scripts/curate-structure.cjs'], { stdio: 'inherit' });
   console.log('Complete discovery staged for review. No entities deleted; no deployment or catalog API writes.');
 } catch (error) {
   for (const [file, bytes] of original) {

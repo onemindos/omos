@@ -1,0 +1,29 @@
+# Hand-written: onemind-core publishes no OpenAPI (services/onemind-core/onemind/api.py sets openapi_url=None).
+# Read-only subset reachable with READ_API_KEY; every path is a GET route of that file (a unit test checks).
+# Writes (POST /objects, /links, /missions, /missions/{id}/cancel) need the operator credential and are not exposed.
+openapi: 3.0.3
+info: {title: OneMind operational core (read-only subset), version: 0.1.0}
+paths:
+  /capabilities:
+    get: {operationId: list_capabilities, summary: List the named mission capabilities the core can run., responses: {"200": {description: OK}}}
+  /objects:
+    get:
+      operationId: list_objects
+      summary: List core objects (entities projected from sources and app-owned), newest data first.
+      parameters:
+      - {name: limit, in: query, required: false, schema: {type: integer, minimum: 1, maximum: 500, default: 200}}
+      - {name: kind, in: query, required: false, description: Filter by object kind., schema: {type: string}}
+      responses: {"200": {description: OK}}
+  /links:
+    get: {operationId: list_links, summary: List relationships between core objects., responses: {"200": {description: OK}}}
+  /agents:
+    get: {operationId: list_agents, summary: List currently discovered agents., responses: {"200": {description: OK}}}
+  /missions:
+    get: {operationId: list_missions, summary: List mission requests and their state., responses: {"200": {description: OK}}}
+  /missions/{mid}:
+    get:
+      operationId: get_mission
+      summary: Get one mission request with its state and result.
+      parameters:
+      - {name: mid, in: path, required: true, schema: {type: string}}
+      responses: {"200": {description: OK}}

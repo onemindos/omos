@@ -7,7 +7,7 @@
 # TWO WAYS TO APPLY:
 #
 # Option A — Web UI (recommended):
-#   Navigate to: https://tak.onemindos.dev → Configuration → Security & Auth
+#   Navigate to: https://tak.tail717ba0.ts.net:8443 → Configuration → Security & Auth
 #   Set LDAP URL:         ldap://tak-ldap:389
 #   Set User String:      uid={username},ou=People,dc=onemindos,dc=dev
 #   Set Style:            DS  (OpenLDAP, NOT AD)

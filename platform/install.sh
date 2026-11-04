@@ -44,31 +44,15 @@ helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
   -f "$PLATFORM/values/ingress-nginx.yaml"
 
 helm repo add argo https://argoproj.github.io/argo-helm --force-update
-helm upgrade --install argocd argo/argo-cd \
-  --kube-context "$CTX" -n argocd --create-namespace
-# ArgoCD uses all defaults — no custom values needed
+helm upgrade --install argocd argo/argo-cd --version 10.1.2 \
+  --kube-context "$CTX" -n argocd --create-namespace \
+  -f "$PLATFORM/values/argocd.yaml"
+# values/argocd.yaml: resource limits, url, Authentik oidc.config, RBAC group mapping, Dex disabled
 
 # -----------------------------------------------------------------------------
-# 2. TLS ISSUERS (cert-manager ClusterIssuers)
-# cloudflare-api-token is a SealedSecret in platform/cert-manager/
+# 2. TLS ISSUERS: none. The unused letsencrypt-dns ClusterIssuer and its Cloudflare
+# token were removed; add an issuer under platform/core when a direct certificate is needed.
 # -----------------------------------------------------------------------------
-kubectl --context "$CTX" apply -f "$PLATFORM/ingress/issuer-dns.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/ingress/issuers.yaml"
-
-# -----------------------------------------------------------------------------
-# 3. CLOUDFLARE TUNNEL (zero public inbound)
-# Routes are declared in platform/cloudflare/config.yaml — edit + apply to add new routes.
-# Requires tunnel-creds-json secret (SealedSecret — see platform/cloudflare/tunnel-creds-json.sealedsecret.yaml):
-#   TOKEN=$(op read "op://00-24 SO/tunnel-credentials/tunnel-token")
-#   python3 -c "
-#     import sys,json,base64; t='$TOKEN'; p=t+'='*(4-len(t)%4)
-#     d=json.loads(base64.urlsafe_b64decode(p))
-#     print(json.dumps({'AccountTag':d['a'],'TunnelID':d['t'],'TunnelSecret':d['s']}))
-#   " | kubectl create secret generic tunnel-creds-json -n cloudflare --from-file=credentials.json=/dev/stdin
-# -----------------------------------------------------------------------------
-kubectl --context "$CTX" create namespace cloudflare --dry-run=client -o yaml | kubectl --context "$CTX" apply -f -
-kubectl --context "$CTX" apply -f "$PLATFORM/cloudflare/config.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/cloudflare/cloudflared.yaml"
 
 # -----------------------------------------------------------------------------
 # 4. NATS — 3-node HA JetStream cluster
@@ -85,7 +69,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/nats/omos-nats-tailnet-service.yaml
 #   websocket:
 #     enabled: true
 #     port: 8080
-# NATS WebSocket is exposed as wss://ws.onemindos.dev via Cloudflare tunnel (platform/cloudflare/config.yaml)
 
 # -----------------------------------------------------------------------------
 # 4b. NACK — JetStream CRD controller (Stream + KeyValue declarative mgmt)
@@ -175,19 +158,14 @@ kubectl --context "$CTX" apply -f "$PLATFORM/omos/feed-scripts.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/feeds.yaml"
 
 # -----------------------------------------------------------------------------
-# 9. LEGACY AGENT (Hermes — mother) + TAK-AGENT + OneMind AI Bridge
-# Secrets (hermes-env, hermes-leaf-conf, hermes-nats-ca) are SealedSecrets in platform/hermes/
-# cloudtak-agent-token: out-of-band — generate in CloudTAK UI → Settings → Tokens
-#   kubectl create secret generic cloudtak-agent-token -n hermes \
-#     --from-literal=token='<token from CloudTAK UI: Settings → Tokens → New>'
+# 9. HERMES (Legacy): nothing to install here
+# The old hermes-legacy instance was retired and removed from the repository (2026-11). Its replacement,
+# onemind-hermes, and the shared hermes namespace objects are Argo CD Applications
+# (platform-onemind-hermes, platform-hermes-base, platform-onemind-mcp): do not apply them by hand.
 # -----------------------------------------------------------------------------
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/namespace.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/pvc.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/deployment.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/tak-agent.yaml"
 
 # -----------------------------------------------------------------------------
-# 10. CLOUDTAK — API + Events + Media + Tiles + MinIO + PostGIS
+# 10. CLOUDTAK — API + Events + Media + Tiles
 # Secrets (cloudtak-secrets) are SealedSecrets in platform/cloudtak/
 # -----------------------------------------------------------------------------
 kubectl --context "$CTX" create namespace cloudtak --dry-run=client -o yaml | kubectl --context "$CTX" apply -f -
@@ -195,9 +173,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/api.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/events.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/media.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/tiles.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/minio.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/postgis.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/cloudflare-route.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/ingress.yaml"
 
 # -----------------------------------------------------------------------------
@@ -216,7 +191,6 @@ kubectl --context "$CTX" apply -f "$TAKDEPLOY/mediamtx.yaml"
 kubectl --context "$CTX" apply -f "$TAKDEPLOY/murmur.yaml"
 kubectl --context "$CTX" apply -f "$TAKDEPLOY/mumble-bridge.yaml"
 kubectl --context "$CTX" apply -f "$TAKDEPLOY/tak-webview-cesium.yaml"
-kubectl --context "$CTX" apply -f "$TAKDEPLOY/mediamtx-cloudflare-route.yaml"
 
 # -----------------------------------------------------------------------------
 # 12. GITHUB RUNNER — self-hosted runner for onemindos org CI/CD
@@ -240,9 +214,7 @@ kubectl --context "$CTX" apply -f "$PLATFORM/takml/pvcs.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/takml-db-creds.sealedsecret.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/takml-nats-creds.sealedsecret.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/configmap-server.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/takml/configmap-vision-worker.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/deployment.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/takml/cloudflare-route.yaml"
 
 echo ""
 echo "==> Platform install complete."

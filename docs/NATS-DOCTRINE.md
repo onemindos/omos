@@ -324,6 +324,35 @@ cmd.map.annotation.{id}.create  { lat, lon, label, color, icon, note }
 The Flutter app subscribes to `cmd.map.>` and responds in real-time.
 **The map is an input device, not just a display.**
 
+### 9.8 Open Decision — TAK Bridge Subjects (live vs §9.1)
+
+Recorded 2026-10-27. **No runtime subject was changed.** This section records how the live
+system differs from §9.1 until the owner decides.
+
+| | Live today (TAK 5.8, NatsBridgePlugin) | §9.1 doctrine |
+|---|---|---|
+| TAK → bus | `tak.cot.out`: one subject for all EUD CoT (`natsProducerSubject`) | `evt.tak.cot.{uid}`: per-UID geo-envelope |
+| bus → TAK | `tak.cot.inject` (`natsConsumerSubject`) | not specified |
+| Client state | none | `evt.tak.status.{uid}` |
+| Stream | `COT` (`tak.cot.>`): receives the traffic; `TAKCoTFlowStopped` watches it | `GEO` (`evt.tak.cot.>`, `evt.tak.status.>`): defined but has 0 messages |
+
+Evidence: `services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml`,
+`platform/nats/streams/cot.yaml` and `geo.yaml`, and the live GEO stream message count.
+`CLAUDE.md` already lists `tak.cot.inject` and `tak.cot.>` in the grammar block, so the two
+documents disagree.
+
+Options for the owner:
+
+1. **Ratify `tak.cot.*` as the raw TAK wire.** Amend §9.1 so that `evt.tak.cot.{uid}` is a
+   derived projection: a separate normalizer subscribes to `tak.cot.out` and publishes
+   per-UID geo-envelopes into `GEO`. This needs no TAK change.
+2. **Move the plugin to `evt.tak.cot.{uid}`.** This changes the plugin config and image,
+   restarts `takserver-plugins` (TIER-1), and requires migrating `COT` consumers and the
+   `TAKCoTFlowStopped` alert.
+
+Until the owner decides, new consumers of TAK CoT read `tak.cot.out` (stream `COT`), and
+injectors publish to `tak.cot.inject`. Nobody should publish `evt.tak.cot.*` by hand.
+
 ---
 
 ## 10. Sources

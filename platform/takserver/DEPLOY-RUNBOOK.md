@@ -9,6 +9,56 @@ registry pull). This gives us a self-owned, air-gappable image supply chain for 
 
 ---
 
+## PASSWORD SUPPLY (since 2026-10-29, step 2 of the CA/keystore rotation)
+
+No keystore, truststore or CA-key password is in Git or in a ConfigMap any more. The running
+Deployments are owned by Argo (`platform-takserver`); the Helm release is frozen (revision 34) and was
+**not** upgraded for this change, so treat the chart paths in sections 5 and 6 below as the historical
+first install, not as the way to change a running cluster.
+
+| What | Where it lives | Read by |
+|---|---|---|
+| CA signing key password | Secret `tak-ca-credentials` key `ca-key-password` (SealedSecret `deploy/tak-ca-credentials.sealedsecret.yaml`) | init container of messaging (CoreConfig `TAKServerCAConfig`), TAK Portal (`tak-portal-ca-certs-v2`) |
+| Server keystore + truststore password | Secret `tak-server-stores` key `keystore-password`; the re-encrypted `takserver.jks`, `truststore-root.jks`, `fed-truststore.jks` are in the same Secret | init containers of config and messaging (CoreConfig `tls` blocks); the stores are projected at `/certs-configmap/` in config, messaging, api and plugins |
+| CA signing JKS | Secret `tak-ca-credentials` key `ca-signing.jks` (messaging only) | messaging |
+| CA private keys (`ca-do-not-share.key`, `root-ca-do-not-share.key`) | SealedSecret `tak-ca-keys`, re-encrypted with the CA key password, **mounted nowhere** (operator tooling only, mount on demand) | nobody |
+| LDAP service-account password | Secret `tak-ldap-creds` key `LDAP_ADMIN_PASSWORD` | init containers of config and messaging |
+
+`CoreConfig.xml` is now the password-free template `deploy/configmap-core-config-v2.yaml` (ConfigMap
+`core-config-v2`). The init container `copy-coreconfig` of `takserver-config` and `takserver-messaging`
+replaces `__CA_KEY_PASS__`, `__TAK_STORE_PASS__` and `__LDAP_BIND_PASS__` from Secret environment
+variables (awk with `ENVIRON`, so no secret on a command line) and fails the pod if any placeholder is left.
+`takserver-api` and `takserver-plugins` have no CoreConfig of their own; they receive the TLS
+configuration from the cluster, so **restart order is config, messaging, api, plugins**
+(Argo sync waves 0, 1, 2, 3 enforce it).
+
+**The running cluster holds the CoreConfig in Ignite memory, and it wins over the file.** Verified on
+2026-10-29: restarting only the config pod made the config service rewrite `/opt/tak/conf/CoreConfig.xml`
+with the old (cached) passwords although the substituted file had the new ones, and messaging then failed
+in `JwtUtils.loadKeyPair` with "keystore password was incorrect". Ignite (`takserver-ignite-0`) has no
+volume, so **any change to a CoreConfig value (passwords, ports, auth) needs a full bounce**: scale
+api, plugins, messaging and config to 0, delete the `takserver-ignite-0` pod and wait for Ready, then bring
+config, messaging, api and plugins back in that order (with Argo auto-sync paused, scale them to 1 and
+let the next sync apply the spec). Expect about 8 minutes without 8089/8443/8446. Check afterwards that
+`/opt/tak/conf/CoreConfig.xml` in the config pod still holds the new values: if the passwords are back to
+the old ones, Ignite served the old cache. `/certs-configmap/` in those four pods is a projected volume:
+the `cert-migration` ConfigMap restricted to an allowlist of keys (no CA keys, no server stores) plus the
+two Secrets above. A key added to `cert-migration` is **not** mounted unless it is added to that list.
+
+Rotate the server-store password: re-encrypt the three stores (`keytool -J-Dkeystore.pkcs12.legacy
+-storepasswd`, passwords via `:env`, never argv), reseal `tak-server-stores`, merge, and let the waves roll
+the tiers. Do the same for the CA key password with `tak-ca-credentials`. Read them (owner only):
+
+```bash
+kubectl --context do-nyc3-omos-cloud -n takserver get secret tak-server-stores -o jsonpath='{.data.keystore-password}' | base64 -d
+kubectl --context do-nyc3-omos-cloud -n takserver get secret tak-ca-credentials -o jsonpath='{.data.ca-key-password}' | base64 -d
+```
+
+Edit CoreConfig only in `configmap-core-config-v2.yaml` (TAK UI saves change the running pod's copy only
+and are lost at the next restart), then restart config before messaging.
+
+---
+
 ## 0. Source material (paths on Zeus's Mac)
 
 | Thing | Path |
@@ -68,7 +118,7 @@ docker rm -f tak-ca-setup 2>/dev/null
 docker run --name tak-ca-setup \
   --env CA_NAME=onemind-tak --env STATE=FL --env CITY=Tampa --env ORGANIZATIONAL_UNIT=OneMind \
   takserver-ca-setup:5.8-onemind
-docker cp tak-ca-setup:/files ./certs-out    # ~31 files, storepass = atakatak
+docker cp tak-ca-setup:/files ./certs-out    # ~31 files, storepass = the keystore password (default until step-2 rotation; see Secret tak-keystores in ns takserver)
 ```
 Required outputs (verify present): `takserver.jks`, `truststore-root.jks`, `fed-truststore.jks`, `admin.pem`.
 `takserver.jks` = single PrivateKeyEntry, alias **`takserver`** (JwtUtils uses the keystore's first alias).
@@ -136,7 +186,7 @@ kc() { kubectl --context kind-tak -n takserver "$@"; }   # DOKS: swap context
 kubectl --context kind-tak create ns takserver 2>/dev/null
 
 kc create configmap cert-migration     --from-file=certs-out/
-kc create configmap core-config        --from-file=CoreConfig.xml=deploy/CoreConfig.xml
+kc create configmap core-config        --from-file=CoreConfig.xml=deploy/CoreConfig.xml   # historical; now core-config-v2 via Argo, see PASSWORD SUPPLY
 kc create configmap tak-ignite-config  --from-file=TAKIgniteConfig.xml=deploy/TAKIgniteConfig.xml
 kc create configmap ignite-extensions  --from-file=ignite-extensions.jar="$TAK/ignite-extensions-5.7-RELEASE-43.jar"
 
@@ -268,7 +318,7 @@ CTX=do-nyc3-onemind-hub
 kubectl --context $CTX create ns takserver
 doctl registry kubernetes-manifest --namespace takserver | kubectl --context $CTX apply -f -
 kubectl --context $CTX -n takserver create configmap cert-migration    --from-file=certs-out/
-kubectl --context $CTX -n takserver create configmap core-config       --from-file=CoreConfig.xml=deploy/CoreConfig.xml
+kubectl --context $CTX -n takserver create configmap core-config       --from-file=CoreConfig.xml=deploy/CoreConfig.xml   # historical; now core-config-v2 via Argo
 kubectl --context $CTX -n takserver create configmap tak-ignite-config --from-file=TAKIgniteConfig.xml=deploy/TAKIgniteConfig.xml
 kubectl --context $CTX -n takserver create configmap ignite-extensions --from-file=ignite-extensions.jar="$TAK/ignite-extensions-5.7-RELEASE-43.jar"
 helm --kube-context $CTX upgrade --install takserver chart -n takserver -f values-doks.yaml --timeout 15m

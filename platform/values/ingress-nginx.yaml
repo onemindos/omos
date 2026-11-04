@@ -1,6 +1,12 @@
 controller:
   publishService:
     enabled: true
+  resources:
+    requests:
+      cpu: 100m
+      memory: 192Mi
+    limits:
+      memory: 384Mi
   # Two replicas: with externalTrafficPolicy Local the DO load balancer only sends
   # traffic to nodes running a controller pod, so one replica would be a single
   # point of failure (the chart adds a PDB with minAvailable 1 when replicas > 1).

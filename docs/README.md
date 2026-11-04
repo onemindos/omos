@@ -32,7 +32,7 @@ Runbooks and setup guides for the live infrastructure:
 | `CLUSTER-SERVICE-INVENTORY.md` | Dated live inventory of Argo CD ownership, Kubernetes Services, zero-replica Deployments, PVCs, and investigation candidates |
 | `CLICKHOUSE-TIMEMACHINE.md` | ClickHouse Time Machine setup, schema, and query patterns |
 | `NATS-SETUP.md` | NATS server install, account config, JetStream setup on macOS |
-| `TAK-INTEGRATION-REFERENCE.md` | TAK Server + NATS integration reference (ADS-B, AIS, CoT bridging) |
+| `TAK-INTEGRATION-REFERENCE.md` | **Historical** (June 2026, OpenTAKServer/Mac-NATS era) TAK + NATS reference; live TAK is in `platform/takserver/README.md` |
 | `CONSTELLATION-OVERWATCH.md` | Constellation Overwatch COP — setup, bridge, Pulsar, fleet management |
 
 ---

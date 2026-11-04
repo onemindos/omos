@@ -23,7 +23,7 @@ There are only a handful of such places, listed below.
 | 9 | `doctl` in scripts | 0 in-cluster jobs; local use in `platform/install.sh`, `scripts/manage_ecosystem_workers.py`, `platform/matrix/deploy-matrix.sh`, legacy runbooks | Remove / replace per section 9 | S |
 | 10 | Terraform `infra/` (DO provider) | 2 roots: `infra/` (VPC, cluster, project), `infra/ecosystem-workers/` (node pool) | Not needed for k3s/Talos | S |
 | 11 | DO-hosted system images | 12 images from `ghcr.io/digitalocean-packages/*` (all DOKS-managed, kube-system) | Disappear with DOKS | none |
-| 12 | DOCR (container registry) | 0 in use (images are GHCR + in-cluster Harbor) | none | none |
+| 12 | DOCR (container registry) | 0 in use (images are GHCR) | none | none |
 | 13 | Managed databases | 0 (CNPG + in-cluster Postgres) | none | none |
 
 Everything else (Argo CD, Authentik, NATS, TAK, CNPG, VolSync, Velero, Tailscale,
@@ -57,7 +57,7 @@ Live (`kubectl get sc`, `kubectl get pv`):
   `platform/onetak/*`, `platform/auth/postgres.yaml`, `platform/n8n/*`,
   `platform/matrix/base/*`, `platform/backstage/postgres.yaml`, `platform/takml/pvcs.yaml`,
   `platform/hermes/agent/pvc.yaml`, `platform/data/clickhouse/clickhouse.yaml`,
-  `platform/values/{loki,tempo}.yaml`, `platform/ecosystem/values/{ollama,dapr,opensearch,spire,harbor}.yaml`,
+  `platform/values/{loki,tempo}.yaml`, `platform/ecosystem/values/{ollama,dapr}.yaml`,
   `platform/ecosystem/resources/postgres-cluster.yaml`, the VolSync sources and
   restore tests under `platform/backups/`, and `platform/takserver/DEPLOY-RUNBOOK.md`.
 - DO volumes are ReadWriteOnce, single-region. They cannot be moved; data moves
@@ -82,17 +82,15 @@ Live (`kubectl get sc`, `kubectl get pv`):
 | Service | Kind | Notes |
 |---|---|---|
 | `ingress-nginx/ingress-nginx-controller` | **DO LB** `143.244.220.155` | annotation `service.beta.kubernetes.io/do-loadbalancer-type: REGIONAL_NETWORK`, Helm-CLI release |
-| `takserver/tak-external` | **DO LB** `152.42.155.95` | defined in `platform/takserver/deploy/tak-lb-proxy.yaml` (`do-loadbalancer-name: onemind-tak`); ports 8089, 8443, 8446, 9101, 9102, 64738; no source ranges |
-| `nats/omos-nats`, `takserver/tak-tailnet`, `openchoreo-control-plane/cilium-gateway-gateway-default` | Tailscale (`loadBalancerClass: tailscale`) | already portable |
+| `nats/omos-nats`, `takserver/tak-tailnet` | Tailscale (`loadBalancerClass: tailscale`) | already portable |
 
-The only `service.beta.kubernetes.io/do-` annotation in Git is in `tak-lb-proxy.yaml`.
-The two public IPs belong to DigitalOcean and cannot move. DNS (Cloudflare) must be
-repointed, and TAK clients (EUDs) that hardcode `152.42.155.95` need a DNS name or
-new connection profiles. Use a DNS name from now on.
+The TAK DO LB (`tak-external`, `152.42.155.95`) was removed on 2026-10-23; TAK now rides the
+tailnet only (`tak-tailnet`). The remaining public IP belongs to DigitalOcean and cannot move;
+Cloudflare DNS must be repointed when it does. EUDs use `tak.tail717ba0.ts.net`, not an IP.
 
 Replacements:
-- Web hosts (auth, ws, onetak, geo): Cloudflare Tunnel (staged and inert in
-  `platform/networking/cloudflared/`, see NETWORKING.md). No inbound ports at home. Effort S.
+- Web hosts (auth, ws, onetak, geo): Cloudflare Tunnel (the staged cloudflared
+  manifests were removed on 2026-10-23; recover them from Git history, see NETWORKING.md). No inbound ports at home. Effort S.
 - TAK raw TCP/UDP (8089 mTLS, 8443, 8446, 9101/9102, 64738 Mumble): a Cloudflare
   Tunnel does NOT carry these. Options: Tailscale only (`tak-tailnet`, staged);
   or a tiny VPS with a static IP forwarding to home over Tailscale (a cheap "front

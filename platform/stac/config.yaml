@@ -1,0 +1,20 @@
+# Shared, non-secret settings. stac-fastapi-pgstac 7.x reads the standard libpq names (PGHOST and friends);
+# the user and password come from Secret/stac-db, which sets PGUSER and PGPASSWORD in each pod.
+# A ConfigMap change does not restart pods: run `kubectl -n stac rollout restart deploy` after a sync.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stac-config
+  namespace: stac
+  labels:
+    app.kubernetes.io/name: stac
+data:
+  # The primary of the shared CloudNativePG cluster. Both APIs use it: the read API has no write routes
+  # (README, "Read and write are separate Deployments"), and pgstac records search statistics on writes.
+  PGHOST: onemind-data-rw.onemind-data.svc.cluster.local
+  PGPORT: "5432"
+  PGDATABASE: stac
+  STAC_FASTAPI_TITLE: OneMind STAC
+  STAC_FASTAPI_DESCRIPTION: Search and catalog for OneMind drone and satellite imagery (pgstac on onemind-data).
+  STAC_FASTAPI_LANDING_ID: onemind-stac
+  STAC_FASTAPI_VERSION: 7.1.0

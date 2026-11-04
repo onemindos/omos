@@ -1,0 +1,28 @@
+{
+  "upstream": {
+    "repository": "https://github.com/karakeep-app/karakeep",
+    "release": "v0.34.1",
+    "commit": "ebd122bb45b38d9dd45f7c6db55b5587bf6b1265",
+    "nativePath": "kubernetes",
+    "sourceSHA256": {
+      "web-deployment.yaml": "e70523b06ea0165a3a3632f254b44990b406b0d1634838ef5e9178a75bcd0f25",
+      "web-service.yaml": "08d46dcb1473852de3cae8884a5514d3621a6e22d891caeb47f9cbf2a51c3bae",
+      "chrome-deployment.yaml": "0ba4043813fbf3fe673eab93ae9cbe0b0ebff293a5289cff2bffdcbcb80e7fbc",
+      "chrome-service.yaml": "c2f9500e56325695dcd6ba0853dd51517b70fff38551f3fcbc132873875c46f0",
+      "meilisearch-deployment.yaml": "e689f2b98425c843c98f7d1ff27b41fb4569a1228ae8f85512591266053bee79",
+      "meilisearch-service.yaml": "1d99a150310b7c00bc3253b1b01b0e4f1e9f29f4774449896b78c65985dffe3e",
+      "data-pvc.yaml": "edef79e0648c26e59fc14c5349730814f91a39db74ddf46574bf082a69c21636",
+      "meilisearch-pvc.yaml": "11c8930775956d2efc0d3f53b2c8dee2a728b0ddb16552b7d6a00e8c1b6c6171"
+    }
+  },
+  "images": {
+    "web": "ghcr.io/karakeep-app/karakeep:0.34.1@sha256:69ae5315c618b7c14c1af3e34c6e211acdb231793af424ecd1cab0b70691d987",
+    "chrome": "ghcr.io/karakeep-app/karakeep-chrome:154.0.8037.57-r1@sha256:c51a8c8e6c3c1040a50fa0ecfd0b2fc298401b4229262636552458151f6f18fa",
+    "meilisearch": "getmeili/meilisearch:v1.41.0@sha256:860fa4baed04ae1c235de870edab0c8006227546dea1bbb6411fbfc5e27cf1db"
+  },
+  "verifiedRegistryPlatforms": [
+    "linux/amd64",
+    "linux/arm64"
+  ],
+  "checkedAt": "2026-10-24"
+}

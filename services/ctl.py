@@ -8,7 +8,7 @@ Usage:
     python3 ctl.py rules set <key> '<json_rule>'
     python3 ctl.py rules delete <key>
     python3 ctl.py mode <incognito|high_alert|watch_me|default>
-    python3 ctl.py agent <legacy|codex|openclaw> '<prompt text>'
+    python3 ctl.py agent <legacy|codex> '<prompt text>'
     python3 ctl.py context
 """
 

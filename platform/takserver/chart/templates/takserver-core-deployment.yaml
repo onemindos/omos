@@ -72,8 +72,24 @@ spec:
               subPath: CoreConfig.xml
       volumes:
         - name: config
+{{- if .Values.takserver.messaging.enrollmentSignerSecret }}
+          # Messaging now reconciles in platform-takserver. Preserve this projection
+          # in any explicitly reviewed future Helm/core ownership transition.
+          projected:
+            defaultMode: 420
+            sources:
+              - configMap:
+                  name: "{{ .Values.certConfigMapName }}"
+              - secret:
+                  name: "{{ .Values.takserver.messaging.enrollmentSignerSecret }}"
+                  items:
+                    - key: ca-signing.jks
+                      path: ca-signing.jks
+                      mode: 256
+{{- else }}
           configMap:
             name: "{{ .Values.certConfigMapName }}"
+{{- end }}
         - name: tak-ignite-config
           configMap:
             name: "{{ .Values.takIgniteConfigMapName }}"

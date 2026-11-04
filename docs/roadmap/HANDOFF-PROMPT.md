@@ -13,14 +13,22 @@ Read in this order before doing anything:
 1. `PLATFORM-ROADMAP.md` (repo root): the four layers, the AI trust model, the namespace map, the
    phase tracker, the decision log and the evidence for finished phases.
 2. `docs/roadmap/HANDOFF.md`: current state, access, rules learned the hard way.
-3. The first unfinished phase in the tracker: Phase 7, brief on draft PR #283.
+3. The first unfinished phase is Phase 6 stabilization; use the latest acceptance
+   receipts, readiness checklist and backstage-parallel-run.md before selecting work.
 4. `CLAUDE.md` and `AGENTS.md` (operating rules), `docs/MISSION.md` (why), `docs/STACK.md` (live inventory).
 
-State: phases 0–6 are complete with live evidence in the roadmap. STAC Browser is
-managed by OpenChoreo; the portal refactor is deployed. Authenticated observability
-reuses existing backends; logs/metrics now work in OneMind Backstage and MCP, and
-backup recovery passed. Phase 6 added the plugins to our existing portal, verified
-both replicas and retired the console. Phase 7 is next; proceed only with the user’s authorization.
+State: phases 0–5 are complete. **Phase 6 remains In progress**; Phase 7 and
+Phase 8 are Not started. Historical Phase 6 integration acceptance was reopened
+for portal trust/coverage stabilization. Source/image/live Grafana, Prometheus
+and native topology slices are accepted through #349/#350, not all-app coverage
+or authorization to migrate. The existing OneMind portal is preserved; the
+temporary console is retired. Read the newest evidence, not old image counts.
+
+The parallel PR run prepares eight bounded workstreams. Agents' offline tests and
+draft PRs are not deployed features, complete recovery or AI write permission.
+Read docs/roadmap/backstage-parallel-run.md and reconcile any shared tracker
+conflicts before reviewing/merging one PR at a time. Keep #339/#332/#284 activation
+gates intact; existing drafts are not blanket deployment authorization.
 
 Working rules:
 - Everything reaches the cluster through Git and Argo CD. Open a PR, wait for CI, merge, then verify
@@ -36,11 +44,12 @@ Working rules:
   workloads with ReadWriteOnce volumes. Never put a secret in Git in plaintext.
 - Do not delete, rotate or overwrite credentials, and do not touch TAK Server or NATS without
   asking Zeus. Ask before anything destructive or hard to reverse.
-- Zeus signed in through Authentik; Phase 6 browser/security gates passed in OneMind.
+- Zeus signed in through Authentik; scoped browser/denial checks passed, but
+  broader live expiry/second-role/recovery coverage is not universally certified.
   The temporary console is retired; use onemind-preview.tail717ba0.ts.net.
 - GitHub CI later could not start due account billing/spending-limit state. Never
   change billing or bypass required checks. Full make validate still has existing
   unrelated YAML debt; record precisely which local checks pass.
 
-Start by rechecking the live cluster and current tracker. Phase 7 is the next phase,
-not phase 3. Report verified changes and remaining work in plain language after each PR.
+Start with the authoritative current tracker and bounded Phase 6 gaps, not an
+old claim that Phase 7 is automatically next. Report verified changes and remaining work in plain language after each PR.

@@ -1,103 +1,219 @@
-/* eslint-disable */
 import { createBackendModule, coreServices } from '@backstage/backend-plugin-api';
 import { notificationService } from '@backstage/plugin-notifications-node';
+import { eventsServiceRef } from '@backstage/plugin-events-node';
+import { signalsServiceRef } from '@backstage/plugin-signals-node';
 import express from 'express';
-import { createHash } from 'node:crypto';
-import { list } from '@internal/plugin-onemind-common-backend';
+import {
+  ACTIVITY_EVENT_TOPIC,
+  ALERT_SIGNAL_CHANNEL,
+  isActivityKind,
+  list,
+  type ActivityEvent,
+} from '@internal/plugin-onemind-common-backend';
+import { ADMIN_GROUP_REF, createAdminRecipients } from './recipients';
+import {
+  classifyApplications,
+  classifyBackups,
+  ensureDeliveryTables,
+  processConditions,
+  processObservations,
+  runDigest,
+  type AppView,
+  type Observation,
+  type Sinks,
+} from './scan';
+import { createStore } from './store';
+import { createTimelineRouter } from './timelineRoute';
 
-type Observation = { key: string; resource: string; kind: 'deployment.failed' | 'deployment.succeeded' | 'backup.failed' | 'backup.succeeded'; occurredAt: string; link: string };
-type Application = { metadata: { name: string; uid: string }; status?: { operationState?: { phase?: string; finishedAt?: string } } };
-type Job = { metadata: { name: string; uid: string; ownerReferences?: { kind: string; name: string }[] }; status?: { conditions?: { type: string; status: string; lastTransitionTime?: string }[] } };
-const hash = (value: string) => createHash('sha256').update(value).digest('hex');
+type Application = {
+  metadata: { name: string; uid: string };
+  status?: {
+    health?: { status?: string };
+    sync?: { status?: string };
+    operationState?: { phase?: string; finishedAt?: string };
+  };
+};
+type Job = {
+  metadata: { name: string; uid: string; ownerReferences?: { kind: string; name: string }[] };
+  status?: { conditions?: { type: string; status: string; lastTransitionTime?: string }[] };
+};
+type CronJob = { metadata: { name: string }; spec?: { suspend?: boolean } };
+
+const argoLink = (name: string) =>
+  `https://argocd.tail717ba0.ts.net/applications/argocd/${encodeURIComponent(name)}`;
+const RUNBOOK = '/docs/default/component/onemind-runbooks/resilience/';
+// Superseded by backup-postgres-backstage; kept suspended on purpose, so not watched.
+const DEFAULT_BACKUP_CRONJOBS = ['backup-postgres-backstage'];
 
 // Internal observer reuses existing read-only cluster permissions. No external webhook
 // credential, Kubernetes writes, arbitrary recipients or raw provider payloads.
-export default createBackendModule({ pluginId: 'onemind', moduleId: 'operational-events', register(reg) {
-  reg.registerInit({ deps: { config: coreServices.rootConfig, scheduler: coreServices.scheduler, database: coreServices.database, logger: coreServices.logger, notifications: notificationService, auth: coreServices.auth, discovery: coreServices.discovery, router: coreServices.httpRouter, httpAuth: coreServices.httpAuth },
-    async init({ config, scheduler, database, logger, notifications, auth, discovery, router, httpAuth }) {
-      const enabled = config.getOptionalBoolean('onemind.operationalEvents.enabled') ?? false;
-      const state = { enabled, recipientReadiness: 'not-verified', lastAttemptAt: null as string | null, lastSuccessAt: null as string | null, sources: {} as Record<string, string> };
-      let readState = async () => state;
-      const routes = express.Router();
-      routes.get('/event-sources', async (req, res, next) => { try { await httpAuth.credentials(req, { allow: ['user'] }); res.json(await readState()); } catch (e) { next(e); } });
-      router.use(routes);
-      if (!enabled) return;
-      const db = await database.getClient();
-      // Global scheduler registration happens only after additive schema creation.
-      if (!await db.schema.hasTable('onemind_operation_delivery')) await db.schema.createTable('onemind_operation_delivery', table => {
-        table.string('id', 64).primary(); table.string('source', 32).notNullable(); table.string('recorded_at', 40).notNullable();
-      }).catch(async error => { if (!await db.schema.hasTable('onemind_operation_delivery')) throw error; });
-      if (!await db.schema.hasTable('onemind_operation_observer')) await db.schema.createTable('onemind_operation_observer', table => { table.string('id', 32).primary(); table.text('payload').notNullable(); }).catch(async error => { if (!await db.schema.hasTable('onemind_operation_observer')) throw error; });
-      readState = async () => { const saved = await db('onemind_operation_observer').where({ id: 'status' }).first(); return saved ? { ...JSON.parse(saved.payload), enabled } : state; };
-      const catalogEntity = async (kind: string, name: string) => {
-        const { token } = await auth.getPluginRequestToken({ onBehalfOf: await auth.getOwnServiceCredentials(), targetPluginId: 'catalog' });
-        const base = await discovery.getBaseUrl('catalog');
-        const response = await fetch(`${base}/entities/by-name/${kind}/default/${encodeURIComponent(name)}`, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8000), redirect: 'error' });
-        if (!response.ok) throw new Error('Recipient catalog unavailable');
-        return response.json();
-      };
-      const readyRecipients = async () => {
-        const group = await catalogEntity('group', 'onemind-admins');
-        const members: unknown = group.spec?.members;
-        if (!Array.isArray(members) || members.length < 1 || members.length > 10) return false;
-        for (const member of members) {
-          if (typeof member !== 'string' || !/^[a-z0-9_-]+$/.test(member)) return false;
-          const user = await catalogEntity('user', member);
-          if (!user.relations?.some((relation: { type: string; targetRef: string }) => relation.type === 'memberOf' && relation.targetRef === 'group:default/onemind-admins')) return false;
-        }
-        return true;
-      };
-      const observeApplications = async (): Promise<Observation[]> => (await list<Application>('/apis/argoproj.io/v1alpha1/namespaces/argocd/applications')).flatMap(app => {
-        const operation = app.status?.operationState;
-        if (!operation?.finishedAt || !['Succeeded', 'Failed', 'Error'].includes(operation.phase ?? '') || !Number.isFinite(Date.parse(operation.finishedAt))) return [];
-        return [{ key: `${app.metadata.uid}:${operation.finishedAt}:${operation.phase}`, resource: app.metadata.name, kind: operation.phase === 'Succeeded' ? 'deployment.succeeded' : 'deployment.failed', occurredAt: operation.finishedAt, link: `https://argocd.tail717ba0.ts.net/applications/argocd/${encodeURIComponent(app.metadata.name)}` }];
-      });
-      const observeBackups = async (): Promise<Observation[]> => (await list<Job>('/apis/batch/v1/namespaces/backstage/jobs')).flatMap(job => {
-        if (!job.metadata.ownerReferences?.some(owner => owner.kind === 'CronJob' && owner.name === 'backstage-backup')) return [];
-        const condition = job.status?.conditions?.find(item => ['Complete', 'Failed'].includes(item.type) && item.status === 'True');
-        if (!condition?.lastTransitionTime || !Number.isFinite(Date.parse(condition.lastTransitionTime))) return [];
-        return [{ key: `${job.metadata.uid}:${condition.type}`, resource: `backstage/${job.metadata.name}`, kind: condition.type === 'Complete' ? 'backup.succeeded' : 'backup.failed', occurredAt: condition.lastTransitionTime, link: '/docs/default/component/onemind-runbooks/resilience/' }];
-      });
-      await scheduler.scheduleTask({ id: 'onemind-operational-events', scope: 'global', frequency: { minutes: 1 }, timeout: { seconds: 50 }, initialDelay: { seconds: 45 }, fn: async () => {
-        state.lastAttemptAt = new Date().toISOString();
-        try {
-          if (!await readyRecipients()) { state.recipientReadiness = 'not-ready'; logger.warn('Operational events paused: intended catalog recipients are not ready'); return; }
-          state.recipientReadiness = 'catalog-membership-verified';
-          for (const [source, observe] of [['argocd', observeApplications], ['backstage-backup', observeBackups]] as const) {
-            try {
-              const values = await observe();
-              const baseline = await db('onemind_operation_delivery').where({ id: hash(`baseline:${source}`) }).first();
-              if (!baseline) {
-                await db.transaction(async tx => {
-                  for (const value of values) await tx('onemind_operation_delivery').insert({ id: hash(`${source}:${value.key}`), source, recorded_at: new Date().toISOString() }).onConflict('id').ignore();
-                  await tx('onemind_operation_delivery').insert({ id: hash(`baseline:${source}`), source, recorded_at: new Date().toISOString() }).onConflict('id').ignore();
-                });
-                state.sources[source] = 'baseline-established'; continue;
-              }
-              for (const value of values) {
-                const id = hash(`${source}:${value.key}`);
-                if (await db('onemind_operation_delivery').where({ id }).first()) continue;
-                // Avoid replaying historical jobs newly discovered after retention changes.
-                if (Date.parse(value.occurredAt) < Date.parse(baseline.recorded_at)) {
-                  await db('onemind_operation_delivery').insert({ id, source, recorded_at: new Date().toISOString() }).onConflict('id').ignore(); continue;
-                }
-                const failed = value.kind.endsWith('.failed');
-                await notifications.send({ recipients: { type: 'entity', entityRef: 'group:default/onemind-admins' }, payload: {
-                  title: `${source === 'argocd' ? 'Deployment' : 'Backup job'} ${failed ? 'failed' : 'completed'}: ${value.resource}`,
-                  description: `Observed ${value.kind} at ${value.occurredAt}. ${source === 'argocd' ? 'Operation completion is not proof of current application health.' : 'Job success is not separate proof of archive restoration; inspect the backup report.'}`,
-                  severity: failed ? 'high' : 'low', topic: source === 'argocd' ? 'deployments' : 'backups', scope: `onemind-observer:${id}`, link: value.link,
-                } });
-                // send acknowledges processing, not user delivery. A crash before this
-                // insert may retry; notification scope collapses duplicate occurrences.
-                await db('onemind_operation_delivery').insert({ id, source, recorded_at: new Date().toISOString() }).onConflict('id').ignore();
-              }
-              state.sources[source] = 'observing';
-            } catch { state.sources[source] = 'unavailable'; logger.warn(`Operational event source unavailable: ${source}`); }
+export const operationalEventsModule = createBackendModule({
+  pluginId: 'onemind',
+  moduleId: 'operational-events',
+  register(reg) {
+    reg.registerInit({
+      deps: {
+        config: coreServices.rootConfig,
+        scheduler: coreServices.scheduler,
+        database: coreServices.database,
+        logger: coreServices.logger,
+        notifications: notificationService,
+        signals: signalsServiceRef,
+        events: eventsServiceRef,
+        auth: coreServices.auth,
+        discovery: coreServices.discovery,
+        router: coreServices.httpRouter,
+        httpAuth: coreServices.httpAuth,
+        userInfo: coreServices.userInfo,
+      },
+      async init({ config, scheduler, database, logger, notifications, signals, events, auth, discovery, router, httpAuth, userInfo }) {
+        const enabled = config.getOptionalBoolean('onemind.operationalEvents.enabled') ?? false;
+        const state = {
+          enabled,
+          recipientReadiness: 'not-verified',
+          lastAttemptAt: null as string | null,
+          lastSuccessAt: null as string | null,
+          sources: {} as Record<string, string>,
+        };
+        let readState = async () => state;
+        const routes = express.Router();
+        routes.get('/event-sources', async (req, res, next) => {
+          try {
+            await httpAuth.credentials(req, { allow: ['user'] });
+            res.json(await readState());
+          } catch (e) {
+            next(e);
           }
-          if (Object.values(state.sources).every(value => value !== 'unavailable')) state.lastSuccessAt = new Date().toISOString();
-        } catch { state.recipientReadiness = 'unavailable'; logger.warn('Operational event recipient verification unavailable'); }
-        finally { await db('onemind_operation_observer').insert({ id: 'status', payload: JSON.stringify(state) }).onConflict('id').merge(); }
-      } });
-    },
-  });
-} });
+        });
+        router.use(routes);
+        if (!enabled) return;
+
+        const db = await database.getClient();
+        await ensureDeliveryTables(db);
+        const store = await createStore(db);
+        routes.use(createTimelineRouter({ httpAuth, userInfo, store }));
+        readState = async () => {
+          const saved = await db('onemind_operation_observer').where({ id: 'status' }).first();
+          return saved ? { ...JSON.parse(saved.payload), enabled } : state;
+        };
+        const recipients = createAdminRecipients({ auth, discovery });
+        const backupCronJobs =
+          config.getOptionalStringArray('onemind.operationalEvents.backupCronJobs') ?? DEFAULT_BACKUP_CRONJOBS;
+        const digestHourUtc = config.getOptionalNumber('onemind.operationalEvents.digestHourUtc') ?? 13;
+
+        // External producers (the activity bridge) post successes here; they are recorded, never notified.
+        await events.subscribe({
+          id: 'onemind-activity-timeline',
+          topics: [ACTIVITY_EVENT_TOPIC],
+          onEvent: async ({ eventPayload }) => {
+            const event = eventPayload as Partial<ActivityEvent>;
+            if (!isActivityKind(event?.kind) || typeof event.id !== 'string' || typeof event.resource !== 'string' || typeof event.occurredAt !== 'string') return;
+            await store.timeline.record({ id: `ext:${event.id}`.slice(0, 64), kind: event.kind, resource: event.resource, occurredAt: event.occurredAt, source: 'external' });
+          },
+        });
+
+        const makeSinks = (userRefs: string[]): Sinks => ({
+          notify: async payload => {
+            await notifications.send({ recipients: { type: 'entity', entityRef: ADMIN_GROUP_REF }, payload });
+          },
+          signal: async message => {
+            await signals.publish({ recipients: { type: 'user', entityRef: userRefs }, channel: ALERT_SIGNAL_CHANNEL, message });
+          },
+        });
+
+        const observeApplications = async () => {
+          const apps = await list<Application>('/apis/argoproj.io/v1alpha1/namespaces/argocd/applications');
+          const observations: Observation[] = apps.flatMap(app => {
+            const operation = app.status?.operationState;
+            if (!operation?.finishedAt || !['Succeeded', 'Failed', 'Error'].includes(operation.phase ?? '') || !Number.isFinite(Date.parse(operation.finishedAt))) return [];
+            return [{ key: `${app.metadata.uid}:${operation.finishedAt}:${operation.phase}`, resource: app.metadata.name, kind: operation.phase === 'Succeeded' ? 'deployment.succeeded' : 'deployment.failed', occurredAt: operation.finishedAt, link: argoLink(app.metadata.name) } as Observation];
+          });
+          const views: AppView[] = apps.map(app => ({ name: app.metadata.name, health: app.status?.health?.status, sync: app.status?.sync?.status, link: argoLink(app.metadata.name) }));
+          return { observations, views };
+        };
+        const observeBackups = async () => {
+          const jobs = await list<Job>('/apis/batch/v1/namespaces/backstage/jobs');
+          const cronJobs = await list<CronJob>('/apis/batch/v1/namespaces/backstage/cronjobs');
+          const observations: Observation[] = jobs.flatMap(job => {
+            const owner = job.metadata.ownerReferences?.find(item => item.kind === 'CronJob' && backupCronJobs.includes(item.name));
+            if (!owner) return [];
+            const condition = job.status?.conditions?.find(item => ['Complete', 'Failed'].includes(item.type) && item.status === 'True');
+            if (!condition?.lastTransitionTime || !Number.isFinite(Date.parse(condition.lastTransitionTime))) return [];
+            return [{ key: `${job.metadata.uid}:${condition.type}`, resource: `backstage/${owner.name}`, kind: condition.type === 'Complete' ? 'backup.succeeded' : 'backup.failed', occurredAt: condition.lastTransitionTime, link: RUNBOOK } as Observation];
+          });
+          const watched = cronJobs
+            .filter(item => backupCronJobs.includes(item.metadata.name))
+            .map(item => ({ name: item.metadata.name, suspended: item.spec?.suspend === true, link: RUNBOOK }));
+          return { observations, watched };
+        };
+
+        await scheduler.scheduleTask({
+          id: 'onemind-operational-events',
+          scope: 'global',
+          frequency: { minutes: 1 },
+          timeout: { seconds: 50 },
+          initialDelay: { seconds: 45 },
+          fn: async () => {
+            state.lastAttemptAt = new Date().toISOString();
+            try {
+              const userRefs = await recipients.userRefs();
+              if (!userRefs) {
+                state.recipientReadiness = 'not-ready';
+                logger.warn('Operational events paused: intended catalog recipients are not ready');
+                return;
+              }
+              state.recipientReadiness = 'catalog-membership-verified';
+              const sinks = makeSinks(userRefs);
+              try {
+                const { observations, views } = await observeApplications();
+                const result = await processObservations({ db, store, source: 'argocd', values: observations, sinks });
+                const { active, healthy } = classifyApplications(views);
+                await processConditions({ store, active, healthy, topic: 'deployments', sinks });
+                state.sources.argocd = result;
+              } catch {
+                state.sources.argocd = 'unavailable';
+                logger.warn('Operational event source unavailable: argocd');
+              }
+              try {
+                const { observations, watched } = await observeBackups();
+                const result = await processObservations({ db, store, source: 'backstage-backup', values: observations, sinks });
+                const { active, healthy } = classifyBackups(watched);
+                await processConditions({ store, active, healthy, topic: 'backups', sinks });
+                state.sources['backstage-backup'] = result;
+              } catch {
+                state.sources['backstage-backup'] = 'unavailable';
+                logger.warn('Operational event source unavailable: backstage-backup');
+              }
+              if (Object.values(state.sources).every(value => value !== 'unavailable')) state.lastSuccessAt = new Date().toISOString();
+            } catch {
+              state.recipientReadiness = 'unavailable';
+              logger.warn('Operational event recipient verification unavailable');
+            } finally {
+              await db('onemind_operation_observer').insert({ id: 'status', payload: JSON.stringify(state) }).onConflict('id').merge();
+            }
+          },
+        });
+
+        // Checked every 30 minutes and idempotent per UTC day, so downtime at the digest hour only delays it.
+        await scheduler.scheduleTask({
+          id: 'onemind-activity-digest',
+          scope: 'global',
+          frequency: { minutes: 30 },
+          timeout: { seconds: 50 },
+          initialDelay: { seconds: 90 },
+          fn: async () => {
+            try {
+              const userRefs = await recipients.userRefs();
+              if (!userRefs) return;
+              await runDigest({ store, sinks: makeSinks(userRefs), hourUtc: digestHourUtc });
+              await store.timeline.prune(new Date(Date.now() - 30 * 24 * 3600_000).toISOString());
+              await store.alerts.pruneResolved(new Date(Date.now() - 7 * 24 * 3600_000).toISOString());
+            } catch {
+              logger.warn('Daily activity digest unavailable; will retry');
+            }
+          },
+        });
+      },
+    });
+  },
+});

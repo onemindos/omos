@@ -1,0 +1,24 @@
+# n8n admits the tool gateway pod on :5678.
+# NetworkPolicies are additive: this adds one allowed source and does not change the existing policies in n8n.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-tool-gateway-agentgateway-standalone
+  namespace: n8n
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector:
+    matchLabels:
+      app: n8n
+  policyTypes: [Ingress]
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: tool-gateway
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: agentgateway-standalone
+    ports:
+    - {protocol: TCP, port: 5678}

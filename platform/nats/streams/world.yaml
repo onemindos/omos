@@ -16,3 +16,4 @@ spec:
   maxAge: 24h
   maxBytes: 2000000000
   duplicateWindow: 2m
+  preventDelete: true

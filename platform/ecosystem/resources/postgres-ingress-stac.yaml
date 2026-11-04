@@ -1,0 +1,30 @@
+# STAC (namespace stac) reaches the shared onemind-data cluster: the two stac-fastapi-pgstac Deployments and the
+# pgstac migration hook. NetworkPolicies are additive, so this adds the one namespace without editing the
+# postgres-ingress policy in postgres-network.yaml.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-ingress-stac
+  namespace: onemind-data
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: onemind-data
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: stac
+      podSelector:
+        matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: In
+          values: [stac]
+        - key: app.kubernetes.io/component
+          operator: In
+          values: [api, api-writer, migrate]
+    ports:
+    - protocol: TCP
+      port: 5432

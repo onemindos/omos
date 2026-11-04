@@ -39,7 +39,6 @@ All K8s secrets in this cluster are managed declaratively via **External Secrets
 | `platform/omos/external-secret.yaml` | omos-nats-creds | omos |
 | `platform/orp/external-secret.yaml` | orp-nats-creds, orp-bridge-key | orp |
 | `platform/cloudflare/external-secret.yaml` | cloudflare-api-credentials | cloudflare |
-| `platform/ingress/external-secret.yaml` | cloudflare-api-token | cert-manager |
 | `tak-cluster/deploy/external-secret.yaml` | tak-nats-leaf | takserver |
 
 ## Secrets NOT Managed by ESO
@@ -48,7 +47,6 @@ Some secrets cannot be automated and must be created once out-of-band:
 
 | Secret | Namespace | Why not in ESO |
 |--------|-----------|----------------|
-| `tunnel-creds-json` | cloudflare | Derived by decoding TUNNEL_TOKEN — not stored as-is in 1Password |
 | `nats/values.secret.yaml` | nats | Helm values file injected at install time, not a K8s secret |
 | `ghcr` / `ghcr-pull-secret` | hermes/orp/omos/wwv | Docker registry credentials |
 | `cloudtak-agent-token` | hermes | Must be generated in CloudTAK UI → Settings → Tokens |

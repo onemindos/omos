@@ -6,4 +6,6 @@ kind: Namespace
 metadata:
   name: agent-fabric
   labels:
-    onemind.io/layer: agents
+    onemind.io/layer: decide
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted

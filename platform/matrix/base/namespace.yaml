@@ -7,3 +7,4 @@ metadata:
   labels:
     onemind.os/component: matrix
     onemind.os/managed-by: kustomize
+    onemind.io/layer: act

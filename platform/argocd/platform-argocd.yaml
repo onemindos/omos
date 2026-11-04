@@ -1,0 +1,60 @@
+# Argo CD managing itself: adopts the hand-run Helm release "argocd" (namespace argocd).
+# Chart argo-cd 10.1.2 and values platform/values/argocd.yaml, exactly as the live release.
+#
+# SAFETY: do not enable automated sync until the adoption in docs/gitops/ARGOCD-SELF-MANAGEMENT.md
+# is complete. Merging this file only creates the Application (it shows OutOfSync); nothing is applied
+# until a person runs a sync.
+#   - no automated sync: the first sync is a manual, reviewed step, after the pending `helm upgrade`
+#     (merged in #392, not yet run) has made the live release equal Git
+#   - prune: never. If a sync is started with prune, Dex-era leftovers and anything else not rendered would go
+#   - no resources-finalizer: deleting this Application can never cascade to Argo CD itself
+#   - CRDs stay out of sync scope (crds.install=false): the Application, ApplicationSet and AppProject CRDs are
+#     only ever changed by hand with `kubectl apply --server-side` on a chart bump
+#   - argocd-secret and argocd-notifications-secret are not rendered (createSecret/create=false): Argo CD writes
+#     the live ones (server key, admin hash) at runtime and a render would hold no data
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-argocd
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+    argocd.argoproj.io/compare-options: ServerSideDiff=true
+spec:
+  project: default
+  sources:
+  - repoURL: https://argoproj.github.io/argo-helm
+    chart: argo-cd
+    targetRevision: 10.1.2
+    helm:
+      releaseName: argocd
+      valueFiles:
+      - $values/platform/values/argocd.yaml
+      # Inline values win over the file: safety switches that must not depend on the values file.
+      valuesObject:
+        crds:
+          install: false
+        configs:
+          secret:
+            createSecret: false
+        notifications:
+          secret:
+            create: false
+  - repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    # Deliberately no `automated:` block (manual sync only at first). After the first verified sync, the
+    # intended steady state is:  automated: { prune: false, selfHeal: true }
+    retry:
+      limit: 3
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 3m
+    syncOptions:
+    - ServerSideApply=true
+    - SkipDryRunOnMissingResource=true

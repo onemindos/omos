@@ -8,14 +8,6 @@
     "groupTitle": "Infrastructure"
   },
   {
-    "name": "kubernetes-dashboard",
-    "title": "Kubernetes Dashboard",
-    "url": "https://k8s-dashboard.tail717ba0.ts.net/#/configmap?namespace=default",
-    "description": "Cluster UI",
-    "group": "infrastructure",
-    "groupTitle": "Infrastructure"
-  },
-  {
     "name": "headlamp",
     "title": "Headlamp",
     "url": "https://headlamp.tail717ba0.ts.net/c/main/token",
@@ -48,9 +40,9 @@
     "groupTitle": "Infrastructure"
   },
   {
-    "name": "hermes-legacy",
-    "title": "Hermes (Legacy)",
-    "url": "https://hermes-agent.tail717ba0.ts.net/login?next=%2F",
+    "name": "onemind-hermes",
+    "title": "Legacy (onemind-hermes)",
+    "url": "https://onemind-hermes.tail717ba0.ts.net/",
     "description": "Legacy AI — cloud",
     "group": "ai-agents",
     "groupTitle": "AI & Agents"
@@ -122,7 +114,7 @@
   {
     "name": "tak-server",
     "title": "TAK Server",
-    "url": "https://tak.onemindos.dev:8446",
+    "url": "https://tak.tail717ba0.ts.net:8446",
     "description": "TAK 5.8 hardened",
     "group": "tak-ecosystem",
     "groupTitle": "TAK Ecosystem"
@@ -138,7 +130,7 @@
   {
     "name": "fedhub",
     "title": "FedHub",
-    "url": "https://fedhub.onemindos.dev",
+    "url": "https://fedhub.tail717ba0.ts.net",
     "description": "TAK federation hub",
     "group": "tak-ecosystem",
     "groupTitle": "TAK Ecosystem"
@@ -260,22 +252,6 @@
     "title": "TileServer GL",
     "url": "https://tileserver.onemindos.dev",
     "description": "Vector tiles",
-    "group": "geospatial",
-    "groupTitle": "Geospatial"
-  },
-  {
-    "name": "valhalla",
-    "title": "Valhalla",
-    "url": "https://valhalla.onemindos.dev",
-    "description": "Routing engine",
-    "group": "geospatial",
-    "groupTitle": "Geospatial"
-  },
-  {
-    "name": "maputnik",
-    "title": "Maputnik",
-    "url": "https://maputnik.onemindos.dev",
-    "description": "Map style editor",
     "group": "geospatial",
     "groupTitle": "Geospatial"
   },
@@ -508,14 +484,6 @@
     "title": "ArgoCD",
     "url": "https://argocd.tail717ba0.ts.net",
     "description": "GitOps CD",
-    "group": "external",
-    "groupTitle": "External"
-  },
-  {
-    "name": "external-kubernetes-dashboard",
-    "title": "Kubernetes Dashboard",
-    "url": "https://k8s-dashboard.tail717ba0.ts.net",
-    "description": "Cluster UI",
     "group": "external",
     "groupTitle": "External"
   },

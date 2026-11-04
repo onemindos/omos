@@ -4,3 +4,7 @@ metadata:
   name: takml
   annotations:
     volsync.backube/privileged-movers: "true"
+  labels:
+    onemind.io/layer: sense
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted

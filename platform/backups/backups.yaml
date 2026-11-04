@@ -134,6 +134,10 @@ kind: CronJob
 metadata:
   name: backup-clickhouse
   namespace: clickhouse
+  annotations:
+    # Read by the portal (Home, Today, Live Ops): retired on purpose, not an attention item.
+    onemind.io/backup-state: superseded
+    onemind.io/superseded-by: VolSync daily snapshot (ReplicationSource volume-ab4fbd87295d, 00:40 UTC)
 spec:
   schedule: 0 3 * * *
   concurrencyPolicy: Forbid

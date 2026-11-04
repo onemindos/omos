@@ -18,12 +18,6 @@
     "size": "20Gi"
   },
   {
-    "namespace": "hermes",
-    "pvc": "hermes-data",
-    "source": "volume-c96e219d2314",
-    "size": "25Gi"
-  },
-  {
     "namespace": "matrix",
     "pvc": "data-postgres-0",
     "source": "volume-0af77b22c7a2",
@@ -91,36 +85,6 @@
   },
   {
     "namespace": "onetak",
-    "pvc": "nominatim-data",
-    "source": "volume-93cec0eff115",
-    "size": "100Gi"
-  },
-  {
-    "namespace": "onetak",
-    "pvc": "onetak-geo-db-data",
-    "source": "volume-50fb74ff16c6",
-    "size": "20Gi"
-  },
-  {
-    "namespace": "onetak",
-    "pvc": "onetak-minio-data",
-    "source": "volume-b455a3425ad0",
-    "size": "20Gi"
-  },
-  {
-    "namespace": "onetak",
-    "pvc": "onetak-pgdata",
-    "source": "volume-76694cc119e9",
-    "size": "10Gi"
-  },
-  {
-    "namespace": "onetak",
-    "pvc": "overpass-data",
-    "source": "volume-76d69bd17963",
-    "size": "100Gi"
-  },
-  {
-    "namespace": "onetak",
     "pvc": "tile38-data",
     "source": "volume-adf3fcd472a7",
     "size": "10Gi"
@@ -133,12 +97,6 @@
   },
   {
     "namespace": "onetak",
-    "pvc": "valhalla-data",
-    "source": "volume-edfbac6aab24",
-    "size": "50Gi"
-  },
-  {
-    "namespace": "onetak",
     "pvc": "webodm-db-data",
     "source": "volume-e0dfcd35f5a7",
     "size": "5Gi"
@@ -148,12 +106,6 @@
     "pvc": "webodm-media",
     "source": "volume-cafdaa0bfb4a",
     "size": "5Gi"
-  },
-  {
-    "namespace": "openclaw",
-    "pvc": "openclaw-home-pvc",
-    "source": "volume-708da2be53bb",
-    "size": "50Gi"
   },
   {
     "namespace": "takml",
@@ -226,47 +178,5 @@
     "pvc": "onemind-cpu-model",
     "source": "volume-aeb2c9c4e472",
     "size": "20Gi"
-  },
-  {
-    "namespace": "onemind-registry",
-    "pvc": "data-harbor-redis-0",
-    "source": "volume-baee1f2a0bd3",
-    "size": "5Gi"
-  },
-  {
-    "namespace": "onemind-registry",
-    "pvc": "data-harbor-trivy-0",
-    "source": "volume-2bf1a9962441",
-    "size": "10Gi"
-  },
-  {
-    "namespace": "onemind-registry",
-    "pvc": "database-data-harbor-database-0",
-    "source": "volume-7db10f24603b",
-    "size": "5Gi"
-  },
-  {
-    "namespace": "onemind-registry",
-    "pvc": "harbor-jobservice",
-    "source": "volume-01764533bacc",
-    "size": "1Gi"
-  },
-  {
-    "namespace": "onemind-registry",
-    "pvc": "harbor-registry",
-    "source": "volume-f0b56ae255e2",
-    "size": "40Gi"
-  },
-  {
-    "namespace": "onemind-search",
-    "pvc": "onemind-search-master-onemind-search-master-0",
-    "source": "volume-bf5e2b142d4b",
-    "size": "20Gi"
-  },
-  {
-    "namespace": "spire-system",
-    "pvc": "spire-data-spire-server-0",
-    "source": "volume-cdf02d607f9c",
-    "size": "5Gi"
   }
 ]
