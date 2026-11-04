@@ -155,8 +155,9 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install PyYAML
-        run: pip install pyyaml
+      # Startup contracts execute the real Hermes init script, which uses ruamel.yaml.
+      - name: Install YAML dependencies for render and startup contracts
+        run: pip install pyyaml ruamel.yaml==0.18.16
 
       # The self-hosted image's system node is too old for `node --test` (used by the portal contract tests).
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
