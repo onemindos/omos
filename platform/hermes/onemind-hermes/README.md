@@ -41,7 +41,7 @@ profile reads it from the container environment; role profiles read it from thei
 
 `config.defaults.yaml` only seeds an empty volume. To change the live `/opt/data/config.yaml` run
 `mcp/apply.sh` (add `--dry-run` first): it sets every server in the defaults (`ops`, `data`, `tak`, `dropbox`,
-`clickup`, `whop` and the nine Zoho entries) exactly as there, removes the old LiteLLM `onemind` entry and the
+`todoist`, `whop` and the nine Zoho entries) exactly as there, removes retired `clickup`, the old LiteLLM `onemind` entry and the
 retired LiteLLM comment block, writes `config.yaml.bak-mcp-<timestamp>` before changing anything and touches no
 other key. A second run prints only `unchanged`. Hermes reads `mcp_servers` at start, so restart the gateway
 (`nats/apply.sh --restart`) afterwards. Check with `hermes mcp test ops|data|tak` inside the pod.
@@ -54,10 +54,31 @@ exclusions (`GetUsageAndQuota` and three more, in CamelCase) matched no tool.
 | Server | Filter | Effect |
 |---|---|---|
 | `dropbox` | `exclude` | Reads and normal writes stay. Excluded: `delete*`, `restore_*`, `sign_cancel_*`, `run_write_dropbox_operation` (a generic writer that could reach a delete), plus the four quota/file-request tools the owner excluded before. |
-| `clickup` | `exclude` | Everything except `clickup_delete_*` and `clickup_merge_tasks` (merging removes the source tasks). |
 | `whop` | `include` (200 of 464) | Reads, plus low-risk writes (messages, forum posts, reactions, notifications, course content, leads, notes, experiences, products, files and exports). Not listed: delete/remove, creating or changing payments, payouts, transfers, fees and refunds, cards and bank accounts, account and user changes, tokens and API keys. The reconciler refuses any such name in `mcp/whop/server.json`. |
 | `zoho-*` | `include` | Read-only lists, unchanged (checked: no delete, remove, void or cancel tool). |
 | `ops`, `data`, `tak` | gateway allowlist | `platform/tool-gateway`. `ops` includes two write tools by owner decision: `kubernetes_resources_create_or_update` and `onemind_tile38_set_point`. |
+
+### Retired ClickUp MCP: bootstrap and recovery
+
+ClickUp is no longer in the defaults. The `initial-config` init container removes
+only `mcp_servers.clickup` through `hermes config unset` when present, after home
+ownership repair and outside the empty-volume seed guard. Thus an existing or
+restored older default-home config cannot reactivate ClickUp on the next start.
+The manual MCP applier also removes that retired entry. Todoist remains the
+owner's task authority and Dropbox the knowledge authority; neither is removed.
+
+This config-only retirement does not read or delete OAuth files, revoke vendor
+grants, change other profiles, migrate tasks, or delete a ClickUp account,
+workspace or task. Previously removed local authentication is not recreated by
+these manifests. Older encrypted backups may still contain historical OAuth
+state; startup removes the config entry, not backup contents. The inactive
+`onepassword/` proposal and historical audit records remain source-only/history,
+not bootstrap inputs. Configuration exports are snapshots, not startup reconcilers.
+
+Regression: `python -m unittest scripts.tests.test_gitops_retired_clickup_mcp -v`.
+The startup test uses the actual installed Hermes CLI in an isolated home; it
+mocks ownership operations and unrelated server reconcilers, not ClickUp removal.
+These source tests do not establish deployment or a live backup restore.
 
 ## Worker roles and the tool gateway
 
