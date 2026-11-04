@@ -18,7 +18,8 @@ devices and DO-hosted non-K8s services are **managed like first-class apps**:
 
 ## Evidence
 
-- 325 Components. Many are external apps (Apple Music, 1Password, Zoho apps)
+- Gatus still has no Argo Application (checked 2026-11-04).
+- 325 Components (2026-10-21). Many are external apps (Apple Music, 1Password, Zoho apps)
   marked `type: website, lifecycle: production` with no health signal. The home
   launcher has hosting chips (Self-hosted / Cloud service / Local / Reference /
   Planned / Unknown), but these are not a catalog model.
