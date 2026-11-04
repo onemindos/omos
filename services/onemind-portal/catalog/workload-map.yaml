@@ -64,7 +64,6 @@ workloads:
   monitoring/monitoring-kube-prometheus-operator: component:default/prometheus
   monitoring/monitoring-kube-state-metrics: component:default/prometheus
   monitoring/prometheus-monitoring-kube-prometheus-prometheus: component:default/prometheus
-  monitoring/tempo: component:default/tempo
   n8n/n8n: component:default/n8n
   n8n/postgres: component:default/n8n
   nats/agent-web-ui: component:default/agent-web-ui
@@ -174,7 +173,6 @@ argoApplications:
   monitoring-kube-prometheus-stack: component:default/prometheus
   monitoring-loki: component:default/loki
   monitoring-otel-collector: component:default/opentelemetry-collector
-  monitoring-tempo: component:default/tempo
   platform-agent-fabric: component:default/agent-web-ui
   platform-auth-helm: component:default/authentik
   platform-auth-infra: component:default/authentik

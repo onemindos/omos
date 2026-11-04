@@ -202,8 +202,8 @@ that all applications are integrated. Nextcloud, Matrix, TAK HTTP, portal federa
 WebODM and other adapters remain explicit implementation work. Existing Legacy
 bus/TAK tools remain separate. No user-file scraping or database backdoor is added.
 
-Karakeep bookmark read/search/save, n8n workflow/execution summaries, Grafana dashboard search and Tempo trace
-lookup have adapters in source. They are blocked pending the requirements recorded
+Karakeep bookmark read/search/save, n8n workflow/execution summaries and Grafana dashboard search
+have adapters in source. They are blocked pending the requirements recorded
 on each catalog entry. Dedicated user/service identities are required; the registry
 pull PAT, app admin credentials and model provider keys are not app API identities.
 For n8n the transport uses `X-N8N-API-KEY`, not Bearer authentication.

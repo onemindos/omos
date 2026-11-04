@@ -109,7 +109,6 @@
   "component:default/k8s-monitoring-monitoring-kube-prometheus-operator-a1fd90c0",
   "component:default/k8s-monitoring-monitoring-kube-state-metrics-54b7d5b9",
   "component:default/k8s-monitoring-prometheus-monitoring-kube-prometheus-p-d0699964",
-  "component:default/k8s-monitoring-tempo-2fe8b2d8",
   "component:default/k8s-n8n-n8n-28ebae17",
   "component:default/k8s-n8n-postgres-2d585b74",
   "component:default/k8s-nats-agent-web-ui-be5be217",

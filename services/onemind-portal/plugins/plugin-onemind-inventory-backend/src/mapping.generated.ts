@@ -80,7 +80,6 @@ export const mapping: InventoryMapping = {
     'monitoring/monitoring-kube-state-metrics': 'component:default/prometheus',
     'monitoring/prometheus-monitoring-kube-prometheus-prometheus':
       'component:default/prometheus',
-    'monitoring/tempo': 'component:default/tempo',
     'n8n/n8n': 'component:default/n8n',
     'n8n/postgres': 'component:default/n8n',
     'nats/agent-web-ui': 'component:default/agent-web-ui',
@@ -444,12 +443,6 @@ export const mapping: InventoryMapping = {
     takml: {
       title: 'TAK-ML',
       system: 'tak-ecosystem',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    tempo: {
-      title: 'Tempo',
-      system: 'observability',
       pillar: 'so',
       review: 'proposed',
     },

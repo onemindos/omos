@@ -548,11 +548,6 @@
     },
     {
       "kind": "StatefulSet",
-      "namespace": "monitoring",
-      "name": "tempo"
-    },
-    {
-      "kind": "StatefulSet",
       "namespace": "n8n",
       "name": "postgres"
     },
@@ -1200,11 +1195,6 @@
       "kind": "Service",
       "namespace": "monitoring",
       "name": "prometheus-operated"
-    },
-    {
-      "kind": "Service",
-      "namespace": "monitoring",
-      "name": "tempo"
     },
     {
       "kind": "Service",

@@ -102,7 +102,7 @@ helm upgrade --install tailscale-operator tailscale/tailscale-operator \
 kubectl --context "$CTX" apply -f "$PLATFORM/tailscale/apiserver-rbac.yaml"
 
 # -----------------------------------------------------------------------------
-# 6. OBSERVABILITY — kube-prometheus-stack, Loki, Tempo, OTel Collector
+# 6. OBSERVABILITY — kube-prometheus-stack, Loki, OTel Collector
 # -----------------------------------------------------------------------------
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts --force-update
 helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
@@ -114,16 +114,12 @@ helm upgrade --install loki grafana/loki \
   --kube-context "$CTX" -n monitoring \
   -f "$PLATFORM/values/loki.yaml"
 
-helm upgrade --install tempo grafana/tempo \
-  --kube-context "$CTX" -n monitoring \
-  -f "$PLATFORM/values/tempo.yaml"
-
 helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts --force-update
 helm upgrade --install otel-collector open-telemetry/opentelemetry-collector \
   --kube-context "$CTX" -n monitoring \
   -f "$PLATFORM/values/otel-collector.yaml"
 
-# Apply custom datasource ConfigMap (Loki + Tempo linked in Grafana)
+# Apply custom datasource ConfigMap (Loki in Grafana)
 kubectl --context "$CTX" apply -f "$PLATFORM/grafana-datasources.yaml"
 
 # -----------------------------------------------------------------------------

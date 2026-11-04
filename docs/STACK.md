@@ -184,7 +184,6 @@ Reached only through `platform-tool-gateway` (namespace `tool-gateway` unless st
 |---------|-----------|-------|---------|-------|--------|----------|--------|
 | `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | Prometheus, Alertmanager, Grafana | Prometheus TSDB, Grafana DB, 40 GiB PVCs in the namespace | `VolSync` | Grafana tailnet; Alertmanager internal | Argo (`monitoring-kube-prometheus-stack`, adopted 2026-10-17) |
 | `loki` | monitoring | loki-7.0.0 | Log storage. **PVC 89% full** (A4) | 20 GiB | `VolSync` | internal | Argo (`monitoring-loki`, adopted 2026-10-17) |
-| `tempo` | monitoring | tempo-1.24.4 | Trace storage | PVC | `VolSync` | internal | Argo (`monitoring-tempo`, adopted 2026-10-17) |
 | `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | Telemetry pipeline | none | Git | internal | Argo (`monitoring-otel-collector`, adopted 2026-10-17) |
 
 ## Not tracked by Argo or Helm
@@ -200,7 +199,7 @@ These run live and are not owned by any Application. Manifests for some of them 
 
 ## GitOps gaps
 
-Eleven releases were installed with `helm upgrade --install` (see `platform/install.sh`). **Update 2026-10-17:** four of them (`cert-manager`, `ingress-nginx`, `nack`, `tailscale-operator`) were adopted into Argo in PR #176 and are owned by the `edge-*` Applications. The four monitoring releases (`monitoring`, `loki`, `tempo`, `otel-collector`) were adopted later the same day as `monitoring-*` Applications. The remaining three are Helm CLI only: `nats`, `takserver` and `argocd`. `helm list -A` still shows all eleven, because adoption leaves the release record. Do not run `platform/install.sh`: it would `helm upgrade` the adopted releases too. Current status: `docs/gitops/HELM-ADOPTION.md`.
+Eleven releases were installed with `helm upgrade --install` (see `platform/install.sh`). **Update 2026-10-17:** four of them (`cert-manager`, `ingress-nginx`, `nack`, `tailscale-operator`) were adopted into Argo in PR #176 and are owned by the `edge-*` Applications. The four monitoring releases (`monitoring`, `loki`, `tempo`, `otel-collector`) were adopted later the same day as `monitoring-*` Applications. **Update 2026-11-03:** Tempo was removed (no trace backend; the OTel collector now ships logs only), leaving three monitoring Applications. The remaining three are Helm CLI only: `nats`, `takserver` and `argocd`. `helm list -A` still shows all eleven, because adoption leaves the release record. Do not run `platform/install.sh`: it would `helm upgrade` the adopted releases too. Current status: `docs/gitops/HELM-ADOPTION.md`.
 
 | Release | Namespace | Chart | Rev | Last updated | Values in Git | Risk if the cluster is rebuilt |
 |---------|-----------|-------|-----|--------------|---------------|-------------------------------|
@@ -214,11 +213,10 @@ Eleven releases were installed with `helm upgrade --install` (see `platform/inst
 | `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | 3 | 2026-07-17 | `platform/values/otel-collector.yaml` | Telemetry only |
 | `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | 3 | 2026-07-11 | `platform/values/tailscale-operator.yaml` | All admin UIs depend on it |
 | `takserver` | takserver | takserver-4.6.0 | 34 | 2026-09-29 | `platform/takserver/values-onemind.yaml` and chart `platform/takserver/chart` | The most important workload has no reproducible rebuild path |
-| `tempo` | monitoring | tempo-1.24.4 | 4 | 2026-07-17 | `platform/values/tempo.yaml` | Traces only |
 
 Whether the values in Git still match what is deployed was not checked; `helm get values` can contain secrets and was not run. Verify with a values diff before adopting any release.
 
-**Suggested adoption order** (from the cluster review, finding H2): `takserver` and `nats` first, behind fresh volume snapshots; then `monitoring`, `loki`, `tempo`, `otel-collector`, `nack`; then `ingress-nginx`, `cert-manager`, `tailscale-operator`; `argocd` last. Per release: export values, commit them, create an Application with the same chart, version and `releaseName`, sync with `ServerSideApply` and `prune: false`, then confirm a zero diff. To back out, delete the Application with `--cascade=false` (workloads keep running, the Helm release secret still exists). This document does not make any of those changes.
+**Suggested adoption order** (from the cluster review, finding H2): `takserver` and `nats` first, behind fresh volume snapshots; then `monitoring`, `loki`, `otel-collector`, `nack`; then `ingress-nginx`, `cert-manager`, `tailscale-operator`; `argocd` last. Per release: export values, commit them, create an Application with the same chart, version and `releaseName`, sync with `ServerSideApply` and `prune: false`, then confirm a zero diff. To back out, delete the Application with `--cascade=false` (workloads keep running, the Helm release secret still exists). This document does not make any of those changes.
 
 Gaps beyond the eleven releases:
 

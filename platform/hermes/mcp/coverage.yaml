@@ -66,11 +66,7 @@ applications:
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   monitoring-otel-collector:
     apps:
-    - tempo
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  monitoring-tempo:
-    apps:
-    - tempo
+    - loki
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-agent-fabric:
     apps:
