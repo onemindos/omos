@@ -38,6 +38,15 @@ class ClickUpRetirementTests(unittest.TestCase):
                        and any(isinstance(t, ast.Name) and t.id == 'REMOVE' for t in node.targets))
         self.assertIn('clickup', ast.literal_eval(removal))
 
+    def test_portable_ci_installs_startup_yaml_dependency(self):
+        # These portable suites execute the real init script, including its parser.
+        workflow = yaml.safe_load((ROOT / '.github/workflows/quality.yml').read_text())
+        steps = workflow['jobs']['helm']['steps']
+        contracts = next(i for i, step in enumerate(steps)
+                         if step.get('name') == 'Portable GitOps pipeline safety contracts')
+        installs = '\n'.join(step.get('run', '') for step in steps[:contracts])
+        self.assertIn('ruamel.yaml==0.18.16', installs)
+
     def test_actual_startup_removes_restored_clickup_twice(self):
         if not CLI.is_file():
             self.skipTest('Actual Hermes CLI unavailable')
