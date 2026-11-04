@@ -3,7 +3,7 @@
 > Current review: [Matrix drift and safe sync](../../docs/operations/matrix-drift-2026-10-23.md).
 > Keep manual sync. Create and verify the sealed config before selecting Synapse;
 > never force, replace, prune or recreate the data PVC. The current homeserver is
-> `matrix.onemindos.dev`; the active server identity is `onemindos.dev`.
+> `matrix.tail717ba0.ts.net` (tailnet-only since 2026-10-29); the active server identity is `onemindos.dev`.
 
 `platform-matrix` (path `platform/matrix/argo/`) is deliberately **manual sync**. Reason: the live Synapse config
 (`ConfigMap/synapse-config`, key `homeserver.yaml`) contains three plaintext secrets, so it cannot be committed:
@@ -48,7 +48,7 @@ the `.sealedsecret.yaml` output, never the plaintext. Confirm with `grep -c encr
 1. Merge the sealed file in a separately reviewed PR, then selectively sync only that SealedSecret in Argo. The controller creates `Secret/synapse-homeserver`; no full application sync yet.
 2. Check: `kubectl -n matrix get secret synapse-homeserver`.
 3. In Argo, review the diff of `platform-matrix`, then sync manually. Expect one Synapse rollout (pod template volume
-   changed), nothing else. Verify `https://matrix.onemindos.dev/_matrix/client/versions` and a login.
+   changed), nothing else. Verify `https://matrix.tail717ba0.ts.net/_matrix/client/versions` and a login.
 4. Keep `platform-matrix` manual. Automated sync is a separately reviewed decision.
 5. Only after Synapse is healthy: remove the old `ConfigMap/synapse-config` (it still holds the plaintext) with
    `kubectl -n matrix delete configmap synapse-config`. Argo does not manage or prune it.

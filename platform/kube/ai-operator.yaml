@@ -47,8 +47,6 @@ rules:
       - jetstream.nats.io
       - gateway.networking.k8s.io
       - monitoring.coreos.com
-      - keda.sh
-      - eventing.keda.sh
       - velero.io
       - volsync.backube
       - snapshot.storage.k8s.io

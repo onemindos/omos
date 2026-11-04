@@ -23,10 +23,10 @@ controllers, or widen AI permissions.
 | The portal's own entity is `k8s-backstage-backstage-21b99354`; `component:default/backstage` does not exist | `/catalog/default/component/backstage` → not found | F2, F5 |
 | Only 6 of 69 Argo CD applications are linked to a catalog entity | catalog query on `argocd/app-name` | F2, F5 |
 | App pages pop up an unrequested GitHub OAuth dialog | GitHub Actions/PR cards on every Component | F5 |
-| Cost Insights page loads empty | `/cost-insights` | F9 |
+| No cost page; OpenCost is reachable only through the proxy route | `/api/proxy/opencost/allocation` | F9 |
 | DigitalOcean cost card says it needs a `billing:read` token; no droplet/volume/LB/snapshot view | `/today`, no DO plugin exists in the directory | F6 |
 | Three backup CronJobs show as "suspended" on `/today`. Two are deliberate replacements: `backstage-backup` is superseded by `backup-postgres-backstage`, and `backup-clickhouse` by daily VolSync. The real gap is `backup-offsite-copy`: it has never run because its credentials do not exist, so every backup sits in one DO bucket. | `platform/backstage/backup.yaml`, `platform/backups/{backups,offsite-copy}.yaml`, live CronJob/VolSync status | F4 must tell retired from pending from failing; offsite setup is Zeus's step (OFFSITE-COPY.md 1–5) |
-| 98 DO volumes (all bound to PVCs) and 58 volume snapshots, no retention view | `doctl` read-only | F6, F8 |
+| 73 DO volumes and 53 snapshots (2026-11-04), no retention view | `doctl` read-only | F6, F8 |
 
 ## Work orders
 
@@ -37,10 +37,10 @@ controllers, or widen AI permissions.
 | F3 | [#359](https://github.com/onemindos/omos/pull/359) | Notification triage and real-time alert routing | none | Inbox shows only actionable items; firing alerts arrive live |
 | F4 | [#360](https://github.com/onemindos/omos/pull/360) | Live Operations: "what is wrong right now" | F3 (soft) | One page: alerts, Argo drift, failing pods, nodes, storage, backups, uptime |
 | F5 | [#361](https://github.com/onemindos/omos/pull/361) | One standard app page for every service | F2 | Same tabs on every app; no GitHub pop-ups; non-K8s variant |
-| F6 | [#362](https://github.com/onemindos/omos/pull/362) | DigitalOcean at a glance (custom plugin) | read-only DO token from Zeus | Droplets, DOKS, volumes, snapshots, LBs, firewalls, VPCs, Spaces, uptime, bill |
-| F7 | [#363](https://github.com/onemindos/omos/pull/363) | Non-Kubernetes apps: model, health and access | F2 | SaaS/home/device apps managed with the same page and live health |
-| F8 | [#364](https://github.com/onemindos/omos/pull/364) | Add and remove apps: lifecycle templates and stack hygiene | F2 | "Add app" and "Retire app" produce reviewed PRs; hygiene report |
-| F9 | [#365](https://github.com/onemindos/omos/pull/365) | Plugin pack: verified additions | none | Kyverno policy reports, OpenCost, shortcuts/bookmarks, admin devtools |
+| F6 | [brief](F6-digitalocean.md) | DigitalOcean at a glance (custom plugin) | read-only DO token from Zeus | Droplets, DOKS, volumes, snapshots, LBs, firewalls, VPCs, Spaces, uptime, bill |
+| F7 | [brief](F7-non-kubernetes-apps.md) | Non-Kubernetes apps: model, health and access | F2 | SaaS/home/device apps managed with the same page and live health |
+| F8 | [brief](F8-app-lifecycle.md) | Add and remove apps: lifecycle templates and stack hygiene | F2 | "Add app" and "Retire app" produce reviewed PRs; hygiene report |
+| F9 | [brief](F9-plugin-pack.md) | Plugin pack: verified additions | none | Kyverno policy reports, OpenCost, shortcuts/bookmarks, admin devtools |
 | F10 | [#366](https://github.com/onemindos/omos/pull/366) | Theme and visual design system | none | Brand-correct red/graphite theme in dark and light, AA contrast |
 | F11 | [#367](https://github.com/onemindos/omos/pull/367) | Live inventory: catalog follows the cluster automatically | F2 | New and removed workloads appear within minutes, attached to their app |
 

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/tasks/onemind.task.manual/v1",
+  "title": "onemind.task.manual.v1 spec",
+  "description": "Manual task for a person or team. Task spec (onemind-xr docs/contracts/mission-task.md section 4). Unknown fields are refused.",
+  "type": "object",
+  "required": [
+    "instructions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "instructions": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "location": {
+      "type": "object",
+      "required": [
+        "lat",
+        "lon"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "lat": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "lon": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        }
+      }
+    }
+  }
+}

@@ -84,7 +84,7 @@ systems:
     domain: domain:default/onemind-so
   - name: ai-agents
     title: AI & agents
-    description: Hermes (Legacy), agent consoles, model gateways and runtimes, model providers and workflow automation.
+    description: Legacy (onemind-hermes), agent consoles, model gateways and runtimes, model providers and workflow automation.
     pillar: so
     review: proposed
     domain: domain:default/onemind-so
@@ -177,10 +177,6 @@ apps:
     title: Tailscale operator and proxies
     system: infrastructure
     description: Tailscale Kubernetes operator and the per-service tailnet proxies it creates.
-  - name: keda
-    title: KEDA
-    system: infrastructure
-    description: Event-driven autoscaling.
   - name: dapr
     title: Dapr
     system: infrastructure
@@ -217,10 +213,6 @@ apps:
     title: Backstage portal
     system: developer-platform
     description: The OneMind developer portal and its PostgreSQL database.
-  - name: tempo
-    title: Tempo
-    system: observability
-    description: Distributed tracing backend.
   - name: opentelemetry-collector
     title: OpenTelemetry Collector
     system: observability
@@ -241,10 +233,6 @@ apps:
     title: Velero
     system: data-storage
     description: Cluster backup and restore.
-  - name: nextcloud
-    title: Nextcloud
-    system: data-storage
-    description: Private file and vault sync for the Mac and Android (Nextcloud, its Redis and the files volume).
   - name: volsync
     title: VolSync
     system: data-storage
@@ -281,23 +269,57 @@ apps:
     title: LiteLLM
     system: ai-agents
     description: Model gateway.
-  - name: hermes-fresh
-    title: Hermes (Fresh)
+  - name: onemind-hermes
+    title: Legacy (onemind-hermes)
     system: ai-agents
-    description: Independent fresh Hermes instance beside Legacy in the hermes namespace (Argo application platform-hermes-fresh); no NATS sidecar, no imported Legacy data.
+    description: Hermes v0.22.7 instance with the single Legacy soul in the hermes namespace (Argo application platform-onemind-hermes); no NATS sidecar, no imported Legacy data.
   - name: onemind-mcp
     title: OneMind internal app MCP
     system: ai-agents
-    description: Read-only MCP server giving Hermes typed tools for in-cluster apps (NATS monitoring, Prometheus); manifests in platform/hermes/mcp (Argo application platform-legacy).
-  - name: paperclip
-    title: Paperclip
+    description: >-
+      MCP server giving Hermes typed tools for in-cluster apps (NATS monitoring, Prometheus, Ollama, OpenCost, and the Tile38 adapter with one write,
+      tile38_set_point); it is the onemind target behind the tool gateway; manifests in platform/hermes/mcp (Argo application platform-onemind-mcp).
+  - name: agentgateway
+    title: Tool gateway (agentgateway)
     system: ai-agents
-    description: Business agent workspace prepared in PR 438; owner setup and runtime verification are pending.
+    description: >-
+      The tool gateway in front of Legacy's tools, agentgateway v1.7.0, serving one MCP endpoint per tool group (ops, dev, cloud, data, tak, home, work,
+      identity, execute); Argo application platform-tool-gateway in namespace tool-gateway. Hermes is not cut over yet.
+  - name: mcp-kubernetes
+    title: Tool gateway Kubernetes backend (mcp-kubernetes)
+    system: ai-agents
+    description: >-
+      containers/kubernetes-mcp-server v0.1.1 behind the tool gateway (target kubernetes, group ops) with 10 read tools, 1 write, 3 destructive tools held
+      back for the execute route; no Secrets in its RBAC.
+  - name: mcp-clickhouse
+    title: Tool gateway ClickHouse backend (mcp-clickhouse)
+    system: ai-agents
+    description: ClickHouse/mcp-clickhouse 0.7.0 behind the tool gateway (target clickhouse, group data) with three read tools as the readonly ClickHouse user legacy_ro.
   - name: karakeep
     title: Karakeep
     system: personal-tools
     description: Native bookmark and read-later workspace prepared with manual Argo and zero replicas; first start, owner enrollment and recovery acceptance are pending.
 placement:
+  hermes-atlas: ai-agents
+  hermes-bible: ai-agents
+  oh-my-hermes: ai-agents
+  hermes-official-plugins: ai-agents
+  hermes-skills: ai-agents
+  hermes-documentation: ai-agents
+  osiris: intelligence
+  worldwideview: intelligence
+  worldmonitor: intelligence
+  argos-atlas: intelligence
+  gods-eye-view: intelligence
+  tacsync: tak-ecosystem
+  cesium-ion-for-tak: tak-ecosystem
+  xmpp-for-tak: tak-ecosystem
+  district47: tak-ecosystem
+  engindearing-projects: tak-ecosystem
+  omnitak-external: tak-ecosystem
+  takgrid: tak-ecosystem
+  gotak: tak-ecosystem
+  cotak: tak-ecosystem
   1password: identity-access
   agent-mail: ai-agents
   agent-monitor: ai-agents
@@ -343,7 +365,6 @@ placement:
   google-messages: communication
   grafana: observability
   headlamp: developer-platform
-  hermes-legacy: ai-agents
   heynats: messaging-nats
   home-assistant: home-homestead
   hubble-ui: observability

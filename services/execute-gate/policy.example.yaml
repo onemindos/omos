@@ -1,0 +1,6 @@
+# Rendered from platform/tool-gateway/policy/classification/*.yaml in Phase 2/4.
+# Resource ids are "<target>/<tool>". Anything not matching `physical` is destructive (default deny).
+physical:
+  - "homeassistant/*"
+destructive:
+  - "kubernetes/resources_delete"   # documentation only; destructive is the default class

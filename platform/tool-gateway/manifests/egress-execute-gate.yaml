@@ -1,0 +1,22 @@
+# Gateway egress to the execute-gate (the AuthZEN decision point of the /execute route, extAuthz). Egress ports are destination
+# pod ports. The gate's own ingress rule is manifests/execute-gate/network.yaml.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: agentgateway-egress-execute-gate
+  namespace: tool-gateway
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: agentgateway-standalone
+      app.kubernetes.io/instance: agentgateway
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: execute-gate
+    ports:
+    - {protocol: TCP, port: 8080}

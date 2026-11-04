@@ -16,6 +16,18 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
+    # Tool gateway target `core` (read-only OpenAPI subset with READ_API_KEY).
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tool-gateway
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: agentgateway-standalone
+              app.kubernetes.io/instance: agentgateway
+      ports:
+        - protocol: TCP
+          port: 8080
     - from:
         - podSelector:
             matchLabels:

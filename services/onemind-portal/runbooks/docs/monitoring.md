@@ -2,7 +2,7 @@
 
 ## Access and dependencies
 
-Open `https://grafana.tail717ba0.ts.net/`. Prometheus, Grafana, Loki and Tempo run in namespace `monitoring`. P3 uses fixed Prometheus queries for backstage, auth, nats, takserver and onetak.
+Open `https://grafana.tail717ba0.ts.net/`. Prometheus, Grafana and Loki run in namespace `monitoring`. P3 uses fixed Prometheus queries for backstage, auth, nats, takserver and onetak.
 
 ## Interpret the panel
 

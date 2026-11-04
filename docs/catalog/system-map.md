@@ -37,7 +37,7 @@ Machine-readable form: `services/onemind-portal/catalog/structure.yaml` (Systems
 | Messaging (NATS) | `system:default/messaging-nats` | SO | The NATS bus, its UIs and tools, and the data pipelines that publish to or consume from it. |
 | TAK & field ops | `system:default/tak-ecosystem` | SO | TAK Server and its plugins, OneTAK, FedHub, TAK-ML, voice and the TAK clients and references. |
 | Geospatial, drones & robotics | `system:default/geospatial` | SO | Map, routing, geocoding and imagery services, drone software and firmware, and robotics platforms. |
-| AI & agents | `system:default/ai-agents` | SO | Hermes (Legacy), agent consoles, model gateways and runtimes, model providers and workflow automation. |
+| AI & agents | `system:default/ai-agents` | SO | Legacy (onemind-hermes), agent consoles, model gateways and runtimes, model providers and workflow automation. |
 | Code repositories | `system:default/repo-onemind` | SO | Source repositories in the onemindos GitHub organization. Hidden by default. |
 | Mesh & devices | `system:default/onemind-mesh` | SO | Tailscale mesh endpoints (devices and service proxies). Discovery snapshot, not live health. Hidden by default. |
 | Personal finance | `system:default/personal-finance` | HP | Personal banking, credit monitoring and credit-building tools. |
@@ -183,7 +183,8 @@ Each application resolves to exactly one app Component. The app carries `argocd/
 | `platform-external-dns` | external-dns | ExternalDNS (`external-dns`) | Platform core |
 | `platform-fedhub` | takserver | FedHub (`fedhub`) | TAK & field ops |
 | `platform-kube` | kube | Headlamp (`headlamp`) | Developer platform |
-| `platform-legacy` | hermes | Hermes (Legacy) (`hermes-legacy`) | AI & agents |
+| `platform-hermes-base` | hermes | Hermes namespace, egress Services and shared Secrets (`onemind-hermes`) | AI & agents |
+| `platform-onemind-mcp` | hermes | OneMind internal app MCP (`onemind-mcp`) | AI & agents |
 | `platform-matrix` | matrix | Matrix Synapse (`matrix-synapse`) | Communication |
 | `platform-monitoring` | monitoring | Grafana (`grafana`) | Observability |
 | `platform-n8n` | n8n | n8n (`n8n`) | AI & agents |
@@ -230,7 +231,7 @@ Workloads become `spec.subcomponentOf` their app and join the app's System. Full
 | external-dns | 1 | ExternalDNS (1) |
 | external-secrets | 3 | External Secrets Operator (3) |
 | github-runner | 2 | Platform core manifests (2) |
-| hermes | 1 | Hermes (Legacy) (1) |
+| hermes | 2 | Legacy (onemind-hermes) (1), OneMind internal app MCP (1) |
 | ingress-nginx | 1 | ingress-nginx (1) |
 | keda | 3 | KEDA (3) |
 | kube | 2 | Headlamp (1), Kubernetes Dashboard (1) |
@@ -311,7 +312,6 @@ These Argo-managed products have no curated app today, so the workloads would st
 | Tailscale | `tailscale` | infrastructure | Platform core | SO |
 | Cloudflare | `cloudflare` | infrastructure | Platform core | SO |
 | DigitalOcean | `digitalocean` | infrastructure | Platform core | SO |
-| Hermes (Legacy) | `hermes-legacy` | ai-agents | AI & agents | SO |
 | Agent Web UI | `agent-web-ui` | ai-agents | AI & agents | SO |
 | OpenClaw | `openclaw` | ai-agents | AI & agents | SO |
 | NATS Dashboard | `nats-dashboard` | ai-agents | Messaging (NATS) | SO |

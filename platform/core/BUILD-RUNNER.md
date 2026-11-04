@@ -1,8 +1,7 @@
-# Build runner and GitOps boundary
-
-The persistent runner image treats EPHEMERAL and DISABLE_AUTO_UPDATE as enabled
-when present, even if their value is "false". Leave them unset for the current
-persistent runner. The functional smoke workflow checks Docker without deploying.
+The runner image treats EPHEMERAL and DISABLE_AUTO_UPDATE as enabled whenever they
+are present, even if their value is "false". Leave EPHEMERAL unset for the persistent
+runner. Both runners set DISABLE_AUTO_UPDATE=true (see below).
+The functional smoke workflow checks Docker without deploying.
 Both runner and Docker images are pinned to the inspected running digests.
 
 Image workflows publish immutable commit tags. They do not directly restart cluster
@@ -41,3 +40,17 @@ second pod, `github-runner-hermes`, is repository-scoped, ephemeral, has only th
   time. The portal `yarn tsc` / `yarn test` need more memory than that; they are not in
   any pull-request workflow.
 - To go back to hosted runners, set `runs-on: ubuntu-latest` again in those two files.
+
+## Runner version and auto-update
+
+Both Deployments pin `myoung34/github-runner:2.338.2@sha256:...`. When GitHub raises the
+minimum runner version, an older runner downloads the new one, exits and deregisters
+("Runner update process finished. Caught EXIT - Deregistering runner"). The container
+restarts from the old image and repeats, which cancels running jobs. This happened on
+2026-11-03 (image 2.338.0, forced to 2.338.2: 113 restarts on `github-runner`, 225 on
+`github-runner-hermes`). `DISABLE_AUTO_UPDATE=true` stops the in-container update.
+
+Trade-off: if GitHub later requires a newer runner, this one stays online but stops
+receiving jobs until the image is bumped, instead of crash-looping. Renovate proposes
+the bump (the tag is kept beside the digest). If checks sit queued with no runner
+picking them up, compare the runner version in the pod log with the latest release.
