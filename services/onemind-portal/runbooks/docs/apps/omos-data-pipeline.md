@@ -7,7 +7,7 @@ Feed, projector and sink services in the omos namespace.
 ## Where it runs
 
 - Catalog entity: `component:default/omos-data-pipeline` in System `messaging-nats`
-- Argo CD application: `platform-omos`
+- Argo CD applications: `platform-omos`, `platform-omos-entity`
 - Namespace: `omos`
 
 ## Workloads

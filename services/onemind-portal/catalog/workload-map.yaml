@@ -197,6 +197,8 @@ argoApplications:
   platform-omos: component:default/omos-data-pipeline
   platform-onetak: component:default/onetak
   platform-ops: component:default/health-keeper
+  platform-omos-entity: component:default/omos-data-pipeline
+  platform-policy: component:default/onemind-core
   platform-redpanda-connect: component:default/redpanda-connect
   platform-security: component:default/kyverno
   platform-stac: component:default/stac
