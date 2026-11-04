@@ -61,6 +61,18 @@ This entry does not refresh historical counts or certify a working route.
 | --- | --- | --- | --- | --- | --- |
 | 2 | `platform-karakeep` | `karakeep` | Native SQLite/assets 20Gi + Meilisearch 5Gi; [backup activation and isolated restore](../platform/karakeep/BACKUP.md) required before real use | Private `https://karakeep.tail717ba0.ts.net`, app authentication | Manual Argo, all replicas zero; [first-start gates](../platform/karakeep/README.md) pending |
 
+## Task service preparation — 2026-10-29
+
+FEATURES D2 and H4 (onemind-xr): missions and tasks per `mission-task.md`, the only writer of KV
+`mission-state` and of `evt.mission.>`, applying `cmd.mission.*` from the policy service. Not deployed:
+the Application is manual and waits for the owner steps in
+[`platform/mission/README.md`](../platform/mission/README.md) (NATS user `mission`, one SealedSecret,
+pinned image digest, the policy service first). Supersedes the parked, never-built `omos-mission-engine`.
+
+| Tier | Application | Namespace | State / recovery | Exposure | Status |
+| --- | --- | --- | --- | --- | --- |
+| 2 | `platform-mission` | `onemind-core` | No PVC; records in KV `mission-state` (R3, history 5), history in `MISSION` (`evt.mission.>`, 90 d) | None (NATS client only; no Service or ingress); ecosystem pool | Manual Argo, not synced; [owner steps](../platform/mission/README.md) pending |
+
 ## Summary
 
 | Item | Count / value |
