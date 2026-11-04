@@ -1,5 +1,18 @@
 # OneMind CoT Tap (TAK → NATS bus, b3 outbound leg)
 
+> **Deprecated (A21, 2026-10-29); not deployed.** `kubectl get deploy cot-tap -n takserver`
+> returns NotFound, and it was only ever applied by hand. Its job (TAK Server -> `tak.cot.out`)
+> moves to the Go `tak-client` bridge (`services/bridge/bridges/tak-client`, Argo
+> `platform-takserver-tak-client`), which verifies the server certificate, publishes with
+> JetStream acks and `Nats-Msg-Id`, negotiates TAK Protocol v1 and also handles injects.
+> Do not deploy this directory. It is removed once `tak-client` has run live for a week
+> (proposal A21-P5 in `docs/proposals/2026-10-29-tak-server-leg.md`).
+>
+> Earlier versions of this README contained a CA key passphrase and a TAK user password in
+> plain text. They were replaced by placeholders here, but they remain in Git history:
+> treat both as exposed and rotate them (proposal A21-P4).
+
+
 A lightweight TAK client that connects to the TAK Server CoT streaming port
 (`8089/ssl`) as a mutual-TLS EUD, receives the full CoT firehose for its
 groups, and republishes each `<event>…</event>` to a NATS subject
@@ -29,16 +42,16 @@ The tap authenticates with a client cert (`CN=omos-cot-tap`) signed by the DOKS
 TAK CA. Mint + register:
 
 ```sh
-# from tak-cluster/b2-enrollment (has ca.pem + ca.key, key pw: atakatak)
+# from tak-cluster/b2-enrollment (has ca.pem + ca.key; the CA key passphrase is in the owner's password manager)
 openssl genrsa -out tap.key 2048
 openssl req -new -key tap.key -out tap.csr \
   -subj "/C=US/ST=FL/L=Tampa/O=TAK/OU=OneMind/CN=omos-cot-tap"
-openssl x509 -req -in tap.csr -CA ca.pem -CAkey ca.key -passin pass:atakatak \
+openssl x509 -req -in tap.csr -CA ca.pem -CAkey ca.key -passin env:TAK_CA_KEY_PASS \
   -CAcreateserial -out tap.pem -days 365 -sha256 -extfile client-ext.cnf   # clientAuth EKU
 
 # register the user so CN maps (cluster DB)
 kubectl -n takserver exec <takserver-api-pod> -- \
-  java -jar /UserManager.jar usermod -p "OmosCotTap-2026#Bus" omos-cot-tap
+  java -jar /UserManager.jar usermod -p "$COT_TAP_PASSWORD" omos-cot-tap   # value from the password manager, never written down
 ```
 
 Create the secret (private key never committed):

@@ -1,5 +1,7 @@
 # OneMind application MCP for Legacy
 
+> **Historical (2026-11-03).** The direct Legacy client (`hermes-legacy`, its NetworkPolicy rule and the in-pod acceptance job of `.github/workflows/onemind-mcp.yml`) was removed on 2026-11-03. `onemind-mcp` is now reached through the tool gateway (`platform/tool-gateway`); the PR preflight job still runs, against `onemind-hermes`.
+
 User authorization: 2026-10-27, implement an extensible internal MCP and deploy it
 for the cluster Hermes agent. Keep the existing services and their APIs. This is
 a bounded addition, not a new cluster administration gateway or a replacement for
@@ -51,7 +53,8 @@ the app catalog, NATS, LiteLLM or Backstage's existing MCP.
    Legacy consume this **same** namespaced Secret, avoiding cross-namespace copies.
    This task authorizes the new integration credential; unrelated credentials must
    not be read or rotated.
-5. Add a third source to `platform/argocd/platform-legacy.yaml`, path
+5. (Historical: since 2026-11-01 `platform/hermes/mcp` is its own Application,
+   `platform-onemind-mcp`; see `platform/hermes/base/README.md`.) Add a third source to `platform/argocd/platform-legacy.yaml`, path
    `platform/hermes/mcp`, targetRevision `main`. Keep its existing sources and sync
    policy. Set the new SealedSecret's sync wave to -2 and MCP Deployment's to -1
    so the authenticated MCP is ready before Legacy's default wave. Argo owns all
@@ -199,12 +202,13 @@ that all applications are integrated. Nextcloud, Matrix, TAK HTTP, portal federa
 WebODM and other adapters remain explicit implementation work. Existing Legacy
 bus/TAK tools remain separate. No user-file scraping or database backdoor is added.
 
-Karakeep bookmark read/search/save, n8n workflow/execution summaries, Paperclip
-company/issue read and backlog creation, Grafana dashboard search and Tempo trace
-lookup have adapters in source. They are blocked pending the requirements recorded
+Karakeep bookmark read/search/save, n8n workflow/execution summaries and Grafana dashboard search
+have adapters in source. They are blocked pending the requirements recorded
 on each catalog entry. Dedicated user/service identities are required; the registry
 pull PAT, app admin credentials and model provider keys are not app API identities.
 For n8n the transport uses `X-N8N-API-KEY`, not Bearer authentication.
+The Paperclip adapter was removed on 2026-11-03 with the platform's Paperclip
+retirement (it was disabled, so the tool list did not change).
 
 Write tools are omitted unless the administrator explicitly sets `allow_writes:
 true` on that app, supplies its dedicated credentials, and verifies network ingress

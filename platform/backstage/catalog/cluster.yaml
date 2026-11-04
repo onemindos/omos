@@ -850,19 +850,19 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: k8s-hermes-hermes-legacy-1e93d498
-  title: Hermes (Legacy) — Core
+  name: k8s-hermes-onemind-hermes-2c3922bb
+  title: Legacy (onemind-hermes) — Core
   description: Deployment in hermes
   annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=hermes,onemind.io/agent=legacy
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=onemind-hermes
     backstage.io/kubernetes-namespace: hermes
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
+    onemind.io/inventory-observed-at: 2026-10-27T08:51:13.000Z
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: hermes-legacy
+    onemind.io/kubernetes-workload: onemind-hermes
     onemind.io/kubernetes-workload-kind: Deployment
     onemind.io/pillar-review: proposed
   tags:
@@ -878,7 +878,40 @@ spec:
   system: ai-agents
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/hermes-legacy
+  subcomponentOf: component:default/onemind-hermes
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-hermes-onemind-mcp-07887746
+  title: OneMind internal app MCP — Core
+  description: Deployment in hermes
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=onemind-mcp
+    backstage.io/kubernetes-namespace: hermes
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-27T08:51:13.000Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+    onemind.io/kubernetes-workload: onemind-mcp
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+  tags:
+    - kubernetes
+    - hermes
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/onemind-mcp
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -912,105 +945,6 @@ spec:
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
   subcomponentOf: component:default/ingress-nginx
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-keda-keda-admission-webhooks-3ffc8093
-  title: KEDA — Admission Webhooks
-  description: Deployment in keda
-  annotations:
-    backstage.io/kubernetes-label-selector: app=keda-admission-webhooks
-    backstage.io/kubernetes-namespace: keda
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: keda-admission-webhooks
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - keda
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/keda
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-keda-keda-operator-f06afbf7
-  title: KEDA — Operator
-  description: Deployment in keda
-  annotations:
-    backstage.io/kubernetes-label-selector: app=keda-operator
-    backstage.io/kubernetes-namespace: keda
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: keda-operator
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - keda
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/keda
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-keda-keda-operator-metrics-apiserver-f1836aa2
-  title: KEDA — Operator Metrics API Server
-  description: Deployment in keda
-  annotations:
-    backstage.io/kubernetes-label-selector: app=keda-operator-metrics-apiserver
-    backstage.io/kubernetes-namespace: keda
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: keda-operator-metrics-apiserver
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - keda
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/keda
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -3015,6 +2949,39 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: k8s-vaultwarden-vaultwarden-fa08c5c9
+  title: Vaultwarden — Core
+  description: Deployment in vaultwarden
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=web,app.kubernetes.io/name=vaultwarden
+    backstage.io/kubernetes-namespace: vaultwarden
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-27T08:51:13.000Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+    onemind.io/kubernetes-workload: vaultwarden
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+  tags:
+    - kubernetes
+    - vaultwarden
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: identity-access
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/vaultwarden
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: k8s-argocd-argocd-application-controller-abcd9767
   title: ArgoCD — Application Controller
   description: StatefulSet in argocd
@@ -3418,39 +3385,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: k8s-monitoring-tempo-2fe8b2d8
-  title: Tempo — Core
-  description: StatefulSet in monitoring
-  annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=tempo,app.kubernetes.io/name=tempo
-    backstage.io/kubernetes-namespace: monitoring
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: tempo
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - monitoring
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: observability
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tempo
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: k8s-n8n-postgres-2d585b74
   title: n8n — Postgres
   description: StatefulSet in n8n
@@ -3802,39 +3736,6 @@ metadata:
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-headlamp-4qwkc
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-hermes-dashboard-6thbx-86bc7138
-  title: "Tailscale operator and proxies — Proxy: hermes-dashboard"
-  description: StatefulSet in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=7cb75f21-e0cc-4c50-ae63-cdb9dbf16c04
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: ts-hermes-dashboard-6thbx
     onemind.io/kubernetes-workload-kind: StatefulSet
     onemind.io/pillar-review: proposed
   tags:
@@ -5206,33 +5107,6 @@ metadata:
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81168a55dff646285f2a.md
       title: "Archived registry: Hubble"
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: mesh-endpoint
-  owner: group:default/onemind-admins
-  system: onemind-mesh
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
-  name: mesh-ba87ad8cd961
-  title: hermes-agent
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
-  annotations:
-    onemind.io/inventory-source: tailscale
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.500Z
-    onemind.io/inventory-review: unreviewed
-    onemind.io/mesh-os: linux
-    onemind.io/mesh-dns: hermes-agent.tail717ba0.ts.net.
-    onemind.io/observed-online: "true"
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/pillar-review: proposed
-  tags:
-    - mesh
-    - unreviewed
   labels:
     onemind.io/pillar: so
 spec:
@@ -7244,7 +7118,7 @@ metadata:
     documentation; deployment and availability unverified."
   tags:
     - fabric-registry
-    - deployment-verified
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: "OneMind multi-agent hive — Legacy (Mother)
       sovereign cloud agent + 10 specialist agents. All on DOKS pod
@@ -7255,9 +7129,7 @@ metadata:
     onemind.io/documented-category: 🧠 Agents
     onemind.io/documented-at: 2026-09-03 07:27:39Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
-    onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
-    onemind.io/runtime-evidence: Deployment hermes/hermes-legacy
+    onemind.io/verification: documented-unverified
     onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e811c914ce4f231123b3a.md
@@ -7268,8 +7140,6 @@ spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: ai-agents
-  dependsOn:
-    - component:default/k8s-hermes-hermes-legacy-1e93d498
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -8837,40 +8707,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
-  name: fabric-paperclip-670d47cc
-  title: Paperclip (registry)
-  description: Open-source app for managing AI agents at work — 79.9k stars, most
-    popular agent UI. Reference for OneMind agent management UI. — Notion
-    documentation; deployment and availability unverified.
-  tags:
-    - fabric-registry
-    - reference
-  annotations:
-    onemind.io/documented-purpose: Open-source app for managing AI agents at work —
-      79.9k stars, most popular agent UI. Reference for OneMind agent management
-      UI.
-    onemind.io/documented-host: 🐳 Docker Local
-    onemind.io/documented-status: ✅ Live
-    onemind.io/documented-category: 🧠 Agents
-    onemind.io/documented-at: 2026-09-03 21:27:33Z
-    onemind.io/registry-review: source-reviewed-runtime-unverified
-    onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
-    onemind.io/documented-address: https://github.com/paperclipai/paperclip
-    onemind.io/verification: reference
-    onemind.io/pillar-review: proposed
-  links:
-    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ada22bc5a0b2164e0b.md
-      title: "Archived registry: Paperclip"
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: reference
-  owner: group:default/onemind-admins
-  system: ai-agents
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
   name: fabric-redpandaconnectwombat-942cb146
   title: Redpanda Connect (Wombat)
   description: Data pipeline — Wombat/Redpanda Connect, bridges NATS → TAK,
@@ -10426,33 +10262,6 @@ metadata:
     onemind.io/inventory-review: unreviewed
     onemind.io/mesh-dns: hermes-omos-dell-zeus.tail717ba0.ts.net.
     onemind.io/observed-online: "true"
-    onemind.io/inventory-state: missing-review-required
-    onemind.io/inventory-missing-observations: "1"
-    onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
-    onemind.io/pillar-review: proposed
-  tags:
-    - mesh
-    - unreviewed
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: mesh-endpoint
-  owner: group:default/onemind-admins
-  system: onemind-mesh
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
-  name: mesh-eb4bcd2d04aa
-  title: hermes-legacy
-  description: Not observed in the latest inventory; review required. linux mesh
-    endpoint. Availability is a discovery snapshot, not a live health check.
-  annotations:
-    onemind.io/inventory-source: tailscale
-    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
-    onemind.io/inventory-review: unreviewed
-    onemind.io/mesh-dns: hermes-legacy.tail717ba0.ts.net.
-    onemind.io/observed-online: "false"
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
@@ -12821,69 +12630,3 @@ spec:
   system: messaging-nats
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-nextcloud-nextcloud-6f9de5a6
-  title: Nextcloud — Core
-  description: Deployment in nextcloud
-  annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=app,app.kubernetes.io/instance=nextcloud,app.kubernetes.io/name=nextcloud
-    backstage.io/kubernetes-namespace: nextcloud
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-23T16:00:00.000Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: nextcloud
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - nextcloud
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: data-storage
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/nextcloud
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-nextcloud-nextcloud-redis-18dd07ef
-  title: Nextcloud — Redis
-  description: Deployment in nextcloud
-  annotations:
-    backstage.io/kubernetes-label-selector: app=nextcloud-redis
-    backstage.io/kubernetes-namespace: nextcloud
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-23T16:00:00.000Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: nextcloud-redis
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - nextcloud
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: data-storage
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/nextcloud

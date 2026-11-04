@@ -10,7 +10,7 @@ practice `warn` is the signal you see.
 | Label | Value | Namespaces |
 |---|---|---|
 | `warn`, `audit` | `restricted` | Every application namespace whose Namespace manifest Argo CD applies, except those listed below |
-| `enforce` | `restricted` | `karakeep`, `n8n`, `paperclip`, `stac`, `stac-validation`, `vaultwarden` |
+| `enforce` | `restricted` | `karakeep`, `n8n`, `stac`, `stac-validation`, `vaultwarden` |
 | `enforce` | `baseline` | `nextcloud` |
 
 No `*-version` label is set, so each mode uses the profile of the cluster's Kubernetes version.
@@ -19,8 +19,7 @@ No `*-version` label is set, so each mode uses the profile of the cluster's Kube
 
 - `falco`, `velero`, `tailscale`, `monitoring`, `github-runner`: their workloads need privileged
   containers, host namespaces or hostPath volumes by design, so the warnings would never clear.
-- `default`, `onemind-search`, `openchoreo-observability-plane`: no long-running workloads
-  (`onemind-search` still runs a nightly VolSync backup mover).
+- `default`: no long-running workloads.
 - `kube-system`, `kube-public`, `kube-node-lease`: managed by DOKS, not defined in Git.
 
 ## VolSync privileged movers
@@ -46,7 +45,7 @@ kubectl --context do-nyc3-omos-cloud -n ops logs deploy/platform-volsync | grep 
 - A namespace with the privileged-movers annotation can go no higher than `enforce: baseline`,
   as `nextcloud` does. Before it can take `enforce: restricted`, each of its ReplicationSources
   needs a non-root `moverSecurityContext` and the annotation must be removed, as in `karakeep`,
-  `n8n`, `paperclip` and `vaultwarden`. Otherwise admission rejects the mover pods and the
+  `n8n` and `vaultwarden`. Otherwise admission rejects the mover pods and the
   backups stop with no error at sync time; the `PortableVolumeBackupOutOfSync` alert is the
   first sign.
 - Any namespace label change, these included, gives every pod in that namespace a new Cilium

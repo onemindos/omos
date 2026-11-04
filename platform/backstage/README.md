@@ -62,6 +62,10 @@ For a recovery exercise on a legacy archive, follow `recovery/README.md` and ins
 
 Home reads shared app links from registered Catalog Components with an Open application link or launcher URL annotation, refreshing each minute. Keep Git-owned catalog changes in both apps.yaml copies for mounted entries, or use the shared-service template and register the merged main-branch descriptor URL. The bundled directory JSON supplies legacy category compatibility and offline export defaults; adding a registered shared service no longer requires a frontend rebuild. Personal shortcuts use account-backed UserSettings and remain separate from shared inventory. Cluster catalog identities are an explicit reviewed snapshot from `scripts/snapshot-cluster.cjs`, not automatic discovery. Stable hash suffixes prevent link/workload identity collisions. Rerun and review the snapshot when adding or removing workloads. The snapshot script updates both development and production copies. user enrollment must update both org.yaml copies. The operations panel queries the live cluster every minute and marks unavailable sources and stale results. Existing unrelated unhealthy workloads are shown, not hidden.
 
+## Plugin ecosystem catalog
+
+`catalog/plugins.yaml` (generated, ConfigMap `backstage-catalog-plugins` mounted at `/app/catalog-plugins`, registered in `app-config.cluster.yaml`) lists every OneMind plugin, adapter and bridge under the System `onemind-plugin-ecosystem`. Edit `catalog/plugins/inventory.yaml` and run `python scripts/generate_plugin_catalog.py`; see [catalog/plugins/README.md](catalog/plugins/README.md).
+
 ## GitHub discovery
 
 `@backstage/plugin-catalog-backend-module-github` is pinned at `0.14.0`, the version in
@@ -94,6 +98,17 @@ URLs; registration still needs `catalog.location.create` (administrators only).
 The block takes effect only once a portal image built from this source is pinned in
 `deployment.yaml`; older images ignore it. Rollback: delete `catalog.providers.github`
 and let Argo sync (no image build), or drop the module in the next image.
+
+The repository's root `catalog-info.yaml` is a Location listing descriptors kept next to
+service source, only for deployed services the static catalog does not define. Today that is
+`onemind-data` (Resource: the CloudNativePG cluster that runs the `services/onemind-postgres`
+image). Services the static catalog defines (portal, core, TAK Server, TAK Portal,
+WebODM-to-STAC sync) stay static. Backstage keeps the first definition of an entity ref and
+logs a conflict for any other; it never merges them. To move a service to its descriptor,
+remove the static entry and the generator input that recreates it in the change that lists
+the descriptor. `services/onemind-portal/catalog-info.yaml` is ready for that and
+deliberately unlisted. `scripts/tests/test_gitops_portal_discovery.py` rejects overlaps and
+unknown owners, systems or relation targets.
 
 ## Release checks
 

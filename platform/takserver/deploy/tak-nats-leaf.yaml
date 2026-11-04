@@ -4,48 +4,56 @@
 # DOKS bus leafnode port (7422) over TLS. Plugin stays creds-free and portable:
 # same plugin config works on Mac / DOKS / edge — only the leaf's remote changes.
 #
-# Secret `tak-nats-leaf` (leaf.conf + ca.crt) is created out-of-band (contains the
-# leaf_tak password) — see DEPLOY-RUNBOOK.md. Never committed.
+# Secret `tak-nats-leaf` (leaf.conf + ca.crt; contains the leaf_tak password) is unsealed
+# from tak-nats-leaf.sealedsecret.yaml beside this file, so changing leaf.conf means
+# resealing it from the plaintext.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tak-nats-leaf
   namespace: takserver
-  labels: { app: tak-nats-leaf }
+  labels: {app: tak-nats-leaf}
 spec:
   replicas: 1
-  selector: { matchLabels: { app: tak-nats-leaf } }
+  selector: {matchLabels: {app: tak-nats-leaf}}
   template:
     metadata:
-      labels: { app: tak-nats-leaf }
+      labels: {app: tak-nats-leaf}
     spec:
       containers:
         - name: nats
           image: nats:2.10-alpine
-          args: ["-c", "/etc/leaf/leaf.conf"]
+          # --name sets the server name the hub lists for this leaf (/leafz "name"), which
+          # NATSLeafnodeDown matches on. leaf.conf sets none, so it was a random ID that changed
+          # on every restart. The pod name rather than a fixed one: the hub drops an older leaf
+          # connection that has the same server name, and RollingUpdate briefly runs two pods.
+          args: ["-c", "/etc/leaf/leaf.conf", "--name", "$(POD_NAME)"]
+          env:
+            - name: POD_NAME
+              valueFrom: {fieldRef: {fieldPath: metadata.name}}
           ports:
-            - { containerPort: 4222, name: client }
-            - { containerPort: 8222, name: monitor }
+            - {containerPort: 4222, name: client}
+            - {containerPort: 8222, name: monitor}
           volumeMounts:
-            - { name: leaf, mountPath: /etc/leaf, readOnly: true }
+            - {name: leaf, mountPath: /etc/leaf, readOnly: true}
           readinessProbe:
-            httpGet: { path: /healthz, port: 8222 }
+            httpGet: {path: /healthz, port: 8222}
             initialDelaySeconds: 3
             periodSeconds: 10
           resources:
-            requests: { cpu: 50m, memory: 32Mi }
-            limits:   { cpu: 250m, memory: 128Mi }
+            requests: {cpu: 50m, memory: 32Mi}
+            limits: {cpu: 250m, memory: 128Mi}
       volumes:
         - name: leaf
-          secret: { secretName: tak-nats-leaf }
+          secret: {secretName: tak-nats-leaf}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: tak-nats-leaf
   namespace: takserver
-  labels: { app: tak-nats-leaf }
+  labels: {app: tak-nats-leaf}
 spec:
-  selector: { app: tak-nats-leaf }
+  selector: {app: tak-nats-leaf}
   ports:
-    - { name: client, port: 4222, targetPort: 4222, protocol: TCP }
+    - {name: client, port: 4222, targetPort: 4222, protocol: TCP}

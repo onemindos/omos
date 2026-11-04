@@ -1,0 +1,37 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 1 — SENSE (TAK Server ↔ bus)                              sync-wave: "3"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-takserver-tak-client: the TAK Server streaming client bridge (FEATURES A21),
+# namespace takserver. Publishes TAK CoT to tak.cot.out and injects tak.cot.inject.
+#
+# Covers: platform/takserver/tak-client/ (Deployment and one NetworkPolicy; the two
+# SealedSecrets it needs are added there by the owner, see README.md in that directory).
+#
+# MANUAL SYNC, zero retries. Do not sync until the prerequisites at the top of
+# platform/takserver/tak-client/deployment.yaml are met (TAK client certificate and NATS
+# credentials sealed, first image build and digest pin). Re-enable automation only after a
+# first rollout has been observed.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-takserver-tak-client
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/takserver/tak-client
+    directory:
+      recurse: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: takserver
+  syncPolicy:
+    retry:
+      limit: 0

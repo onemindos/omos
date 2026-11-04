@@ -102,7 +102,7 @@ helm upgrade --install tailscale-operator tailscale/tailscale-operator \
 kubectl --context "$CTX" apply -f "$PLATFORM/tailscale/apiserver-rbac.yaml"
 
 # -----------------------------------------------------------------------------
-# 6. OBSERVABILITY — kube-prometheus-stack, Loki, Tempo, OTel Collector
+# 6. OBSERVABILITY — kube-prometheus-stack, Loki, OTel Collector
 # -----------------------------------------------------------------------------
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts --force-update
 helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
@@ -114,16 +114,12 @@ helm upgrade --install loki grafana/loki \
   --kube-context "$CTX" -n monitoring \
   -f "$PLATFORM/values/loki.yaml"
 
-helm upgrade --install tempo grafana/tempo \
-  --kube-context "$CTX" -n monitoring \
-  -f "$PLATFORM/values/tempo.yaml"
-
 helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts --force-update
 helm upgrade --install otel-collector open-telemetry/opentelemetry-collector \
   --kube-context "$CTX" -n monitoring \
   -f "$PLATFORM/values/otel-collector.yaml"
 
-# Apply custom datasource ConfigMap (Loki + Tempo linked in Grafana)
+# Apply custom datasource ConfigMap (Loki in Grafana)
 kubectl --context "$CTX" apply -f "$PLATFORM/grafana-datasources.yaml"
 
 # -----------------------------------------------------------------------------
@@ -158,16 +154,11 @@ kubectl --context "$CTX" apply -f "$PLATFORM/omos/feed-scripts.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/feeds.yaml"
 
 # -----------------------------------------------------------------------------
-# 9. LEGACY AGENT (Hermes — mother) + TAK-AGENT + OneMind AI Bridge
-# Secrets (hermes-env, hermes-leaf-conf, hermes-nats-ca) are SealedSecrets in platform/hermes/
-# cloudtak-agent-token: out-of-band — generate in CloudTAK UI → Settings → Tokens
-#   kubectl create secret generic cloudtak-agent-token -n hermes \
-#     --from-literal=token='<token from CloudTAK UI: Settings → Tokens → New>'
+# 9. HERMES (Legacy): nothing to install here
+# The old hermes-legacy instance was retired and removed from the repository (2026-11). Its replacement,
+# onemind-hermes, and the shared hermes namespace objects are Argo CD Applications
+# (platform-onemind-hermes, platform-hermes-base, platform-onemind-mcp): do not apply them by hand.
 # -----------------------------------------------------------------------------
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/namespace.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/pvc.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/deployment.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/tak-agent.yaml"
 
 # -----------------------------------------------------------------------------
 # 10. CLOUDTAK — API + Events + Media + Tiles
@@ -219,7 +210,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/takml/pvcs.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/takml-db-creds.sealedsecret.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/takml-nats-creds.sealedsecret.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/configmap-server.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/takml/configmap-vision-worker.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/deployment.yaml"
 
 echo ""

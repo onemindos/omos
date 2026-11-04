@@ -88,7 +88,8 @@ describe('portal catalog with the live inventory flag off', () => {
     const flagFalse = await serve([catalogModuleOnemindLiveInventory], {
       inventory: { live: { enabled: false } },
     });
-    expect(baseline.clean).toHaveLength(406);
+    // Includes this PR's three workloads and the workload retirements now on main.
+    expect(baseline.clean).toHaveLength(409);
     expect(flagAbsent.clean).toEqual(baseline.clean);
     expect(flagFalse.clean).toEqual(baseline.clean);
     const stamped = baseline.clean.filter(e =>
