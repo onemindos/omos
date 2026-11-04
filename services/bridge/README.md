@@ -53,6 +53,7 @@ omos-bridge/
 ├── bridges/
 │   ├── mavlink/              ← MAVLink v2 drones/autopilots (gomavlib)
 │   ├── tak/                  ← TAK / CoT XML ↔ NATS (ATAK, OTS)
+│   ├── tak-client/           ← TAK Server streaming client (8089 mTLS) ↔ tak.cot.out / tak.cot.inject
 │   ├── homeassistant/        ← Home Assistant WebSocket API ↔ NATS
 │   ├── webhook/              ← HTTP POST → NATS (GitHub, Stripe, Twilio, etc.)
 │   └── mqtt/                 ← MQTT 3.1/5.0 ↔ NATS (IoT, sensors, HA devices)
@@ -87,7 +88,7 @@ omos-bridge/
 
 | Bridge | Protocol | Domain | Language | Status |
 |---|---|---|---|---|
-| [mavlink](./bridges/mavlink/) | MAVLink v2 | `air` | Go | ✅ v0.2 |
+| [mavlink](./bridges/mavlink/) | MAVLink 1/2 | `tel.fleet.drone.*`, `cmd.fleet.drone.*` (sim only, policy-signed) | Go | ✅ v1.0 |
 | [tak](./bridges/tak/) | TAK / CoT XML | `field` | Go | ✅ v0.1 |
 | [homeassistant](./bridges/homeassistant/) | HA WebSocket API | `home` | Go | ✅ v0.1 |
 | [webhook](./bridges/webhook/) | HTTP POST/GET/PUT | `net` | Go | ✅ v0.1 |

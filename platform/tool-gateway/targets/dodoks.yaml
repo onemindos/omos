@@ -1,0 +1,14 @@
+# DigitalOcean hosted MCP endpoint `doks` (Kubernetes (DOKS); digitalocean-labs/mcp-digitalocean v1.6.5). No pod.
+# One Personal Access Token for all DigitalOcean targets (Secret gateway-target-digitalocean, key token): custom scopes, read plus
+# chosen create/update, NO delete scopes, so a mistaken classification still cannot delete.
+name: dodoks
+groups: [cloud]
+enabled_by: [gateway-target-digitalocean]
+env:
+  TARGET_DODOKS_TOKEN: {secret: gateway-target-digitalocean, key: token}
+target:
+  mcp:
+    host: https://doks.mcp.digitalocean.com/mcp
+  policies:
+    backendAuth:
+      key: "${TARGET_DODOKS_TOKEN}"

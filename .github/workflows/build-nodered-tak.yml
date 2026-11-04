@@ -17,6 +17,8 @@ permissions:
 
 jobs:
   build:
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4

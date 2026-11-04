@@ -11,7 +11,6 @@ resources:
 - sealed/matrix-volume-d946eeb02a16.yaml
 - sealed/matrix-volume-197d8a9e297d.yaml
 - sealed/monitoring-volume-0a77d3a320c8.yaml
-- sealed/monitoring-volume-bec6172775e6.yaml
 - sealed/n8n-volume-e0d2f2fea651.yaml
 - sealed/n8n-volume-b98c04b6228d.yaml
 - sealed/nats-volume-cedf723508b6.yaml
@@ -30,10 +29,8 @@ resources:
 - sealed/takserver-volume-ca153ea90369.yaml
 - sealed/takserver-volume-b5898fcc79f1.yaml
 - sealed/takserver-volume-2b88c0eca294.yaml
-- namespaces.yaml
 - takserver-quota.yaml
 - sealed/dapr-system-volume-e18340617b8d.yaml
 - sealed/dapr-system-volume-cc7912733ca4.yaml
 - sealed/dapr-system-volume-5b6b57939ee3.yaml
 - sealed/onemind-ai-volume-aeb2c9c4e472.yaml
-- retained-recovery.yaml

@@ -1,0 +1,124 @@
+# omos-tak-client (FEATURES A21): TAK Server streaming client bridge. Joins TAK Server's
+# 8089 streaming input with its own client certificate, publishes every CoT it receives to
+# tak.cot.out (stream COT) and injects tak.cot.inject (queue group tak-cot-inject, shared
+# with NatsBridgePlugin 1.1.0+). Replaces services/takserver/cot-tap, which is not deployed.
+# Source: services/bridge/bridges/tak-client. Applied only by the platform-takserver-tak-client
+# Application (manual sync). platform-takserver does not read this directory.
+#
+# Sync prerequisites, in order (README.md beside this file has the exact commands):
+#   1. A TAK client certificate for CN omos-tak-client, signed by the TAK Server CA and
+#      mapped to the TAK groups it should see, sealed as tak-client-tls.sealedsecret.yaml.
+#   2. NATS credentials sealed as tak-client-nats.sealedsecret.yaml (keys user, password):
+#      today the shared ONEMIND user, as omos-nats-creds; a dedicated user is proposal A21-P2.
+#   3. The first build-tak-client run on main pushed the image; replace the tag below with
+#      its digest (tag@sha256:...) from the workflow's image-digest artifact.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omos-tak-client
+  namespace: takserver
+  labels:
+    app: tak-client
+    app.kubernetes.io/name: omos-tak-client
+    app.kubernetes.io/part-of: omos-platform
+spec:
+  replicas: 1 # one TAK identity; a second replica would double every injected event
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: tak-client
+  template:
+    metadata:
+      labels:
+        app: tak-client
+        app.kubernetes.io/name: omos-tak-client
+        app.kubernetes.io/part-of: omos-platform
+    spec:
+      # Ecosystem pool, hard placement as platform/ecosystem/resources/authorization-context.yaml
+      # does: hub-core is memory-saturated (cluster review H1). The pool has no taints.
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 15
+      imagePullSecrets:
+        - name: ghcr # SealedSecret platform/takserver/deploy/ghcr.sealedsecret.yaml
+      containers:
+        - name: tak-client
+          # Pin digest after first CI build (.github/workflows/build-tak-client.yml).
+          image: ghcr.io/onemindos/omos-tak-client:0.1.0
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: tak-client-nats
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tak-client-nats
+                  key: password
+            - name: TAK_CLIENT_ID
+              value: "omos-tak-client"
+            - name: TAK_ADDR
+              value: "takserver-messaging-service.takserver.svc.cluster.local:8089"
+            - name: TAK_CERT_FILE
+              value: /certs/tls.crt
+            - name: TAK_KEY_FILE
+              value: /certs/tls.key
+            - name: TAK_CA_FILE
+              value: /certs/ca.crt
+            - name: TAK_PROTOCOL
+              value: "auto"
+            - name: INJECT_ENABLED
+              value: "true"
+            - name: INJECT_QUEUE
+              value: "tak-cot-inject"
+            - name: ECHO_SUPPRESS
+              value: "true"
+            - name: OUT_JETSTREAM
+              value: "true"
+          volumeMounts:
+            - name: certs
+              mountPath: /certs
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 20
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "25m"
+              memory: "32Mi"
+            limits:
+              cpu: "250m"
+              memory: "128Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+      volumes:
+        - name: certs
+          secret:
+            secretName: tak-client-tls
+            defaultMode: 0440

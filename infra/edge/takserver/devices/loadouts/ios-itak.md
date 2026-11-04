@@ -21,7 +21,7 @@ App Store + cert/profile import. USB helps only for file transfer / Apple Config
    Address:  192.168.1.183   (LAN)   |   100.74.182.117 (Tailscale/cellular)
    Port:     8089
    Protocol: SSL/TLS
-   Cert:     zeus-phone.p12  (pass: atakatak unless changed)
+   Cert:     zeus-phone.p12  (pass: the keystore password; see PR on TAK credential rotation)
    ```
 7. Confirm on WebTAK, mark `live` in `devices/registry.md`.
 

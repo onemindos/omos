@@ -12,6 +12,7 @@ These runbooks describe the deployed OneMind configuration reviewed on October 6
 | TAK clients or geospatial services fail | [TAK](tak.md) |
 | STAC pilot loads but collections/search fail | [STAC pilot](stac.md) |
 | A health check fails, or metrics are missing | [Monitoring](monitoring.md) |
+| A tier 1 service (TAK, NATS, Authentik, ingress, certificates, Sealed Secrets, backups, Argo CD, Hermes) is degraded | [Tier 1 services](tier1/index.md) |
 
 ## Prerequisites
 

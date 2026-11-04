@@ -1,0 +1,68 @@
+# Synapse homeserver.yaml - reference shape only.
+# The live config is kept under platform/matrix/ in the infra repo and applied by the
+# platform-matrix Argo Application. Secret values come from SealedSecrets and are
+# never written inline; the placeholders below must stay placeholders.
+
+server_name: "onemindos.dev"
+pid_file: /data/homeserver.pid
+
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    bind_addresses: ['::']
+    resources:
+      - names: [client, federation]
+        compress: true
+
+database:
+  name: psycopg2
+  txn_limit: 10000
+  args:
+    user: synapse
+    password: "<from SealedSecret>"
+    database: synapse
+    host: postgres.matrix.svc.cluster.local
+    port: 5432
+    cp_min: 5
+    cp_max: 20
+
+redis:
+  enabled: true
+  host: redis.matrix.svc.cluster.local
+  port: 6379
+  password: "<from SealedSecret>"
+
+# Registration: keep false. Open it only for the minutes needed to create a user.
+enable_registration: false
+registration_shared_secret: "<from SealedSecret>"
+
+signing_key_path: "/data/signing.key"
+
+media_store_path: "/data/media"
+max_upload_size: 100M
+dynamic_thumbnails: true
+
+# Closed federation (sovereign mode): an empty list allows no remote servers.
+federation_domain_whitelist: []
+
+log_config: "/config/log.config"
+
+enable_metrics: true
+report_stats: false
+
+url_preview_enabled: true
+url_preview_ip_range_blacklist:
+  - "127.0.0.0/8"
+  - "10.0.0.0/8"
+  - "172.16.0.0/12"
+  - "192.168.0.0/16"
+  - "100.64.0.0/10"
+  - "169.254.0.0/16"
+  - "::1/128"
+  - "fe80::/10"
+  - "fc00::/7"
+
+# Do not add email:, push: or sms: blocks unless they are complete. A partial
+# block (for example email without notif_from) is a ConfigError on boot.

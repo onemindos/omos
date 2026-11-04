@@ -18,12 +18,6 @@
     "size": "20Gi"
   },
   {
-    "namespace": "hermes",
-    "pvc": "hermes-data",
-    "source": "volume-c96e219d2314",
-    "size": "25Gi"
-  },
-  {
     "namespace": "matrix",
     "pvc": "data-postgres-0",
     "source": "volume-0af77b22c7a2",
@@ -45,12 +39,6 @@
     "namespace": "monitoring",
     "pvc": "storage-loki-0",
     "source": "volume-0a77d3a320c8",
-    "size": "20Gi"
-  },
-  {
-    "namespace": "monitoring",
-    "pvc": "storage-tempo-0",
-    "source": "volume-bec6172775e6",
     "size": "20Gi"
   },
   {

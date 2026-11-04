@@ -1,9 +1,5 @@
 package tak.server.plugins;
 
-import io.nats.client.Connection;
-import io.nats.client.Dispatcher;
-import io.nats.client.Nats;
-import io.nats.client.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tak.server.cot.CotEventContainer;
@@ -11,29 +7,30 @@ import tak.server.proto.StreamingProtoBufHelper;
 import atakmap.commoncommo.protobuf.v1.MessageOuterClass.Message;
 
 import java.lang.invoke.MethodHandles;
-import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * TAK Server ↔ NATS Bridge Plugin
  *
- * Bidirectional bridge between TAK Server CoT events and NATS subjects.
+ * NATS → TAK:  messages on natsConsumerSubject (tak.cot.inject) are checked
+ *              (one CoT event, no stream-control types), converted and sent
+ *              into TAK Server. The subscription uses the queue group
+ *              natsQueueGroup (tak-cot-inject), shared with the tak-client
+ *              bridge, so each message is injected once.
  *
- * TAK → NATS:  Every CoT message arriving at TAK Server is published to
- *               natsProducerSubject (default: tak.cot.out) as UTF-8 XML.
+ * TAK → NATS:  CoT delivered to onMessage is published to natsProducerSubject
+ *              (tak.cot.out). In TAK Server cluster mode the plugin manager
+ *              delivers nothing to onMessage (services/takserver/cot-tap/README.md),
+ *              so the tak-client bridge (services/bridge/bridges/tak-client) is
+ *              the TAK → bus leg there; set natsProducerEnabled: false once it runs.
  *
- * NATS → TAK:  Messages published to natsConsumerSubject
- *               (default: tak.cot.inject) are parsed as CoT XML and
- *               injected into TAK Server, appearing on all connected maps.
+ * Visibility: the constructor logs "NatsBridgePlugin v… loaded", start() logs
+ * the subscription, and a status line with counters is logged every
+ * statusIntervalSeconds (default 60). If none of these lines appears in the
+ * takserver-plugins log, the plugin JAR is not on the plugin manager's classpath
+ * (see services/takserver/plugin-src/README.md, "Is it loaded?").
  *
- * Configuration (plugin-config.yaml next to JAR in tak/lib/):
- *   natsUrl:             nats://localhost:4222
- *   natsConsumerSubject: tak.cot.inject
- *   natsProducerSubject: tak.cot.out
- *   groups:
- *     - __ANON__
+ * The SDK-free parts (config, validation, NATS) are BridgeCore and NatsLink;
+ * this class is only the TAK Server glue.
  */
 @TakServerPlugin(
     name = "TAK Server NATS Bridge Plugin",
@@ -44,70 +41,39 @@ public class NatsBridgePlugin extends MessageSenderReceiverBase {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String DEFAULT_NATS_URL     = "nats://localhost:4222";
-    private static final String DEFAULT_COT_OUT      = "tak.cot.out";
-    private static final String DEFAULT_COT_INJECT   = "tak.cot.inject";
+    private final BridgeCore.Config cfg;
+    private volatile NatsLink link;
 
-    private final String natsUrl;
-    private final String producerSubject;
-    private final String consumerSubject;
-    private final Set<String> groups;
-
-    private Connection natsConnection;
-    private Dispatcher natsDispatcher;
-
-    @SuppressWarnings("unchecked")
     public NatsBridgePlugin() {
-        natsUrl         = getStringProp("natsUrl",             DEFAULT_NATS_URL);
-        producerSubject = getStringProp("natsProducerSubject", DEFAULT_COT_OUT);
-        consumerSubject = getStringProp("natsConsumerSubject", DEFAULT_COT_INJECT);
-
-        Set<String> grps = new HashSet<>();
-        if (config.containsProperty("groups")) {
-            grps.addAll((List<String>) config.getProperty("groups"));
-        }
-        if (grps.isEmpty()) {
-            grps.add("__ANON__");
-        }
-        groups = grps;
-
-        logger.info("NatsBridgePlugin config — url={} producer={} consumer={} groups={}",
-            natsUrl, producerSubject, consumerSubject, groups);
+        cfg = BridgeCore.parseConfig(key -> config.containsProperty(key) ? config.getProperty(key) : null);
+        logger.info("NatsBridgePlugin v{} loaded: {}", BridgeCore.VERSION, cfg);
     }
 
     // ─── TAK → NATS ───────────────────────────────────────────────────────────
 
     @Override
     public void onMessage(Message message) {
-        if (natsConnection == null || natsConnection.getStatus() != Connection.Status.CONNECTED) {
-            logger.warn("NATS not connected — dropping outbound CoT");
+        NatsLink l = link;
+        if (l == null) {
             return;
         }
         try {
             CotEventContainer cot = StreamingProtoBufHelper.proto2cot(message.getPayload());
-            String cotXml = cot.asXml();
-            natsConnection.publish(producerSubject, cotXml.getBytes(StandardCharsets.UTF_8));
-            logger.debug("TAK→NATS [{}]: {}", producerSubject, cotXml.substring(0, Math.min(120, cotXml.length())));
+            l.forward(cot.asXml());
         } catch (Exception e) {
-            logger.error("Error forwarding CoT to NATS", e);
+            logger.error("NatsBridgePlugin could not forward CoT to NATS", e);
         }
     }
 
     // ─── NATS → TAK ───────────────────────────────────────────────────────────
 
-    private void onNatsMessage(io.nats.client.Message natsMsg) {
+    private void inject(String cotXml) {
         try {
-            String cotXml = new String(natsMsg.getData(), StandardCharsets.UTF_8);
-            logger.debug("NATS→TAK [{}]: {}", consumerSubject, cotXml.substring(0, Math.min(120, cotXml.length())));
-
             Message takMessage = getConverter().cotStringToDataMessage(
-                cotXml,
-                groups,
-                Integer.toString(System.identityHashCode(this))
-            );
+                cotXml, cfg.groups, Integer.toString(System.identityHashCode(this)));
             send(takMessage);
         } catch (Exception e) {
-            logger.error("Error injecting NATS message into TAK", e);
+            throw new IllegalStateException("convert or send failed", e);
         }
     }
 
@@ -115,49 +81,23 @@ public class NatsBridgePlugin extends MessageSenderReceiverBase {
 
     @Override
     public void start() {
-        logger.info("NatsBridgePlugin starting — connecting to {}", natsUrl);
+        logger.info("NatsBridgePlugin starting, connecting to {}", cfg.natsUrl);
         try {
-            Options options = new Options.Builder()
-                .server(natsUrl)
-                .maxReconnects(-1)          // reconnect forever
-                .reconnectWait(java.time.Duration.ofSeconds(2))
-                .connectionName("takserver-nats-bridge")
-                .build();
-
-            natsConnection = Nats.connect(options);
-            logger.info("NatsBridgePlugin connected to NATS");
-
-            // Subscribe to inbound CoT subject
-            natsDispatcher = natsConnection.createDispatcher(this::onNatsMessage);
-            natsDispatcher.subscribe(consumerSubject);
-            logger.info("NatsBridgePlugin subscribed to NATS subject: {}", consumerSubject);
-
+            NatsLink l = new NatsLink(cfg, this::inject);
+            l.start();
+            link = l;
         } catch (Exception e) {
-            logger.error("NatsBridgePlugin failed to connect to NATS at {}", natsUrl, e);
+            logger.error("NatsBridgePlugin failed to start NATS link to {}", cfg.natsUrl, e);
         }
     }
 
     @Override
     public void stop() {
         logger.info("NatsBridgePlugin stopping");
-        try {
-            if (natsDispatcher != null) {
-                natsDispatcher.unsubscribe(consumerSubject);
-            }
-            if (natsConnection != null) {
-                natsConnection.close();
-            }
-        } catch (Exception e) {
-            logger.error("Error stopping NatsBridgePlugin", e);
+        NatsLink l = link;
+        link = null;
+        if (l != null) {
+            l.close();
         }
-    }
-
-    // ─── Helpers ──────────────────────────────────────────────────────────────
-
-    private String getStringProp(String key, String defaultVal) {
-        if (config.containsProperty(key)) {
-            return (String) config.getProperty(key);
-        }
-        return defaultVal;
     }
 }

@@ -115,7 +115,7 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 | Service | Namespace | Image | Status |
 |---------|-----------|-------|--------|
 | NATS 3-node HA | nats | nats (Helm) | ✅ live |
-| Legacy (Hermes AI) | hermes | ghcr.io/onemindos/hermes-legacy:latest | ✅ live |
+| Legacy (Hermes AI, `onemind-hermes`) | hermes | official Hermes image, pinned digest | ✅ live |
 | copilot-runtime | hermes | ghcr.io/onemindos/copilot-runtime:latest | ✅ live |
 | OneTAK API | onetak | ghcr.io/onemindos/onetak-api:latest | ✅ live |
 | OneTAK Events | onetak | ghcr.io/onemindos/onetak-events:latest | ✅ live |

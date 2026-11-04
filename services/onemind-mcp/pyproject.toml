@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "onemind-mcp"
+version = "0.1.0"
+description = "Private MCP tools for OneMind cluster applications"
+requires-python = ">=3.12"
+dependencies = ["mcp==1.30.0", "httpx==0.28.1", "PyYAML==6.0.3", "pydantic==2.14.1", "starlette==1.10.0", "uvicorn==0.54.0"]
+
+[project.scripts]
+onemind-mcp = "onemind_mcp.server:main"
+
+[tool.setuptools.packages.find]
+include = ["onemind_mcp*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

@@ -1,0 +1,222 @@
+# takml network policies: deny everything, then allow only the flows the
+# workloads use (checked against live pods and logs on 2026-10-27).
+#
+# The backup-postgres-takml CronJob (platform/backups/postgres.yaml) is covered
+# here, not in platform/backups/network.yaml, so every takml rule syncs and rolls
+# back together in this prune-enabled app (platform-backups has prune: false).
+# VolSync movers (app=platform-volume-backup) already have DNS + HTTPS egress
+# from platform/backups/volsync/network.yaml; they read the PVCs locally.
+# Cilium allows kubelet probes from the node, so tcpSocket probes keep working.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: takml
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: dns
+  namespace: takml
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+---
+# takml-db: PostgreSQL for takml-server and the daily pg_dump. No egress beyond DNS.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: takml-db
+  namespace: takml
+spec:
+  podSelector:
+    matchLabels:
+      app: takml-db
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: takml-server
+    - podSelector:
+        matchLabels:
+          app: platform-backup
+    ports:
+    - protocol: TCP
+      port: 5432
+---
+# takml-server: no in-cluster caller was found (no Service references, no
+# request logs since the 2026-10-23 start), so only this namespace and
+# monitoring may reach 8234.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: takml-server
+  namespace: takml
+spec:
+  podSelector:
+    matchLabels:
+      app: takml-server
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector: {}
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+    ports:
+    - protocol: TCP
+      port: 8234
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: takml-db
+    ports:
+    - protocol: TCP
+      port: 5432
+  # tak.addr / tak.port (TAKFS model sync with TAK Server).
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: takserver
+      podSelector:
+        matchLabels:
+          app: takserver-api
+    ports:
+    - protocol: TCP
+      port: 8443
+  # Public HTTPS only. The PyTorch MX plugin may fetch native libraries at
+  # start (its library logging is discarded, so this could not be ruled out);
+  # private ranges stay blocked.
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+        - 100.64.0.0/10
+        - 169.254.0.0/16
+        - 127.0.0.0/8
+        - 0.0.0.0/8
+        - 224.0.0.0/4
+        - 240.0.0.0/4
+    ports:
+    - protocol: TCP
+      port: 443
+---
+# takml-vision-worker: pulls RTSP from onetak-media (MediaMTX allows only TCP
+# RTSP transport, rtspTransports: [tcp]) and publishes to the core NATS bus.
+# Nothing connects to it.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: takml-vision-worker
+  namespace: takml
+spec:
+  podSelector:
+    matchLabels:
+      app: takml-vision-worker
+  policyTypes:
+  - Ingress
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: onetak
+      podSelector:
+        matchLabels:
+          app: onetak-media
+    ports:
+    - protocol: TCP
+      port: 8554
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: nats
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: nats
+          app.kubernetes.io/component: nats
+    ports:
+    - protocol: TCP
+      port: 4222
+---
+# backup-postgres-takml pods: same rules as platform-backup-egress for n8n and
+# backstage in platform/backups/network.yaml (takml-db, DNS, Spaces, S3 proxy).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: platform-backup-egress
+  namespace: takml
+spec:
+  podSelector:
+    matchLabels:
+      app: platform-backup
+  policyTypes:
+  - Ingress
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: takml-db
+    ports:
+    - protocol: TCP
+      port: 5432
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+        - 100.64.0.0/10
+        - 169.254.0.0/16
+        - 127.0.0.0/8
+    ports:
+    - protocol: TCP
+      port: 443
+  - to:
+    - ipBlock:
+        cidr: 10.10.255.254/32
+    ports:
+    - protocol: TCP
+      port: 443

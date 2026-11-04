@@ -1,7 +1,45 @@
 # NATS-SETUP.md — OneMind NATS Server Foundation (P1-A)
 
 > Phase 1 deliverable. Implemented: 2026-06-10. Updated: 2026-06-10 (P1-A card t_e473f24d).
+> Section 0 updated 2026-10-27 from the live cluster (read-only).
 > **Passwords are NOT in this file.** See `~/.nats/config/accounts.creds` (chmod 600, never commit).
+
+> **Sections 1-8 are historical.** They record the June 2026 standalone server on the Mac
+> (`onemind-mac`). The authority bus is now the in-cluster 3-node JetStream cluster in
+> section 0. That cluster has **no `GLOBAL` account and no `no_auth_user`** (every client
+> authenticates), uses **TLS**, and runs every managed stream at **R3**. Do not copy the
+> unauthenticated, plaintext or R1 examples below into anything that talks to the cluster.
+
+---
+
+## 0. Live authority bus (in-cluster, `do-nyc3-omos-cloud`)
+
+- **Servers:** StatefulSet `nats` in namespace `nats`, 3 replicas (`nats-0..2`), `nats:2.14.2-alpine`,
+  JetStream on 49Gi PVCs with `max_file_store: 45Gi` and no memory store. The StatefulSet is in
+  `platform/nats/nats-statefulset.yaml` (Application `platform-nats`). The ConfigMap, Services, PDB
+  and auth values are still owned by Helm release `nats` (see `docs/gitops/HELM-ADOPTION.md`).
+- **Client URL:** `nats://nats.nats.svc.cluster.local:4222` (some clients use `tls://`), credentials
+  from a Secret (`NATS_USER` / `NATS_PASSWORD`). See "Bus Authority" in `CLAUDE.md`.
+- **Accounts (config-based, password auth, no JWTs):**
+
+  | Account | JetStream | Users | Notes |
+  |---------|-----------|-------|-------|
+  | `ONEMIND` | yes (no account limits) | 1 password user | All application traffic and every stream. Imports `$SYS.REQ.>` from `SYS`. |
+  | `SYS` | no | 2 password users | `system_account`; exports `$SYS.REQ.>` to `ONEMIND`. Surveyor authenticates here. |
+
+  There is no `no_auth_user`, so a connection without credentials is rejected. The `CORE` /
+  `FABRIC` / `INTERFACE` layout in section 2 was never deployed to the cluster.
+- **TLS:** the client port 4222, the cluster routes (6222) and the leafnode port (7422) each use TLS
+  with the cert-manager certificate `nats-server-tls` (CA `nats-ca`, `platform/nats/certs.yaml`). Leafnodes
+  authenticate into `ONEMIND`. The edge reaches them through the `omos-nats` Tailscale load balancer.
+  WebSocket (8080) has `no_tls` in the server; it is exposed only through `platform/nats/ws-ingress.yaml`.
+- **Streams:** the Stream/KeyValue CRs in `platform/nats/streams/` are applied by the Argo Application
+  `platform-nats-streams` and reconciled by NACK (`edge-nack`). There are 38 live CRs (14 streams,
+  24 KV buckets), all R3 file storage, all with `preventDelete: true`. App-created buckets also exist
+  outside Git, for example `KV_feed-config`, which is R1. Add or change a stream by editing its CR,
+  never with `nats stream add`.
+- **Backups:** CronJob `backup-nats-streams`, 03:30 UTC daily (`platform/backups/`). Freshness is alerted by
+  `platform/monitoring/backup-health.yaml`.
 
 ---
 
@@ -31,6 +69,9 @@ ps aux | grep nats-server | grep -v grep
 ---
 
 ## 2. Account Layout (Doctrine §5 config-based)
+
+> Historical, Mac server only. The cluster has `ONEMIND` + `SYS`, with no `GLOBAL` and no
+> `no_auth_user` (section 0).
 
 Four accounts. No JWTs. Config-based staging — designed to migrate to operator/JWT when
 the fleet exceeds ~20 nodes (see NATS-DOCTRINE.md §5).
@@ -150,6 +191,9 @@ log_file: "/Users/onemind/.nats/nats-server.log"
 ---
 
 ## 4. Stream Setup
+
+> Historical, Mac server only (`--replicas 1`, created with the CLI). In the cluster, streams
+> are R3 CRs in `platform/nats/streams/`, applied by `platform-nats-streams` (section 0).
 
 EVT and CMD are created in the **CORE** account; TEL in the **FABRIC** account.
 

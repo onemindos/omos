@@ -1,0 +1,17 @@
+# Tool classification for gateway target 'cloudtak' (CloudTAK 13.113.0 API, OpenAPI trimmed to nine parameterless GET operations).
+# The tool names are the ids in openapi/cloudtak.recipe.yaml; manifests/openapi-cloudtak.configmap.yaml is generated from it.
+# The source is pruned from GET /api/openapi of the live cloudtak-api (2026-11-04, read-only).
+target: cloudtak
+read:
+- get_profile
+- get_server
+- list_basemaps
+- list_clients
+- list_connections
+- list_contacts
+- list_groups
+- list_missions
+- list_video_streams
+write: []
+destructive: []
+physical: []

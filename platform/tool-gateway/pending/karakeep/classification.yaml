@@ -1,0 +1,26 @@
+# Tool classification for target `karakeep` (@karakeep/mcp 0.34.1; read from the pinned image over stdio 2026-11-04). NOT ACTIVE: see README.md.
+target: karakeep
+read:
+- get-asset
+- get-bookmark
+- get-bookmark-content
+- get-bookmark-highlights
+- get-bookmark-lists
+- get-highlight
+- get-list
+- get-list-bookmarks
+- get-lists
+- get-tag
+- get-tag-bookmarks
+- get-tags
+- list-highlights
+- search-bookmarks
+write: []
+destructive:
+- delete-bookmark
+- delete-highlight
+- delete-list
+- delete-tag
+- detach-tag-from-bookmark
+- remove-bookmark-from-list
+physical: []

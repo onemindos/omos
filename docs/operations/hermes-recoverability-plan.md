@@ -1,5 +1,7 @@
 # Hermes recoverability plan
 
+> **Historical (2026-11-03).** A plan for the retired `hermes-legacy` volume. `platform/hermes/agent/` no longer exists: the Git-only content is in `platform/hermes/doctrine/` and `platform/hermes/onemind-hermes/plugins/`, and the running agent is `onemind-hermes`.
+
 **Status (2026-10-16):** decisions made (D1 to D8, section 4). Step 0, Step 1 and most of Steps 2 and 3 are done; see the progress table below. The export is blocked on rotating the credentials found in the live config and skills.
 **Written:** 2026-10-16. Live state below was read from the cluster (`do-nyc3-omos-cloud`) and from Zeus's Mac on 2026-10-15/16, read-only.
 ## Progress
@@ -50,7 +52,7 @@ VolSync `ReplicationSource volume-c96e219d2314` backs up `hermes-data` with rest
 
 ### 1.3 Why Git cannot rebuild Hermes today
 
-- **The seeding mechanism is dead.** `legacy/seed/01-seed-legacy` copied the persona from `/opt/hermes/seed/`. That path only existed in the old custom image. The live pod runs the stock image and `/opt/hermes/seed` does not exist, so the live `SOUL.md` has been edited by hand on the volume. The three Git copies drifted: `legacy/seed/SOUL.mother.md` (38 differing lines from live, all of them the "daughter" versus "edge nodes" wording), `platform/hermes/agent/agents/legacy/SOUL.md` (80), `legacy/agents/legacy/SOUL.md` (125). These counts measure text difference, not meaning.
+- **The seeding mechanism is dead.** `legacy/seed/01-seed-legacy` copied the persona from `/opt/hermes/seed/`. That path only existed in the old custom image. The live pod runs the stock image and `/opt/hermes/seed` does not exist, so the live `SOUL.md` has been edited by hand on the volume. The three Git copies drifted: `legacy/seed/SOUL.mother.md` (38 differing lines from live, all of them the "daughter" versus "edge nodes" wording), `platform/hermes/doctrine/agents/legacy/SOUL.md` (80), `legacy/agents/legacy/SOUL.md` (125). These counts measure text difference, not meaning.
 - **The live soul carries stale facts.** It says the architecture is AWS Bedrock (the live provider is `digitalocean`, model `nemotron-3-ultra-550b`), lists a NATS account layout that is unverified, and describes `om_presence` as a voice bridge (archived in August). A rebuild from this text would reinstate those beliefs.
 - **The documented recovery is weak.** `legacy/RUNBOOKS.md` section 10 says that if the volume is lost, "Hermes memory/skills are gone". Legacy's own `MEMORY.md` still says disaster recovery is "clone omos-legacy and build seed/", a repo that no longer exists and a process that no longer works.
 - **Some definitions exist only on the pod.** The pod keeps a clone of `onemindos/omos-legacy`. That GitHub repo no longer exists. The clone has **2 unpushed commits from 2026-09-17** that add the four overseer agents (SO, HP, LE, GE): `agents/{SO,HP,LE,GE}/SOUL.md` and 81 added lines of `AGENTS.yaml`. Apart from those and one `shellcheck` line in `seed/launch.sh`, the clone is identical to `legacy/`. The clone's own git history is damaged (a `git bundle` of it cannot be cloned because of a missing object), so it must not be trusted as a backup.
@@ -194,7 +196,7 @@ Each step is its own PR (or small set of PRs), reviewed before the next begins. 
 
 ### Step 3: Prove it, and apply the soul change
 
-1. Restore the latest VolSync snapshot into a **scratch namespace** (never over the live volume). Check `SOUL.md`, `config.yaml`, skills, memory files, and `PRAGMA integrity_check` on both databases. A file-level restore was already verified on 2026-10-08 (see 1.2); this step adds the application-level check.
+1. Restore the latest VolSync snapshot into a **scratch namespace** (never over the live volume). Create it with `onemind.io/layer: decide`; Kyverno denies a bare `kubectl create namespace` (recipe in `docs/architecture/namespace-layers.md`). Check `SOUL.md`, `config.yaml`, skills, memory files, and `PRAGMA integrity_check` on both databases. A file-level restore was already verified on 2026-10-08 (see 1.2); this step adds the application-level check.
 2. Boot a second Hermes against the restored volume with the NATS platform disabled, so it cannot collide with the live agent's bus identity. Confirm it loads the soul and skills.
 3. Repeat the seed path from an empty volume and compare with the live agent.
 4. Record the result in `docs/operations/` and in `docs/STACK.md`. Re-run quarterly.

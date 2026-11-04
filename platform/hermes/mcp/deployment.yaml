@@ -1,0 +1,156 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onemind-mcp
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  progressDeadlineSeconds: 180
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: onemind-mcp
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: onemind-mcp
+    spec:
+      imagePullSecrets:
+        - name: onemind-mcp-registry
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values: [onemind-ecosystem-cpu]
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: mcp
+          image: ghcr.io/onemindos/onemind-mcp@sha256:aa455196cf03aab0f6cc478cede40c2bed78192cee85e381bff6d1bdb12cc66b
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          ports:
+            - name: http
+              containerPort: 8000
+          env:
+            - name: ONEMIND_APPS_FILE
+              value: /etc/onemind/apps.yaml
+            - name: ONEMIND_ALLOWED_HOSTS
+              value: onemind-mcp.hermes.svc.cluster.local:8000,onemind-mcp.hermes.svc:8000,127.0.0.1:8000,onemind-mcp.hermes.svc.cluster.local,onemind-mcp.hermes.svc
+            - name: ONEMIND_MCP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: onemind-mcp-auth
+                  key: token
+            - name: NATS_MONITOR_URL
+              value: http://nats-0.nats-headless.nats.svc.cluster.local:8222
+            # Images with multi-node NATS tools read every node and fail over in this
+            # order; older images ignore this and use NATS_MONITOR_URL (nats-0).
+            - name: NATS_MONITOR_URLS
+              value: >-
+                http://nats-0.nats-headless.nats.svc.cluster.local:8222,http://nats-1.nats-headless.nats.svc.cluster.local:8222,http://nats-2.nats-headless.nats.svc.cluster.local:8222
+            - name: PROMETHEUS_URL
+              value: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+            - name: TILE38_URL
+              value: http://tile38.onetak.svc.cluster.local:9851
+            - name: STAC_URL
+              value: http://stac-api.stac.svc.cluster.local:8080
+            - name: OLLAMA_URL
+              value: http://onemind-cpu-model.onemind-ai.svc.cluster.local:11434
+            - name: ALERTMANAGER_URL
+              value: http://monitoring-kube-prometheus-alertmanager.monitoring.svc.cluster.local:9093
+            - name: LOKI_URL
+              value: http://loki-gateway.monitoring.svc.cluster.local
+            - name: OPENCOST_URL
+              value: http://opencost.opencost.svc.cluster.local:9003
+            - name: GRAFANA_URL
+              value: http://monitoring-grafana.monitoring.svc.cluster.local
+            - name: GRAFANA_API_TOKEN
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: GRAFANA_API_TOKEN}
+            - name: LITELLM_URL
+              value: http://litellm.onemind-ai.svc.cluster.local:4000
+            - name: LITELLM_API_KEY
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: LITELLM_API_KEY}
+            - name: BACKSTAGE_URL
+              value: http://backstage.backstage.svc.cluster.local:7007
+            - name: BACKSTAGE_API_TOKEN
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: BACKSTAGE_API_TOKEN}
+            - name: ARGOCD_URL
+              value: https://argocd-server.argocd.svc.cluster.local
+            - name: ARGOCD_API_TOKEN
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: ARGOCD_API_TOKEN}
+            - name: MEDIAMTX_URL
+              value: http://onetak-media.onetak.svc.cluster.local:4000
+            - name: MEDIAMTX_API_CREDENTIALS
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: MEDIAMTX_API_CREDENTIALS}
+            # n8n and Karakeep stay disabled in apps.yaml until the owner seals their keys; the
+            # references are optional so sealing the key and flipping `enabled` is the whole change.
+            - name: N8N_URL
+              value: http://n8n.n8n.svc.cluster.local:5678
+            - name: N8N_API_TOKEN
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: N8N_API_TOKEN, optional: true}
+            - name: KARAKEEP_URL
+              value: http://web.karakeep.svc.cluster.local:3000
+            - name: KARAKEEP_API_TOKEN
+              valueFrom:
+                secretKeyRef: {name: onemind-mcp-auth, key: KARAKEEP_API_TOKEN, optional: true}
+          resources:
+            # Observed 2026-10-27: peak 5m CPU / 45Mi working set since deploy (incl. #541 image).
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          startupProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 2
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          volumeMounts:
+            - name: apps
+              mountPath: /etc/onemind
+              readOnly: true
+            - name: ca
+              mountPath: /etc/onemind-ca
+              readOnly: true
+      volumes:
+        - name: apps
+          configMap:
+            name: onemind-mcp-apps
+        - name: ca
+          configMap:
+            name: onemind-mcp-ca

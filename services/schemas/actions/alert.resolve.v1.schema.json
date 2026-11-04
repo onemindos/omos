@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/actions/alert.resolve/v1",
+  "title": "alert.resolve v1 parameters",
+  "description": "Resolve an alert (A1). Parameters of an ActionRequest (onemind-xr docs/contracts/asset-command.md section 6.1). Unknown fields are refused.",
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {
+    "note": {
+      "type": "string",
+      "maxLength": 500
+    }
+  }
+}

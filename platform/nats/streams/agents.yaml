@@ -18,3 +18,4 @@ spec:
   discard: old
   maxAge: 168h
   duplicateWindow: 2m
+  preventDelete: true
