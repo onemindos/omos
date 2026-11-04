@@ -1,5 +1,7 @@
 # Hermes through LiteLLM — credential-gated rollout
 
+> **Historical (2026-11-03).** Describes the LiteLLM route of `hermes-legacy`. The files under `platform/hermes/agent/` it names were deleted on 2026-11-03.
+
 Task 6 prepares Hermes' OpenAI-compatible route at
 `http://litellm.onemind-ai.svc.cluster.local:4000/v1`. It does not deploy or claim a
 successful live model response. The existing NATS leaf, persona, tools and Matrix

@@ -1,5 +1,7 @@
 # OneMind application MCP for Legacy
 
+> **Historical (2026-11-03).** The direct Legacy client (`hermes-legacy`, its NetworkPolicy rule and the in-pod acceptance job of `.github/workflows/onemind-mcp.yml`) was removed on 2026-11-03. `onemind-mcp` is now reached through the tool gateway (`platform/tool-gateway`); the PR preflight job still runs, against `onemind-hermes`.
+
 User authorization: 2026-10-27, implement an extensible internal MCP and deploy it
 for the cluster Hermes agent. Keep the existing services and their APIs. This is
 a bounded addition, not a new cluster administration gateway or a replacement for
@@ -37,6 +39,9 @@ the app catalog, NATS, LiteLLM or Backstage's existing MCP.
    and `monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090`.
    Git records these names; the preflight/live calls must confirm reachability.
    NATS tools report one node and never claim a cluster aggregate.
+   From the image that adds multi-node support, `NATS_MONITOR_URLS` lists
+   `nats-{0,1,2}` and the tools fail over in that order or read the node named in
+   `node`; the existing `NATS_MONITOR_URL` (nats-0) stays as the fallback for older images.
 3. The `OneMind internal MCP` workflow builds/pushes
    `ghcr.io/onemindos/onemind-mcp:sha-<source-sha>` on the feature branch and main.
    Obtain its `onemind-mcp-image` artifact and pin the returned `sha256` digest in
@@ -48,7 +53,8 @@ the app catalog, NATS, LiteLLM or Backstage's existing MCP.
    Legacy consume this **same** namespaced Secret, avoiding cross-namespace copies.
    This task authorizes the new integration credential; unrelated credentials must
    not be read or rotated.
-5. Add a third source to `platform/argocd/platform-legacy.yaml`, path
+5. (Historical: since 2026-11-01 `platform/hermes/mcp` is its own Application,
+   `platform-onemind-mcp`; see `platform/hermes/base/README.md`.) Add a third source to `platform/argocd/platform-legacy.yaml`, path
    `platform/hermes/mcp`, targetRevision `main`. Keep its existing sources and sync
    policy. Set the new SealedSecret's sync wave to -2 and MCP Deployment's to -1
    so the authenticated MCP is ready before Legacy's default wave. Argo owns all
@@ -85,12 +91,38 @@ mcp_servers:
       Authorization: "Bearer ${ONEMIND_MCP_TOKEN}"
 ```
 
-The initial pre-provisioned bearer credential is for **one private Legacy client**
-and authorizes all configured read tools. It is not browser OAuth or per-user
-authorization. The MCP has no Kubernetes token mount or API privileges. Add
-separate scopes/identities before enabling writes or other principals. Do not
+Legacy's pre-provisioned bearer credential (`ONEMIND_MCP_TOKEN` from
+`onemind-mcp-auth`) is audited as client `hermes` and authorizes all configured read
+tools. It is not browser OAuth or per-user authorization. The MCP has no Kubernetes
+token mount or API privileges. Source supports a token per client
+(`ONEMIND_MCP_TOKENS_FILE`, below); each client is audited by name but still gets
+every read tool, so add separate scopes before enabling writes. Do not
 expose this plaintext internal endpoint beyond the intended cluster trust boundary;
 TLS/mTLS and an identity layer are prerequisites for wider exposure.
+
+### Adding a client (not yet deployed)
+
+The pinned image predates per-client tokens, and the deployment sets only
+`ONEMIND_MCP_TOKEN` until an owner seals a client Secret. To add a client:
+
+1. Generate one random token per client locally without printing it. Seal a
+   namespace-scoped `SealedSecret/onemind-mcp-clients` in `hermes`, key `tokens`,
+   holding a JSON object or `name:token` lines (format in
+   `services/onemind-mcp/README.md`). Leave `hermes` out while `ONEMIND_MCP_TOKEN`
+   is set. Commit only ciphertext; list it in `platform/hermes/mcp/kustomization.yaml`
+   with sync wave -2.
+2. In one commit, pin an image digest built from source with per-client tokens,
+   mount the Secret read-only (for example at `/etc/onemind-clients`, keeping the
+   default file mode because the container runs as uid 10001 without an fsGroup) and
+   set `ONEMIND_MCP_TOKENS_FILE=/etc/onemind-clients/tokens`. Older images ignore it.
+3. Allow the client's pods in `platform/hermes/mcp/network-policy.yaml` (today only
+   Legacy may connect) and add the client's egress. A client in another namespace
+   needs its own token sealed in that namespace.
+4. Sync. Only the MCP pod restarts; Legacy keeps its token. Verify anonymous `/mcp`
+   returns 401 and each client's calls appear in the audit log under its name.
+
+To revoke or rotate one client, change its entry, reseal and roll the MCP; the
+other clients keep working.
 
 ## Acceptance and rollback
 
@@ -133,8 +165,9 @@ Hermes image digest matches the config init-container's pinned image.
 Image candidate built from source `3c68986` in
 [40455284585](https://github.com/onemindos/omos/actions/runs/40455284585):
 `ghcr.io/onemindos/onemind-mcp@sha256:80fa67bc138006bd1efc0dc849504910b4068667036d880cba9d0c71afb762cc`.
-Later changes add config integration/tests/docs; the server runtime source is
-unchanged from that image. The active SealedSecrets public certificate fingerprint
+Later changes add config integration/tests/docs; the server runtime source was
+unchanged from that image until per-client tokens were added (not yet deployed).
+The active SealedSecrets public certificate fingerprint
 was `B8:21:29:16:FE:9B:B0:B7:4A:7B:29:BB:32:B6:F9:93:16:41:16:46:BC:F9:29:D4:69:15:E7:49:8C:9D:26:22`.
 Live acceptance completed in
 [40470531771](https://github.com/onemindos/omos/actions/runs/40470531771).
@@ -169,12 +202,13 @@ that all applications are integrated. Nextcloud, Matrix, TAK HTTP, portal federa
 WebODM and other adapters remain explicit implementation work. Existing Legacy
 bus/TAK tools remain separate. No user-file scraping or database backdoor is added.
 
-Karakeep bookmark read/search/save, n8n workflow/execution summaries, Paperclip
-company/issue read and backlog creation, Grafana dashboard search and Tempo trace
-lookup have adapters in source. They are blocked pending the requirements recorded
+Karakeep bookmark read/search/save, n8n workflow/execution summaries and Grafana dashboard search
+have adapters in source. They are blocked pending the requirements recorded
 on each catalog entry. Dedicated user/service identities are required; the registry
 pull PAT, app admin credentials and model provider keys are not app API identities.
 For n8n the transport uses `X-N8N-API-KEY`, not Bearer authentication.
+The Paperclip adapter was removed on 2026-11-03 with the platform's Paperclip
+retirement (it was disabled, so the tool list did not change).
 
 Write tools are omitted unless the administrator explicitly sets `allow_writes:
 true` on that app, supplies its dedicated credentials, and verifies network ingress

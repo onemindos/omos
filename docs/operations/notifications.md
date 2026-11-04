@@ -32,7 +32,7 @@ until someone reads it. Filter by minimum severity to hide these.
 
 **Which watches exist.** The observer only watches CronJobs named in
 `onemind.operationalEvents.backupCronJobs` (default `backup-postgres-backstage`).
-`backstage-backup` is suspended on purpose (superseded) and is not watched, so it never alerts.
+The legacy `backstage-backup` CronJob (superseded) was removed; it was never watched.
 Telling retired from pending from failing backups across the whole platform is F4's job.
 
 ## Alertmanager webhook

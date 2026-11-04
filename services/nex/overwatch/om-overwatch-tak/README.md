@@ -65,7 +65,7 @@ Everything server-side is wired (TAK Server :8089, NatsBridgePlugin connected,
 this organ running). To confirm on a real device:
 
 1. **Connect** an ATAK (Android) / iTAK (iPhone) to `192.168.1.183:8089` (LAN) or
-   `100.74.182.117:8089` (Tailscale), SSL/TLS, cert `admin.p12` (pw `atakatak`).
+   `100.74.182.117:8089` (Tailscale), SSL/TLS, cert `admin.p12` (pw: the keystore password, default until step-2 rotation).
 2. **Outbound test** — run the live feed; moving tracks appear on the map:
    ```bash
    python3 cmd/demo-feed.py          # DEMO-PATROL (friendly, blue) + DEMO-THREAT (hostile, red)

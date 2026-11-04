@@ -23,10 +23,8 @@ Tailscale Kubernetes operator and the per-service tailnet proxies it creates.
 | `ts-cilium-gateway-gateway-default-hl5fh` | StatefulSet | `tailscale` |
 | `ts-grafana-ksprn` | StatefulSet | `tailscale` |
 | `ts-headlamp-4qwkc` | StatefulSet | `tailscale` |
-| `ts-hermes-dashboard-6thbx` | StatefulSet | `tailscale` |
 | `ts-heynats-p5dmf` | StatefulSet | `tailscale` |
 | `ts-hubble-tw85d` | StatefulSet | `tailscale` |
-| `ts-kubernetes-dashboard-9r9fp` | StatefulSet | `tailscale` |
 | `ts-n8n-pmtds` | StatefulSet | `tailscale` |
 | `ts-nats-dashboard-242wv` | StatefulSet | `tailscale` |
 | `ts-nats-monitor-zh589` | StatefulSet | `tailscale` |

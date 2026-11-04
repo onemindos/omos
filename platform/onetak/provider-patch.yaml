@@ -23,6 +23,9 @@ data:
 
     const CA_CERT_PATH = '/home/etl/tak-ca/ca.pem';
     const CA_KEY_PATH  = '/home/etl/tak-ca/ca.key';
+    // Dormant and not mounted by any workload. The CA key password is now in Secret tak-ca-credentials
+    // (step 1/2, 2026-10-29); wire it from there if this script is ever revived.
+    // (dormant: this ConfigMap is not mounted by any workload today)
     const CA_PASSPHRASE = 'atakatak';
 
     function generateTAKCert(username) {

@@ -16,10 +16,6 @@ applications:
     apps:
     - onemind_core
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  ecosystem-keda:
-    apps:
-    - onemind_core
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   ecosystem-litellm:
     apps:
     - litellm
@@ -66,11 +62,7 @@ applications:
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   monitoring-otel-collector:
     apps:
-    - tempo
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  monitoring-tempo:
-    apps:
-    - tempo
+    - loki
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-agent-fabric:
     apps:
@@ -124,7 +116,15 @@ applications:
     apps:
     - fedhub
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  platform-hermes-fresh:
+  platform-hermes-base:
+    apps:
+    - agent_fabric
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-onemind-hermes:
+    apps:
+    - agent_fabric
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-onemind-mcp:
     apps:
     - agent_fabric
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
@@ -135,10 +135,6 @@ applications:
   platform-kube:
     apps:
     - kubernetes
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  platform-legacy:
-    apps:
-    - agent_fabric
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-matrix:
     apps:
@@ -160,13 +156,13 @@ applications:
     apps:
     - nats
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  platform-nats-tools:
+  platform-nats-streams:
     apps:
     - nats
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  platform-nextcloud:
+  platform-nats-tools:
     apps:
-    - nextcloud
+    - nats
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-observability:
     apps:
@@ -187,10 +183,6 @@ applications:
   platform-ops:
     apps:
     - kubernetes
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  platform-paperclip:
-    apps:
-    - paperclip
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-redpanda-connect:
     apps:
@@ -216,6 +208,26 @@ applications:
     apps:
     - tak
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-tool-gateway:
+    apps:
+    - litellm
+    - kubernetes
+    - stac
+    - onemind_core
+    - mediamtx
+    - tile38
+    reason: >-
+      Legacy's tool front door (agentgateway) replaces LiteLLM as the MCP hub and adds no app of its own to
+      apps.yaml. Its backends are served by gateway targets and routes, not by apps.yaml entries, and Hermes is not
+      cut over yet (Phase 5), so Legacy still reaches these apps through onemind-mcp and LiteLLM. kubernetes:
+      target kubernetes (Deployment mcp-kubernetes, 10 read and 1 write tool on /ops, three destructive tools held for
+      /execute, no Secrets in its RBAC); the kubernetes app in apps.yaml stays disabled until the cutover. stac:
+      OpenAPI target stac, 5 read tools on /data. onemind_core: OpenAPI target core, 6 read tools on /data, using
+      the read API key only. mediamtx: OpenAPI target mediamtx, 25 read operations on /tak, no config paths.
+      tile38: the tile38 adapter of onemind-mcp (target onemind, /ops): 6 read, 1 write, delete and drop unregistered.
+      Deployment mcp-clickhouse (target clickhouse, 3 read tools on /data, ClickHouse user legacy_ro with readonly=1)
+      has no app id; the ClickHouse data is owned by platform-observability (data_backups). Source of truth:
+      platform/tool-gateway/targets and policy/classification, docs/architecture/onemind-tool-gateway.md.
   platform-vaultwarden:
     apps:
     - vaultwarden

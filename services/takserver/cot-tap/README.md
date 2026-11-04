@@ -29,11 +29,11 @@ The tap authenticates with a client cert (`CN=omos-cot-tap`) signed by the DOKS
 TAK CA. Mint + register:
 
 ```sh
-# from tak-cluster/b2-enrollment (has ca.pem + ca.key, key pw: atakatak)
+# from tak-cluster/b2-enrollment (has ca.pem + ca.key, key pw: the CA key password, see Secret tak-ca-credentials in ns takserver)
 openssl genrsa -out tap.key 2048
 openssl req -new -key tap.key -out tap.csr \
   -subj "/C=US/ST=FL/L=Tampa/O=TAK/OU=OneMind/CN=omos-cot-tap"
-openssl x509 -req -in tap.csr -CA ca.pem -CAkey ca.key -passin pass:atakatak \
+openssl x509 -req -in tap.csr -CA ca.pem -CAkey ca.key -passin env:CAPASS \
   -CAcreateserial -out tap.pem -days 365 -sha256 -extfile client-ext.cnf   # clientAuth EKU
 
 # register the user so CN maps (cluster DB)

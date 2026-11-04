@@ -33,7 +33,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: backstage
-        image: ghcr.io/onemindos/onemind-portal@sha256:28b33606c82f62d4a58d67a6ae2bbac485bd6dc21d3098c7e858b9c9acefe4dc
+        image: ghcr.io/onemindos/onemind-portal@sha256:ee3b54b1572bb57812448a7cfbfdd3ec9f5aeb2a25e5bc5c5ee50038c2bee721
         command:
         - node
         args:
@@ -77,6 +77,19 @@ spec:
             secretKeyRef:
               name: backstage-mcp
               key: MCP_TOKEN
+        - name: ONEMIND_MCP_HUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: backstage-mcp
+              key: ONEMIND_MCP_HUB_TOKEN
+        # Read-only Authentik token for the org sync (authentik.orgSync, off by default). Optional:
+        # the owner seals backstage-authentik-catalog; until then the variable is simply absent.
+        - name: AUTHENTIK_CATALOG_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: backstage-authentik-catalog
+              key: AUTHENTIK_CATALOG_TOKEN
+              optional: true
         - name: PORTAL_URL
           value: https://onemind-preview.tail717ba0.ts.net
         - name: POSTGRES_PASSWORD
@@ -128,6 +141,9 @@ spec:
         - name: catalog
           mountPath: /app/catalog
           readOnly: true
+        - name: catalog-plugins
+          mountPath: /app/catalog-plugins
+          readOnly: true
         - name: cluster-config
           mountPath: /app/app-config.cluster.yaml
           subPath: app-config.cluster.yaml
@@ -146,6 +162,9 @@ spec:
       - name: catalog
         configMap:
           name: backstage-catalog
+      - name: catalog-plugins
+        configMap:
+          name: backstage-catalog-plugins
       - name: cluster-config
         configMap:
           name: backstage-cluster-config
@@ -157,11 +176,12 @@ spec:
           name: onemind-fga-context
       terminationGracePeriodSeconds: 45
       affinity:
+        # Required, not preferred: hub-core is memory-saturated, so the portal runs only
+        # on the autoscaled ecosystem pool. PostgreSQL (RWO volume) is not moved.
         nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            preference:
-              matchExpressions:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
               - key: doks.digitalocean.com/node-pool
                 operator: In
                 values:

@@ -15,6 +15,11 @@ const PILLARS = ['so', 'le', 'hp', 'ge'];
 const LABEL_PILLARS = [...PILLARS, 'shared'];
 const ACRONYMS = new Set(['api', 'db', 'ui', 'ldap', 'dns', 'nats', 'tak', 'pg', 'ml', 'id', 'tls', 'ha', 'ws', 'oc', 'ai', 'cpu', 'crd', 'crds', 'tcp', 'url', 'ip', 'sql', 'mcp', 'stac', 'osm']);
 const refOf = e => `${e.kind.toLowerCase()}:${(e.metadata.namespace || 'default').toLowerCase()}/${e.metadata.name.toLowerCase()}`;
+const ARGO_URL = 'https://argocd.tail717ba0.ts.net';
+const ARGO_RESOURCE_TYPE = 'argocd-application';
+const MAP_SOURCE = 'catalog/workload-map.yaml';
+// Generated from workload-map.yaml on every run, so a removed mapping removes its Resource.
+const isArgoResource = e => e.kind === 'Resource' && e.spec?.type === ARGO_RESOURCE_TYPE && e.metadata.annotations?.['onemind.io/structure-source'] === MAP_SOURCE;
 const load = file => YAML.parseAllDocuments(fs.readFileSync(file, 'utf8')).map(d => d.toJSON()).filter(Boolean);
 
 function loadSources(base = root) {
@@ -128,6 +133,30 @@ function appEntity(app, previous) {
   return base;
 }
 
+// The Argo CD plugin reads one argocd/app-name per entity. An app deployed by several Argo applications
+// keeps the primary one; each other application gets this Resource, so every application has exactly
+// one entity that names it and the plugin can show its sync and health state.
+function argoResource(argo, app, primary) {
+  return {
+    apiVersion: 'backstage.io/v1alpha1',
+    kind: 'Resource',
+    metadata: {
+      name: `argocd-app-${argo}`,
+      title: `Argo CD application ${argo}`,
+      description: `Argo CD application ${argo}, one of the applications that deploy ${app.metadata.title} (component:default/${app.metadata.name}, whose primary application is ${primary}).`,
+      tags: ['argocd'],
+      links: [{ url: `${ARGO_URL}/applications/argocd/${argo}`, title: 'Argo CD application', type: 'argocd' }],
+      annotations: {
+        'argocd/app-name': argo,
+        'argocd/instance-name': 'onemind-cloud',
+        'onemind.io/hosting': 'digitalocean-nyc3',
+        'onemind.io/structure-source': MAP_SOURCE,
+      },
+    },
+    spec: { type: ARGO_RESOURCE_TYPE, owner: OWNER, system: app.spec.system, dependencyOf: [`component:default/${app.metadata.name}`] },
+  };
+}
+
 function pillarFor(structure, system, ref) {
   const override = structure.pillarOverrides?.[ref];
   if (override) return LABEL_PILLARS.includes(override) ? override : null;
@@ -162,7 +191,7 @@ function runStructure(input, sources) {
   const appSystem = new Map([...newApps].map(([n, a]) => [n, a.system]));
   for (const [n, s] of Object.entries(structure.placement)) appSystem.set(n, s);
   const domainRefs = new Set(structure.domains.map(d => `domain:default/${d.name}`));
-  const keep = e => e.kind !== 'System' && !(e.kind === 'Domain' && domainRefs.has(refOf(e)));
+  const keep = e => e.kind !== 'System' && !(e.kind === 'Domain' && domainRefs.has(refOf(e))) && !isArgoResource(e);
   const oldApps = apps.filter(keep);
   const oldCluster = cluster.filter(keep);
 
@@ -230,6 +259,11 @@ function runStructure(input, sources) {
     ann['argocd/instance-name'] = 'onemind-cloud';
     if (list.length > 1) ann['onemind.io/argocd-apps'] = [...list].sort().join(',');
     else delete ann['onemind.io/argocd-apps'];
+  }
+  for (const [argo, ref] of Object.entries(map.argoApplications).sort(([a], [b]) => (a < b ? -1 : 1))) {
+    const app = appComponent.get(ref.split('/')[1]);
+    const primary = app.metadata.annotations['argocd/app-name'];
+    if (argo !== primary) appsOut.push(argoResource(argo, app, primary));
   }
   for (const [name, list] of subcomponents) {
     const app = appComponent.get(name);
@@ -386,4 +420,4 @@ if (require.main === module) {
   const count = (text, kind) => (text.match(new RegExp(`^kind: ${kind}$`, 'gm')) || []).length;
   console.log(`Structure applied: ${count(result.apps, 'Domain')} domains, ${count(result.apps, 'System')} systems, ${(result.cluster.match(/^ {2}subcomponentOf: /gm) || []).length} subcomponents.`);
 }
-module.exports = { applyStructure, runbooksFor, writeRunbooks, applyStructureToText, loadSources, load, refOf, workloadIdentity, appForWorkload, workloadRole, writeCatalog, UNASSIGNED };
+module.exports = { applyStructure, isArgoResource, runbooksFor, writeRunbooks, applyStructureToText, loadSources, load, refOf, workloadIdentity, appForWorkload, workloadRole, writeCatalog, UNASSIGNED };

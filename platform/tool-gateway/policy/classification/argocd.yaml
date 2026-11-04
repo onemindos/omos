@@ -1,0 +1,21 @@
+# Tool classification for target `argocd` (argoproj-labs/mcp-for-argocd v0.9.0, MCP_READ_ONLY=true): conservative read-only start.
+# The eleven read tools are the server's `tools/list` in read-only mode, read from the pinned image on 2026-11-04. In write mode it adds
+# create_application, update_application, delete_application, sync_application and run_resource_action; they are not offered by this backend
+# and stay unlisted except delete_application, which is named so it can only ever appear on /execute.
+target: argocd
+read:
+- get_application
+- get_application_events
+- get_application_managed_resources
+- get_application_resource_tree
+- get_application_workload_logs
+- get_appproject
+- get_resource_actions
+- get_resource_events
+- get_resources
+- list_applications
+- list_clusters
+write: []
+destructive:
+- delete_application
+physical: []

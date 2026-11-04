@@ -6,6 +6,8 @@ metadata:
     app.kubernetes.io/name: vaultwarden
     onemind.io/layer: make-sense
     pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
   annotations:
     argocd.argoproj.io/sync-options: Prune=false,Delete=false
     argocd.argoproj.io/sync-wave: '-2'
