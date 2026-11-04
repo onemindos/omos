@@ -1,7 +1,7 @@
 # F8 — Add and remove apps: lifecycle templates and stack hygiene
 
 Work order for one implementing agent. Branch: `flagship/f8-app-lifecycle`.
-Program index: [README](README.md). Depends on: F2. Absorbs draft #351.
+Program index: [README](README.md). Depends on: F2. Absorbs closed draft #351.
 
 ## Outcome Zeus sees
 
@@ -28,9 +28,12 @@ Program index: [README](README.md). Depends on: F2. Absorbs draft #351.
 ## Evidence
 
 - Templates exist: `services/onemind-portal/templates/{app-onboarding,deployment-change,recovery-preparation,service,service-registration}`.
-  Draft #351 extends `app-onboarding/skeleton/README.md` with the per-app
+  Closed draft #351 extends `app-onboarding/skeleton/README.md` with the per-app
   contract. No retirement template exists.
-- 69 Argo apps, 6 mapped. 58 DO snapshots with no retention view.
+- 60 Argo apps and 53 DO snapshots with no retention view (2026-11-04).
+- Paperclip, Nextcloud and Hermes Legacy were retired by hand in November. The
+  2026-11-03 cluster workup still found leftover volumes and stale alerts, which
+  a retirement checklist should catch.
 
 ## Build
 
@@ -65,7 +68,7 @@ templates until Zeus says to remove them), `plugins/plugin-onemind-services-back
 - [ ] "Retire app" on `stac-browser` lists its workloads, Argo app, links and
       alerts, and produces a PR that removes only that app's files (the test
       asserts the file list).
-- [ ] The hygiene report flags the unmapped Argo apps and at least the snapshot
+- [ ] The hygiene report flags any unmapped Argo app and at least the snapshot
       age findings.
 - [ ] No template step calls `kubectl`, Argo sync or DO write APIs (test).
       Required gates pass.
