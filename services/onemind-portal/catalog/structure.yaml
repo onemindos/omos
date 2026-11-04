@@ -307,6 +307,7 @@ placement:
   cesium-unity: geospatial
   cesium-omniverse: geospatial
   whop: business-operations
+  mediamtx-upstream: tak-ecosystem
   hermes-atlas: ai-agents
   hermes-bible: ai-agents
   oh-my-hermes: ai-agents

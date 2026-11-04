@@ -71,6 +71,8 @@ require('./test-intelligence-references.cjs');
 require('./test-hermes-ecosystem.cjs');
 // Geospatial and commerce references reuse existing canonical systems.
 require('./test-geospatial-commerce-references.cjs');
+// TAK upstream references preserve canonical deployed workload identities.
+require('./test-tak-ecosystem.cjs');
 require('./test-snapshot-cluster.cjs');
 // F11 live inventory guards (mapping bundle, flag default, RBAC) ride the same gate and image-build step.
 require('./test-live-inventory.cjs');
