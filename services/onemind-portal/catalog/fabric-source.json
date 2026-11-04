@@ -1614,17 +1614,6 @@
     "Tags": []
   },
   {
-    "Page": "Paperclip",
-    "Description": "Open-source app for managing AI agents at work — 79.9k stars, most popular agent UI. Reference for OneMind agent management UI.",
-    "Category": "🧠 Agents",
-    "Host": "🐳 Docker Local",
-    "Status": "✅ Live",
-    "userDefined:URL": "https://github.com/paperclipai/paperclip",
-    "url": "https://app.notion.com/3d0d0cf70a7e81ada22bc5a0b2164e0b",
-    "Last edited time": "2026-09-03 21:27:33Z",
-    "Tags": []
-  },
-  {
     "Page": "Miro",
     "Description": "Collaborative whiteboarding",
     "Category": "🛠️ Productivity",

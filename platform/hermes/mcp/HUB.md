@@ -163,8 +163,9 @@ mcp_servers:
 
 Caveat learned from Legacy (see "Legacy 401" below): with `gateway.multiplex_profiles: true`,
 Hermes resolves `${VAR}` only from the profile's `.env` / secret sources, never from container
-env. Either keep multiplexing off for onemind-hermes, or make sure the variable is in the
-profile's secret scope.
+env. Multiplexing cannot be turned off in Hermes v0.22.5 (`false` is rewritten to `true`), so make sure
+the variable is in the profile's secret scope (the role profiles' `.env`, see
+`onemind-hermes/README.md`).
 
 ### 4. Verify
 

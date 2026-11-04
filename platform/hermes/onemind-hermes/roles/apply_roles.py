@@ -7,8 +7,12 @@ profile per role in roles.yaml, and the default profile's `delegation.backend` /
 
 - Anything it would overwrite is first copied to $HERMES_HOME/backups/legacy-roles-<UTC stamp>/.
 - A file or key that already matches is left alone and reported "unchanged"; a second run changes nothing.
-- No credential is read, copied or written. Role profiles get no auth.json: they inherit the default profile's
-  pooled openai-codex credentials (hermes_cli.auth.read_credential_pool falls back to the root store).
+- Role profiles get no auth.json: they inherit the default profile's pooled openai-codex credentials
+  (hermes_cli.auth.read_credential_pool falls back to the root store).
+- Each role gets only the MCP servers named in its `mcp` list (copied from the default profile's mcp_servers) and
+  the matching `mcp-<server>` toolsets. Hermes resolves ${VAR} in a routed profile's MCP headers from that
+  profile's own .env only (agent/secret_scope.py), so ONEMIND_GATEWAY_KEY is copied from this pod's environment
+  into each role's .env (mode 0600). The value is never printed or logged; a second run reports "unchanged".
 - Config goes through Hermes' own atomic_config_write (comments kept, existing keys never dropped).
 """
 
@@ -92,6 +96,37 @@ def put_config(path, wanted, label):
         atomic_config_write(pathlib.Path(path), cfg)
 
 
+def ensure_env(pdir, name, label):
+    """Make `name=<value of $name in this process>` the only definition of name in <pdir>/.env (0600, hermes)."""
+    value = os.environ.get(name, "")
+    if not value or "\n" in value:
+        print("ERROR %s: %s is not set in the pod environment" % (label, name))
+        return 1
+    path = os.path.join(pdir, ".env")
+    lines = (read(path) or "").splitlines()
+    mine = [i for i, line in enumerate(lines) if line.split("=", 1)[0].strip() in (name, "export " + name)]
+    current = [lines[i].split("=", 1)[1].strip().strip("'\"") if "=" in lines[i] else "" for i in mine]
+    if len(mine) == 1 and current[0] == value and oct(os.stat(path).st_mode & 0o777) == "0o600":
+        say("unchanged", "%s .env %s" % (label, name))
+        return 0
+    say("update" if mine else "create", "%s .env %s (value not shown)" % (label, name))
+    if DRY:
+        return 0
+    # No backup copy: the file only ever holds this managed key, and a backup would copy a credential.
+    kept = [line for i, line in enumerate(lines) if i not in mine]
+    kept.append("%s=%s" % (name, value))
+    tmp = path + ".tmp"
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as fh:
+        fh.write("\n".join(kept) + "\n")
+    os.replace(tmp, path)
+    try:
+        shutil.chown(path, "hermes", "hermes")
+    except (LookupError, PermissionError):
+        pass
+    return 0
+
+
 def hermes(*args):
     exe = shutil.which("hermes") or "/opt/hermes/.venv/bin/hermes"
     return subprocess.run([exe, *args], capture_output=True, text=True, env=dict(os.environ, HERMES_HOME=HOME))
@@ -142,10 +177,20 @@ def main():
                 wanted[key] = default_cfg[key]
         if isinstance(default_cfg.get("agent"), dict) and default_cfg["agent"].get("disabled_toolsets"):
             wanted["agent.disabled_toolsets"] = list(default_cfg["agent"]["disabled_toolsets"])
-        # Tool gateway: whatever the default profile has. ${VAR} references stay unexpanded (raw read).
-        if isinstance(default_cfg.get("mcp_servers"), dict) and default_cfg["mcp_servers"]:
-            wanted["mcp_servers"] = default_cfg["mcp_servers"]
+        # Tool gateway: only this role's servers, as the default profile has them. ${VAR} references stay
+        # unexpanded (raw read). Missing servers are an error, not a silent empty set.
+        servers = list(role.get("mcp") or [])
+        available = default_cfg.get("mcp_servers") if isinstance(default_cfg.get("mcp_servers"), dict) else {}
+        missing = [s for s in servers if s not in available]
+        if missing:
+            print("ERROR profile %s: mcp server(s) %s not in the default profile's mcp_servers" % (name, ", ".join(missing)))
+            rc = 1
+            continue
+        if servers:
+            wanted["mcp_servers"] = {s: available[s] for s in servers}
         put_config(os.path.join(pdir, "config.yaml"), wanted, "profile %s config.yaml" % name)
+        if servers:
+            rc |= ensure_env(pdir, "ONEMIND_GATEWAY_KEY", "profile %s" % name)
         put_file(os.path.join(pdir, "SOUL.md"), role["brief"].strip() + "\n", "profile %s SOUL.md" % name)
         from hermes_cli.profiles import read_profile_meta
         want_desc = " ".join(role["description"].split())
