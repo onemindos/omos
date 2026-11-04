@@ -1,5 +1,8 @@
 # OneMind platform roadmap: layers, OpenChoreo and AI operations
 
+> **2026-11-04:** OpenChoreo has been retired. The phases below that depend on it are
+> history, and this plan needs revisiting before they are treated as current work.
+
 Living document. Started 2026-10-18. Owner: Zeus. Kept at the repository root so any
 agent (Claude Code, Codex or another) can pick up the work where the last one stopped.
 
