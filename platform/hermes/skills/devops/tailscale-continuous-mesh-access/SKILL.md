@@ -30,9 +30,9 @@ part: a clear picture of what "healthy" means, and a cheap check you can schedul
   pod `ts-<name>-<id>-0`, and its node state lives in a Secret. A restarted pod
   re-joins by itself.
 - Machines the agent manages are reached through the **ProxyGroup `egress`**
-  (pod `egress-0`, `ProxyGroupReady`) and three `ExternalName` Services in
+  (pod `egress-0`, `ProxyGroupReady`) and four `ExternalName` Services in
   namespace `hermes`, defined in `platform/hermes/base/egress.yaml`:
-  `omos-mbp` (22), `omos-s24` (8022), `omos-ha-edge` (8123). The Home Assistant
+  `omos-mbp` (22), `omos-s24` (8022), `omos-ha-edge` (8123), `omos-dell-zeus` (22). The Home Assistant
   box has been offline since about 2026-09-19, so a failing `omos-ha-edge` is
   expected, not an incident.
 - Who may talk to what is the tailnet policy `platform/core/policy.hujson`
@@ -41,10 +41,10 @@ part: a clear picture of what "healthy" means, and a cheap check you can schedul
   (Funnel is off).
 - `onemind-hermes` itself has **no `tailscaled`, no `tailscale` binary, no
   `kubectl` and no service-account token**. Its NetworkPolicy
-  (`platform/hermes/onemind-hermes/network.yaml`) allows only DNS, LiteLLM
-  (4000), Matrix Synapse (8008) and public HTTPS, and excludes `100.64.0.0/10`.
-  So from this pod the egress Services are unreachable until the owner adds a
-  rule in Git. Check; do not assume.
+  (`platform/hermes/onemind-hermes/network.yaml`) allows DNS, the tool gateway,
+  NATS, Matrix, public HTTPS, and one rule per egress proxy pod and port
+  (the four above). `100.64.0.0/10` stays excluded from the public rule, so
+  nothing else on the tailnet is reachable. Check; do not assume.
 
 ## What "healthy" means, by layer
 
@@ -69,8 +69,8 @@ is down. A DNS failure means the Service does not exist.
 
 ```bash
 # 1. Can this pod open the egress paths? (runs anywhere in the cluster network)
-python3 scripts/mesh-health.py probe                 # the three default Services
-python3 scripts/mesh-health.py probe --target omos-mbp.hermes.svc.cluster.local:22
+python3 scripts/mesh-health.py probe                 # the default Services (Mac, S24, HA)
+python3 scripts/mesh-health.py probe --target omos-dell-zeus.hermes.svc.cluster.local:22
 
 # 2. Summarize a peer list. Run `tailscale status --json` on a machine that has the
 #    CLI (the owner's Mac) and pipe it in. Names and OS only; addresses are not printed.
@@ -111,8 +111,8 @@ Notes:
 ## When it is down
 
 1. Run the probe. Note which targets fail and how (timeout, refused, DNS).
-2. All three time out: the NetworkPolicy has no rule for the egress Services, or
-   the egress proxy is down. Say which you checked. Do not start a userspace
+2. Every target times out: the NetworkPolicy rules or the egress proxies are
+   down (a device that is simply off also times out). Say which you checked. Do not start a userspace
    `tailscaled`, a tunnel through another machine or an exit node.
 3. One target refuses: the device is up but its service is not (Termux not
    running on the S24; Remote Login off on the Mac). That is the owner's device.

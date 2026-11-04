@@ -10,7 +10,7 @@ the old instance and `platform-legacy` are gone from Git; the sections below are
 | `SealedSecret/hermes-dashboard-auth` | dashboard login (`envFrom`) of `onemind-hermes` |
 | `SealedSecret/omos-nats-creds` | `NATS_USER` / `NATS_PASSWORD` of `onemind-hermes` (direct client of the bus) |
 | `SealedSecret/hermes-nats-ca` | NATS CA volume of `onemind-hermes` |
-| `Service/omos-ha-edge`, `omos-mbp`, `omos-s24` | Tailscale egress to the edge devices (the tool gateway's Home Assistant target uses `hermes/omos-ha-edge`) |
+| `Service/omos-ha-edge`, `omos-mbp`, `omos-s24`, `omos-dell-zeus` | Tailscale egress to the owner's devices (the tool gateway's Home Assistant target uses `hermes/omos-ha-edge`). `onemind-hermes` reaches them through per-device, per-port rules in its NetworkPolicy; ports 22, 8022, 8123, 22 |
 
 Every object carries `argocd.argoproj.io/sync-options: Prune=false,Delete=false`. Deleting an
 Argo Application, or removing a file from this directory, therefore never deletes them. To
