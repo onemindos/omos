@@ -12,6 +12,7 @@ const docs = YAML.parseAllDocuments(text).map(doc => {
 });
 const placement = YAML.parse(fs.readFileSync(path.join(root, 'catalog/structure.yaml'), 'utf8')).placement;
 const links = {
+  'mediamtx-upstream': 'https://mediamtx.org',
   tacsync: 'https://tacsync.com',
   'cesium-ion-for-tak': 'https://github.com/CesiumGS/cesium-ion-for-TAK-plugins',
   district47: 'https://district47.us',
@@ -121,6 +122,36 @@ test('external OmniTAK is explicitly unrelated to the retired OneMind name', () 
   assert.match(entity.metadata.title, /external/i);
   assert.match(entity.metadata.description, /third-party.*unrelated to OneMind.*retired OmniTAK name/);
 });
+
+test('MediaMTX upstream reference does not replace the canonical OneTAK service', () => {
+  const reference = docs.find(e => e.metadata.name === 'mediamtx-upstream');
+  assert.equal(reference.metadata.annotations['onemind.io/launcher-url'], 'https://mediamtx.org');
+  assert.equal(reference.metadata.annotations['onemind.io/launcher-category'], 'TAK Ecosystem');
+  assert.ok(reference.metadata.tags.includes('reference'));
+  assert.match(reference.metadata.description, /not a separate OneMind deployment or a claim of tested integration/);
+  assert.equal(reference.spec.subcomponentOf, undefined);
+  assert.equal(reference.spec.dependsOn, undefined);
+  const onetak = docs.find(e => e.metadata.name === 'onetak');
+  assert.equal(onetak.metadata.links.find(l => l.title === 'Open application').url, 'https://onetak.onemindos.dev');
+  assert.ok(onetak.metadata.annotations['onemind.io/kubernetes-workloads'].split(',').includes('onetak/onetak-media'));
+  const clusterText = fs.readFileSync(path.join(root, 'catalog/cluster.yaml'), 'utf8');
+  const cluster = YAML.parseAllDocuments(clusterText).map(d => d.toJS());
+  const workload = cluster.find(e => e.metadata.name === 'k8s-onetak-onetak-media-31c9ce7b');
+  assert.equal(workload.spec.subcomponentOf, 'component:default/onetak');
+  assert.equal(workload.spec.system, 'tak-ecosystem');
+  const archive = cluster.find(e => e.metadata.name === 'fabric-mediamtx-2e634268');
+  assert.ok(archive.spec.dependsOn.includes('component:default/k8s-onetak-onetak-media-31c9ce7b'));
+  assert.equal([...docs, ...cluster].filter(e => e.metadata.annotations?.['onemind.io/launcher-url'] === 'https://mediamtx.org').length, 1);
+  // Reference-only: do not attach workload, Argo or verified-runtime claims.
+  for (const key of Object.keys(reference.metadata.annotations)) {
+    assert.ok(!/^(argocd\/|backstage.io\/kubernetes-|onemind.io\/(verified-at|deployment))/.test(key), key);
+  }
+  const { applyStructureToText, loadSources } = require('./curate-structure.cjs');
+  const rewritten = applyStructureToText({ apps: text, cluster: clusterText }, loadSources());
+  const block = value => value.split('---\n').find(part => part.includes('  name: mediamtx-upstream\n'));
+  assert.equal(block(rewritten.apps), block(text), 'reference survives durable curation byte-for-byte');
+});
+
 test('TAK Product Center retains its existing repository-list link', () => {
   const entity = docs.find(e => e.metadata.name === 'tak-product-center');
   assert.ok(entity.metadata.links.some(link => link.url === 'https://github.com/orgs/TAK-Product-Center/repositories'));

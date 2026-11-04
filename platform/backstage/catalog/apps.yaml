@@ -420,6 +420,39 @@ spec:
   owner: group:default/onemind-admins
   domain: domain:default/onemind
 ---
+# Upstream reference only: deployed MediaMTX remains the OneTAK media workload.
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: mediamtx-upstream
+  title: MediaMTX (upstream reference)
+  description: >-
+    Official upstream reference for MediaMTX, an open-source live media router
+    for publishing, reading, proxying, forwarding, recording and playing back
+    real-time video and audio streams. Listed in TAK Ecosystem for its video
+    role; not a separate OneMind deployment or a claim of tested integration.
+  tags:
+    - reference
+    - media
+    - tak-ecosystem
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/launcher-url: https://mediamtx.org
+    onemind.io/launcher-category: TAK Ecosystem
+    onemind.io/pillar-review: proposed
+  links:
+    - url: https://mediamtx.org
+      title: Official upstream website
+      icon: dashboard
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
