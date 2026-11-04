@@ -838,62 +838,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: hermes-legacy
-  title: Hermes (old Legacy instance, being retired)
-  description: Old Legacy instance (being retired)
-  tags:
-    - ai-agents
-  links:
-    - url: https://hermes-agent.tail717ba0.ts.net/login?next=%2F
-      title: Open application
-      icon: dashboard
-    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
-      title: Operations runbook
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/relationship-source: ingress-service-selector
-    onemind.io/inventory-review: imported-link
-    onemind.io/tech-stack-status: Active
-    onemind.io/tech-stack-category: AI / ML
-    onemind.io/license: Commercial
-    onemind.io/onemind-integration: "true"
-    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81f4b144f3e8313ce477
-    onemind.io/tech-stack-notes: OneMind's primary AI agent. Runs on NATS,
-      interfaces with Bedrock/Claude, manages state.db, handles voice + text
-      tasks.
-    onemind.io/supported-platforms: Linux,K8s
-    argocd/app-name: platform-legacy
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: hermes
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=hermes,onemind.io/agent=legacy
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: hermes
-    grafana/alert-label-selector: namespace=hermes
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=hermes-legacy
-    onemind.io/logs-query: '{k8s_namespace_name="hermes", k8s_pod_name=~"(hermes-legacy)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/hermes-legacy/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: hermes/hermes-legacy
-    onemind.io/api-relationship-source: platform/hermes/agent/deployment.yaml
-      (nats-platform plugin registers agents.prompt.hermes.zeus.legacy through
-      the nats-leaf sidecar)
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: ai-agents
-  dependsOn:
-    - component:default/k8s-hermes-hermes-legacy-1e93d498
-  consumesApis:
-    - api:default/nats-agent-protocol
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: agent-web-ui
   title: Agent Web UI
   description: NATS agent browser
@@ -7115,6 +7059,195 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: hermes-atlas
+  title: Hermes Atlas
+  description: >-
+    External reference: Community-curated Hermes ecosystem directory with
+    guides, tools, skills and plugins. No OneMind installation or integration
+    verified.
+  tags:
+    - reference
+    - hermes
+    - community
+  links:
+    - url: https://hermesatlas.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://hermesatlas.com
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hermes-bible
+  title: Hermes Bible
+  description: >-
+    External reference: Unofficial community documentation and workflows for
+    Hermes Agent; not affiliated with Nous Research. No OneMind installation or
+    integration verified.
+  tags:
+    - reference
+    - hermes
+    - community
+  links:
+    - url: https://www.hermesbible.com
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://www.hermesbible.com
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: oh-my-hermes
+  title: Oh My Hermes
+  description: >-
+    External reference: Community coding harness for Hermes Agent with IDE
+    workflows. No OneMind installation or integration verified.
+  tags:
+    - reference
+    - hermes
+    - community
+  links:
+    - url: https://omher.app
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://omher.app
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hermes-official-plugins
+  title: Hermes Official Plugins
+  description: >-
+    External reference: Official Hermes Agent plugins built and maintained by
+    Nous Research. No OneMind installation or integration verified.
+  tags:
+    - reference
+    - hermes
+    - official
+  links:
+    - url: https://github.com/NousResearch/hermes-official-plugins/tree/main
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://github.com/NousResearch/hermes-official-plugins/tree/main
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hermes-skills
+  title: Hermes Skills
+  description: >-
+    External reference: Official Nous Research Hermes skills documentation entry
+    point, redirecting to the skills marketplace. No OneMind installation or
+    integration verified.
+  tags:
+    - reference
+    - hermes
+    - official
+  links:
+    - url: https://hermes-agent.nousresearch.com/docs/skills
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://hermes-agent.nousresearch.com/docs/skills
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hermes-documentation
+  title: Hermes Documentation
+  description: >-
+    External reference: Official Nous Research documentation for Hermes Agent.
+    No OneMind installation or integration verified.
+  tags:
+    - reference
+    - hermes
+    - official
+  links:
+    - url: https://hermes-agent.nousresearch.com/docs/
+      title: External reference
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-url: https://hermes-agent.nousresearch.com/docs/
+    onemind.io/launcher-category: Hermes Ecosystem
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: osiris
   title: OSIRIS
   description: >-
@@ -7399,41 +7532,7 @@ metadata:
     github.com/project-slug: onemindos/omos
     backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
     onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/operator,tailscale/ts-agent-console-8khxt,tailscale/ts-agent-tap-v7ktr,tailscale/ts-argocd-slkzh,tailscale/ts-cilium-gateway-gateway-default-bl4tw,tailscale/ts-cilium-gateway-gateway-default-hl5fh,tailscale/ts-grafana-ksprn,tailscale/ts-headlamp-4qwkc,tailscale/ts-hermes-dashboard-6thbx,tailscale/ts-heynats-p5dmf,tailscale/ts-hubble-tw85d,tailscale/ts-n8n-pmtds,tailscale/ts-nats-dashboard-242wv,tailscale/ts-nats-monitor-zh589,tailscale/ts-nats-ui-d6rrg,tailscale/ts-nats-ws-4q6bc,tailscale/ts-observer-pftsp,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-onemind-preview-shtd7,tailscale/ts-opencost-rqpmq,tailscale/ts-tak-tailnet-jtgn4
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: keda
-  tags:
-    - kubernetes
-  title: KEDA
-  description: Event-driven autoscaling.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-keda
-    argocd/instance-name: onemind-cloud
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: keda
-    backstage.io/kubernetes-namespace: keda
-    backstage.io/kubernetes-label-selector: app in
-      (keda-admission-webhooks,keda-operator,keda-operator-metrics-apiserver)
-    grafana/alert-label-selector: namespace=keda
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=keda
-    onemind.io/logs-query: '{k8s_namespace_name="keda"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/keda/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: keda/keda-admission-webhooks,keda/keda-operator,keda/keda-operator-metrics-apiserver
+    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/operator,tailscale/ts-agent-console-8khxt,tailscale/ts-agent-tap-v7ktr,tailscale/ts-argocd-slkzh,tailscale/ts-cilium-gateway-gateway-default-bl4tw,tailscale/ts-cilium-gateway-gateway-default-hl5fh,tailscale/ts-grafana-ksprn,tailscale/ts-headlamp-4qwkc,tailscale/ts-heynats-p5dmf,tailscale/ts-hubble-tw85d,tailscale/ts-n8n-pmtds,tailscale/ts-nats-dashboard-242wv,tailscale/ts-nats-monitor-zh589,tailscale/ts-nats-ui-d6rrg,tailscale/ts-nats-ws-4q6bc,tailscale/ts-observer-pftsp,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-onemind-preview-shtd7,tailscale/ts-opencost-rqpmq,tailscale/ts-tak-tailnet-jtgn4
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7752,39 +7851,6 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: developer-platform
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: tempo
-  tags:
-    - kubernetes
-  title: Tempo
-  description: Distributed tracing backend.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: monitoring-tempo
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: monitoring
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=tempo,app.kubernetes.io/name=tempo
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: monitoring
-    grafana/alert-label-selector: namespace=monitoring
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=monitoring&var-workload=tempo
-    onemind.io/logs-query: '{k8s_namespace_name="monitoring", k8s_pod_name=~"(tempo)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/tempo/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: monitoring/tempo
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: observability
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -8270,7 +8336,7 @@ metadata:
   tags:
     - kubernetes
   title: Legacy (onemind-hermes)
-  description: Hermes v0.22.5 instance with the single Legacy soul in the hermes
+  description: Hermes v0.22.7 instance with the single Legacy soul in the hermes
     namespace (Argo application platform-onemind-hermes); no NATS sidecar, no
     imported Legacy data.
   annotations:
@@ -8289,6 +8355,7 @@ metadata:
     grafana/alert-label-selector: namespace=hermes
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=onemind-hermes
     onemind.io/logs-query: '{k8s_namespace_name="hermes", k8s_pod_name=~"(onemind-hermes)-.*"}'
+    onemind.io/argocd-apps: platform-hermes-base,platform-onemind-hermes
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8328,8 +8395,7 @@ metadata:
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/services/onemind-mcp
     onemind.io/deployment-source: platform/hermes/mcp; platform/argocd/platform-onemind-mcp.yaml
     onemind.io/relationship-source: platform/hermes/mcp/deployment.yaml
-      (NATS_MONITOR_URL nats-0 monitoring port 8222, PROMETHEUS_URL);
-      platform/hermes/agent/onemind_mcp_config.py (Hermes Legacy client)
+      (NATS_MONITOR_URL nats-0 monitoring port 8222, PROMETHEUS_URL)
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8348,8 +8414,6 @@ spec:
   dependsOn:
     - component:default/nats
     - component:default/prometheus
-  dependencyOf:
-    - component:default/hermes-legacy
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -8663,6 +8727,35 @@ spec:
   system: gitops-delivery
   dependencyOf:
     - component:default/argocd
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-hermes-base
+  title: Argo CD application platform-hermes-base
+  description: Argo CD application platform-hermes-base, one of the applications
+    that deploy Legacy (onemind-hermes) (component:default/onemind-hermes, whose
+    primary application is platform-onemind-hermes).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-hermes-base
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-hermes-base
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: ai-agents
+  dependencyOf:
+    - component:default/onemind-hermes
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource

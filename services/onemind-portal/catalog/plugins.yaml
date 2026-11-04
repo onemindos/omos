@@ -110,8 +110,9 @@ kind: Resource
 metadata:
   name: host-hermes-plugin-volume
   title: Hermes plugin volume (/opt/data/plugins)
-  description: Persistent volume of the hermes-legacy pod where Hermes plugins are installed by hand (a GitOps gap,
-    see platform/hermes/agent/plugins/README.md). onemind-hermes (the successor instance) was still in Init on 2026-10-29.
+  description: Persistent volume of the onemind-hermes pod (PVC onemind-hermes-data). The nats-platform plugin is
+    installed on it by platform/hermes/onemind-hermes/nats/apply.sh, so it is a GitOps gap only for the install
+    step. The old hermes-legacy volume, which held hand-installed plugins, was retired in 2026-11.
   tags:
   - plugin-ecosystem
   - plugin-host
@@ -121,15 +122,16 @@ metadata:
     onemind.io/runs-on-kind: cluster
   annotations:
     onemind.io/runs-on-kind: cluster
-    onemind.io/plugin-source: platform/hermes/agent/plugins/README.md
-    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/agent/plugins/README.md
-    onemind.io/plugin-verified: 2026-10-29 (ls and cat in the hermes container)
+    onemind.io/plugin-source: platform/hermes/onemind-hermes/plugins/README.md
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/onemind-hermes/plugins/README.md
+    onemind.io/plugin-verified: 2026-11-01 nats-platform loaded in the onemind-hermes pod (retirement audit); other
+      plugins not read
 spec:
   type: plugin-host
   owner: group:default/onemind-admins
   system: onemind-plugin-ecosystem
   dependsOn:
-  - component:default/k8s-hermes-hermes-legacy-1e93d498
+  - component:default/k8s-hermes-onemind-hermes-2c3922bb
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -1176,9 +1178,9 @@ kind: Component
 metadata:
   name: hermes-plugin-nats-platform
   title: nats-platform
-  description: Synadia Agent Protocol gateway adapter (upstream synadia-ai/hermes-nats-gateway 0.1.2, Apache-2.0).
-    Registers an AgentService on agents.prompt.{agent}.{owner}.{session} and routes prompts into the gateway. Patched
-    by the init container (nats-platform-patch-cm.yaml).
+  description: Synadia Agent Protocol gateway adapter (upstream synadia-ai/hermes-nats-gateway 0.1.2, Apache-2.0,
+    vendored). Registers an AgentService on agents.prompt.{agent}.{owner}.{session} and routes prompts into the
+    gateway. Includes the approval-import fix that used to be a start-up hot-patch.
   tags:
   - plugin
   - hermes-plugin
@@ -1196,23 +1198,24 @@ metadata:
     onemind.io/plugin-status: live
     onemind.io/plugin-origin: upstream
     onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns hermes / pod hermes-legacy (container hermes)
+    onemind.io/runs-on: ns hermes / pod onemind-hermes (container hermes)
     onemind.io/plugin-subtype: platform
     onemind.io/connects-to: nats,hermes
     onemind.io/nats-subscribes: agents.prompt.*.*.*
     onemind.io/plugin-version: 0.1.2
-    onemind.io/plugin-source: platform/hermes/agent/nats-platform-patch-cm.yaml
-    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/agent/nats-platform-patch-cm.yaml
-    onemind.io/plugin-build: Upstream package installed by hand on the volume; patch applied at pod start
-    onemind.io/plugin-verified: 2026-10-29 plugin.yaml read in the pod
+    onemind.io/plugin-source: platform/hermes/onemind-hermes/plugins/nats-platform
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/onemind-hermes/plugins/nats-platform
+    onemind.io/plugin-build: Vendored in Git; copied onto the volume by platform/hermes/onemind-hermes/nats/apply.sh
+      and listed in plugins.enabled
+    onemind.io/plugin-verified: 2026-11-01 plugin loaded in the onemind-hermes pod (retirement audit)
 spec:
   type: hermes-plugin
   lifecycle: production
   owner: group:default/onemind-admins
   system: onemind-plugin-ecosystem
-  subcomponentOf: component:default/hermes-legacy
+  subcomponentOf: component:default/onemind-hermes
   dependsOn:
-  - component:default/hermes-legacy
+  - component:default/onemind-hermes
   - resource:default/host-hermes-plugin-volume
   - resource:default/nats-subject-agents-prompt
   consumesApis:
@@ -1225,41 +1228,43 @@ metadata:
   title: nats-context
   description: Gives Hermes a live operational picture. Subscribes to the OneMind subject families, prepends a LIVE
     OPERATIONAL PICTURE block on every LLM call (pre_llm_call) and exposes 9 NATS tools (publish, request, peek,
-    JetStream fetch, KV get/put/list, server info, list streams). Source is not in this repo (probably onemindos/hermes-plugin-nats-context).
+    JetStream fetch, KV get/put/list, server info, list streams). Vendored in Git (platform/hermes/onemind-hermes/plugins/nats-context)
+    but not enabled on onemind-hermes until the raw-feed and generic nats_publish decisions are made.
   tags:
   - plugin
   - hermes-plugin
-  - live
+  - parked
   - cluster
   - nats
   labels:
     onemind.io/plugin-type: hermes-plugin
-    onemind.io/plugin-status: live
+    onemind.io/plugin-status: parked
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/pillar: so
   annotations:
     onemind.io/plugin-type: hermes-plugin
-    onemind.io/plugin-status: live
+    onemind.io/plugin-status: parked
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns hermes / pod hermes-legacy (container hermes)
+    onemind.io/runs-on: ns hermes / pod onemind-hermes (not enabled)
     onemind.io/plugin-subtype: standalone
     onemind.io/connects-to: nats,hermes
     onemind.io/nats-publishes: cmd.>
     onemind.io/nats-subscribes: tak.cot.>,ent.>,tel.>,det.>,evt.>,intel.>,cmd.>,svc.bridge.>,agents.hb.>
     onemind.io/plugin-version: 1.0.0
-    onemind.io/plugin-source: not in this repository
-    onemind.io/plugin-build: Installed by hand on the plugin volume; source repo unconfirmed
-    onemind.io/plugin-verified: 2026-10-29 plugin.yaml read in the pod
+    onemind.io/plugin-source: platform/hermes/onemind-hermes/plugins/nats-context
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/onemind-hermes/plugins/nats-context
+    onemind.io/plugin-build: Vendored in Git; installed only with nats/apply.sh --with-context
+    onemind.io/plugin-verified: 2026-11-01 vendored in Git, not in plugins.enabled
 spec:
   type: hermes-plugin
-  lifecycle: production
+  lifecycle: parked
   owner: group:default/onemind-admins
   system: onemind-plugin-ecosystem
-  subcomponentOf: component:default/hermes-legacy
+  subcomponentOf: component:default/onemind-hermes
   dependsOn:
-  - component:default/hermes-legacy
+  - component:default/onemind-hermes
   - resource:default/host-hermes-plugin-volume
   - resource:default/nats-subject-cmd-all
   - resource:default/nats-subject-tak-cot-all
@@ -1279,174 +1284,44 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: hermes-plugin-tak-platform
-  title: tak-platform
-  description: TAK gateway adapter. Reads GeoChat CoT from tak.cot.out, routes it through the Hermes message pipeline
-    and injects replies on tak.cot.inject so Legacy appears as a TAK contact (callsign Legacy). Lives under /opt/data/plugins/platforms/.
-    Source is not in this repo (probably onemindos/hermes-plugin-tak).
-  tags:
-  - plugin
-  - hermes-plugin
-  - live
-  - cluster
-  - nats
-  labels:
-    onemind.io/plugin-type: hermes-plugin
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/pillar: so
-  annotations:
-    onemind.io/plugin-type: hermes-plugin
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns hermes / pod hermes-legacy (container hermes)
-    onemind.io/plugin-subtype: platform
-    onemind.io/connects-to: nats,tak-server,hermes
-    onemind.io/nats-publishes: tak.cot.inject
-    onemind.io/nats-subscribes: tak.cot.out
-    onemind.io/plugin-version: 0.1.0
-    onemind.io/plugin-source: not in this repository
-    onemind.io/plugin-build: Installed by hand on the plugin volume; source repo unconfirmed
-    onemind.io/plugin-verified: 2026-10-29 plugin.yaml read in the pod
-spec:
-  type: hermes-plugin
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: onemind-plugin-ecosystem
-  subcomponentOf: component:default/hermes-legacy
-  dependsOn:
-  - component:default/hermes-legacy
-  - component:default/tak-server
-  - resource:default/host-hermes-plugin-volume
-  - resource:default/nats-subject-tak-cot-inject
-  - resource:default/nats-subject-tak-cot-out
-  consumesApis:
-  - api:default/tak-cot-bridge
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: hermes-plugin-onemind-vision
   title: onemind-vision
   description: 'Sovereign intelligence fusion for Legacy: vision query, anomaly detection, SITREP generation and
-    course-of-action tools. Formerly onemind-maven (renamed, tools maven_* became vision_*).'
+    course-of-action tools. Formerly onemind-maven (renamed, tools maven_* became vision_*). Source only: it is
+    not installed on onemind-hermes.'
   tags:
   - plugin
   - hermes-plugin
-  - live
+  - parked
   - cluster
   labels:
     onemind.io/plugin-type: hermes-plugin
-    onemind.io/plugin-status: live
+    onemind.io/plugin-status: parked
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/pillar: so
   annotations:
     onemind.io/plugin-type: hermes-plugin
-    onemind.io/plugin-status: live
+    onemind.io/plugin-status: parked
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns hermes / pod hermes-legacy (container hermes)
+    onemind.io/runs-on: ns hermes (not installed)
     onemind.io/plugin-subtype: standalone
     onemind.io/connects-to: hermes,nats
     onemind.io/plugin-version: 1.0.0
-    onemind.io/plugin-source: platform/hermes/agent/plugins/onemind-vision
-    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/agent/plugins/onemind-vision
-    onemind.io/plugin-build: Copied by hand to the plugin volume; the Git copy is byte-identical to the live one
-      (README in the same directory)
-    onemind.io/plugin-verified: 2026-10-29 plugin.yaml read in the pod
+    onemind.io/plugin-source: platform/hermes/onemind-hermes/plugins/onemind-vision
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/onemind-hermes/plugins/onemind-vision
+    onemind.io/plugin-build: Source in Git; no install step. The copy that ran on the retired hermes-legacy volume
+      was byte-identical
+    onemind.io/plugin-verified: 2026-11-01 not on the onemind-hermes volume (retirement audit)
 spec:
   type: hermes-plugin
-  lifecycle: production
+  lifecycle: parked
   owner: group:default/onemind-admins
   system: onemind-plugin-ecosystem
-  subcomponentOf: component:default/hermes-legacy
+  subcomponentOf: component:default/onemind-hermes
   dependsOn:
-  - component:default/hermes-legacy
-  - resource:default/host-hermes-plugin-volume
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: hermes-plugin-memory-wiki
-  title: memory-wiki
-  description: 'Dashboard-only plugin (upstream NousResearch/hermes-memory-wiki, MIT): browsable subject pages and
-    daily logs from session history plus a read-only audit of persistent memory. Registers no tools or hooks.'
-  tags:
-  - plugin
-  - hermes-plugin
-  - live
-  - cluster
-  labels:
-    onemind.io/plugin-type: hermes-plugin
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: upstream
-    onemind.io/runs-on-kind: cluster
-    onemind.io/pillar: so
-  annotations:
-    onemind.io/plugin-type: hermes-plugin
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: upstream
-    onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns hermes / pod hermes-legacy (Hermes dashboard)
-    onemind.io/plugin-subtype: dashboard
-    onemind.io/connects-to: hermes
-    onemind.io/plugin-version: 1.0.0
-    onemind.io/plugin-source: not in this repository
-    onemind.io/plugin-build: Upstream, installed by hand on the plugin volume
-    onemind.io/plugin-verified: 2026-10-29 plugin.yaml read in the pod
-spec:
-  type: hermes-plugin
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: onemind-plugin-ecosystem
-  subcomponentOf: component:default/hermes-legacy
-  dependsOn:
-  - component:default/hermes-legacy
-  - resource:default/host-hermes-plugin-volume
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: hermes-plugin-project-stewardship
-  title: hermes-project-stewardship
-  description: Durable project ownership for Hermes agent fleets (upstream Sahil-SS9/hermes-project-stewardship
-    0.5.3, Apache-2.0). Tools steward_status, steward_run_cycle, steward_propose_initiative. Found on the volume
-    but missing from platform/hermes/agent/plugins/README.md.
-  tags:
-  - plugin
-  - hermes-plugin
-  - live
-  - cluster
-  labels:
-    onemind.io/plugin-type: hermes-plugin
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: upstream
-    onemind.io/runs-on-kind: cluster
-    onemind.io/pillar: so
-  annotations:
-    onemind.io/plugin-type: hermes-plugin
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: upstream
-    onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns hermes / pod hermes-legacy (container hermes)
-    onemind.io/plugin-subtype: standalone
-    onemind.io/connects-to: hermes
-    onemind.io/plugin-version: 0.5.3
-    onemind.io/plugin-source: not in this repository
-    onemind.io/plugin-build: Upstream, installed by hand on the plugin volume
-    onemind.io/plugin-verified: 2026-10-29 plugin.yaml read in the pod
-spec:
-  type: hermes-plugin
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: onemind-plugin-ecosystem
-  subcomponentOf: component:default/hermes-legacy
-  dependsOn:
-  - component:default/hermes-legacy
-  - resource:default/host-hermes-plugin-volume
+  - component:default/onemind-hermes
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -3148,51 +3023,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: mcp-adapter-paperclip
-  title: 'MCP adapter: paperclip'
-  description: Companies, issues and backlog task creation. Adapter implemented but disabled in apps.yaml until
-    the blocker is cleared.
-  tags:
-  - plugin
-  - mcp-adapter
-  - parked
-  - cluster
-  - mcp
-  labels:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: parked
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/pillar: so
-  annotations:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: parked
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/plugin-subtype: paperclip
-    onemind.io/connects-to: paperclip,onemind-mcp,litellm
-    onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
-    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
-    onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
-    onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
-      not probed
-    onemind.io/mcp-app-id: paperclip
-    onemind.io/mcp-url-env: PAPERCLIP_URL
-    onemind.io/blocked-reason: Dedicated company-scoped Paperclip agent API token and authenticated acceptance required;
-      do not reuse browser sessions or provider keys.
-spec:
-  type: mcp-adapter
-  lifecycle: parked
-  owner: group:default/onemind-admins
-  system: onemind-plugin-ecosystem
-  subcomponentOf: component:default/onemind-mcp
-  dependsOn:
-  - component:default/k8s-hermes-onemind-mcp-07887746
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: mcp-adapter-grafana
   title: 'MCP adapter: grafana'
   description: Dashboard discovery and observability navigation. Read-only adapter served by onemind-mcp and reached
@@ -3233,50 +3063,6 @@ spec:
   dependsOn:
   - component:default/k8s-hermes-onemind-mcp-07887746
   - component:default/grafana
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: mcp-adapter-tempo
-  title: 'MCP adapter: tempo'
-  description: Distributed traces by trace identifier. Read-only adapter served by onemind-mcp and reached by Hermes
-    through the LiteLLM MCP hub.
-  tags:
-  - plugin
-  - mcp-adapter
-  - live
-  - cluster
-  - mcp
-  labels:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/pillar: so
-  annotations:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/plugin-subtype: tempo
-    onemind.io/connects-to: tempo,onemind-mcp,litellm
-    onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
-    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
-    onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
-    onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
-      not probed
-    onemind.io/mcp-app-id: tempo
-    onemind.io/mcp-url-env: TEMPO_URL
-spec:
-  type: mcp-adapter
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: onemind-plugin-ecosystem
-  subcomponentOf: component:default/onemind-mcp
-  dependsOn:
-  - component:default/k8s-hermes-onemind-mcp-07887746
-  - component:default/tempo
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component

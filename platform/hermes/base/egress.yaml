@@ -1,7 +1,11 @@
 # Tailscale egress: how Hermes reaches machines on the tailnet. Each Service makes the Tailscale operator run a
 # proxy (ProxyGroup "egress") to one tailnet address; Hermes connects to <name>.hermes.svc.cluster.local.
-# The operator fills in spec.externalName; platform-legacy ignores differences in that field so the two never fight.
-# Access is also limited by the tailnet policy (platform/core/policy.hujson): each target and port must be allowed there.
+# The operator fills in spec.externalName; platform-hermes-base ignores differences in that field (ignoreDifferences).
+# Access is limited twice: the tailnet policy (platform/core/policy.hujson) allows each target and port, and the
+# onemind-hermes NetworkPolicy (platform/hermes/onemind-hermes/network.yaml) allows the pod to reach each proxy pod
+# (labels tailscale.com/parent-resource=<Service name>) on that port only. A new Service needs both, in one PR.
+# Reach each at <name>.hermes.svc.cluster.local:<port>. These are the ports the devices really offer; logins
+# (SSH keys, ADB pairing, Home Assistant token) are not here.
 apiVersion: v1
 kind: Service
 metadata:
@@ -58,3 +62,22 @@ spec:
       port: 8123
       protocol: TCP
       targetPort: 8123
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omos-dell-zeus
+  namespace: hermes
+  labels:
+    tailscale.com/proxy-group: egress
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+    tailscale.com/tailnet-ip: 100.124.33.13    # Zeus's Windows laptop: OpenSSH Server (owner must enable it)
+spec:
+  type: ExternalName
+  externalName: placeholder.tailscale.svc.cluster.local   # the operator replaces this with the proxy's name
+  ports:
+    - name: ssh
+      port: 22
+      protocol: TCP
+      targetPort: 22

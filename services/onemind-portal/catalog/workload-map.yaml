@@ -35,12 +35,8 @@ workloads:
   github-runner/github-runner: component:default/platform-core
   github-runner/github-runner-hermes: component:default/platform-core
   hermes/onemind-hermes: component:default/onemind-hermes
-  hermes/hermes-legacy: component:default/hermes-legacy
   hermes/onemind-mcp: component:default/onemind-mcp
   ingress-nginx/ingress-nginx-controller: component:default/ingress-nginx
-  keda/keda-admission-webhooks: component:default/keda
-  keda/keda-operator: component:default/keda
-  keda/keda-operator-metrics-apiserver: component:default/keda
   kube-system/clickhouse-operator: component:default/clickhouse
   kube-system/coredns: component:default/kubernetes-system
   kube-system/hubble-relay: component:default/hubble-ui
@@ -65,7 +61,6 @@ workloads:
   monitoring/monitoring-kube-prometheus-operator: component:default/prometheus
   monitoring/monitoring-kube-state-metrics: component:default/prometheus
   monitoring/prometheus-monitoring-kube-prometheus-prometheus: component:default/prometheus
-  monitoring/tempo: component:default/tempo
   n8n/n8n: component:default/n8n
   n8n/postgres: component:default/n8n
   nats/agent-web-ui: component:default/agent-web-ui
@@ -109,7 +104,6 @@ workloads:
   tailscale/ts-cilium-gateway-gateway-default-hl5fh: component:default/tailscale-operator
   tailscale/ts-grafana-ksprn: component:default/tailscale-operator
   tailscale/ts-headlamp-4qwkc: component:default/tailscale-operator
-  tailscale/ts-hermes-dashboard-6thbx: component:default/tailscale-operator
   tailscale/ts-heynats-p5dmf: component:default/tailscale-operator
   tailscale/ts-hubble-tw85d: component:default/tailscale-operator
   tailscale/ts-n8n-pmtds: component:default/tailscale-operator
@@ -161,7 +155,6 @@ argoApplications:
   ecosystem-cnpg: component:default/cloudnative-pg
   ecosystem-dapr: component:default/dapr
   ecosystem-falco: component:default/falco
-  ecosystem-keda: component:default/keda
   ecosystem-kyverno: component:default/kyverno
   ecosystem-litellm: component:default/litellm
   ecosystem-ollama: component:default/ollama
@@ -176,7 +169,6 @@ argoApplications:
   monitoring-kube-prometheus-stack: component:default/prometheus
   monitoring-loki: component:default/loki
   monitoring-otel-collector: component:default/opentelemetry-collector
-  monitoring-tempo: component:default/tempo
   platform-agent-fabric: component:default/agent-web-ui
   platform-auth-helm: component:default/authentik
   platform-auth-infra: component:default/authentik
@@ -194,7 +186,6 @@ argoApplications:
   platform-onemind-hermes: component:default/onemind-hermes
   platform-onemind-mcp: component:default/onemind-mcp
   platform-kube: component:default/headlamp
-  platform-legacy: component:default/hermes-legacy
   platform-matrix: component:default/matrix-synapse
   platform-metrics-server: component:default/kubernetes-system
   platform-monitoring: component:default/grafana

@@ -50,12 +50,14 @@ class OpenApiTargets(unittest.TestCase):
                 vol = next(v for v, c in volumes.items() if c == cm["metadata"]["name"])
                 self.assertEqual(path, f"{mounts[vol]['mountPath']}/openapi.yaml")
                 self.assertTrue(mounts[vol]["readOnly"])
-                # Backing secret and egress exist.
-                for ref in (frag.get("env") or {}).values():
-                    sealed = yaml.safe_load((BASE / f"manifests/gateway-target-{name}.sealedsecret.yaml").read_text())
-                    self.assertEqual(sealed["metadata"]["name"], ref["secret"])
-                    self.assertIn(ref["key"], sealed["spec"]["encryptedData"])
-                self.assertTrue((BASE / f"manifests/egress-{name}.yaml").exists())
+                # Backing secret and egress exist (a target with `enabled_by` and no sealed file yet keeps its egress in
+                # pending/<name>/ until the keys session activates it; test_gitops_tool_gateway_targets.py covers that).
+                if all((BASE / f"manifests/{s}.sealedsecret.yaml").exists() for s in frag.get("enabled_by") or []):
+                    for ref in (frag.get("env") or {}).values():
+                        sealed = yaml.safe_load((BASE / f"manifests/gateway-target-{name}.sealedsecret.yaml").read_text())
+                        self.assertEqual(sealed["metadata"]["name"], ref["secret"])
+                        self.assertIn(ref["key"], sealed["spec"]["encryptedData"])
+                    self.assertTrue((BASE / f"manifests/egress-{name}.yaml").exists())
 
     def test_mediamtx_never_exposes_config_endpoints(self):
         cm = yaml.safe_load((BASE / "manifests/openapi-mediamtx.configmap.yaml").read_text())

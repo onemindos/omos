@@ -1,0 +1,13 @@
+{
+  "keep_in": [
+    { "id": "sim-range", "circle": { "lat": 0.0, "lon": 0.0, "radius_m": 1000 } }
+  ],
+  "keep_out": [
+    { "id": "no-fly-north-east", "circle": { "lat": 0.005, "lon": 0.005, "radius_m": 150 } },
+    { "id": "no-fly-box", "polygon": [
+      { "lat": -0.004, "lon": -0.004 }, { "lat": -0.004, "lon": -0.003 },
+      { "lat": -0.003, "lon": -0.003 }, { "lat": -0.003, "lon": -0.004 }
+    ] }
+  ],
+  "max_hae_m": 300
+}

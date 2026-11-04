@@ -1,5 +1,10 @@
 # hermes-legacy → onemind-hermes migration: inventory and order
 
+> **Historical (2026-11-03).** The migration is finished: `hermes-legacy` and its Application `platform-legacy` were removed
+> from Git, `onemind-hermes` holds the Legacy NATS identity, and the Git-only doctrine moved to `platform/hermes/doctrine/`.
+> What was verified, kept and dropped is in [`RETIREMENT-AUDIT.md`](RETIREMENT-AUDIT.md). The text below is the working record
+> as it stood during the migration; paths such as `platform/hermes/agent/` and `platform/hermes/bridge/` no longer exist.
+
 Read-only inventory of `hermes-legacy` taken 2026-10-29 from the live pod
 (`/opt/data`, `state.db`, `config.yaml`, the `nats-leaf` monitor). It records
 what Legacy actually uses, so the migration copies that and nothing else. See
@@ -42,7 +47,7 @@ Google client after cutover; recreate needed ones as SealedSecrets.
 
 ## Skills not shipped with onemind-hermes
 
-onemind-hermes (Hermes v0.22.5) bundles 58 skills. Legacy has about 104 non-archived skills that
+onemind-hermes (Hermes v0.22.7) bundles 58 skills. Legacy has about 104 non-archived skills that
 onemind-hermes lacks. They fall into three groups:
 
 **OneMind / Zeus authored: candidates to bring over (review each).**
@@ -74,10 +79,10 @@ Personal/ops: `mac-*` (4), `s24-*` (2), `android-adb-management`,
 `onemind-xr-platform`, `onemind-product-strategy`, `merge-reconciler`,
 `hermes-mobile-desktop-sync`, and the 38 under `.archive/`.
 
-Skills that change often should live in Git (`platform/hermes/agent/`) and be
+Skills that change often should live in Git (`platform/hermes/skills/`) and be
 seeded, not hand-copied from the volume.
 
-## Legacy-only wiring (in `platform/hermes/agent/deployment.yaml`)
+## Legacy-only wiring (was in `platform/hermes/agent/deployment.yaml`, removed 2026-11-03)
 
 - `nats-leaf` sidecar with its own bus identity (`hermes-leaf-conf`).
 - `patch_nats_platform.py` applied to the gateway at startup (code hot-patch).
@@ -96,7 +101,7 @@ Each step ends with an observed check on onemind-hermes. Legacy keeps running un
    dashboard and from the Hermes desktop app pointed at onemind-hermes. This replaces
    Legacy's main traffic.
 2. **Identity.** Seed the Legacy `SOUL.md` and doctrine from Git
-   (`platform/hermes/agent/agents/`, `doctrine/`). onemind-hermes runs a single
+   (`platform/hermes/doctrine/agents/`, `doctrine/`). onemind-hermes runs a single
    soul, so the four profile souls are not seeded as separate agents. Copy
    `MEMORY.md` and `USER.md` after reading them.
 3. **OneMind MCP.** Give onemind-hermes its own `onemind-mcp` token (SealedSecret), allow
@@ -110,13 +115,14 @@ Each step ends with an observed check on onemind-hermes. Legacy keeps running un
    budget that avoids the October `tokens_per_day` failures; enable Telegram as
    their delivery target.
 7. **NATS cutover.** Prepared in Git (this section's PR): `nats-platform` and `nats-context`
-   vendored into `platform/hermes/agent/plugins/` without the startup hot-patch, onemind-hermes a
+   vendored into `platform/hermes/onemind-hermes/plugins/` without the startup hot-patch, onemind-hermes a
    **direct client** of the cluster bus (no leaf sidecar), identity `agents.*.hermes.zeus.legacy` guarded
    against a double presence. The order of the switch, the checks and the rollback are in
    [NATS inventory and cutover](#nats-inventory-and-cutover-step-7) below. `tak-platform` is not ported.
 8. **Retire Legacy.** Keep a VolSync snapshot of `hermes-data`, then, with
    owner approval, remove the Legacy Deployment and Application. Rotate the
-   credential files listed above.
+   credential files listed above. **Done in Git on 2026-11-03** (the removal PR): the leaf rule in `nats-leafnodes`, the
+   `hermes-leaf-conf` Secret, the VolSync source for `hermes-data` and the Application are gone; credential rotation is still open.
 
 ## NATS inventory and cutover (step 7)
 
@@ -139,7 +145,7 @@ listener: the earlier "684k in, 5.6k out" is the same picture seen from the hub.
 
 The hot-patch (`patch_nats_platform.py`, `nats-platform-patch-cm.yaml`) changes one thing in `adapter.py`: it moves
 `set_current_session_key` and `reset_current_session_key` from `tools.approval` to `tools.approval_context`.
-Hermes v0.22.5 has them **only** in `tools.approval_context` and has **no native NATS platform**
+Hermes v0.22.7 (and v0.22.5) has them **only** in `tools.approval_context` and has **no native NATS platform**
 (`grep` over `gateway/`, `hermes_cli/`, `plugins/`, `tools/`, `agent/` finds none), so the plugin is still needed
 and the fix is still needed. It is now a normal line in the vendored `adapter.py`, not a patch applied at start.
 
@@ -147,10 +153,10 @@ and the fix is still needed. It is now a normal line in the vendored `adapter.py
 
 | Item | Decision |
 |---|---|
-| `nats-platform` | Vendored to `platform/hermes/agent/plugins/nats-platform/` (runtime files, Apache-2.0 `LICENSE`). Three small changes, listed in its `ONEMIND-CHANGES.md`: the approval import, credentials and TLS from the environment, and refusing a duplicate identity. Loads through the real v0.22.5 plugin discovery in the live onemind-hermes image (checked read-only in `/tmp`, nothing kept) |
-| `nats-context` | Vendored to `platform/hermes/agent/plugins/nats-context/`, with `conn.py` so it can use the same credentials. **Not enabled by default** (`apply.sh --with-context`): it takes the raw feeds into the model prompt and gives it a generic `nats_publish`, which PR #562 (no raw feeds, no `cmd.*` for Hermes) and PR #564 (`nats_publish` retired behind a flag, `onemind-bus` tools instead) remove on purpose. Owner decision below |
+| `nats-platform` | Vendored to `platform/hermes/onemind-hermes/plugins/nats-platform/` (runtime files, Apache-2.0 `LICENSE`). Three small changes, listed in its `ONEMIND-CHANGES.md`: the approval import, credentials and TLS from the environment, and refusing a duplicate identity. Loads through the real v0.22.5 plugin discovery in the live onemind-hermes image (checked read-only in `/tmp`, nothing kept) |
+| `nats-context` | Vendored to `platform/hermes/onemind-hermes/plugins/nats-context/`, with `conn.py` so it can use the same credentials. **Not enabled by default** (`apply.sh --with-context`): it takes the raw feeds into the model prompt and gives it a generic `nats_publish`, which PR #562 (no raw feeds, no `cmd.*` for Hermes) and PR #564 (`nats_publish` retired behind a flag, `onemind-bus` tools instead) remove on purpose. Owner decision below |
 | `platforms/tak-platform` | **Not ported.** It hears nothing today, it needs `tak_admin.pem` on the volume (which this document says not to copy) and it disables certificate verification. PR #585 replaces it with a TAK-native client using its own certificate. It stays on Legacy until then, so Legacy keeps its beacon and nothing is lost that worked |
-| `onemind-maven` | Is `onemind-vision` (renamed), already in Git at `platform/hermes/agent/plugins/onemind-vision/`. It makes no NATS connection (the only "NATS" in it is a string in a prompt). Not part of this step |
+| `onemind-maven` | Is `onemind-vision` (renamed), already in Git at `platform/hermes/onemind-hermes/plugins/onemind-vision/`. It makes no NATS connection (the only "NATS" in it is a string in a prompt). Not part of this step |
 | `memory-wiki`, `hermes-project-stewardship` | Third party, no NATS. Not part of this step |
 
 ### How onemind-hermes connects
@@ -222,7 +228,7 @@ guard), prompt `agents.prompt.hermes.zeus.legacy-next`, then set it back.
 - The shared `onemind` credential is readable by the agent's shell (the terminal backend is `local`). PR #562's
   `hermes` user is the fix; until then this is the same exposure Legacy had through `hermes-env`.
 - After Legacy is retired (step 8): delete the Legacy rule in the `nats-leafnodes` policy and the `hermes-leaf-conf`
-  Secret, and stop `leaf_tak` being shared.
+  Secret, and stop `leaf_tak` being shared. The rule and the Secret left Git on 2026-11-03; `leaf_tak` is still the TAK leaf's.
 
 ## Chat channels (Telegram and Matrix), moved 2026-10-29
 

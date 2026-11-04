@@ -18,6 +18,9 @@
 #   out of band (kubectl patch, carries credentials) and stays untouched.
 # - kv-feed-config.yaml is excluded: the live bucket was created by an app (R1)
 #   and has no CR. Adopting it needs the full live config first (see that file).
+# - ent.yaml and kv-entity-correlation.yaml are owner PROPOSALS for the entity
+#   service (docs/proposals/2026-10-29-entity-service-ent-stream.md) and stay
+#   excluded until the owner approves them.
 # ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -34,7 +37,7 @@ spec:
     path: platform/nats/streams
     directory:
       recurse: false
-      exclude: "kv-feed-config.yaml"
+      exclude: "{kv-feed-config.yaml,ent.yaml,kv-entity-correlation.yaml}"
   destination:
     server: https://kubernetes.default.svc
     namespace: nats

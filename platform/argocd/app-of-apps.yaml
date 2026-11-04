@@ -16,8 +16,7 @@
 #         │             platform-takserver       TAK Server overlay (LB, NATS leaf, config)
 #         │             platform-takml           TAK ML vision pipeline (inference → CoT)
 #         │ AUTH        platform-auth-infra      Authentik Postgres + Redis + ingress + secret
-#  Wave 3 │ AI          platform-legacy          Hermes AI agent + copilot bridge (old instance, being retired)
-#         │             platform-onemind-hermes  new Hermes instance (persona Legacy)
+#  Wave 3 │ AI          platform-onemind-hermes  new Hermes instance (persona Legacy)
 #         │             platform-onemind-mcp     onemind-mcp tool server (tool gateway target)
 #         │ DATA        platform-observability   ClickHouse (Altinity)
 #         │             platform-redpanda        Redpanda Connect pipelines

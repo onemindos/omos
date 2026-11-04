@@ -16,10 +16,6 @@ applications:
     apps:
     - onemind_core
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  ecosystem-keda:
-    apps:
-    - onemind_core
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   ecosystem-litellm:
     apps:
     - litellm
@@ -66,11 +62,7 @@ applications:
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   monitoring-otel-collector:
     apps:
-    - tempo
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  monitoring-tempo:
-    apps:
-    - tempo
+    - loki
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-agent-fabric:
     apps:
@@ -144,10 +136,6 @@ applications:
     apps:
     - kubernetes
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  platform-legacy:
-    apps:
-    - agent_fabric
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-matrix:
     apps:
     - matrix
@@ -181,6 +169,10 @@ applications:
     - data_backups
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-omos:
+    apps:
+    - onemind_core
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-omos-entity:
     apps:
     - onemind_core
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.

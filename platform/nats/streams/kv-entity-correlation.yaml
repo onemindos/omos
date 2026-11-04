@@ -1,0 +1,18 @@
+# PROPOSAL (owner approval required): the entity service's own bucket.
+# Excluded from the platform-nats-streams Application until the owner approves
+# docs/proposals/2026-10-29-entity-service-ent-stream.md (BUS-DESIGN section 5).
+# Holds the single-active-replica lease (key `lease.entity-service`, compare-and-set, the
+# value carries its own expiry) and, later, manual correlation and `decorrelated_from`.
+# The service fails at start if this bucket does not exist; it never creates buckets.
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-entity-correlation
+  namespace: nats
+spec:
+  bucket: entity-correlation
+  storage: file
+  replicas: 3
+  history: 5
+  maxBytes: 67108864
+  preventDelete: true

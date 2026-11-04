@@ -129,14 +129,14 @@ spec:
       interval: 30s
       rules:
         - alert: HermesDown
-          expr: kube_deployment_status_replicas_available{namespace="hermes",deployment="hermes-legacy"} == 0
+          expr: kube_deployment_status_replicas_available{namespace="hermes",deployment="onemind-hermes"} == 0
           for: 2m
           labels:
             severity: warning
             service: hermes
           annotations:
             summary: "Hermes AI agent is down"
-            description: "hermes-legacy deployment has no available replicas. AI brain is offline."
+            description: "onemind-hermes deployment (persona Legacy) has no available replicas. AI brain is offline."
 
         - alert: OneMindMCPDown
           expr: kube_deployment_status_replicas_available{namespace="hermes",deployment="onemind-mcp"} == 0

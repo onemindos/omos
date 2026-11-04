@@ -36,7 +36,7 @@ spec:
                       - onemind-ecosystem-cpu
       initContainers:
         - name: initial-config
-          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          image: nousresearch/hermes-agent:v0.22.7@sha256:e6d81ae52ebf6a43efa529701405509f20054ba818f179ddd748bed4f8af584c
           command:
             - /opt/hermes/.venv/bin/python3
             - -c
@@ -70,6 +70,19 @@ spec:
               subprocess.run([
                   sys.executable, '/zoho/reconcile.py', '--home', '/opt/data',
                   '--manifest', '/zoho/servers.json',
+              ], check=True)
+
+              # Whop owns exactly one public OAuth server definition; tokens stay on PVC.
+              subprocess.run([
+                  sys.executable, '/whop/reconcile.py', '--home', '/opt/data',
+                  '--manifest', '/whop/server.json',
+              ], check=True)
+
+              # Todoist owns only its public OAuth definition; never read or replace tokens.
+              # Keep this outside the empty-volume seed guard, after ownership repair.
+              subprocess.run([
+                  sys.executable, '/todoist/reconcile.py', '--home', '/opt/data',
+                  '--manifest', '/todoist/server.json',
               ], check=True)
 
               # Cron assets are Git-owned, so unlike config.yaml they are refreshed on every
@@ -115,6 +128,12 @@ spec:
             - name: zoho-config
               mountPath: /zoho
               readOnly: true
+            - name: whop-config
+              mountPath: /whop
+              readOnly: true
+            - name: todoist-config
+              mountPath: /todoist
+              readOnly: true
         # Python packages the NATS gateway platform needs and the Hermes image lacks (nats-py,
         # nkeys and the Synadia agent SDK; pydantic and pynacl are already in the venv, so
         # --no-deps). Pinned with hashes in nats/gateway-deps.txt. The plugins add the directory to
@@ -124,7 +143,7 @@ spec:
         # A failed install does not stop the pod (Telegram, Matrix and the dashboard do not need it);
         # the NATS plugin simply cannot load and says so in the gateway log.
         - name: install-gateway-deps
-          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          image: nousresearch/hermes-agent:v0.22.7@sha256:e6d81ae52ebf6a43efa529701405509f20054ba818f179ddd748bed4f8af584c
           command:
             - sh
             - -c
@@ -172,7 +191,7 @@ spec:
               mountPath: /tmp
       containers:
         - name: hermes
-          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          image: nousresearch/hermes-agent:v0.22.7@sha256:e6d81ae52ebf6a43efa529701405509f20054ba818f179ddd748bed4f8af584c
           args: [gateway, run]
           securityContext:
             allowPrivilegeEscalation: false
@@ -253,9 +272,8 @@ spec:
               value: onemind-hermes-nats-platform
             - name: NATS_CONTEXT_CLIENT_NAME
               value: onemind-hermes-nats-context
-            # Identity on the fabric: agents.{prompt,status,hb}.hermes.zeus.legacy, the one hermes-legacy
-            # holds today. REFUSE_DUPLICATE keeps this instance down while hermes-legacy still holds it
-            # (MIGRATION.md, "NATS cutover").
+            # Identity on the fabric: agents.{prompt,status,hb}.hermes.zeus.legacy. This instance is the only
+            # holder since the old Hermes was retired (2026-11-03).
             - name: HERMES_NATS_AGENT
               value: hermes
             - name: HERMES_NATS_OWNER
@@ -323,6 +341,12 @@ spec:
         - name: zoho-config
           configMap:
             name: onemind-hermes-zoho
+        - name: whop-config
+          configMap:
+            name: onemind-hermes-whop
+        - name: todoist-config
+          configMap:
+            name: onemind-hermes-todoist
         - name: export
           secret:
             secretName: onemind-hermes-export

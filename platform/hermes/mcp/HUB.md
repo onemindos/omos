@@ -7,10 +7,11 @@
 > `http://agentgateway.tool-gateway.svc.cluster.local:8080/<group>/mcp` with `ONEMIND_GATEWAY_KEY`.
 > See [`docs/architecture/onemind-tool-gateway.md`](../../../docs/architecture/onemind-tool-gateway.md) (design),
 > [`docs/operations/tool-gateway.md`](../../../docs/operations/tool-gateway.md) (runbook) and
-> `platform/tool-gateway/`. `hermes-legacy` is unaffected: it talks to `onemind-mcp` directly.
+> `platform/tool-gateway/`.
 >
 > `onemind-mcp` (this directory: `apps.yaml`, `coverage.yaml`, Deployment, NetworkPolicy) still runs as the gateway's
-> `onemind` target and as `hermes-legacy`'s MCP server. The text below is the historical LiteLLM design.
+> `onemind` target. The old `hermes-legacy` instance, which used to call it directly, was removed from the repository on
+> 2026-11-03 together with its NetworkPolicy rule. The text below is the historical LiteLLM design.
 
 Historical status (2026-10-29): Verified against the running
 LiteLLM `v1.104.2` image (`ghcr.io/berriai/litellm`, digest `sha256:3d88bd75…`) on
@@ -162,8 +163,9 @@ mcp_servers:
 
 Caveat learned from Legacy (see "Legacy 401" below): with `gateway.multiplex_profiles: true`,
 Hermes resolves `${VAR}` only from the profile's `.env` / secret sources, never from container
-env. Either keep multiplexing off for onemind-hermes, or make sure the variable is in the
-profile's secret scope.
+env. Multiplexing cannot be turned off in Hermes v0.22.5 (`false` is rewritten to `true`), so make sure
+the variable is in the profile's secret scope (the role profiles' `.env`, see
+`onemind-hermes/README.md`).
 
 ### 4. Verify
 
@@ -207,7 +209,7 @@ kubectl -n hermes logs deploy/onemind-mcp   # audit lines per tool call (actor "
 - **Version pin.** Verified only against `v1.104.2`; `server_id` pinning, `auth_value` alias and
   `require_key_mcp_access_defined` are recent fields.
 
-## Legacy 401 (diagnosed 2026-10-29, not fixed)
+## Legacy 401 (diagnosed 2026-10-29; historical, the instance was retired 2026-11-03)
 
 `hermes-legacy` logs `MCP server 'onemind': … HTTP 401` every 5 minutes. The token is not stale:
 `ONEMIND_MCP_TOKEN` has the same length (64) and SHA-256 prefix in the `onemind-mcp-auth` Secret,

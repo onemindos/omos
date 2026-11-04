@@ -21,7 +21,7 @@ set -eu
 
 CTX="${KUBE_CONTEXT:-do-nyc3-omos-cloud}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
-PLUGINS="$HERE/../../agent/plugins"
+PLUGINS="$HERE/../plugins"
 
 kx() {
   kubectl --context "$CTX" -n hermes exec "$@"

@@ -126,6 +126,14 @@ def allow_expr(c: dict) -> str | None:
     return 'mcp.tool.target == "%s" && (%s)' % (c["target"], " || ".join(terms))
 
 
+def gated_allow_expr(c: dict) -> str | None:
+    """CEL for the destructive and physical tools of this target (visible on the execute route only), or None."""
+    terms = _name_term([n for cls in GATED for n in c[cls]])
+    if not terms:
+        return None
+    return 'mcp.tool.target == "%s" && (%s)' % (c["target"], " || ".join(terms))
+
+
 def has_gated(c: dict) -> bool:
     return bool(c["destructive"] or c["physical"])
 

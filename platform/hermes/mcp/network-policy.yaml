@@ -13,30 +13,7 @@ spec:
   - Ingress
   - Egress
   ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: hermes
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: hermes
-          onemind.io/agent: legacy
-    ports:
-    - protocol: TCP
-      port: 8000
-  # LiteLLM MCP gateway (platform/hermes/mcp/HUB.md); its egress is unrestricted.
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: onemind-ai
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: litellm
-          app.kubernetes.io/instance: litellm
-    ports:
-    - protocol: TCP
-      port: 8000
-  # Tool gateway (platform/tool-gateway), target `onemind`; replaces the LiteLLM rule in Phase 6.
+  # Tool gateway (platform/tool-gateway), target `onemind`. The LiteLLM MCP hub that used to call this pod was retired in Phase 6 (LiteLLM has 0 MCP servers and no call came from it).
   - from:
     - namespaceSelector:
         matchLabels:
@@ -132,17 +109,7 @@ spec:
     ports:
     - protocol: TCP
       port: 8080
-  # Owner-approved read-only apps (2026-10-29): Tempo and Grafana in monitoring.
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: monitoring
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: tempo
-    ports:
-    - protocol: TCP
-      port: 3200
+  # Owner-approved read-only app (2026-10-29): Grafana in monitoring.
   - to:
     - namespaceSelector:
         matchLabels:

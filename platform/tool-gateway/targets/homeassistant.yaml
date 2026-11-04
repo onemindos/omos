@@ -1,0 +1,15 @@
+# Home Assistant core "MCP Server" integration (/api/mcp) on the edge host, reached through the existing tailnet egress proxy.
+# Spike H1 is still open: the documented auth is OAuth 2.0 + PKCE. If a long-lived token is refused at /api/mcp, switch to the community
+# homeassistant-ai/ha-mcp (streamable HTTP, long-lived token, maintained: v9.1.0 on 2026-11-04) behind this same fragment.
+# Tools follow Assist exposure: expose NO lock, cover, alarm or siren entity until the execute gate is verified.
+name: homeassistant
+groups: [home]
+enabled_by: [gateway-target-homeassistant]
+env:
+  TARGET_HOMEASSISTANT_TOKEN: {secret: gateway-target-homeassistant, key: token}
+target:
+  mcp:
+    host: http://homeassistant-edge.tool-gateway.svc.cluster.local:8123/api/mcp
+  policies:
+    backendAuth:
+      key: "${TARGET_HOMEASSISTANT_TOKEN}"

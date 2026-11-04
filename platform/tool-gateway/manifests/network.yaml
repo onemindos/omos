@@ -1,5 +1,5 @@
 # Default deny for the whole namespace, then the gateway pod's base policy (ingress from Hermes and
-# Prometheus, DNS and trace egress). NetworkPolicies are additive: each backend adds its own
+# Prometheus, DNS egress). NetworkPolicies are additive: each backend adds its own
 # egress-<target>.yaml next to this file, so backend PRs never edit a shared file.
 # Egress ports are destination pod ports, after Service targetPort translation.
 apiVersion: networking.k8s.io/v1
@@ -27,7 +27,7 @@ spec:
       app.kubernetes.io/instance: agentgateway
   policyTypes: [Ingress, Egress]
   ingress:
-  # Only Hermes may call the gateway (hermes-legacy is not a client).
+  # Only Hermes may call the gateway (the retired hermes-legacy was never a client).
   - from:
     - namespaceSelector:
         matchLabels:
@@ -58,13 +58,3 @@ spec:
     ports:
     - {protocol: UDP, port: 53}
     - {protocol: TCP, port: 53}
-  # Traces: Tempo OTLP/gRPC.
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: monitoring
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: tempo
-    ports:
-    - {protocol: TCP, port: 4317}

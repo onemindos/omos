@@ -4,7 +4,7 @@
 
 ## What it does
 
-| From the repo (`platform/hermes/agent/`) | To the volume |
+| From the repo (the layout `seed.sh` expects; the soul is in `platform/hermes/doctrine/agents/`) | To the volume |
 |------------------------------------------|---------------|
 | `agents/legacy/SOUL.md` | `/opt/data/SOUL.md` |
 | `cron/jobs.json` | `/opt/data/cron/jobs.json` |
@@ -32,5 +32,5 @@ Today Git holds only the soul. The skills, the config template and the cron jobs
 To wire it in later:
 
 1. Make the identity files available at `/seed`, laid out as above. The soul and cron fit in a ConfigMap; skills and config do not (1 MiB limit), so use a small image built by CI from `platform/hermes/agent/` and pin it by digest.
-2. Add an init container to `platform/hermes/agent/deployment.yaml`, next to `install-gateway-deps`, that mounts `/seed` read-only and the `data` volume at `/opt/data` and runs `sh /seed.sh`. Because it never overwrites, it is safe on every start.
+2. Add an init container to `platform/hermes/onemind-hermes/deployment.yaml`, next to `install-gateway-deps`, that mounts `/seed` read-only and the `data` volume at `/opt/data` and runs `sh /seed.sh`. Because it never overwrites, it is safe on every start.
 3. Run the restore drill's empty-volume case once and compare with the live agent.
