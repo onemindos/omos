@@ -53,6 +53,7 @@ omos-bridge/
 ├── bridges/
 │   ├── mavlink/              ← MAVLink v2 drones/autopilots (gomavlib)
 │   ├── tak/                  ← TAK mesh gateway: SA multicast, TAK Protocol v0/v1 ↔ NATS
+│   ├── tak-client/           ← TAK Server streaming client (8089 mTLS) ↔ tak.cot.out / tak.cot.inject
 │   ├── homeassistant/        ← Home Assistant WebSocket API ↔ NATS
 │   ├── webhook/              ← HTTP POST → NATS (GitHub, Stripe, Twilio, etc.)
 │   └── mqtt/                 ← MQTT 3.1/5.0 ↔ NATS (IoT, sensors, HA devices)
