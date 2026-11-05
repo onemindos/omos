@@ -9,6 +9,7 @@ import adrPlugin from '@backstage-community/plugin-adr/alpha';
 import announcementsPlugin from '@backstage-community/plugin-announcements/alpha';
 import { assistantPlugin } from '@internal/plugin-onemind-assistant';
 import { authModule } from '@internal/plugin-onemind-auth';
+import { costPlugin } from '@internal/plugin-onemind-cost';
 import { missionsPlugin } from '@internal/plugin-onemind-missions';
 import { navModule } from '@internal/plugin-onemind-nav';
 import offlinePlugin from '@internal/plugin-onemind-offline';
@@ -51,6 +52,7 @@ export default createApp({
     homeModule,
     todayPlugin,
     livePlugin,
+    costPlugin,
     authModule,
     systemsPlugin,
     servicesModule,
