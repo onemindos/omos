@@ -1,0 +1,37 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 3 — MAKE SENSE / ACT (geofences and alerts)              sync-wave: "5"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-omos-geofence: the OneMind geofence and alert service (FEATURES D1, D6),
+# namespace omos.
+#
+# Covers: platform/omos/geofence/ (Deployment and the public-key ConfigMap; it reuses the
+# omos-nats-creds SealedSecret that platform-omos applies).
+#
+# MANUAL SYNC, zero retries. Do not sync until the prerequisites at the top of
+# platform/omos/geofence/deployment.yaml are met (entity service and ENT, owner rulings
+# D1-P1..D1-P4, policy public key, first image build and digest pin). Re-enable
+# automation only after a first rollout has been observed.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-omos-geofence
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/omos/geofence
+    directory:
+      recurse: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: omos
+  syncPolicy:
+    retry:
+      limit: 0

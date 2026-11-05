@@ -1,0 +1,82 @@
+name: Build geofence service
+# Tests the omos geofence and alert service (unit + integration against a disposable nats-server) on
+# every PR that touches it, and on main builds ghcr.io/onemindos/omos-geofence-service with
+# the tags sha-<commit> and the version in services/geofence/VERSION. The digest is uploaded as
+# an artifact; pin it in platform/omos/geofence/deployment.yaml.
+on:
+  push:
+    branches: [main]
+    paths:
+      - services/geofence/**
+      - services/schemas/map/**
+      - services/schemas/alert/**
+      - services/schemas/actions/zone.*
+      - .github/workflows/build-geofence-service.yml
+  pull_request:
+    paths:
+      - services/geofence/**
+      - services/schemas/map/**
+      - services/schemas/alert/**
+      - services/schemas/actions/zone.*
+      - .github/workflows/build-geofence-service.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: geofence-service-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/geofence
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
+        with:
+          go-version: "1.26.4"
+          cache: false
+      # The integration tests create ENT with per-message TTL (2.11+); 2.14.9 is the target
+      # server version in BUS-DESIGN section 4.1.
+      - name: Install nats-server
+        run: go install github.com/nats-io/nats-server/v2@v2.14.9
+      - name: Vet
+        run: go vet ./...
+      - name: Test (race)
+        run: NATS_SERVER_BIN="$(go env GOPATH)/bin/nats-server" go test -race -count=1 ./...
+  image:
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Read version
+        id: version
+        run: echo "version=$(tr -d '[:space:]' < services/geofence/VERSION)" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        id: image
+        with:
+          context: services/geofence
+          push: true
+          tags: |
+            ghcr.io/onemindos/omos-geofence-service:sha-${{ github.sha }}
+            ghcr.io/onemindos/omos-geofence-service:${{ steps.version.outputs.version }}
+          platforms: linux/amd64
+          cache-from: type=gha,scope=omos-geofence-service
+          cache-to: type=gha,mode=max,scope=omos-geofence-service
+      - name: Record image digest
+        run: printf '%s\n' '${{ steps.image.outputs.digest }}' > image-digest.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: omos-geofence-service-image
+          path: image-digest.txt
