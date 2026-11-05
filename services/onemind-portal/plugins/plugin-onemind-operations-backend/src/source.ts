@@ -11,6 +11,7 @@ export type SourceId =
   | 'nodes'
   | 'events'
   | 'cronjobs'
+  | 'policyreports'
   | 'uptime';
 
 /** ok: fetched just now (or within the cache window). stale: the fetch failed, last good data served. error: nothing to show. */

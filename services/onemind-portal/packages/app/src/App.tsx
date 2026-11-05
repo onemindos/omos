@@ -32,11 +32,13 @@ import { homeModule, todayPlugin } from '@internal/plugin-onemind-home';
 import { livePlugin } from '@internal/plugin-onemind-live';
 import { prometheusPlugin, prometheusApiModule } from './prometheusPlugin';
 import { catalogCompositionModule } from './catalogCompositionModules';
+import { kyvernoPolicyModule } from './kyvernoPolicy';
 import { systemRedirectsModule } from './systemRedirects';
 
 export default createApp({
   features: [
     catalogCompositionModule,
+    kyvernoPolicyModule,
     systemRedirectsModule,
     githubActionsPlugin,
     githubPullRequestsPlugin,
