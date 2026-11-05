@@ -26,6 +26,18 @@ rules:
   - n8n
   verbs:
   - get
+- apiGroups:
+  - aquasecurity.github.io
+  resources:
+  - clusterconfigauditreports
+  - clusterinfraassessmentreports
+  - clusterrbacassessmentreports
+  - clustersbomreports
+  - clustervulnerabilityreports
+  verbs:
+  - get
+  - list
+  - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
