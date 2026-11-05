@@ -18,6 +18,9 @@ jest.mock('@backstage/plugin-search', () => ({
   }),
   SearchModal: () => null,
 }));
+jest.mock('@backstage-community/plugin-shortcuts', () => ({
+  Shortcuts: () => <button type="button">Add Shortcuts</button>,
+}));
 jest.mock('./SidebarLogo', () => ({ SidebarLogo: () => null }));
 
 const item = (id: string, title: string, href: string) =>
@@ -91,6 +94,11 @@ describe('OneMindSidebar', () => {
     expect(screen.queryByText('DigitalOcean')).toBeNull();
     expect(screen.queryByText('Pillars')).toBeNull();
     expect(screen.queryByRole('link', { name: /Visualizer/ })).toBeNull();
+  });
+
+  it('offers personal shortcuts in the desktop sidebar', async () => {
+    await render({}, false);
+    expect(screen.getByRole('button', { name: 'Add Shortcuts' })).toBeTruthy();
   });
 
   it('shows flagged groups when their flags are on', async () => {

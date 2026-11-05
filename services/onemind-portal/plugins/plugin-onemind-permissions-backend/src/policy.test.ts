@@ -21,6 +21,20 @@ import {
   templateParameterReadPermission,
   templateStepReadPermission,
 } from '@backstage/plugin-scaffolder-common/alpha';
+import {
+  devToolsAdministerPermission,
+  devToolsConfigReadPermission,
+  devToolsExternalDependenciesReadPermission,
+  devToolsInfoReadPermission,
+} from '@backstage/plugin-devtools-common';
+import {
+  devToolsTaskSchedulerCreatePermission,
+  devToolsTaskSchedulerReadPermission,
+} from '@backstage/plugin-devtools-common/alpha';
+import {
+  unprocessedEntitiesDeletePermission,
+  unprocessedEntitiesReadPermission,
+} from '@backstage/plugin-catalog-unprocessed-entities-common';
 import { createOneMindPolicy, isOneMindAdmin } from './policy';
 
 const user = (admin: boolean): PolicyQueryUser => ({
@@ -146,6 +160,48 @@ describe('OneMind permission policy', () => {
     expect((await decide(write, user(true))).result).toBe(
       AuthorizeResult.ALLOW,
     );
+  });
+
+  describe('DevTools', () => {
+    const result = async (permission: Permission, who?: PolicyQueryUser) =>
+      (await decide(permission, who)).result;
+
+    test.each([
+      ['devtools.administer', devToolsAdministerPermission],
+      ['devtools.info', devToolsInfoReadPermission],
+      [
+        'devtools.external-dependencies',
+        devToolsExternalDependenciesReadPermission,
+      ],
+    ])('%s is admin only, although its action is read', async (_n, p) => {
+      expect(p.attributes.action).toBe('read');
+      expect(await result(p, user(true))).toBe(AuthorizeResult.ALLOW);
+      expect(await result(p, user(false))).toBe(AuthorizeResult.DENY);
+      expect(await result(p, undefined)).toBe(AuthorizeResult.DENY);
+    });
+
+    test.each([
+      ['devtools.config', devToolsConfigReadPermission],
+      ['devtools.scheduler.read', devToolsTaskSchedulerReadPermission],
+      ['devtools.scheduler.trigger', devToolsTaskSchedulerCreatePermission],
+    ])('%s is closed to everyone, administrators included', async (_n, p) => {
+      for (const who of [user(true), user(false), undefined]) {
+        expect(await result(p, who)).toBe(AuthorizeResult.DENY);
+      }
+    });
+  });
+
+  describe('catalog unprocessed entities', () => {
+    test.each([
+      ['read', unprocessedEntitiesReadPermission],
+      ['delete', unprocessedEntitiesDeletePermission],
+    ])('%s is admin only', async (_n, permission) => {
+      const result = async (who?: PolicyQueryUser) =>
+        (await decide(permission, who)).result;
+      expect(await result(user(true))).toBe(AuthorizeResult.ALLOW);
+      expect(await result(user(false))).toBe(AuthorizeResult.DENY);
+      expect(await result(undefined)).toBe(AuthorizeResult.DENY);
+    });
   });
 
   test('admin is exactly membership of group:default/onemind-admins', () => {

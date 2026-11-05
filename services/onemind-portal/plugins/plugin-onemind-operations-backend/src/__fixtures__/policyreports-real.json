@@ -1,0 +1,2026 @@
+[
+ {
+  "metadata": {
+   "name": "0880b7db-4371-46e2-b587-2d6f54a25368",
+   "namespace": "backstage"
+  },
+  "scope": {
+   "kind": "CronJob",
+   "name": "backup-postgres-backstage",
+   "namespace": "backstage"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-cronjob-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-cronjob-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-cronjob-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-cronjob-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-cronjob-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-cronjob-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "61ab6b07-7b6b-4a4c-9e25-4c1758a8418b",
+   "namespace": "backstage"
+  },
+  "scope": {
+   "kind": "Deployment",
+   "name": "backstage",
+   "namespace": "backstage"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "713a823e-c5cf-4b2b-bb47-43c8538bd85c",
+   "namespace": "backstage"
+  },
+  "scope": {
+   "kind": "StatefulSet",
+   "name": "backstage-postgres",
+   "namespace": "backstage"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "953b0dcb-2d1d-4f57-a915-3568c7a769c1",
+   "namespace": "backstage"
+  },
+  "scope": {
+   "kind": "Deployment",
+   "name": "portal-redirect",
+   "namespace": "backstage"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "989b469f-3909-47ed-b61c-dabb098ac420",
+   "namespace": "backstage"
+  },
+  "scope": {
+   "kind": "Pod",
+   "name": "backstage-postgres-0",
+   "namespace": "backstage"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 5,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-image-tag' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-hostpath",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-hostpath' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-privileged",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-privileged' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "d2496613-e3e6-40f2-808b-448e5a0c9043",
+   "namespace": "backstage"
+  },
+  "scope": {
+   "kind": "Pod",
+   "name": "portal-redirect-5d6bbccf45-nb2tx",
+   "namespace": "backstage"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 5,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-image-tag' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-hostpath",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-hostpath' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-privileged",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-privileged' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "d3cde06f-5921-4dca-873f-649c9380faac",
+   "namespace": "backstage"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "portal-redirect-5d6bbccf45",
+   "namespace": "backstage"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "05a9e42c-ecb3-4b4a-baf4-8b7f379975c7",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Pod",
+   "name": "nack-7b584649d6-w6tw6",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 5,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-image-tag' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-hostpath",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-hostpath' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-privileged",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-privileged' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "0612ea10-b9d3-4534-9797-b9d156212096",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Deployment",
+   "name": "nats-ui",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "062ef494-ae78-4e69-b897-cfe7deec8273",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "CronJob",
+   "name": "backup-nats-streams",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-cronjob-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-cronjob-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-cronjob-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-cronjob-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-cronjob-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-cronjob-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "0f18f19e-db85-4d20-a0c6-d2cf657d9663",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nats-dashboard-84b968f7b9",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 0,
+   "skip": 3,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "0f32de4b-8f18-4202-af9d-35956349dcd8",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "heynats-744dcb8d67",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 0,
+   "skip": 3,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "233e96fe-4188-43eb-8fc3-42a53f44da86",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nack-67fd746458",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 0,
+   "skip": 3,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "266f0c4f-2818-46cb-a18a-5d64debbd495",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nack-7686558bb6",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 0,
+   "skip": 3,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "3ab68df6-c9ef-4c47-b79e-af4bf07b3d79",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nats-leafz-exporter-64498d69d7",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "40461482-c2e7-46b6-a7a0-b22ae953a070",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Deployment",
+   "name": "nats-surveyor",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "4afc5936-64fe-44b7-9637-62a288763f11",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nack-fbbbf5bfc",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 0,
+   "skip": 3,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "50598839-87a2-424b-9c13-db36e003a7f9",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nats-dashboard-fd76db9d",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "55e5b7ab-335c-4208-84a0-c5d2a24af4ae",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Pod",
+   "name": "nats-dashboard-fd76db9d-pnj7x",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 5,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-image-tag' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-hostpath",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-hostpath' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-privileged",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-privileged' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "589e5869-632b-4f68-8f06-5e7bff466956",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Pod",
+   "name": "nats-1",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 5,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-image-tag' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-hostpath",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-hostpath' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-privileged",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-privileged' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "5e1d8792-f59c-4244-9930-e84c89739973",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nats-ui-6d5c856f6f",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 0,
+   "skip": 3,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "60b27cc9-6742-4985-ae21-5f28ec2b38a5",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nack-7b584649d6",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "62fdfa54-c04d-4ffc-a8ca-91e9fe75a66a",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "StatefulSet",
+   "name": "nats",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "756eccd5-23a1-45b8-a4cb-f1843c5696ca",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "heynats-6cbcbbb7b7",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "81f08e4d-8ace-40f1-a1ff-ac5f5bd23f58",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Pod",
+   "name": "nats-surveyor-568d9849f-t2j5m",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 5,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-image-tag' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-hostpath",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-hostpath' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-privileged",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-privileged' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "9189b7db-c677-4ea0-a744-610c60fc0d93",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "heynats-5df944887d",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 0,
+   "skip": 3,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "9460156e-a5d2-411e-9f4a-d2d9590507b5",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Deployment",
+   "name": "heynats",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "97793144-72ce-449c-aaad-72ff7ba39660",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Pod",
+   "name": "nats-ui-5c7d87c86d-f5cvv",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 5,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-image-tag' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-hostpath",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-hostpath' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-privileged",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-privileged' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "97c4b325-a971-482c-bc94-03b1c5079a78",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nats-surveyor-568d9849f",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "a9ab7f46-1822-47d4-8005-25054b1592cd",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nats-ui-5c7d87c86d",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "ad9ddc01-c60c-4fd0-809d-68b4e4ec2ffa",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Pod",
+   "name": "nats-2",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 5,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-image-tag' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-hostpath",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-hostpath' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-privileged",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-privileged' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "af9505cf-5e91-4abf-ad14-a167b62f2231",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nats-dashboard-86db4bbbd",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 0,
+   "skip": 3,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "b585bb96-356a-473b-9d08-cb4fb2eb7461",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Pod",
+   "name": "nats-leafz-exporter-64498d69d7-fsbb4",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 5,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-image-tag' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-hostpath",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-hostpath' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-privileged",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-privileged' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "b8b274e8-cd97-4883-89ff-66e7a7b41d25",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "heynats-58f6f58cf7",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 0,
+   "skip": 3,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "bb978f66-3ff9-459e-9de7-775b6ec018e0",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nats-dashboard-6cf6844df6",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 0,
+   "skip": 3,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "be216fe2-3a6f-4b33-93ef-ddcef6023095",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Deployment",
+   "name": "nack",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "c5dca7f9-c612-466a-b94f-07bcdd3c0ba5",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Deployment",
+   "name": "nats-leafz-exporter",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "d78b43cd-95a2-47ed-afef-fe110f848f3a",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Deployment",
+   "name": "nats-dashboard",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 3,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-image-tag' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'autogen-validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "e1fe12fe-9cb5-4a5c-98b4-1d600fdbb5f2",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nats-dashboard-85d5cf4cf4",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 0,
+   "skip": 3,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "e27c678c-6d6e-491a-aea4-19e172aca35b",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "ReplicaSet",
+   "name": "nats-surveyor-64454f68cc",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 0,
+   "skip": 3,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-require-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "autogen-validate-image-tag",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "autogen-validate-resources",
+    "result": "skip",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "preconditions not met"
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "f1c84a7a-9195-42ce-8b1d-af32ed9a6bd9",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Pod",
+   "name": "nats-0",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 5,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-image-tag' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-hostpath",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-hostpath' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-privileged",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-privileged' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-resources' passed."
+   }
+  ]
+ },
+ {
+  "metadata": {
+   "name": "fe86bfd8-9923-4dc7-9843-ea086f62b3d1",
+   "namespace": "nats"
+  },
+  "scope": {
+   "kind": "Pod",
+   "name": "heynats-6cbcbbb7b7-fl4ct",
+   "namespace": "nats"
+  },
+  "summary": {
+   "error": 0,
+   "fail": 0,
+   "pass": 5,
+   "skip": 0,
+   "warn": 0
+  },
+  "results": [
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "require-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'require-image-tag' passed."
+   },
+   {
+    "policy": "disallow-latest-image-tag",
+    "rule": "validate-image-tag",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-image-tag' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-hostpath",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-hostpath' passed."
+   },
+   {
+    "policy": "disallow-privileged-and-hostpath",
+    "rule": "disallow-privileged",
+    "result": "pass",
+    "severity": "high",
+    "category": "Pod Security Standards (Baseline)",
+    "message": "validation rule 'disallow-privileged' passed."
+   },
+   {
+    "policy": "require-requests-limits",
+    "rule": "validate-resources",
+    "result": "pass",
+    "severity": "medium",
+    "category": "Best Practices",
+    "message": "validation rule 'validate-resources' passed."
+   }
+  ]
+ }
+]

@@ -104,6 +104,29 @@ describe('buildNavModel', () => {
     expect(titles(shown, 'change')).toContain('Retire app');
   });
 
+  it('lists DevTools and Unprocessed entities for admins only, never under More', () => {
+    const items = [
+      ...pages,
+      item('page:devtools', 'DevTools', '/devtools'),
+      item(
+        'page:catalog-unprocessed-entities',
+        'Unprocessed Entities',
+        '/catalog-unprocessed-entities',
+      ),
+    ];
+    const admin = buildNavModel({ items, flags: off, isAdmin: true });
+    expect(titles(admin, 'admin')).toEqual([
+      'Audit Logs',
+      'Visualizer',
+      'DevTools',
+      'Unprocessed entities',
+    ]);
+    const user = buildNavModel({ items, flags: off, isAdmin: false });
+    expect(labels(user)).not.toContain('Admin');
+    expect(titles(user, 'more') ?? []).not.toContain('DevTools');
+    expect(titles(user, 'more') ?? []).not.toContain('Unprocessed Entities');
+  });
+
   it('shows Admin only to admins and does not leak its pages into More', () => {
     const user = buildNavModel({ items: pages, flags: off, isAdmin: false });
     expect(labels(user)).not.toContain('Admin');

@@ -27,6 +27,11 @@ rules:
   - apiGroups: [metrics.k8s.io]
     resources: [pods, nodes]
     verbs: [get, list]
+  # Kyverno's reports controller writes one PolicyReport per scanned resource. The portal's
+  # "Policy results" card reads them (read-only; cluster-scoped reports are not included).
+  - apiGroups: [wgpolicyk8s.io]
+    resources: [policyreports]
+    verbs: [get, list]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding

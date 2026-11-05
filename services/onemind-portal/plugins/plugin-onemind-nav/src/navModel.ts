@@ -261,6 +261,13 @@ export const NAV_GROUPS: GroupSpec[] = [
         ids: ['page:devtools'],
         titles: ['DevTools'],
       },
+      {
+        key: 'unprocessed-entities',
+        title: 'Unprocessed entities',
+        icon: 'catalog',
+        ids: ['page:catalog-unprocessed-entities'],
+        titles: ['Unprocessed Entities', 'Catalog Unprocessed Entities'],
+      },
     ],
   },
 ];

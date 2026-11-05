@@ -27,6 +27,8 @@ backend.add(
   import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
 );
 backend.add(import('@backstage/plugin-catalog-backend-module-logs'));
+// Failed and pending catalog entities. Administrator-only through the OneMind policy.
+backend.add(import('@backstage/plugin-catalog-backend-module-unprocessed'));
 // GitHub discovery through the read-only GitHub App; discovers nothing without catalog.providers.github.
 // Also lets Catalog Import analyze GitHub repository URLs (catalog.location.create stays admin-only).
 backend.add(import('@backstage/plugin-catalog-backend-module-github'));
@@ -44,6 +46,8 @@ backend.add(import('@backstage/plugin-search-backend-module-pg'));
 backend.add(import('@backstage/plugin-search-backend-module-catalog'));
 backend.add(import('@backstage/plugin-search-backend-module-techdocs'));
 
+// Admin diagnostics. The OneMind policy makes it administrator-only and closes /config.
+backend.add(import('@backstage/plugin-devtools-backend'));
 backend.add(import('@backstage/plugin-kubernetes-backend'));
 backend.add(import('@backstage/plugin-user-settings-backend'));
 backend.add(import('@backstage/plugin-events-backend'));
