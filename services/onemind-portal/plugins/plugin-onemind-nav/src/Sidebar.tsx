@@ -4,6 +4,7 @@ import {
   SidebarDivider,
   SidebarGroup,
   SidebarItem,
+  SidebarScrollWrapper,
   SidebarSpace,
   SidebarSubmenu,
   SidebarSubmenuItem,
@@ -18,6 +19,7 @@ import {
 import { SearchModalProvider } from '@backstage/plugin-search';
 import { UserSettingsSignInAvatar } from '@backstage/plugin-user-settings';
 import { NotificationsSidebarItem } from '@backstage/plugin-notifications';
+import { Shortcuts } from '@backstage-community/plugin-shortcuts';
 import { Typography, useTheme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { SidebarLogo } from './SidebarLogo';
@@ -161,6 +163,24 @@ function renderGroup(
   );
 }
 
+/**
+ * Personal shortcuts, stored per signed-in user through the Backstage storage API
+ * (account-backed by the user-settings backend, bucket "shortcuts"). Internal portal
+ * paths only. Shown in the desktop sidebar; the phone bottom bar is already full.
+ */
+function ShortcutsSection() {
+  const { isMobile } = useSidebarPinState();
+  if (isMobile) return null;
+  return (
+    <>
+      <SidebarDivider />
+      <SidebarScrollWrapper>
+        <Shortcuts />
+      </SidebarScrollWrapper>
+    </>
+  );
+}
+
 export function OneMindSidebar({ navItems }: { navItems: NavContentNavItems }) {
   useBarStyles();
   const flags = useNavFlags();
@@ -183,6 +203,7 @@ export function OneMindSidebar({ navItems }: { navItems: NavContentNavItems }) {
             group.key === 'now' ? <NotificationsSidebarItem /> : undefined,
           ),
         )}
+        <ShortcutsSection />
         <SidebarSpace />
         <SidebarDivider />
         <SidebarGroup

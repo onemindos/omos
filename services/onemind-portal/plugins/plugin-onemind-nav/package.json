@@ -20,6 +20,7 @@
     "test": "backstage-cli package test"
   },
   "dependencies": {
+    "@backstage-community/plugin-shortcuts": "0.25.1",
     "@backstage/core-components": "0.18.14",
     "@backstage/frontend-plugin-api": "0.18.1",
     "@backstage/plugin-app-react": "0.2.7",
