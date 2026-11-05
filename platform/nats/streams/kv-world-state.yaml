@@ -1,3 +1,10 @@
+# world-state: layer manifests and density cells (BUS-DESIGN D3; onemind-xr contract
+# layer-snapshot.md section 2). Single writer: omos-layer-service (platform/omos/layer/).
+# Keys: {layer}.meta (manifest, refreshed every 30 s and on change), {layer}.cells.z{z}
+# (density cells, every 30 s, at most 512 KiB each) and _lease.layer-service (the writer's
+# compare-and-set lease). The 5 m TTL makes a missing manifest mean "layer down".
+# This purpose and a 64 MiB maxBytes cap are owner proposal A5-P1/A5-P2
+# (docs/proposals/2026-10-29-layer-service.md); the spec below is unchanged.
 apiVersion: jetstream.nats.io/v1beta2
 kind: KeyValue
 metadata:

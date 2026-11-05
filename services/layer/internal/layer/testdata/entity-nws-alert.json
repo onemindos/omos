@@ -1,0 +1,137 @@
+{
+  "aliases": {
+    "ids": [
+      {
+        "id": "noaa-j4yqrxihy3cjsuswvrwidyxpfb",
+        "type": "intel_id"
+      }
+    ],
+    "name": "Flood Warning"
+  },
+  "callsign": "Flood Warning",
+  "confidence": 0.7,
+  "confidence_parts": {
+    "corroboration": 0.7,
+    "source_prior": 0.7,
+    "track_quality": 1
+  },
+  "correlation": null,
+  "cot_security": null,
+  "created_t": 1793291233993,
+  "current_task": null,
+  "entity_id": "noaa-j4yqrxihy3cjsuswvrwidyxpfb",
+  "entity_type": "event",
+  "expiry_t": 1793321100000,
+  "geo": {
+    "coords": {
+      "coordinates": [
+        -106.958571,
+        33.898571
+      ],
+      "type": "Point"
+    },
+    "kind": "hazard",
+    "shape": "point"
+  },
+  "indicators": {
+    "egress_tak": true,
+    "emergency": false,
+    "exercise": false,
+    "simulated": false,
+    "starred": false
+  },
+  "kind": "weather_alert",
+  "lat": 33.898571,
+  "lifecycle": "active",
+  "live": true,
+  "location": {
+    "lat": 33.898571,
+    "lon": -106.958571,
+    "measured_t": 1793234400000
+  },
+  "lon": -106.958571,
+  "marking": {
+    "releasable_to": [],
+    "tlp": "CLEAR"
+  },
+  "meta": {
+    "affectedZones": [
+      "https://api.weather.gov/zones/county/NMC053"
+    ],
+    "areaDesc": "Socorro, NM",
+    "category": "Met",
+    "certainty": "Likely",
+    "description": "* WHAT...Flooding caused by excessive rainfall is occurring.\n\n* WHERE...South Central Socorro County in central New Mexico...\n\n* WHEN...Until 645 PM MDT Thursday.\n\n* IMPACTS...Flooding of rivers, creeks, streams, and other low-lying\nand flood-prone locations is imminent or occurring.\n\n* ADDITIONAL DETAILS...\n- At 638 PM MDT, emergency management reported flooding in the\nwarned area. Flooding is already occurring.\n- Flooding was reported in Socorro County in the Escondida and\nPueblito Communities. Several roads have been rendered impassible\nnear San Pedro.\n- Some locations that will experience ",
+    "effective": "2026-10-28T18:40:00-06:00",
+    "ends": "2026-10-29T18:45:00-06:00",
+    "event": "Flood Warning",
+    "expires": "2026-10-29T18:45:00-06:00",
+    "headline": "Flood Warning issued October 28 at 6:40PM MDT until October 29 at 6:45PM MDT by NWS Albuquerque NM",
+    "instruction": "Turn around, don't drown when encountering flooded roads. Most flood\ndeaths occur in vehicles.\n\nBe especially cautious at night when it is harder to recognize the\ndangers of flooding.",
+    "messageType": "Alert",
+    "onset": "2026-10-28T18:40:00-06:00",
+    "references": [],
+    "response": "Avoid",
+    "same": [
+      "035053"
+    ],
+    "senderName": "NWS Albuquerque NM",
+    "sent": "2026-10-28T18:40:00-06:00",
+    "severity": "Severe",
+    "status": "Actual",
+    "ugc": [
+      "NMC053"
+    ],
+    "urgency": "Expected",
+    "web": "http://www.weather.gov"
+  },
+  "pinned": false,
+  "properties": {
+    "callsign": "Flood Warning",
+    "ce": 1000,
+    "le": 1000
+  },
+  "provenance": {
+    "how": "m-g",
+    "primary": "feed-intel-noaa",
+    "source_t": 1793234400000
+  },
+  "relationships": [],
+  "route": null,
+  "seq": 1,
+  "sources": [
+    {
+      "components": [
+        "location",
+        "geo"
+      ],
+      "data_type": "intel",
+      "first_seen_t": 1793291233993,
+      "integration": "feed-intel-noaa",
+      "last_seen_t": 1793291233993,
+      "seq": 3,
+      "source_id": "urn:oid:2.49.0.1.840.0.e456a8b989cbe05485479fdd536926c3faf164ce.001.1",
+      "source_t": 1793234400000,
+      "stream": "INTEL",
+      "subject": "intel.weather.noaa.alert",
+      "tier": "sensor"
+    }
+  ],
+  "stale": 3600,
+  "t": 1793234400000,
+  "template": "geo",
+  "tracked": null,
+  "traits": [
+    "locatable"
+  ],
+  "type": "onemind.event",
+  "uid": "noaa-j4yqrxihy3cjsuswvrwidyxpfb",
+  "uncertainty": {
+    "ce_m": 1000,
+    "error_ellipse": null,
+    "le_m": 1000,
+    "pos_enu_cov": null,
+    "vel_enu_cov": null
+  },
+  "v": 1
+}
