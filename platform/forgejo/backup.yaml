@@ -65,7 +65,10 @@ metadata:
 spec:
   sourcePVC: forgejo-data
   paused: false
-  trigger: {}
+  trigger:
+    # Never leave this empty: VolSync treats an empty trigger as a continuous sync loop.
+    # The coordinated backup Job advances this value once a day.
+    manual: initial-2026-11-05
   restic:
     repository: forgejo-data-restic
     copyMethod: Snapshot
