@@ -1,5 +1,11 @@
 # onemind-hermes
 
+Dedicated Mac SSH bootstrap, owner-local enrollment and pending acceptance gates:
+[`mac-access/README.md`](mac-access/README.md). No authenticated Mac access is
+claimed by the source wiring alone. The existing initial-config prepares owner-only
+0400 credentials for the nonroot hermes account in a bounded RAM emptyDir; main
+never mounts the raw Secret and no credential is copied to the PVC.
+
 Legacy (`onemind-hermes`): the OneMind Hermes instance. It replaced the old `hermes-legacy`
 Deployment, which was removed from Git on 2026-11-03 (see [`RETIREMENT-AUDIT.md`](RETIREMENT-AUDIT.md)), and the
 `hermes-fresh` launch of October 26, 2026 (same image, same design, new names and new storage). It does not
