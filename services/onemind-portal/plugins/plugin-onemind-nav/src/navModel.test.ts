@@ -18,6 +18,7 @@ const pages = [
   item('page:cost-insights', 'Cost Insights', '/cost-insights'),
   item('page:tech-insights', 'Tech Insights', '/tech-insights'),
   item('page:tech-radar', 'Tech Radar', '/tech-radar'),
+  item('page:onemind-stack-hygiene', 'Stack hygiene', '/stack-hygiene'),
   item('page:techdocs', 'Docs', '/docs'),
   item('page:announcements', 'Announcements', '/announcements'),
   item('page:scaffolder', 'Create...', '/create'),

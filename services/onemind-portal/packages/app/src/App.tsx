@@ -19,6 +19,7 @@ import {
   accessModule,
   standardAppPageModule,
   githubGateModules,
+  stackHygienePlugin,
 } from '@internal/plugin-onemind-services';
 import { systemsPlugin } from '@internal/plugin-onemind-systems';
 import { designModule } from '@internal/plugin-onemind-theme';
@@ -64,6 +65,7 @@ export default createApp({
     authModule,
     systemsPlugin,
     servicesModule,
+    stackHygienePlugin,
     accessModule,
     standardAppPageModule,
     ...githubGateModules,

@@ -167,6 +167,13 @@ export const NAV_GROUPS: GroupSpec[] = [
         ids: ['page:tech-radar'],
         titles: ['Tech Radar'],
       },
+      {
+        key: 'stack-hygiene',
+        title: 'Stack hygiene',
+        icon: 'insights',
+        ids: ['page:onemind-stack-hygiene'],
+        titles: ['Stack hygiene'],
+      },
     ],
   },
   {

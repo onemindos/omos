@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ values.name }}
+  namespace: ${{ values.name }}
+  annotations:
+    tailscale.com/hostname: ${{ values.name }}
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: ${{ values.name }}
+      port:
+        number: 80
+  tls:
+  - hosts:
+    - ${{ values.name }}

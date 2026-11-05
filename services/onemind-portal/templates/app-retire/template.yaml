@@ -1,0 +1,92 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: retire-app
+  title: Retire app
+  description: Lists everything attached to an app (read-only), asks what to keep, and opens a draft removal pull request with a manual teardown checklist. The portal deletes nothing.
+  tags:
+    - lifecycle
+    - app
+spec:
+  owner: group:default/onemind-admins
+  type: service
+  parameters:
+    - title: Which app
+      required:
+        - app
+      properties:
+        app:
+          title: App or workload
+          type: string
+          description: Pick an app Component to retire it with all its workloads, or one workload Component to remove only that workload.
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind: Component
+            defaultKind: Component
+    - title: Data retention
+      required:
+        - retention
+        - reason
+      properties:
+        retention:
+          title: What happens to the data first
+          type: string
+          default: keep-last-backup
+          enum:
+            - keep-last-backup
+            - export-first
+            - no-retention
+          enumNames:
+            - Keep the last backup (default)
+            - Export the data first, then keep the last backup
+            - No retention, the data is not needed
+        retentionDays:
+          title: Retention days
+          type: integer
+          default: 30
+          minimum: 0
+          maximum: 3650
+          description: Volumes, snapshots and restic credentials stay until this many days after the merge. Deleting them is a separate owner approval.
+        reason:
+          title: Why it is being retired
+          type: string
+          minLength: 10
+          maxLength: 1500
+          ui:widget: textarea
+        understand:
+          title: I understand the portal deletes nothing and the PR lists manual steps
+          type: boolean
+          default: false
+  steps:
+    - id: plan
+      name: Inventory what is attached and prepare the removal (read-only)
+      action: onemind:app-retire:plan
+      input:
+        entityRef: ${{ parameters.app }}
+        retention: ${{ parameters.retention }}
+        retentionDays: ${{ parameters.retentionDays }}
+        reason: ${{ parameters.reason }}
+    - id: publish
+      name: Open the draft removal pull request
+      if: ${{ parameters.understand }}
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?owner=onemindos&repo=omos
+        branchName: ${{ steps.plan.output.branchName }}
+        targetBranchName: main
+        title: ${{ steps.plan.output.title }}
+        description: ${{ steps.plan.output.body }}
+        commitMessage: ${{ steps.plan.output.title }}
+        sourcePath: .
+        filesToDelete: ${{ steps.plan.output.filesToDelete }}
+        draft: true
+        update: true
+        forceEmptyGitAuthor: true
+  output:
+    links:
+      - title: Review the draft removal pull request
+        url: ${{ steps.publish.output.remoteUrl }}
+    text:
+      - title: What is attached and what the PR does
+        content: ${{ steps.plan.output.body }}

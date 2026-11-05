@@ -1,0 +1,59 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: ${{ values.name }}
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: dns
+  namespace: ${{ values.name }}
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+{%- if values.access == 'tailnet' or values.access == 'cloudflare' %}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress
+  namespace: ${{ values.name }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ${{ values.name }}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+{%- if values.access == 'tailnet' %}
+          kubernetes.io/metadata.name: tailscale
+{%- else %}
+          kubernetes.io/metadata.name: ingress-nginx
+{%- endif %}
+    ports:
+    - protocol: TCP
+      port: ${{ values.port }}
+{%- endif %}

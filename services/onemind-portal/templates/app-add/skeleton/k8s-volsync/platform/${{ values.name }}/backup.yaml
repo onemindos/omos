@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: ${{ values.name }}
+automountServiceAccountToken: false
+---
+# The trigger MUST have a schedule: a ReplicationSource with an empty `trigger` is never scheduled.
+# Snapshot and cache claims are temporary and use do-block-storage so cleanup frees their volumes;
+# left unset they would fall back to the retain class of the source claim and leave billed volumes behind.
+# Needs the restic repository Secret ${{ values.name }}-data-restic as a SealedSecret
+# (pattern: platform/karakeep/backup-data.sealedsecret.yaml). Run an isolated restore before real data.
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: ${{ values.name }}-data
+  namespace: ${{ values.name }}
+  annotations:
+    onemind.dev/source-pvc: data
+spec:
+  sourcePVC: data
+  paused: false
+  trigger:
+    schedule: ${{ values.backupSchedule }}
+  restic:
+    repository: ${{ values.name }}-data-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      fsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
