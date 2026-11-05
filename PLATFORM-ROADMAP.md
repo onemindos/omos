@@ -1431,6 +1431,18 @@ Provider deletion and recovery verification must be recorded from live evidence;
 this source change alone does not certify either. Preserve device originals and
 existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
 
+## User-directed independent Git recovery — 2026-11-01
+
+- [x] Prepare private Forgejo15LTS, retained single-volume SQLite/Git/LFS storage, restricted bootstrap and manual-sync Argo source.
+- [x] Prepare a scoped coordinator that quiesces the writer, exports an encrypted dated VolSync/Restic backup, then restores its prior replica count.
+- [ ] Supply strict SealedSecrets, review current capacity/storage/backup window and activate through Argo.
+- [ ] Enroll owner, pilot one GitHub pull mirror and verify Git/LFS/wiki plus independent restore before expanding.
+- [ ] Inventory/export GitHub PR/issues/releases and required GHCR images separately; automatic discovery and metadata backup are not implemented.
+
+GitHub stays primary. No origin, Actions, Argo source URL or registry cutover.
+Source preparation does not claim live deployment, mirror enrollment or recovery acceptance.
+See [Forgejo runbook](platform/forgejo/README.md).
+
 ## Deferred Mattermost + TAK evaluation — 2026-11-01
 
 Zeus requested a detailed future plan and explicitly deferred deployment. The
@@ -1454,3 +1466,21 @@ data retained; no data import or cluster rollout is claimed here.
 merge, manual sync (OpenRemote first, ThingsBoard after it is stable), login, telemetry and isolated restore acceptance remain pending. Real SealedSecrets were committed 2026-11-04.
 No Hermes adapter, NATS contracts or physical-control permission changes. Phase6
 remains In progress; Phases7/8 remain unfinished.
+
+## User-directed Trivy scanning pilot — 2026-10-24
+
+Zeus requested an implementation PR for a limited Trivy Operator pilot.
+The [runbook](docs/operations/trivy-image-scan-pilot.md) records the read-only
+capacity/monitoring preflight, pinned chart/images, scoped RBAC, resource cap,
+namespace-only image scans and Grafana view. The pilot creates reports, not
+deployment blocking or automatic remediation. Authentik work is separate.
+
+| Work | Status | Next gate |
+|---|---|---|
+| Argo-owned Trivy image-only pilot in `auth,nats,onetak,n8n` | Retargeted 2026-11-04 (Nextcloud retired); owner approved deploy; [PR #442](https://github.com/onemindos/omos/pull/442) awaits merge, which auto-syncs via `platform-security`; not live-accepted. Private `ghcr.io/onemindos` images (`heynats`, `nats-dashboard`, `tak-portal`) are not scanned | Merge, actual Argo rollout, per-container digest/report coverage (21 controllers, 3 expected gaps) and deny tests |
+| One scan Job, bounded resources and Grafana visibility | 96 GitOps tests pass, including six rendered Trivy safety contracts; live acceptance pending | Scan resource measurements, metric/CRD parity, 24-hour refresh and safe pause acceptance |
+
+This user-directed security slice does not close portal phases, reverse approved
+retirements, grant broader agent write rights or change application identities.
+Only report reads are added to the chart's standard aggregated viewer roles;
+application Secrets remain inaccessible to the scanner.

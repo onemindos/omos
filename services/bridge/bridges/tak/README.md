@@ -1,150 +1,228 @@
-# tak-bridge — TAK/CoT ↔ NATS Bridge
+# tak-mesh — OneMind TAK mesh gateway
 
-Part of the **One Mind OS (omos)** bridge ecosystem.
+Part of the **One Mind OS (omos)** bridge ecosystem. Design and context:
+[ADR 0003](../../../../docs/architecture/decisions/0003-tak-native-clients-and-mesh.md).
 
 ## What It Does
 
-`tak-bridge` translates between the [Cursor-on-Target (CoT)](https://www.mitre.org/capabilities/cybersecurity/overview/cybersecurity-blog/cursor-on-target) XML protocol used by ATAK, WinTAK, and OpenTAK Server (OTS) and the omos NATS message bus.
+ATAK, iTAK, WinTAK and VR-TAK talk to each other through Common Commo, TAK's
+comms library: SA over UDP multicast, direct messages over short TCP
+connections, and TAK Protocol negotiation between XML (v0) and protobuf (v1).
+This gateway does the same, so OneMind is a peer on the mesh rather than only a
+TAK Server feed. It works with no server and no cloud link; the NATS leaf node
+forwards to the cluster bus whenever it is connected.
 
-**Inbound (ATAK → NATS):**
-- Listens on a UDP port for CoT XML events from ATAK/OTS clients.
-- Parses each `<event>` into a typed `CotPayload` struct.
-- Wraps the payload in the standard One Mind envelope and publishes to `omos.field.<uid>.telemetry`.
+| Direction | Path |
+|---|---|
+| Mesh → bus | SA group, GeoChat group, directed TCP and optional UDP → CoT XML on `tak.cot.mesh.rx` |
+| Bus → mesh | CoT XML on `tak.cot.mesh.tx` → multicast in the negotiated protocol version (GeoChat `b-t-f*` to the chat group), or directed TCP with header `Tak-Dest-Uid` |
+| Mesh → TAK Server (optional) | `MESH_TO_TAK_SERVER=true` (default `false`) also publishes to `tak.cot.inject`, except OneMind's own CoT |
+| Data packages | Directed `b-f-t-r` requests are fetched into `DATAPKG_DIR/inbox` and acked; `DATAPKG_DIR/outbox` is served at `/getfile` |
+| Health | `tel.fleet.edge.{GATEWAY_ID}.status` every 30 s |
 
-**Outbound (NATS → ATAK):**
-- Subscribes to `omos.field.*.command` on NATS.
-- Serialises command payloads as CoT `<event>` XML and forwards them to the configured TAK server via UDP.
+Protocol handling follows `takproto/README.txt` and the Commo sources in
+`TAK-Product-Center/atak-civ`:
 
-**Operations:**
-- Heartbeat published every 30 s to `omos.bridge.tak-bridge.health`.
-- Errors reported to `omos.bridge.tak-bridge.errors`.
-- Graceful shutdown on `SIGTERM`/`SIGINT` with NATS drain.
+- Receives both v0 XML and v1 protobuf; always publishes XML to NATS, so
+  consumers see the same format as `tak.cot.out` from TAK Server.
+- Broadcasts TakControl every 60 s and tracks each contact's versions; sends v1
+  only when every contact it hears can decode it, otherwise XML. A TakControl
+  with unset versions counts as version 1, and one without `contactUid` applies
+  to the paired event's uid (`takcontrol.proto`).
+- On encode, typed detail fields (`contact`, `__group`, `precisionlocation`,
+  `status`, `takv`, `track`) are used only when the whole element maps;
+  everything else stays in `xmlDetail`.
+- Drops its own multicast echo, and sets `Nats-Msg-Id` so two gateways hearing
+  the same report store it once in stream `COT` (2 min duplicate window).
+- Publishes `tak.cot.mesh.rx` with acked JetStream publishes (at most 256
+  awaiting an ack, 5 s timeout). A publish that is not acked, for example
+  during a leaf outage, counts in `meta.errors`, not in `meta.rx`. With no
+  stream on `tak.cot.mesh.rx` reachable from the leaf, set
+  `MESH_RX_JETSTREAM=false` for core publishes.
+- Rejects a v1 message whose `xmlDetail` is not a balanced XML fragment (or
+  carries a processing instruction or DOCTYPE), so a peer cannot close the
+  detail and smuggle a second event onto the bus or `tak.cot.inject`.
+- Refuses tasking and hostile, joker or faker types (`t-k-*`, `a-h-*`, `a-j-*`,
+  `a-k-*`) on `tak.cot.mesh.tx` with an error reply, as defence in depth until
+  leaf permissions restrict that subject.
+- Reads at most 16 directed TCP connections at once, each up to 256 KiB;
+  further connections are closed.
+- Registered detail extensions it cannot decode are counted in the
+  `Tak-Undecoded-Extensions` header.
 
----
+The codec and the mesh encryption are written from the published wire spec and
+checked against OpenSSL and the `takproto` Python package; no GPL code is
+included.
+
+### Interfaces
+
+`MESH_INTERFACE` applies to both directions: the gateway joins the groups on
+that interface, and its transmit socket sends multicast there
+(`IP_MULTICAST_IF`). Leave it unset only on a host with one network. On a Mac
+with Wi-Fi, Ethernet and Tailscale, set it to the interface on the ATAK LAN
+(`route -n get 239.2.3.1` shows which one the system would pick otherwise).
+The status message reports the interface in `meta.tx_interface`.
+
+**Run one gateway per mesh interface and NATS subject.** Every gateway
+subscribed to `tak.cot.mesh.tx` transmits every message it gets, so two gateways
+on the same LAN and bus send each marker twice. Two gateways on the same LAN
+that both receive are fine: `Nats-Msg-Id` deduplicates what they publish.
+
+### GeoChat
+
+ATAK's "All Chat Rooms" uses multicast group `224.10.10.1:17012`. The gateway
+joins it (`MESH_CHAT_GROUP`, `off` disables). Chat it hears is published on
+`tak.cot.mesh.rx` with `Tak-Delivery: chat`. CoT of type `b-t-f` or `b-t-f-*`
+on `tak.cot.mesh.tx` is sent to the chat group; everything else goes to the SA
+group.
+
+### Mesh encryption
+
+With `MESH_AUTH_KEY` and `MESH_CIPHER_KEY` set (two different 256-bit keys, 64
+hex characters each), the gateway does what Commo does after `setCryptoKeys`:
+every multicast and directed message is AES-256-CBC encrypted with a random IV,
+followed by an HMAC-SHA256 under the auth key over IV and ciphertext (wire
+layout `IV | ciphertext | HMAC`). Inbound mesh, directed and UDP messages that
+do not authenticate are dropped and counted as errors, including plaintext.
+
+The keys are secrets. Put them in the host's secret store and export them into
+the gateway's environment; never write them into `.env.example`, `bridge.yaml`
+or anything committed. Every device on the mesh must use the same pair.
+
+### Data packages
+
+With `DATAPKG_DIR` set, the gateway takes part in Commo's peer-hosted transfer
+(`commoncommo/core/missionpackage-rules.txt`):
+
+- **Receive.** A file transfer request (`b-f-t-r` with `<fileshare>`) sent
+  **directly to the gateway** (directed TCP) is fetched over http from the
+  request's source address (the URL's port and path are kept; the host is
+  replaced, as Commo's own fallback does), up to `DATAPKG_MAX_BYTES`. The file
+  is kept only if its size and SHA-256 match the request, as
+  `inbox/<sha256>-<filename>`. If the sender asked for an ack, the gateway
+  sends a `b-f-t-a` `<ackresponse>` with `success` true or false to the
+  sender's endpoint. Requests heard on multicast are not fetched. At most two
+  fetches run at once; a package already in the inbox (same SHA-256) is acked
+  without a second fetch, and requests that arrive while two fetches run, or
+  that would take the inbox over `DATAPKG_INBOX_MAX_BYTES`, get a nack. Peer-hosted
+  https (`peerHosted`, `httpsPort`) and server-hosted (`/Marti/`) URLs are
+  refused.
+- **Serve.** With `DATAPKG_HTTP_PORT` set, files placed in `outbox/` are served
+  at `http://<host>:<port>/getfile?file=<name>`. The server listens on
+  `GATEWAY_ENDPOINT_HOST`, else on `MESH_INTERFACE`'s IPv4 address, and on all
+  interfaces only when neither is set (it logs a warning). To send one to an ATAK user,
+  publish a `b-f-t-r` naming that URL on `tak.cot.mesh.tx` with
+  `Tak-Dest-Uid: <their uid>`.
+
+Received files stay on the edge host; nothing about them is published to NATS
+yet (see the owner proposals in
+`docs/roadmap/2026-10-29-tak-mesh-gateway-owner-proposals.md`).
 
 ## Quick Start
 
+On the Mac, next to the local leaf (`infra/edge/mac-leaf`):
+
 ```bash
-# 1. Clone / enter the bridge directory
-cd omos-bridge/bridges/tak
-
-# 2. Copy and edit environment
-cp .env.example .env
-
-# 3. Build
-go build -o tak-bridge .
-
-# 4. Run (with a local NATS server already running)
-source .env && ./tak-bridge
+cd services/bridge/bridges/tak
+cp .env.example .env          # edit; secrets come from the environment, not this file
+MESH_INTERFACE=en0 ./run-mac.sh
 ```
 
----
+`run-mac.sh` builds the gateway, checks that the leaf answers on `NATS_URL`,
+and prints the transmit interface before starting. Anywhere else:
+
+```bash
+go build -o tak . && set -a && . ./.env && set +a && ./tak
+```
+
+Run it on an edge host on the same LAN or radio network as the TAK devices, next
+to a NATS leaf. Multicast does not reach pods in the cloud cluster, so the
+gateway has no container image or Argo Application.
 
 ## Environment Variables
 
 | Variable | Default | Description |
 |---|---|---|
-| `NATS_URL` | `nats://localhost:4222` | NATS server connection URL |
-| `BRIDGE_NAME` | `tak-bridge` | Bridge identifier used in log lines and NATS subjects |
-| `TAK_LISTEN_PORT` | `8087` | UDP port to listen on for incoming CoT XML |
-| `TAK_SERVER_HOST` | `localhost` | Hostname / IP of the TAK server to forward commands to |
-| `TAK_SERVER_PORT` | `8087` | UDP port of the TAK server |
-
----
+| `NATS_URL` | `nats://localhost:4222` | NATS (normally the local leaf) |
+| `NATS_USER`, `NATS_PASSWORD` | unset | NATS credentials, if the leaf requires them |
+| `GATEWAY_ID` | `tak-mesh` | Gateway name in subjects, headers and TakControl (`omos-gw-<id>`) |
+| `MESH_GROUP` | `239.2.3.1:6969` | SA multicast group |
+| `MESH_CHAT_GROUP` | `224.10.10.1:17012` | GeoChat group; `off` disables |
+| `MESH_INTERFACE` | system default | Interface to join the groups on **and transmit on** |
+| `MESH_TTL` | `1` | Multicast TTL (Commo's default is 1) |
+| `MESH_PROTOCOL` | `auto` | `auto` negotiates; `xml` never sends protobuf |
+| `MESH_AUTH_KEY`, `MESH_CIPHER_KEY` | unset | Mesh encryption keys, 64 hex characters each, different; both or neither. Secrets |
+| `DIRECT_TCP_PORT` | `4242` | Directed TCP messages; `0` disables |
+| `UDP_LISTEN_PORT` | `0` | Unicast UDP CoT input; `0` disables |
+| `MESH_TO_TAK_SERVER` | `false` | Also publish received CoT to `tak.cot.inject`; skips uids `OM.*`, `INTEL.*` and `omos-gw-*` |
+| `GATEWAY_CALLSIGN` | unset | If set, the gateway sends its own SA every 30 s |
+| `GATEWAY_ENDPOINT_HOST` | unset | LAN address advertised as `host:DIRECT_TCP_PORT:tcp`, so TAK users can message the gateway |
+| `GATEWAY_COT_TYPE` | `a-f-G-E-S` | CoT type of the gateway's SA |
+| `GATEWAY_LAT`, `GATEWAY_LON` | `0` | Position of the gateway's SA |
+| `DATAPKG_DIR` | unset | Enables data packages; holds `inbox/` and `outbox/` |
+| `DATAPKG_HTTP_PORT` | `0` | Serves `outbox/` at `/getfile`; `0` disables |
+| `DATAPKG_MAX_BYTES` | `52428800` | Largest data package accepted |
+| `DATAPKG_INBOX_MAX_BYTES` | `1073741824` | Inbox size cap, counting fetches in flight; `0` disables |
+| `MESH_RX_JETSTREAM` | `true` | Acked JetStream publishes on `tak.cot.mesh.rx`; `false` uses core publishes |
 
 ## NATS Subjects
 
-| Subject | Direction | Description |
+| Subject | Direction | Payload |
 |---|---|---|
-| `omos.field.<uid>.telemetry` | Publish | One Mind envelope containing `CotPayload` for each received CoT event |
-| `omos.field.*.command` | Subscribe | Commands received here are wrapped in CoT XML and forwarded to the TAK server |
-| `omos.bridge.tak-bridge.health` | Publish | Heartbeat JSON every 30 s: `{"source","ts","status":"ok"}` |
-| `omos.bridge.tak-bridge.errors` | Publish | Error JSON: `{"source","ts","error":"…"}` |
+| `tak.cot.mesh.rx` | Publish | CoT XML. Headers: `Nats-Msg-Id`, `Tak-Gateway`, `Tak-Delivery` (`mesh`, `chat`, `direct`, `udp`), `Tak-Proto` (`0`, `1`), `Tak-From` |
+| `tak.cot.mesh.tx` | Subscribe | CoT XML to send; `t-k-*`, `a-h-*`, `a-j-*` and `a-k-*` are refused. Optional header `Tak-Dest-Uid` sends it directed to that contact. Request/reply answers `ok` or `error: …`; senders that would use a JetStream publish should use a core publish instead (the reply would race the PubAck) and read `meta.tx` from the status |
+| `tak.cot.inject` | Publish (optional) | CoT XML for TAK Server via NatsBridgePlugin |
+| `tel.fleet.edge.{id}.status` | Publish | `{uid, type: "fleet.edge", t, meta: {proto_version, contacts, rx, tx, errors, last_error, tx_interface, chat_group, encrypted, to_tak_server, datapkg_rx, datapkg_failed, …}}` |
 
-### One Mind Envelope Shape
-
-```json
-{
-  "id": "1718000000000000000",
-  "ts": 1718000000000,
-  "source": "tak-bridge",
-  "entity": "field.ANDROID-abc",
-  "domain": "field",
-  "payload": {
-    "msg_type": "cot",
-    "data": {
-      "uid": "ANDROID-abc",
-      "cot_type": "a-f-G-U-C",
-      "how": "m-g",
-      "callsign": "ZEUS",
-      "lat": 30.267,
-      "lon": -97.743,
-      "hae": 150.0,
-      "ce": 9.9,
-      "le": 9.9,
-      "stale_at": 1751500800000,
-      "detail_raw": "<detail><contact callsign=\"ZEUS\"/></detail>"
-    }
-  }
-}
-```
-
----
-
-## Watch Commands
+Anyone allowed to publish `tak.cot.mesh.tx` can put markers on every device on
+the mesh, and anyone allowed to publish `tak.cot.inject` can do the same through
+TAK Server. Restrict both with NATS permissions.
 
 ```bash
-# Stream all field telemetry from ATAK units
-nats sub 'omos.field.*.telemetry'
-
-# Stream telemetry from a specific unit
-nats sub 'omos.field.ANDROID-abc.telemetry'
-
-# Monitor bridge health
-nats sub 'omos.bridge.tak-bridge.health'
-
-# Monitor bridge errors
-nats sub 'omos.bridge.tak-bridge.errors'
-
-# Send a test command to all field units
-nats pub 'omos.field.ANDROID-abc.command' '{"action":"ping"}'
-
-# Pretty-print incoming telemetry (requires jq)
-nats sub 'omos.field.*.telemetry' | while read -r line; do echo "$line" | jq .; done
+nats sub tak.cot.mesh.rx --headers-only
+nats req tak.cot.mesh.tx '<event version="2.0" uid="omos-test-1" type="b-m-p-s-m" how="h-g-i-g-o" time="2026-10-29T12:00:00Z" start="2026-10-29T12:00:00Z" stale="2026-10-29T13:00:00Z"><point lat="30.2672" lon="-97.7431" hae="0" ce="9999999" le="9999999"/><detail><contact callsign="OneMind test"/></detail></event>'
+nats sub 'tel.fleet.edge.*.status'
 ```
 
----
+## Tests
 
-## Architecture
-
-```
-ATAK/WinTAK/OTS
-      │  CoT XML (UDP)
-      ▼
- tak-bridge (this binary)
-      │  JSON One Mind Envelope
-      ├──▶  NATS: omos.field.<uid>.telemetry
-      │
-      │  NATS: omos.field.*.command
-      ◀──┤
-      │  CoT XML (UDP)
-      ▼
- TAK Server / OTS
+```bash
+go vet ./... && go test -race ./...
 ```
 
----
+Covers the protobuf round trip of a full ATAK SA, the whole-element rule,
+negotiation rules 3a–3c and 4 (including TakControl with unset versions),
+malformed input, real multicast on the host, transmit on a named interface
+(the loopback interface: a peer joined there must hear the gateway), GeoChat
+routing, mesh encryption against an OpenSSL known-answer vector, plaintext
+rejection on an encrypted mesh, the `MESH_TO_TAK_SERVER` filter, directed TCP
+both ways, and data package fetch, verify, ack and `/getfile` serving.
+`hardening_test.go` covers the review fixes: a smuggled `</detail></event>`
+in `xmlDetail`, the transmit type guard, the `/getfile` bind address, data
+package admission (concurrency, SHA-256 dedup, inbox cap) and the directed
+connection limit.
 
-## Roadmap
+## Changes
 
-| Version | Feature |
-|---|---|
-| **v0.1** | UDP inbound CoT → NATS, NATS command → UDP outbound *(current)* |
-| **v0.2** | TCP multicast / streaming socket support for high-density TAK nets |
-| **v0.3** | Full bidirectional NATS→TAK command relay with ACK envelope |
-| **v0.4** | `orbit.go` batch publish — aggregate CoT events and publish as bulk telemetry bundles |
+**v0.4.0.** Review hardening: v1 `xmlDetail` must be a balanced XML fragment;
+acked JetStream publishes on `tak.cot.mesh.rx` (`MESH_RX_JETSTREAM`); transmit
+refuses `t-k-*`, `a-h-*`, `a-j-*` and `a-k-*`; data package fetch limit,
+SHA-256 dedup and inbox cap (`DATAPKG_INBOX_MAX_BYTES`); directed TCP limited to
+16 connections of 256 KiB; `/getfile` binds to the mesh address.
 
----
+**v0.3.0.** `MESH_INTERFACE` now applies to transmit (it was receive only, so
+SA could leave by the default route instead of the ATAK LAN). GeoChat group,
+Commo-compatible mesh encryption, peer-hosted data packages, directed transmit
+(`Tak-Dest-Uid`), `MESH_TTL`. `MESH_TO_TAK_SERVER=true` no longer copies
+OneMind's own CoT (`OM.*`, `INTEL.*`) or gateway presence to `tak.cot.inject`.
+A TakControl with unset versions (as `takproto` attaches to GeoChat) no longer
+drops the whole mesh to XML.
+
+**v0.2.0.** v0.1 accepted XML on unicast UDP 8087, published JSON envelopes to
+`omos.field.<uid>.telemetry` and sent `omos.field.*.command` to a TAK server as
+CoT at 0,0. Those subjects were outside the platform grammar and had no
+consumers; they are removed. Set `UDP_LISTEN_PORT=8087` to keep the old input.
 
 ## License
 
-Apache-2.0 — see [`SPDX-License-Identifier`](../../../LICENSE) header in source.
+Apache-2.0.

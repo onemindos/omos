@@ -152,3 +152,8 @@ apps:
   description: Community device telemetry, dashboards and alarms
   enabled: false
   blocked_reason: Prepared private IoT pilot; deployment, owner enrollment, dedicated read identity and scoped API or MCP acceptance pending. No physical actions granted.
+
+- id: forgejo
+  description: Private secondary Git forge and GitHub pull mirrors; GitHub remains primary
+  enabled: false
+  blocked_reason: Prepared source only. Owner enrollment, scoped read-only API adapter/token and authenticated acceptance are pending; no agent repository writes or CI execution.

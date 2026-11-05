@@ -258,3 +258,7 @@ applications:
   platform-thingsboard:
     apps: [thingsboard]
     reason: Prepared private pilot; supporting database and identity services belong to this app. Agent access stays disabled until scoped acceptance.
+  platform-forgejo:
+    apps:
+    - forgejo
+    reason: Private secondary forge owns Git mirrors and recovery state. Agent API remains disabled until authenticated read-only enrollment is reviewed.

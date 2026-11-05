@@ -50,7 +50,7 @@ Changing the sealed bootstrap file later is not a password rotation mechanism.
 
 ## First login and owner credentials
 
-The system administrator email is `me@zeusdelacruz.com` (`SYSADMIN_EMAIL`). Only the
+The system administrator email is the owner address recorded as `SYSADMIN_EMAIL` in that private file. Only the
 BCrypt hash is sealed, so the plaintext **cannot be recovered from the cluster**. It
 exists solely in the owner-only (0600) file
 `~/.config/onemind/recovery/iot-pilot/thingsboard-2026-11-04.json` on Zeus's Mac (never

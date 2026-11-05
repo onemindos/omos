@@ -74,6 +74,14 @@ two SealedSecrets, pinned image digest).
 
 ## Summary
 
+Trivy pilot, prepared 2026-10-24 and retargeted 2026-11-04: a bounded Argo-managed
+image-vulnerability pilot for `auth,nats,onetak,n8n` under `platform/security/`, with
+one concurrent scan Job, namespace-scoped operator permissions and a Grafana dashboard.
+Owner approved deploying it 2026-11-04; merging auto-syncs it through `platform-security`.
+It is not live-accepted yet, and the three private `ghcr.io/onemindos` images
+(`heynats`, `nats-dashboard`, `tak-portal`) are not scanned. No new PVC, node or public
+route is requested. See [capacity, scope and acceptance](operations/trivy-image-scan-pilot.md).
+
 | Item | Count / value |
 |------|---------------|
 | Argo CD Applications | 47 (45 Synced and Healthy; `app-of-apps` and `platform-ecosystem-resources` OutOfSync) |
@@ -342,3 +350,13 @@ existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
 These are fresh evaluation deployments, not migrations of retained Mac volumes,
 verified services or new cluster-count observations. User expressly chose both for
 comparison. See the owning READMEs for edition, launch and restore requirements.
+
+## Forgejo secondary forge — launch-ready 2026-11-04
+
+User-directed private GitHub pull-mirror standby. Source and SealedSecrets are
+committed but the Application is not synced, so no live health, hostname, account
+or backup is claimed. GitHub remains the working forge and Argo source.
+
+| Tier | Application | Namespace | State / recovery | Exposure | Status |
+| --- | --- | --- | --- | --- | --- |
+| 2 | `platform-forgejo` | `forgejo` | Rootless Forgejo 15.0.11 LTS, SQLite/Git/LFS on one 20Gi `do-block-storage-retain` claim; nightly coordinated stop plus VolSync/Restic export (`backups/restic/forgejo/data`); restore acceptance pending | Private `https://forgejo.tail717ba0.ts.net` (Tailscale ingress), local accounts, no SSH or registration; hub pool preferred | Manual Argo, not synced; [owner first sign-in and mirror pilot](../platform/forgejo/README.md#owner-first-sign-in) pending |
