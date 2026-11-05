@@ -19,6 +19,8 @@ export const ADMIN_ONLY_READ_PERMISSIONS: readonly string[] = [
   'devtools.administer',
   'devtools.info',
   'devtools.external-dependencies',
+  // Failed and pending catalog entities, with their raw source documents and errors.
+  'catalog.entities.unprocessed.read',
 ];
 
 /**

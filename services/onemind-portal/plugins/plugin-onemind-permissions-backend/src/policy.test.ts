@@ -31,6 +31,10 @@ import {
   devToolsTaskSchedulerCreatePermission,
   devToolsTaskSchedulerReadPermission,
 } from '@backstage/plugin-devtools-common/alpha';
+import {
+  unprocessedEntitiesDeletePermission,
+  unprocessedEntitiesReadPermission,
+} from '@backstage/plugin-catalog-unprocessed-entities-common';
 import { createOneMindPolicy, isOneMindAdmin } from './policy';
 
 const user = (admin: boolean): PolicyQueryUser => ({
@@ -184,6 +188,19 @@ describe('OneMind permission policy', () => {
       for (const who of [user(true), user(false), undefined]) {
         expect(await result(p, who)).toBe(AuthorizeResult.DENY);
       }
+    });
+  });
+
+  describe('catalog unprocessed entities', () => {
+    test.each([
+      ['read', unprocessedEntitiesReadPermission],
+      ['delete', unprocessedEntitiesDeletePermission],
+    ])('%s is admin only', async (_n, permission) => {
+      const result = async (who?: PolicyQueryUser) =>
+        (await decide(permission, who)).result;
+      expect(await result(user(true))).toBe(AuthorizeResult.ALLOW);
+      expect(await result(user(false))).toBe(AuthorizeResult.DENY);
+      expect(await result(undefined)).toBe(AuthorizeResult.DENY);
     });
   });
 
