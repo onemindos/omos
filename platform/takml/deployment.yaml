@@ -97,6 +97,44 @@ spec:
                   app: takml-vision-worker
               topologyKey: kubernetes.io/hostname
       initContainers:
+        - name: render-config
+          # Fills the store-password token of application.properties from the sealed Secret takml-tak-client
+          # into an in-memory emptyDir. awk reads the value from ENVIRON, so nothing secret is on a command
+          # line. A missing value or a leftover token fails the pod start.
+          image: busybox:1.36@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              : "${TAK_STORE_PASS:?}"
+              awk 'function rep(s, k, v,   i) { while ((i = index(s, k)) > 0) s = substr(s, 1, i - 1) v substr(s, i + length(k)); return s }
+                   { print rep($0, "__TAK_STORE_PASS__", ENVIRON["TAK_STORE_PASS"]) }' \
+                /tmp/cm/application.properties > /rendered/application.properties
+              if grep -q '__[A-Z_]*__' /rendered/application.properties; then
+                echo "unreplaced placeholder in application.properties" >&2
+                rm -f /rendered/application.properties
+                exit 1
+              fi
+          env:
+            - name: TAK_STORE_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: takml-tak-client
+                  key: store-password
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+          volumeMounts:
+            - name: config-template
+              mountPath: /tmp/cm
+              readOnly: true
+            - name: config
+              mountPath: /rendered
         - name: check-jar
           image: busybox:1.36@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
           command:
@@ -144,12 +182,6 @@ spec:
                 secretKeyRef:
                   name: takml-db-creds
                   key: password
-            - name: TAKSERVER_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: tak-keystores-copy
-                  key: cert-password
-                  optional: true
           ports:
             - name: http
               containerPort: 8234
@@ -196,13 +228,23 @@ spec:
         - name: jar
           persistentVolumeClaim:
             claimName: takml-server-jar
-        - name: config
+        - name: config-template
           configMap:
             name: takml-server-config
+        - name: config
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Mi
         - name: certs
           secret:
-            secretName: tak-keystores-copy
-            optional: true
+            # takml-tak-client (2026-10-29, step 3): only the two stores TAK-ML reads, re-encrypted with a new
+            # password. Replaces tak-keystores-copy, which held a copy of every TAK Server store.
+            secretName: takml-tak-client
+            items:
+              - key: takserver.jks
+                path: takserver.jks
+              - key: truststore-root.jks
+                path: truststore-root.jks
         - name: models
           persistentVolumeClaim:
             claimName: takml-models

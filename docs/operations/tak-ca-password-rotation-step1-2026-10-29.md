@@ -138,6 +138,9 @@ step 3.
 - SealedSecret `tak-enrollment-signer` retired from Git (Argo prunes the Secret); nothing mounts it.
 - Reverting #577 alone is no longer a complete rollback: restore `core-config` and the removed
   `cert-migration` keys from `tak-step2-backup-20261029` first, and bounce Ignite as described in the runbook.
+- Step 3 is prepared (PR `chore/tak-ca-password-rotation-step3`, runbook section "STEP 3" in
+  `platform/takserver/DEPLOY-RUNBOOK.md`, script `scripts/tak/rotate-step3.sh`); the items below that it covers are
+  done when that window is.
 - Remaining: delete `tak-step2-backup-20261029` and `tak-ca-backup-20261029` after the soak period;
   retire the unused `tak-keystores` Secret and its mounts; step 3 (unencrypted `takserver.key`, `admin.key`,
   `user.key` and the stock-password `*.p12`/`admin.jks`/`user.jks` in `cert-migration`, plus FedHub, TAK-ML

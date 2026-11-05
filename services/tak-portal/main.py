@@ -1,9 +1,11 @@
 import io
 import os
+import secrets
 import uuid
 import zipfile
 import base64
 from datetime import datetime, timezone, timedelta
+from xml.sax.saxutils import escape
 
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, StreamingResponse
@@ -22,10 +24,14 @@ CA_CERT_PATH = os.getenv("CA_CERT_PATH", "/certs/ca.pem")
 CA_KEY_PATH = os.getenv("CA_KEY_PATH", "/certs/ca.key")
 _raw_pass = os.getenv("CA_KEY_PASS", "")
 CA_KEY_PASS = _raw_pass.encode() if _raw_pass else None
-# Device-facing p12/truststore password that goes into the data package (certPassword). It is independent of
-# TAK Server's server-store password rotated in step 2 (2026-10-29), and of the CA key password (CA_KEY_PASS above).
-# Changing it changes what operators/devices type or import, so rotate it as its own change.
-CERT_PASS = b"atakatak"
+# Password of the client .p12 and the truststore .p12 inside each data package (written to the package manifest and
+# preferences as certPassword / clientPassword0 / caPassword0). It is independent of TAK Server's server-store
+# password and of the CA key password (CA_KEY_PASS above). CERT_PASS (env, from the sealed Secret
+# tak-portal-package-pass) fixes one password per deployment; if it is unset, every package gets its own random
+# password. There is no built-in default: the stock TAK password is never used. The password travels inside the
+# package, so devices that already imported an older package keep their own stored copy and are unaffected.
+_raw_cert_pass = os.getenv("CERT_PASS", "")
+CERT_PASS = _raw_cert_pass.encode() if _raw_cert_pass else None
 
 app = FastAPI(title="OneMind TAK Portal")
 templates = Jinja2Templates(directory="templates")
@@ -43,8 +49,12 @@ def _load_ca() -> tuple:
     return ca_cert, ca_key
 
 
-def _issue_cert(callsign: str) -> tuple[bytes, bytes, bytes]:
-    """Returns (client_p12, truststore_p12, ca_cert_pem)"""
+def _package_password() -> bytes:
+    return CERT_PASS or secrets.token_urlsafe(24).encode()
+
+
+def _issue_cert(callsign: str, password: bytes) -> tuple[bytes, bytes, bytes]:
+    """Returns (client_p12, truststore_p12, ca_cert_pem); both p12 files are encrypted with password"""
     ca_cert, ca_key = _load_ca()
 
     client_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
@@ -88,7 +98,7 @@ def _issue_cert(callsign: str) -> tuple[bytes, bytes, bytes]:
         key=client_key,
         cert=client_cert,
         cas=[ca_cert],
-        encryption_algorithm=serialization.BestAvailableEncryption(CERT_PASS),
+        encryption_algorithm=serialization.BestAvailableEncryption(password),
     )
 
     truststore_p12 = pkcs12.serialize_key_and_certificates(
@@ -96,7 +106,7 @@ def _issue_cert(callsign: str) -> tuple[bytes, bytes, bytes]:
         key=None,
         cert=ca_cert,
         cas=None,
-        encryption_algorithm=serialization.BestAvailableEncryption(CERT_PASS),
+        encryption_algorithm=serialization.BestAvailableEncryption(password),
     )
 
     ca_pem = ca_cert.public_bytes(serialization.Encoding.PEM)
@@ -104,7 +114,9 @@ def _issue_cert(callsign: str) -> tuple[bytes, bytes, bytes]:
 
 
 def _build_package(callsign: str) -> str:
-    client_p12, truststore_p12, _ = _issue_cert(callsign)
+    pkg_pass = _package_password()
+    client_p12, truststore_p12, _ = _issue_cert(callsign, pkg_pass)
+    pkg_pass_xml = escape(pkg_pass.decode(), {'"': "&quot;"})
 
     pkg_uid = str(uuid.uuid4())
 
@@ -115,6 +127,8 @@ def _build_package(callsign: str) -> str:
     <entry key="description0" class="class java.lang.String">OneMind OS</entry>
     <entry key="enabled0" class="class java.lang.Boolean">true</entry>
     <entry key="connectString0" class="class java.lang.String">{TAK_HOST},{TAK_PORT},TCP</entry>
+    <entry key="caPassword0" class="class java.lang.String">{pkg_pass_xml}</entry>
+    <entry key="clientPassword0" class="class java.lang.String">{pkg_pass_xml}</entry>
   </preference>
   <preference version="1" name="com.atakmap.app_preferences">
     <entry key="displayServerConnectionWidget" class="class java.lang.Boolean">true</entry>
@@ -130,10 +144,10 @@ def _build_package(callsign: str) -> str:
    </Configuration>
    <Contents>
       <Content ignore="false" zipEntry="certs/{callsign}.p12">
-         <Parameter name="certPassword" value="atakatak"/>
+         <Parameter name="certPassword" value="{pkg_pass_xml}"/>
       </Content>
       <Content ignore="false" zipEntry="certs/truststore-root.p12">
-         <Parameter name="certPassword" value="atakatak"/>
+         <Parameter name="certPassword" value="{pkg_pass_xml}"/>
       </Content>
       <Content ignore="false" zipEntry="{callsign}.pref"/>
    </Contents>

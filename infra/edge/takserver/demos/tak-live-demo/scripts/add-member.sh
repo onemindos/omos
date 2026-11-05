@@ -15,7 +15,7 @@ set -euo pipefail
 
 USER="${1:?usage: add-member.sh <username> [public_host]}"
 HOST="${2:-74.108.23.135}"
-PASS="atakatak"
+PASS="${P12_PASS:?set P12_PASS (password for the new member .p12)}"
 
 TAK=/Users/zeus/ATAK/server/standard/takserver-docker-5.7-RELEASE-43/tak
 CERTS="$TAK/certs/files"
@@ -59,7 +59,7 @@ fi
 
 echo "[3/5] Building data package ZIP..."
 mkdir -p "$OUTDIR"
-PKG_DESC="oneMind TAK" bash "$BUILD" \
+PKG_DESC="oneMind TAK" P12_PASS="$PASS" bash "$BUILD" \
   "$USER" "$CERTS/${USER}.p12" "$CERTS/truststore-root.p12" \
   "$HOST" "$OUTDIR/OneMind-${USER^}.zip"
 

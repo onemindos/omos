@@ -17,12 +17,12 @@
 #          server/.../certs/files/omos-iphone17.p12 \
 #          server/.../certs/files/truststore-root.p12 \
 #          100.74.182.117 deploy/exports/OneMind-iPhone17.zip
-# Cert/CA password is assumed to be the TAK default 'atakatak' (override with P12_PASS).
+# P12_PASS (env, required) is the password of the client .p12 and the truststore .p12; there is no default.
 set -euo pipefail
 
 USER="${1:?user}"; CLIENT_P12="${2:?client .p12}"; CA_P12="${3:?truststore .p12}"
 HOST="${4:?host/ip}"; OUT="${5:?output .zip}"
-PASS="${P12_PASS:-atakatak}"
+PASS="${P12_PASS:?set P12_PASS (the password of the client and truststore .p12)}"
 PORT="${TAK_COT_PORT:-8089}"
 DESC="${PKG_DESC:-OneMind TAK}"
 

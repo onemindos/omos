@@ -14,12 +14,19 @@ POD=$(kubectl get pod -n takserver -l app=takserver-api --context "$CONTEXT" \
 
 echo "Using pod: $POD"
 
-# Step 2 (2026-10-29) rotated TAK Server's server stores, not this client admin.p12 (a separate file in
-# ConfigMap cert-migration, still the stock password). Rotate it with the admin client identity. See docs/operations/tak-ca-password-rotation-step1-2026-10-29.md
-kubectl exec -n takserver "$POD" --context "$CONTEXT" -- sh -c '
-  openssl pkcs12 -legacy -in /certs-configmap/admin.p12 -passin pass:atakatak \
+# admin.p12 is encrypted with the leaf-identity password (step 3, 2026-10-29): Secret tak-leaf-identities, key
+# leaf-password. It is read here and handed to the pod on stdin, so it is never on a command line. See
+# docs/operations/tak-ca-password-rotation-step1-2026-10-29.md
+LEAF_PASS="$(kubectl get secret tak-leaf-identities -n takserver --context "$CONTEXT" \
+  -o jsonpath='{.data.leaf-password}' | base64 -d)"
+[ -n "$LEAF_PASS" ] || { echo "Secret tak-leaf-identities/leaf-password is missing or empty" >&2; exit 1; }
+
+printf '%s\n' "$LEAF_PASS" | kubectl exec -i -n takserver "$POD" --context "$CONTEXT" -- sh -c '
+  IFS= read -r LEAF_PASS
+  export LEAF_PASS
+  openssl pkcs12 -legacy -in /certs-configmap/admin.p12 -passin env:LEAF_PASS \
     -nokeys -clcerts -out /tmp/admin.crt 2>/dev/null
-  openssl pkcs12 -legacy -in /certs-configmap/admin.p12 -passin pass:atakatak \
+  openssl pkcs12 -legacy -in /certs-configmap/admin.p12 -passin env:LEAF_PASS \
     -nocerts -nodes -out /tmp/admin.key 2>/dev/null
 
   # Channel name → description
