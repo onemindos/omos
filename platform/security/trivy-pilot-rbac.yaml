@@ -1,6 +1,6 @@
 # Namespace-bound workloads/reports; scan Jobs and transient configuration only
 # in trivy-system. No application Secret access, workload writes or node access.
-# v0.35.0 always watches configauditreports/exposedsecretreports/sbomreports even with scanners off.
+# v0.35.0 watches the other report types even with their scanners off, so they stay read-only here.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -91,6 +91,8 @@ rules:
   resources:
   - configauditreports
   - exposedsecretreports
+  - infraassessmentreports
+  - rbacassessmentreports
   - sbomreports
   verbs:
   - get

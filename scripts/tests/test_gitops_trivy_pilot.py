@@ -104,7 +104,7 @@ class TrivyPilotTests(unittest.TestCase):
             self.assertTrue(permits(self.rbac, namespace, 'apps', 'replicasets', 'watch'))
             self.assertTrue(permits(self.rbac, namespace, 'batch', 'jobs', 'list'))
             self.assertTrue(permits(self.rbac, namespace, 'aquasecurity.github.io', 'vulnerabilityreports', 'create'))
-            for report in ['sbomreports', 'exposedsecretreports', 'configauditreports']:
+            for report in ['sbomreports', 'exposedsecretreports', 'configauditreports', 'rbacassessmentreports', 'infraassessmentreports']:
                 self.assertTrue(permits(self.rbac, namespace, 'aquasecurity.github.io', report, 'watch'))
                 self.assertFalse(permits(self.rbac, namespace, 'aquasecurity.github.io', report, 'create'))
             self.assertFalse(permits(self.rbac, namespace, 'apps', 'deployments', 'patch'))
