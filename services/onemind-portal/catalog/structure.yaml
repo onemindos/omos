@@ -302,11 +302,11 @@ apps:
   - name: openremote
     title: OpenRemote
     system: home-homestead
-    description: Private OpenRemote IoT evaluation (manager, Keycloak, PostgreSQL, same-origin proxy) prepared with a manual Argo Application; sealed credentials, first sync, owner login, telemetry and restore acceptance are pending.
+    description: Private OpenRemote IoT evaluation with a manual Argo Application; first sync, owner login, telemetry and restore acceptance are pending.
   - name: thingsboard
     title: ThingsBoard
     system: home-homestead
-    description: Private ThingsBoard Community 4.3 IoT evaluation (application and PostgreSQL, one-time schema bootstrap hook) prepared with a manual Argo Application; sealed credentials, first sync, owner login, telemetry and restore acceptance are pending.
+    description: Private ThingsBoard Community 4.3 IoT evaluation with a manual Argo Application; first sync, owner login, telemetry and restore acceptance are pending.
 placement:
   google-earth: geospatial
   cesium-native: geospatial
