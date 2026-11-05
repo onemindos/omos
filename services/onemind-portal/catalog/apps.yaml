@@ -8847,10 +8847,8 @@ metadata:
   tags:
     - kubernetes
   title: OpenRemote
-  description: Private OpenRemote IoT evaluation (manager, Keycloak, PostgreSQL,
-    same-origin proxy) prepared with a manual Argo Application; sealed
-    credentials, first sync, owner login, telemetry and restore acceptance are
-    pending.
+  description: Private OpenRemote IoT evaluation with a manual Argo Application;
+    first sync, owner login, telemetry and restore acceptance are pending.
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
@@ -8884,10 +8882,9 @@ metadata:
   tags:
     - kubernetes
   title: ThingsBoard
-  description: Private ThingsBoard Community 4.3 IoT evaluation (application and
-    PostgreSQL, one-time schema bootstrap hook) prepared with a manual Argo
-    Application; sealed credentials, first sync, owner login, telemetry and
-    restore acceptance are pending.
+  description: Private ThingsBoard Community 4.3 IoT evaluation with a manual Argo
+    Application; first sync, owner login, telemetry and restore acceptance are
+    pending.
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml

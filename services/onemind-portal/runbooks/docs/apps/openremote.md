@@ -2,7 +2,7 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Private OpenRemote IoT evaluation (manager, Keycloak, PostgreSQL, same-origin proxy) prepared with a manual Argo Application; sealed credentials, first sync, owner login, telemetry and restore acceptance are pending.
+Private OpenRemote IoT evaluation with a manual Argo Application; first sync, owner login, telemetry and restore acceptance are pending.
 
 ## Where it runs
 
