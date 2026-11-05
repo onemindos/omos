@@ -44,6 +44,8 @@ backend.add(import('@backstage/plugin-search-backend-module-pg'));
 backend.add(import('@backstage/plugin-search-backend-module-catalog'));
 backend.add(import('@backstage/plugin-search-backend-module-techdocs'));
 
+// Admin diagnostics. The OneMind policy makes it administrator-only and closes /config.
+backend.add(import('@backstage/plugin-devtools-backend'));
 backend.add(import('@backstage/plugin-kubernetes-backend'));
 backend.add(import('@backstage/plugin-user-settings-backend'));
 backend.add(import('@backstage/plugin-events-backend'));

@@ -23,6 +23,7 @@ import {
 import { systemsPlugin } from '@internal/plugin-onemind-systems';
 import { designModule } from '@internal/plugin-onemind-theme';
 import '@internal/plugin-onemind-theme/brand.css';
+import { devtoolsFeature } from './devtoolsFeature';
 import { shortcutsFeature } from './shortcutsFeature';
 import { createApp } from '@backstage/frontend-defaults';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
@@ -55,6 +56,7 @@ export default createApp({
     livePlugin,
     costPlugin,
     shortcutsFeature,
+    devtoolsFeature,
     authModule,
     systemsPlugin,
     servicesModule,

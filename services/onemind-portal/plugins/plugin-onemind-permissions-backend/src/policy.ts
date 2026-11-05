@@ -10,12 +10,39 @@ export const isOneMindAdmin = (user?: Pick<PolicyQueryUser, 'info'>) =>
   Boolean(user?.info.ownershipEntityRefs.includes(ADMIN_GROUP_REF));
 
 /**
+ * Permissions whose action is `read` but whose answer exposes operator internals
+ * (host details, package inventory, ingestion failures). Without this list the rule
+ * "any signed-in user may read" would let every user open the admin tools. Only
+ * administrators are allowed these.
+ */
+export const ADMIN_ONLY_READ_PERMISSIONS: readonly string[] = [
+  'devtools.administer',
+  'devtools.info',
+  'devtools.external-dependencies',
+];
+
+/**
+ * Permissions nobody gets, administrators included.
+ *  - devtools.config: the DevTools config view returns the loaded configuration, and it
+ *    hides only values that a plugin's config schema marks `@visibility secret`. A secret
+ *    in a key without that mark would be shown, so the endpoint stays closed.
+ *  - devtools.scheduler.*: the scheduled-task view is not part of this portal, and its
+ *    trigger would let a click run background jobs.
+ */
+export const NEVER_ALLOWED_PERMISSIONS: readonly string[] = [
+  'devtools.config',
+  'devtools.scheduler.read',
+  'devtools.scheduler.trigger',
+];
+
+/**
  * The one OneMind permission policy. It applies to every Backstage permission,
  * including `catalog.entity.*` and `scaffolder.task.create`:
  *
  *   anonymous / no user identity                 DENY, including reads
- *   member of group:default/onemind-admins       ALLOW everything
- *   any other signed-in user, action `read`      ALLOW
+ *   NEVER_ALLOWED_PERMISSIONS                    DENY for everyone, administrators included
+ *   member of group:default/onemind-admins       ALLOW everything else
+ *   any other signed-in user, action `read`      ALLOW, except ADMIN_ONLY_READ_PERMISSIONS
  *   any other signed-in user, create/update/delete   DENY
  *
  * Decisions are never CONDITIONAL, so there is no per-entity filtering: a user who may
@@ -27,9 +54,14 @@ export function createOneMindPolicy(): PermissionPolicy {
   return {
     async handle(request, user) {
       if (!user) return { result: AuthorizeResult.DENY };
+      const { name, attributes } = request.permission;
+      if (NEVER_ALLOWED_PERMISSIONS.includes(name)) {
+        return { result: AuthorizeResult.DENY };
+      }
+      if (isOneMindAdmin(user)) return { result: AuthorizeResult.ALLOW };
       if (
-        isOneMindAdmin(user) ||
-        request.permission.attributes.action === 'read'
+        attributes.action === 'read' &&
+        !ADMIN_ONLY_READ_PERMISSIONS.includes(name)
       ) {
         return { result: AuthorizeResult.ALLOW };
       }
