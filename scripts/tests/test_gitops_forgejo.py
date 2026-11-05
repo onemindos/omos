@@ -35,7 +35,9 @@ class FakeAPI:
         if path == BACKUP.SCALE:
             if patch:
                 self.replicas = patch["spec"]["replicas"]
-            return {"metadata": {"resourceVersion": "42"}, "spec": {"replicas": self.replicas}}
+            # Like the real scale API, omit replicas when it is zero.
+            spec = {"replicas": self.replicas} if self.replicas else {}
+            return {"metadata": {"resourceVersion": "42"}, "spec": spec}
         if path == BACKUP.PODS:
             return {"items": []}
         if path == BACKUP.SOURCE:

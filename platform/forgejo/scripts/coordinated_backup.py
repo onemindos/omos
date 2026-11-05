@@ -48,7 +48,7 @@ def wait_for(check, timeout, clock=time.monotonic, sleep=time.sleep):
 
 def coordinate(api, wait=wait_for):
     before = api(SCALE)
-    replicas = before["spec"]["replicas"]
+    replicas = before["spec"].get("replicas", 0)  # the scale API omits a zero value
     if replicas not in (0, 1):
         raise ValueError("Expected one writer or a deliberately stopped application")
     if api(SOURCE).get("spec", {}).get("paused", False):
@@ -74,7 +74,7 @@ def coordinate(api, wait=wait_for):
     finally:
         if changed:
             current = api(SCALE)
-            if current["spec"]["replicas"] == 0:
+            if current["spec"].get("replicas", 0) == 0:
                 api(SCALE, {"metadata": {"resourceVersion": current["metadata"]["resourceVersion"]},
                             "spec": {"replicas": replicas}})
                 print("Original Forgejo replica count restored", flush=True)
