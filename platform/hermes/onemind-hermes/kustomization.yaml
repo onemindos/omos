@@ -2,6 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: hermes
 resources:
+  - mac-access/onemind-hermes-mac-ssh.sealedsecret.json
   - pvc.yaml
   - deployment.yaml
   - service.yaml
@@ -21,6 +22,10 @@ resources:
   - mcp/zoho/zoho-workdrive.sealedsecret.yaml
   - mcp/zoho/zoho-mail-calendar.sealedsecret.yaml
 configMapGenerator:
+  - name: onemind-hermes-mac-ssh-client
+    files:
+      - mac_ssh.py=mac-access/mac_ssh.py
+      - prepare_mac_ssh.py=mac-access/prepare_mac_ssh.py
   - name: onemind-hermes-todoist
     files:
       - reconcile.py=mcp/todoist/reconcile.py

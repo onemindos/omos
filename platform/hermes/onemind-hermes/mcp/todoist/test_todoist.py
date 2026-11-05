@@ -12,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import unittest
 
 HERE = Path(__file__).parent
@@ -143,7 +144,8 @@ class GitOpsTests(unittest.TestCase):
 
     def test_fresh_and_existing_startup_twice_ownership_before_cli(self):
         # Execute the real init code with fixture-only path rewriting. Mock chown/root
-        # detection (no root required), and unrelated Zoho/Whop subprocesses only.
+        # detection and cross-domain subprocesses; Mac credential preparation has
+        # its own nonroot, metadata, projection and retry contracts in mac-access.
         spec = yaml.safe_load((BASE / 'deployment.yaml').read_text())['spec']['template']['spec']
         initial = next(c for c in spec['initContainers'] if c['name'] == 'initial-config')
         self.assertIn("'/todoist/reconcile.py'", initial['command'][-1])
@@ -188,7 +190,11 @@ class GitOpsTests(unittest.TestCase):
                             patch('pwd.getpwnam', return_value=SimpleNamespace(pw_uid=os.getuid(), pw_gid=os.getgid())), \
                             patch('subprocess.run', side_effect=run):
                         exec(code, {})
-                    self.assertEqual([Path(a[1]).parent.name for a in calls], ['zoho', 'whop', 'todoist'])
+                    self.assertEqual([Path(a[1]).parent.name for a in calls],
+                                     ['legacy-mac-ssh', 'zoho', 'whop', 'todoist'])
+                    self.assertEqual(calls[0], [sys.executable,
+                                               '/etc/legacy-mac-ssh/prepare_mac_ssh.py'])
+                    self.assertTrue(all(a[:1] == calls[0][:1] for a in calls))
                     current = yaml.safe_load((home / 'config.yaml').read_text())
                     if cli.is_file():
                         self.assertEqual(current['mcp_servers']['todoist'], EXPECTED)

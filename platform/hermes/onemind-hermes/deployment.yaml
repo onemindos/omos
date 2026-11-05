@@ -62,6 +62,14 @@ spec:
                   os.chown(target.parent, owner.pw_uid, owner.pw_gid)
                   os.chown(target, owner.pw_uid, owner.pw_gid)
 
+              # Direct image Python stays root here; resolve the actual hermes account
+              # and prepare owner-only credentials exclusively in the RAM volume.
+              import subprocess
+              import sys
+              subprocess.run([
+                  sys.executable, '/etc/legacy-mac-ssh/prepare_mac_ssh.py',
+              ], check=True)
+
               # Retire ClickUp on every start, including restoration of an older PVC.
               # Config only: never touch OAuth files, other profiles or vendor data.
               import subprocess
@@ -147,6 +155,14 @@ spec:
               readOnly: true
             - name: todoist-config
               mountPath: /todoist
+              readOnly: true
+            - name: mac-ssh-input
+              mountPath: /var/run/legacy-mac-ssh-input
+              readOnly: true
+            - name: mac-ssh
+              mountPath: /var/run/legacy-mac-ssh
+            - name: mac-ssh-client
+              mountPath: /etc/legacy-mac-ssh
               readOnly: true
         # Python packages the NATS gateway platform needs and the Hermes image lacks (nats-py,
         # nkeys and the Synadia agent SDK; pydantic and pynacl are already in the venv, so
@@ -323,6 +339,12 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /opt/data
+            - name: mac-ssh
+              mountPath: /var/run/legacy-mac-ssh
+              readOnly: true
+            - name: mac-ssh-client
+              mountPath: /etc/legacy-mac-ssh
+              readOnly: true
             # Deploy key + repository for the nightly config-export job. The Secret does not
             # exist until the owner creates it (README "Scheduled jobs"), so it is optional.
             - name: export
@@ -333,6 +355,26 @@ spec:
               mountPath: /etc/nats-ca
               readOnly: true
       volumes:
+        - name: mac-ssh
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Mi
+        - name: mac-ssh-input
+          secret:
+            secretName: onemind-hermes-mac-ssh
+            optional: true
+            defaultMode: 256  # 0400; root-only input to initial-config, never main
+            items:
+              - key: ssh-privatekey
+                path: ssh-privatekey
+              - key: ssh-publickey
+                path: ssh-publickey
+              - key: known_hosts
+                path: known_hosts
+        - name: mac-ssh-client
+          configMap:
+            name: onemind-hermes-mac-ssh-client
+            defaultMode: 292  # 0444; source only, no credentials
         - name: tmp
           emptyDir:
             sizeLimit: 128Mi
