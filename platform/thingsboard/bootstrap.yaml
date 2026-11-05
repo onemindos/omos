@@ -92,9 +92,6 @@ spec:
         - name: logs
           emptyDir:
             sizeLimit: 512Mi
-        - name: data
-          emptyDir:
-            sizeLimit: 512Mi
       restartPolicy: Never
       initContainers:
         - name: guard
@@ -177,5 +174,3 @@ spec:
               mountPath: /work
             - name: logs
               mountPath: /var/log/thingsboard
-            - name: data
-              mountPath: /usr/share/thingsboard/data
