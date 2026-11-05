@@ -1,0 +1,20 @@
+{
+  "observed": "2026-11-01",
+  "verification": "docker buildx imagetools inspect; image index contains Linuxamd64",
+  "images": {
+    "manager": {
+      "image": "openremote/manager@sha256:8c4778d832ae8fbf3be6103db79316867c0b2960f0ada583d4ddd4df23ed1924",
+      "amd64_manifest": "sha256:8449147707df5ed5399b571ed86ef005a4e1489292337b8884696cb5985ac5bb",
+      "source_commit": "9f9cf8ddcdf92d6b3d8553ee689a014a5988ca1e"
+    },
+    "keycloak": {
+      "image": "openremote/keycloak@sha256:5e5ee2899c56c941f3531818e71ea1dbcc70b4761cc32306e550bbc21af56e27",
+      "amd64_manifest": "sha256:9e00390b412e875d78ee9145f5a0d53076936efcdbda131b0d33d3d89c40e2f0"
+    },
+    "postgresql": {
+      "image": "openremote/postgresql@sha256:1622df4e31a0492e40d44920592264e2400adf7295fa68c6a63135a5ce7ffaf7",
+      "amd64_manifest": "sha256:37ecc2164eba78e89da8deea9cc700dec8e19bc71c9be84cb3131b4900e8e281",
+      "upstream_version": "17.9.0.1-slim (image labels PG17.9, Timescale2.26.4)"
+    }
+  }
+}

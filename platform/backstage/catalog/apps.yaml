@@ -8841,6 +8841,77 @@ spec:
   system: personal-tools
 ---
 apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: openremote
+  tags:
+    - kubernetes
+  title: OpenRemote
+  description: Private OpenRemote IoT evaluation with a manual Argo Application;
+    first sync, owner login, telemetry and restore acceptance are pending.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-openremote
+    onemind.io/launcher-url: https://openremote.tail717ba0.ts.net
+    onemind.io/runtime-evidence: Prepared source only; manual Argo, no live
+      namespace or workload; no working-route or application acceptance
+      recorded.
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/openremote/
+    github.com/project-slug: onemindos/omos
+  links:
+    - url: https://openremote.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+  labels:
+    onemind.io/pillar: le
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: home-homestead
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: thingsboard
+  tags:
+    - kubernetes
+  title: ThingsBoard
+  description: Private ThingsBoard Community 4.3 IoT evaluation with a manual Argo
+    Application; first sync, owner login, telemetry and restore acceptance are
+    pending.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-thingsboard
+    onemind.io/launcher-url: https://thingsboard.tail717ba0.ts.net
+    onemind.io/runtime-evidence: Prepared source only; manual Argo, no live
+      namespace or workload; no working-route or application acceptance
+      recorded.
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/thingsboard/
+    github.com/project-slug: onemindos/omos
+  links:
+    - url: https://thingsboard.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+  labels:
+    onemind.io/pillar: le
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: home-homestead
+---
+apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
   name: argocd-app-app-of-apps

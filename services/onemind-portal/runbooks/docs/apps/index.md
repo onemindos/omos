@@ -47,6 +47,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [OneTAK](onetak.md) | tak-ecosystem |
 | [OpenCost](opencost.md) | observability |
 | [OpenFGA](openfga.md) | identity-access |
+| [OpenRemote](openremote.md) | home-homestead |
 | [OpenTelemetry Collector](opentelemetry-collector.md) | observability |
 | [Platform Backup and Recovery](platform-backup-recovery.md) | data-storage |
 | [Platform core manifests](platform-core.md) | infrastructure |
@@ -56,6 +57,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Tailscale operator and proxies](tailscale-operator.md) | infrastructure |
 | [TAK Server](tak-server.md) | tak-ecosystem |
 | [TAK-ML](takml.md) | tak-ecosystem |
+| [ThingsBoard](thingsboard.md) | home-homestead |
 | [TileServer GL](tileserver-gl.md) | geospatial |
 | [Vaultwarden](vaultwarden.md) | identity-access |
 | [Velero](velero.md) | data-storage |

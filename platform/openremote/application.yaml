@@ -1,0 +1,346 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+spec:
+  selector:
+    app: keycloak
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        doks.digitalocean.com/node-pool: onemind-ecosystem-cpu
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: keycloak
+          image: openremote/keycloak@sha256:5e5ee2899c56c941f3531818e71ea1dbcc70b4761cc32306e550bbc21af56e27
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: '2'
+              memory: 1Gi
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: health
+              containerPort: 9000
+          env:
+            - name: TZ
+              value: America/New_York
+            - name: KC_HOSTNAME
+              value: https://openremote.tail717ba0.ts.net/auth
+            - name: KC_HTTP_ENABLED
+              value: 'true'
+            - name: KC_PROXY_HEADERS
+              value: xforwarded
+            - name: KC_DB_URL_HOST
+              value: postgresql
+            - name: KC_DB_URL_DATABASE
+              value: openremote
+            - name: KC_DB_SCHEMA
+              value: public
+            - name: KC_DB_USERNAME
+              value: postgres
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: openremote-env
+                  key: DB_PASSWORD
+            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: openremote-env
+                  key: ADMIN_PASSWORD
+            - name: JAVA_OPTS_APPEND
+              value: -Xms128m -Xmx512m
+          startupProbe:
+            httpGet:
+              path: /auth/health/ready
+              port: health
+            periodSeconds: 10
+            failureThreshold: 90
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /auth/health/ready
+              port: health
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /auth/health/live
+              port: health
+            periodSeconds: 30
+            failureThreshold: 5
+            timeoutSeconds: 5
+      volumes: []
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: manager
+spec:
+  selector:
+    app: manager
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+    - name: mqtt
+      port: 1883
+      targetPort: mqtt
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manager
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: manager
+  template:
+    metadata:
+      labels:
+        app: manager
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        doks.digitalocean.com/node-pool: onemind-ecosystem-cpu
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 185
+        runAsGroup: 185
+        fsGroup: 185
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: manager
+          image: openremote/manager@sha256:8c4778d832ae8fbf3be6103db79316867c0b2960f0ada583d4ddd4df23ed1924
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 250m
+              memory: 768Mi
+            limits:
+              cpu: '2'
+              memory: 2Gi
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: mqtt
+              containerPort: 1883
+          env:
+            - name: TZ
+              value: America/New_York
+            - name: OR_HOSTNAME
+              value: openremote.tail717ba0.ts.net
+            - name: OR_SSL_PORT
+              value: '-1'
+            - name: OR_DEV_MODE
+              value: 'false'
+            - name: OR_SETUP_RUN_ON_RESTART
+              value: 'false'
+            - name: OR_KEYCLOAK_HOST
+              value: keycloak
+            - name: OR_KEYCLOAK_PUBLIC_URI
+              value: https://openremote.tail717ba0.ts.net/auth
+            - name: OR_DB_HOST
+              value: postgresql
+            - name: OR_DB_NAME
+              value: openremote
+            - name: OR_DB_SCHEMA
+              value: openremote
+            - name: OR_DB_USER
+              value: postgres
+            - name: OR_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: openremote-env
+                  key: DB_PASSWORD
+            - name: OR_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: openremote-env
+                  key: ADMIN_PASSWORD
+            - name: OR_WEBSERVER_ALLOWED_ORIGINS
+              value: https://openremote.tail717ba0.ts.net
+            - name: OR_METRICS_ENABLED
+              value: 'false'
+            - name: JAVA_OPTS
+              value: -Xms256m -Xmx1024m
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            failureThreshold: 90
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 30
+            failureThreshold: 5
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: storage
+              mountPath: /storage
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: storage
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy
+spec:
+  selector:
+    app: proxy
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxy
+  annotations:
+    argocd.argoproj.io/sync-wave: '3'
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: proxy
+  template:
+    metadata:
+      labels:
+        app: proxy
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        doks.digitalocean.com/node-pool: onemind-ecosystem-cpu
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        fsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: proxy
+          image: nginx:1.30.6-alpine@sha256:47928bf67eb62a1863cb08d9ecb52d3e704304ba614eaee17884204677702951
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          ports:
+            - name: http
+              containerPort: 8080
+          command:
+            - nginx
+            - -c
+            - /etc/nginx/nginx.conf
+            - -g
+            - daemon off;
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            failureThreshold: 90
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 30
+            failureThreshold: 5
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: config
+          configMap:
+            name: proxy-config
+        - name: tmp
+          emptyDir:
+            sizeLimit: 64Mi

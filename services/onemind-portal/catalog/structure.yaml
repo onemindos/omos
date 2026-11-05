@@ -299,6 +299,14 @@ apps:
     title: Karakeep
     system: personal-tools
     description: Native bookmark and read-later workspace prepared with manual Argo and zero replicas; first start, owner enrollment and recovery acceptance are pending.
+  - name: openremote
+    title: OpenRemote
+    system: home-homestead
+    description: Private OpenRemote IoT evaluation with a manual Argo Application; first sync, owner login, telemetry and restore acceptance are pending.
+  - name: thingsboard
+    title: ThingsBoard
+    system: home-homestead
+    description: Private ThingsBoard Community 4.3 IoT evaluation with a manual Argo Application; first sync, owner login, telemetry and restore acceptance are pending.
 placement:
   google-earth: geospatial
   cesium-native: geospatial

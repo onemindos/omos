@@ -182,3 +182,33 @@ exceptions:
       The tool-gateway namespace is live (Argo application platform-tool-gateway, Deployments agentgateway, mcp-kubernetes and
       mcp-clickhouse) but the committed cluster inventory snapshot predates it, so no workload entry yet generates this
       annotation. Remove this exception when the inventory is next refreshed from the cluster.
+  - app: component:default/openremote
+    capability: kubernetes
+    reason: >-
+      OpenRemote source is staged with a manual Argo Application and no live namespace or workload snapshot is recorded.
+      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
+  - app: component:default/openremote
+    capability: grafana-alerts
+    reason: >-
+      OpenRemote source is staged with a manual Argo Application and no live namespace or workload snapshot is recorded.
+      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
+  - app: component:default/openremote
+    capability: logs
+    reason: >-
+      OpenRemote source is staged with a manual Argo Application and no live namespace or workload snapshot is recorded.
+      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
+  - app: component:default/thingsboard
+    capability: kubernetes
+    reason: >-
+      ThingsBoard source is staged with a manual Argo Application and no live namespace or workload snapshot is recorded.
+      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
+  - app: component:default/thingsboard
+    capability: grafana-alerts
+    reason: >-
+      ThingsBoard source is staged with a manual Argo Application and no live namespace or workload snapshot is recorded.
+      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
+  - app: component:default/thingsboard
+    capability: logs
+    reason: >-
+      ThingsBoard source is staged with a manual Argo Application and no live namespace or workload snapshot is recorded.
+      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.

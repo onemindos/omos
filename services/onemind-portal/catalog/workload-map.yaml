@@ -150,6 +150,12 @@ workloads:
   karakeep/web: component:default/karakeep
   karakeep/chrome: component:default/karakeep
   karakeep/meilisearch: component:default/karakeep
+  openremote/manager: component:default/openremote
+  openremote/keycloak: component:default/openremote
+  openremote/postgresql: component:default/openremote
+  openremote/proxy: component:default/openremote
+  thingsboard/thingsboard: component:default/thingsboard
+  thingsboard/postgres: component:default/thingsboard
 argoApplications:
   app-of-apps: component:default/argocd
   ecosystem-barman: component:default/cloudnative-pg
@@ -214,5 +220,7 @@ argoApplications:
   platform-volsync: component:default/volsync
   platform-volume-backups: component:default/platform-backup-recovery
   platform-karakeep: component:default/karakeep
+  platform-openremote: component:default/openremote
+  platform-thingsboard: component:default/thingsboard
 primaryArgoApplication:
   cloudnative-pg: ecosystem-cnpg

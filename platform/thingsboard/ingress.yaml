@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: thingsboard
+  annotations:
+    tailscale.com/hostname: thingsboard
+    argocd.argoproj.io/sync-wave: '4'
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: thingsboard
+      port:
+        number: 8080
+  tls:
+    - hosts:
+        - thingsboard

@@ -1,0 +1,181 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: thingsboard-bootstrap-v1
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+    argocd.argoproj.io/sync-wave: '1'
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 1800
+  template:
+    metadata:
+      labels:
+        app: bootstrap
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        doks.digitalocean.com/node-pool: onemind-ecosystem-cpu
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 70
+        runAsGroup: 70
+        fsGroup: 799
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: secure-admin
+          image: postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          env:
+            - &id001
+              name: PGHOST
+              value: postgres
+            - &id002
+              name: PGUSER
+              value: postgres
+            - &id003
+              name: PGDATABASE
+              value: thingsboard
+            - &id004
+              name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: thingsboard-env
+                  key: DB_PASSWORD
+            - &id005
+              name: PGCONNECT_TIMEOUT
+              value: '15'
+            - name: TB_SYSADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: thingsboard-env
+                  key: SYSADMIN_EMAIL
+            - name: TB_SYSADMIN_PASSWORD_HASH
+              valueFrom:
+                secretKeyRef:
+                  name: thingsboard-env
+                  key: SYSADMIN_PASSWORD_HASH
+          command:
+            - /bin/sh
+            - -ec
+            - if [ -f /work/install-required ]; then psql -X --set=ON_ERROR_STOP=1 --file=/scripts/secure-admin.sql;
+              fi
+          volumeMounts:
+            - name: work
+              mountPath: /work
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+      volumes:
+        - name: work
+          emptyDir:
+            sizeLimit: 16Mi
+        - name: scripts
+          configMap:
+            name: thingsboard-bootstrap
+            defaultMode: 365
+        - name: logs
+          emptyDir:
+            sizeLimit: 512Mi
+        - name: data
+          emptyDir:
+            sizeLimit: 512Mi
+      restartPolicy: Never
+      initContainers:
+        - name: guard
+          image: postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          env:
+            - *id001
+            - *id002
+            - *id003
+            - *id004
+            - *id005
+          command:
+            - /scripts/guard.sh
+          volumeMounts:
+            - name: work
+              mountPath: /work
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+        - name: install
+          image: thingsboard/tb-node:4.3.1.8@sha256:5e2c180f3c48a9f4efd3e19d2f03c41b510ff1a935f25083657e0cf046a94872
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            runAsUser: 799
+            runAsGroup: 799
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: '2'
+              memory: 2Gi
+          env:
+            - name: TB_SERVICE_ID
+              value: onemind-thingsboard
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/thingsboard
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: thingsboard-env
+                  key: DB_PASSWORD
+            - name: JWT_TOKEN_SIGNING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: thingsboard-env
+                  key: JWT_TOKEN_SIGNING_KEY
+            - name: TB_QUEUE_TYPE
+              value: in-memory
+            - name: JAVA_OPTS
+              value: -Xms256m -Xmx1200m
+            - name: INSTALL_TB
+              value: 'true'
+            - name: LOAD_DEMO
+              value: 'false'
+          command:
+            - /bin/sh
+            - -ec
+            - if [ -f /work/install-required ]; then exec start-tb-node.sh; fi
+          volumeMounts:
+            - name: work
+              mountPath: /work
+            - name: logs
+              mountPath: /var/log/thingsboard
+            - name: data
+              mountPath: /usr/share/thingsboard/data

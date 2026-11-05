@@ -1,0 +1,11 @@
+{
+  "observed": "2026-11-01",
+  "verification": "docker buildx imagetools inspect; image index contains Linuxamd64",
+  "images": {
+    "server": {
+      "image": "thingsboard/tb-node:4.3.1.8@sha256:5e2c180f3c48a9f4efd3e19d2f03c41b510ff1a935f25083657e0cf046a94872",
+      "amd64_manifest": "sha256:5e4d5c3a912f9f11639e294b118389315081d1ddd78c827d416eeb294ba821d1",
+      "source_tag": "v4.3.1.8"
+    }
+  }
+}

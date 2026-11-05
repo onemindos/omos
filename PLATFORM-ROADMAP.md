@@ -1452,6 +1452,21 @@ contract or live setting is added. TAK artifact availability/rights and actual
 free-versus-commercial requirements remain unresolved. Implementation/adoption
 needs a later decision; this entry changes no phase completion or deployment state.
 
+## User-directed IoT comparison — November1,2026
+
+Zeus selected **both OpenRemote and ThingsBoard** for cluster evaluation, superseding
+the earlier recommendation to promote only one immediately. Source is prepared as
+separate manual-sync Argo Applications in one reviewable batch. Private HTTPS,
+retained data, per-volume encrypted backups and an idempotent ThingsBoard account
+bootstrap are declared. Local containers were retired separately with their saved
+data retained; no data import or cluster rollout is claimed here.
+
+[OpenRemote launch/recovery](platform/openremote/README.md) and
+[ThingsBoard CE4.3 launch/recovery](platform/thingsboard/README.md). Capacity,
+merge, manual sync (OpenRemote first, ThingsBoard after it is stable), login, telemetry and isolated restore acceptance remain pending. Real SealedSecrets were committed 2026-11-04.
+No Hermes adapter, NATS contracts or physical-control permission changes. Phase6
+remains In progress; Phases7/8 remain unfinished.
+
 ## User-directed Trivy scanning pilot — 2026-10-24
 
 Zeus requested an implementation PR for a limited Trivy Operator pilot.

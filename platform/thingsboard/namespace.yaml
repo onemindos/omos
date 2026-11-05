@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: thingsboard
+  annotations:
+    argocd.argoproj.io/sync-wave: '-5'
+    argocd.argoproj.io/sync-options: Prune=false
+  labels:
+    onemind.io/layer: decide
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
