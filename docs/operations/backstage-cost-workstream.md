@@ -4,6 +4,15 @@ Draft, offline implementation only. No backend route, proxy, UI wiring, permissi
 network, storage or deployment change. No live acceptance was attempted. Phase 6
 remains in progress; the coordinator owns the separate roadmap update.
 
+> **Update 2026-11-05 (F9).** The Cost page now exists as the internal plugin
+> `services/onemind-portal/plugins/plugin-onemind-cost` (page `/cost`, extension
+> `page:cost-insights`). It reads the existing `/api/proxy/opencost/allocation` route and
+> validates with a TypeScript port of `scripts/cost-allocation.cjs`; a parity test runs both
+> on the same payloads. OpenChoreo and its observability adapter are retired, so the
+> OpenChoreo-scope mapping items below no longer apply. The first real allocation response
+> (OpenCost 1.121.3, cluster `onemind-cloud`) was captured read-only on 2026-11-05 and a
+> trimmed copy is the page's regression fixture. OpenCost's response carries no currency.
+
 ## Source and existing integration
 
 Repository source inspected:

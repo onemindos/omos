@@ -163,7 +163,32 @@ The same server reads fixed Prometheus queries for five namespaces: backstage, a
 
 ## OpenCost allocation proxy
 
-`/api/proxy/opencost/allocation` forwards GET requests to the in-cluster OpenCost allocation API (`opencost.opencost.svc.cluster.local:9003/allocation`). Backstage credentials are required and are not forwarded; other OpenCost routes are not reachable through it. It returns raw OpenCost estimates; `scripts/cost-allocation.cjs` defines how a future card should validate them (`docs/operations/backstage-cost-workstream.md`). The OpenCost catalog component links to the tailnet UI.
+`/api/proxy/opencost/allocation` forwards GET requests to the in-cluster OpenCost allocation API (`opencost.opencost.svc.cluster.local:9003/allocation`). Backstage credentials are required and are not forwarded; other OpenCost routes are not reachable through it. It returns raw OpenCost estimates. The Cost page (see [Plugin pack](#plugin-pack-f9)) is its only consumer; `scripts/cost-allocation.cjs` defines the validation (`docs/operations/backstage-cost-workstream.md`). The OpenCost catalog component links to the tailnet UI.
+
+## Plugin pack (F9)
+
+Five additions, one commit each so any can be reverted alone. Exact versions are the ones in the
+Backstage 1.55.3 release manifest unless stated. Work order: [F9](../../docs/roadmap/flagship/F9-plugin-pack.md).
+
+| Addition | What a person sees | Package | Boundary |
+| --- | --- | --- | --- |
+| Cost page | Sidebar Insights > Cost (`/cost`): last 1, 7 or 30 complete UTC days of OpenCost cost per namespace, app and pillar | internal `plugin-onemind-cost` (no new dependency) | Signed-in users; reads only the existing proxy route |
+| Shortcuts | "Add shortcut" list in the desktop sidebar | `@backstage-community/plugin-shortcuts` 0.25.1 | Stored per user in the account-backed storage API |
+| DevTools | Admin > DevTools, Info tab (host, Node, Backstage and package versions) | `@backstage/plugin-devtools` 0.1.43, `-backend` 0.5.21, `-common` 0.1.26 | Administrators only; raw config and scheduler views are closed |
+| Unprocessed entities | Admin > Unprocessed entities: failed and pending catalog entities with errors | `@backstage/plugin-catalog-unprocessed-entities` 0.2.35, `-common` 0.0.17, `@backstage/plugin-catalog-backend-module-unprocessed` 0.6.16 | Administrators only |
+| Kyverno policy results | "Policy results (Kyverno)" card on app and workload pages | internal (`operations-backend` route, app card) | Signed-in users; read-only |
+
+**Cost page.** The response is validated with a TypeScript port of `scripts/cost-allocation.cjs`; `allocation.test.ts` runs both on the same payloads and requires identical results, so change them together. Unknown, partial, empty and failed results are labelled and never shown as zero; a namespace with an unusable cost shows "Unknown", and totals become "at least". OpenCost always adds an `__unmounted__` line (load balancers are most of it today); it is shown as "Not owned by a namespace" instead of being dropped. Namespaces are joined to catalog apps through `backstage.io/kubernetes-namespace`; a namespace several apps share is shown as shared and is never split between them, and pillar totals mark assignments that are still `proposed`. The page states that these are estimates and not the DigitalOcean bill. OpenCost does not report a currency, so amounts are labelled USD, which is how DigitalOcean bills. Query: `window=<start>,<end>&aggregate=namespace&accumulate=true` with whole UTC days.
+
+**Shortcuts.** `@backstage/plugin-shortcuts` is deprecated (last release April 2024, moved to community-plugins) and is not in the 1.55.3 manifest. `@backstage-community/plugin-shortcuts` 0.25.1 is the newest release whose dependency ranges the pinned core packages satisfy (0.26.0 would pull a second copy of `core-components`). It has no new-frontend export, so `packages/app/src/shortcutsFeature.ts` converts the legacy plugin to register its API and `plugin-onemind-nav` renders the component. It is hidden on phones, where the bottom bar is already full. This is separate from the shared app links on Home and from Settings.
+
+**DevTools and unprocessed entities.** Every DevTools permission has action `read`, which the default rule would have given to any signed-in user, so the policy lists the administrator-only ones explicitly. `devtools.config` is closed for everyone: the Config view hides only values a plugin's config schema marks `@visibility secret`, so a secret in an unmarked key would be shown. The scheduler view is closed because its trigger would run background jobs. The Config and Scheduled Tasks tabs are also removed in code (`devtoolsFeature.ts`). To re-enable one, remove its entry from `NEVER_ALLOWED_PERMISSIONS` in `policy.ts` and from `devtoolsFeature.ts`, after checking the config schema coverage. The unprocessed-entities plugin ships its page disabled and attaches a copy to DevTools; `unprocessedEntitiesFeature.ts` enables the standalone page and disables the copy. Its delete action stays administrator-only; deleting a row only makes the catalog re-ingest that entity. Negative tests start the real routes behind the real policy (`adminRoutes.test.ts`, `unprocessedRoutes.test.ts`): 403 for a signed-in non-admin and for a service credential such as the MCP token, 403 on `/config` even for an administrator.
+
+**Kyverno policy results.** Options checked on 2026-11-05: Kyverno's Policy Reporter plugin needs the Policy Reporter service as another in-cluster workload (the larger node had about 16% memory requests free); TeraSky `kyverno-policy-reports` 1.21.0 supports the new frontend but needs `core-components` 0.18.15, `frontend-plugin-api` 0.18.2 and `@backstage/ui` 0.19, newer than 1.55.3, and fetches a report per resource UID. Neither is installed. Kyverno's reports controller already writes a namespaced `PolicyReport` per scanned resource (693 on 2026-11-05, no failures), so `GET /api/onemind/policy-reports` in `plugin-onemind-operations-backend` reads `/apis/wgpolicyk8s.io/v1alpha2/policyreports` through the read-only cluster access the Live Operations page uses: signed-in users only, fixed path, at most one cluster list per minute shared by all callers, stale or error reported rather than an all-clear. It resolves each Pod and ReplicaSet to its controller by longest name prefix, so `backstage-postgres` stays apart from `backstage`. The card matches an app's workloads from `onemind.io/kubernetes-workloads` (or the single `onemind.io/kubernetes-workload`), falls back to the whole namespace when none is named, and counts a violation once per workload, policy and rule. Cluster-scoped reports are not read. This needs one RBAC addition: `get`/`list` on `policyreports.wgpolicyk8s.io` in the `backstage-observer` ClusterRole (`rbac.yaml`); `platform-backstage` has automated sync, so it applies when this merges. No Secret access is added. No Trivy Operator work: it runs separately in `trivy-system`.
+
+**Not built.** Bookmarks per entity and the optional Q&A plugin are not part of this pack. Harbor and OpenChoreo are retired and nothing was added for them.
+
+**Bundle size.** See the F9 work order status for the measured change.
 
 ## P4 TechDocs
 
@@ -261,8 +286,9 @@ OpenChoreo service or configuration.
 | Caller | Decision |
 | --- | --- |
 | No user identity | DENY, including reads |
-| Member of `group:default/onemind-admins` | ALLOW everything |
-| Any other signed-in user, `read` actions | ALLOW |
+| `devtools.config`, `devtools.scheduler.read`, `devtools.scheduler.trigger` | DENY for everyone, administrators included |
+| Member of `group:default/onemind-admins` | ALLOW everything else |
+| Any other signed-in user, `read` actions | ALLOW, except `devtools.administer`, `devtools.info`, `devtools.external-dependencies` and `catalog.entities.unprocessed.read`, which are administrator-only |
 | Any other signed-in user, create/update/delete (entity create/refresh/delete, location writes, `scaffolder.task.create`, ...) | DENY |
 
 Decisions are never conditional, so there is no per-entity filtering. Machine callers (the MCP

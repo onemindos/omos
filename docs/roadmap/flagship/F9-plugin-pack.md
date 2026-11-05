@@ -55,4 +55,35 @@ if approved; manual sync), and docs.
 
 ## Status
 
-(Implementing agent: write progress here.)
+**Built 2026-11-05 on `feat/backstage-plugin-pack`, one commit per plugin; not deployed.** The image builds in CI on merge and
+`platform/backstage/deployment.yaml` still pins the old digest, so nothing below is visible until a reviewed digest update.
+Details and boundaries: [Plugin pack](../../../platform/backstage/README.md#plugin-pack-f9).
+
+| Plugin | State | Notes |
+|---|---|---|
+| OpenCost Cost page | Built (internal plugin) | The community OpenCost plugin has no new-frontend export and its own API config; a small page reads the existing proxy route and validates with a TypeScript port of `scripts/cost-allocation.cjs` (parity-tested). Unknown and partial data are labelled, never zero; `__unmounted__` cost is shown separately; the page says these are estimates, not the DigitalOcean bill. |
+| Shortcuts | Built | `@backstage-community/plugin-shortcuts` 0.25.1, not `@backstage/plugin-shortcuts` (deprecated since April 2024, not in the 1.55.3 manifest). Legacy plugin converted; desktop sidebar only. |
+| DevTools | Built, admin only | 0.1.43 / backend 0.5.21. Info view only: `devtools.config` and the scheduler views are closed for everyone. `devtools.info` and `devtools.external-dependencies` have action `read`, so the policy now lists them as administrator-only. |
+| Unprocessed entities | Built, admin only | 0.2.35 / module 0.6.16. Standalone page enabled, DevTools copy disabled. |
+| Kyverno policy results | Built without a new workload | Policy Reporter needs another workload; TeraSky needs core packages newer than 1.55.3. A card reads the PolicyReports Kyverno already writes through the backend's existing read-only cluster access. Adds `get`/`list` on `policyreports.wgpolicyk8s.io` to the `backstage-observer` ClusterRole. |
+| Q&A, Trivy Operator, bookmarks per entity | Not built | Q&A skipped by owner decision; Trivy Operator already runs in `trivy-system`; bookmarks were not requested. |
+
+**Acceptance**
+
+- [ ] Cost page matches OpenCost's own API within 1%. The page shows OpenCost's `totalCost` per namespace unchanged
+      (no rescaling), and the real payload captured on 2026-11-05 is its regression fixture (`takserver` $14.70 over 7 days,
+      `__unmounted__` $26.97). A live comparison needs the deployed image. **Open.**
+- [x] Each plugin renders or shows a clear state: tests cover Cost (available, partial, unknown, empty, error), the Kyverno card
+      (zero, violation, unavailable, stale, no report) and the DevTools and unprocessed-entities tabs in a test app. Not yet seen in
+      a browser against live data. **Open: check after deployment.**
+- [x] Admin-only plugins return 403 for non-admins: `adminRoutes.test.ts` and `unprocessedRoutes.test.ts` run the real routes
+      behind the real policy (non-admin, service credential, and `/config` for an administrator).
+- [x] `yarn install --immutable`, `tsc`, lint, the portal's node tests, the app and backend builds, and
+      `test_gitops_portal_*.py` pass. `repo test`: 600 pass; 8 fail in `plugin-onemind-inventory-backend`, which fail the same way
+      on `origin/main` (catalog drift, unrelated).
+- [x] Bundle size: app JavaScript 16,324,215 to 16,816,248 bytes uncompressed (+492 KB, +3.0%); `dist` 89,156 to 91,324 KB.
+
+**Check after deployment** Sign in as an administrator and as a non-administrator. Both: Insights > Cost shows namespaces with a
+total and an estimate notice; an app page shows "Policy results (Kyverno)". Administrator only: Admin > DevTools (Info tab only) and
+Admin > Unprocessed entities. As a non-administrator, `/api/devtools/info`, `/api/devtools/config` and
+`/api/catalog/entities/unprocessed/failed` return 403.
