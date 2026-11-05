@@ -6679,12 +6679,21 @@ __metadata:
   resolution: "@internal/plugin-onemind-services-backend@workspace:plugins/plugin-onemind-services-backend"
   dependencies:
     "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/backend-test-utils": "npm:1.11.7"
     "@backstage/catalog-model": "npm:1.10.1"
     "@backstage/cli": "npm:0.36.6"
+    "@backstage/integration": "npm:^2.1.2"
     "@backstage/plugin-catalog-common": "npm:1.2.0"
     "@backstage/plugin-catalog-node": "npm:2.2.5"
+    "@backstage/plugin-permission-common": "npm:^0.9.11"
+    "@backstage/plugin-scaffolder-backend": "npm:4.2.0"
+    "@backstage/plugin-scaffolder-backend-module-github": "npm:0.10.0"
+    "@backstage/plugin-scaffolder-common": "npm:^2.3.0"
+    "@backstage/plugin-scaffolder-node": "npm:^0.13.7"
     "@internal/plugin-onemind-common-backend": "workspace:^"
+    ajv: "npm:^8.20.0"
     express: "npm:4.22.1"
+    yaml: "npm:2.9.1"
   languageName: unknown
   linkType: soft
 

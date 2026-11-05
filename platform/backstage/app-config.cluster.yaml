@@ -68,6 +68,8 @@ catalog:
     - {type: file, target: /app/templates/app-onboarding/template.yaml, rules: [{allow: [Template]}]}
     - {type: file, target: /app/templates/deployment-change/template.yaml, rules: [{allow: [Template]}]}
     - {type: file, target: /app/templates/recovery-preparation/template.yaml, rules: [{allow: [Template]}]}
+    - {type: file, target: /app/templates/app-add/template.yaml, rules: [{allow: [Template]}]}
+    - {type: file, target: /app/templates/app-retire/template.yaml, rules: [{allow: [Template]}]}
     - {type: file, target: /app/catalog/apps.yaml}
     - {type: file, target: /app/catalog/cluster.yaml}
     - {type: file, target: /app/catalog/org.yaml, rules: [{allow: [User, Group]}]}

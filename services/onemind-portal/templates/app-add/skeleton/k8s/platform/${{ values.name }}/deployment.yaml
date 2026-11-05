@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ values.name }}
+  namespace: ${{ values.name }}
+  labels:
+    app.kubernetes.io/name: ${{ values.name }}
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ${{ values.name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ${{ values.name }}
+    spec:
+      automountServiceAccountToken: false
+      # The hub-core pool is memory-saturated: new apps go to the ecosystem pool.
+      nodeSelector:
+        doks.digitalocean.com/node-pool: onemind-ecosystem-cpu
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+        # TODO review: set runAsUser and fsGroup if the image does not declare a numeric non-root USER.
+      containers:
+      - name: app
+        # Pinned by digest. Never use a floating tag.
+        image: ${{ values.image }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: ${{ values.port }}
+        # Real values come from a SealedSecret (see ${{ values.name }}.secret.example); optional until it exists.
+        envFrom:
+        - secretRef:
+            name: ${{ values.name }}-secrets
+            optional: true
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        # Starting values only. The hub-core pool is saturated: do not raise requests without a capacity check.
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+{%- if values.healthCheck == 'probe' %}
+        readinessProbe:
+          httpGet:
+            path: ${{ values.healthPath }}
+            port: http
+        livenessProbe:
+          httpGet:
+            path: ${{ values.healthPath }}
+            port: http
+          initialDelaySeconds: 15
+{%- endif %}
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+{%- if values.dataPlan == 'volsync' %}
+        - name: data
+          mountPath: /data
+{%- endif %}
+      volumes:
+      - name: tmp
+        emptyDir:
+          sizeLimit: 128Mi
+{%- if values.dataPlan == 'volsync' %}
+      - name: data
+        persistentVolumeClaim:
+          claimName: data
+{%- endif %}

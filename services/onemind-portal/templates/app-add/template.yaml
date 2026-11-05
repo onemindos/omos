@@ -1,0 +1,319 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: add-app
+  title: Add app to OneMind
+  description: Opens a reviewed draft pull request with the catalog entry and, for Kubernetes, the Argo CD Application and a manifest
+    skeleton. Nothing changes live until the pull request is merged (and, for Kubernetes, synced by a person).
+  tags:
+    - lifecycle
+    - app
+spec:
+  owner: group:default/onemind-admins
+  type: service
+  parameters:
+    - title: What is it
+      required:
+        - name
+        - title
+        - description
+        - hosting
+      properties:
+        name:
+          title: Name
+          type: string
+          pattern: ^[a-z][a-z0-9-]{2,39}$
+          description: Lowercase letters, digits and dashes. For Kubernetes this is also the namespace, the Argo CD Application suffix (platform-NAME) and the manifest directory (platform/NAME).
+          ui:autofocus: true
+        title:
+          title: Title
+          type: string
+          minLength: 3
+          maxLength: 80
+        description:
+          title: What it is for
+          type: string
+          minLength: 10
+          maxLength: 400
+          ui:widget: textarea
+        hosting:
+          title: Hosting
+          type: string
+          default: kubernetes
+          enum:
+            - kubernetes
+            - digitalocean
+            - saas
+            - home-device
+          enumNames:
+            - Kubernetes through Argo CD (omos-cloud)
+            - DigitalOcean (outside the cluster)
+            - SaaS or external provider
+            - Home server or device
+      dependencies:
+        hosting:
+          oneOf:
+            - properties:
+                hosting:
+                  enum:
+                    - kubernetes
+                image:
+                  title: Container image, pinned by digest
+                  type: string
+                  pattern: ^[a-zA-Z0-9./:_-]+@sha256:[a-f0-9]{64}$
+                  description: registry/name:tag@sha256:... Never a floating tag.
+                port:
+                  title: HTTP container port
+                  type: integer
+                  minimum: 1
+                  maximum: 65535
+                  default: 8080
+                layer:
+                  title: Namespace layer
+                  type: string
+                  default: make-sense
+                  enum:
+                    - data
+                    - sense
+                    - make-sense
+                    - decide
+                    - act
+                    - guard
+                access:
+                  title: Access
+                  type: string
+                  default: tailnet
+                  enum:
+                    - tailnet
+                    - cloudflare
+                    - internal
+                  enumNames:
+                    - Tailnet only (Tailscale ingress)
+                    - Public through Cloudflare (nginx with the Cloudflare allowlist)
+                    - Internal only (no ingress)
+                healthCheck:
+                  title: Health check
+                  type: string
+                  default: probe
+                  enum:
+                    - probe
+                    - none
+                  enumNames:
+                    - Readiness and liveness probe on the Deployment
+                    - None yet (the hygiene report will flag it)
+                healthPath:
+                  title: Health path
+                  type: string
+                  default: /health
+                dataPlan:
+                  title: Data and backup
+                  type: string
+                  default: none
+                  enum:
+                    - none
+                    - volsync
+                    - pg-dump
+                  enumNames:
+                    - No persistent data
+                    - One volume, backed up by VolSync
+                    - Database, backed up by a dump job
+                storage:
+                  title: Volume size (when VolSync)
+                  type: string
+                  default: 5Gi
+                  pattern: ^[0-9]+(Mi|Gi|Ti)$
+                backupSchedule:
+                  title: VolSync schedule, cron (never empty)
+                  type: string
+                  default: 30 3 * * *
+                  pattern: ^\S+ \S+ \S+ \S+ \S+$
+              required:
+                - image
+                - port
+                - access
+                - dataPlan
+            - properties:
+                hosting:
+                  enum:
+                    - digitalocean
+                url:
+                  title: Canonical HTTPS URL
+                  type: string
+                  pattern: ^https://[^\s"'<>`\\]+$
+                dataPlan:
+                  title: Data and backup
+                  type: string
+                  default: provider
+                  enum:
+                    - provider
+                    - none
+                    - pg-dump
+                healthCheck:
+                  title: Health check
+                  type: string
+                  default: url
+                  enum:
+                    - url
+                    - none
+                healthUrl:
+                  title: Health URL
+                  type: string
+                  pattern: ^https://[^\s"'<>`\\]*$
+              required:
+                - url
+            - properties:
+                hosting:
+                  enum:
+                    - saas
+                url:
+                  title: Canonical HTTPS URL
+                  type: string
+                  pattern: ^https://[^\s"'<>`\\]+$
+                dataPlan:
+                  title: Data and backup
+                  type: string
+                  default: provider
+                  enum:
+                    - provider
+                    - none
+              required:
+                - url
+            - properties:
+                hosting:
+                  enum:
+                    - home-device
+                url:
+                  title: URL on the private mesh (optional)
+                  type: string
+                dataPlan:
+                  title: Data and backup
+                  type: string
+                  default: none
+                  enum:
+                    - none
+                    - provider
+    - title: Where it sits
+      required:
+        - pillar
+        - system
+        - owner
+      properties:
+        pillar:
+          title: Pillar
+          type: string
+          enum:
+            - so
+            - le
+            - hp
+            - ge
+          enumNames:
+            - SO, Sovereign Operations
+            - LE, Legacy Evolution
+            - HP, Holistic Performance
+            - GE, Generational Empire
+        system:
+          title: System
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind: System
+            defaultKind: System
+        owner:
+          title: Owner
+          type: string
+          default: group:default/onemind-admins
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+        lifecycle:
+          title: Lifecycle
+          type: string
+          default: experimental
+          enum:
+            - experimental
+            - production
+  steps:
+    - id: prepare
+      name: Prepare catalog inputs and review checklist (read-only)
+      action: onemind:app-add:prepare
+      input:
+        name: ${{ parameters.name }}
+        title: ${{ parameters.title }}
+        description: ${{ parameters.description }}
+        hosting: ${{ parameters.hosting }}
+        pillar: ${{ parameters.pillar }}
+        system: ${{ parameters.system }}
+        owner: ${{ parameters.owner }}
+        lifecycle: ${{ parameters.lifecycle }}
+        url: ${{ parameters.url }}
+        image: ${{ parameters.image }}
+        port: ${{ parameters.port }}
+        access: ${{ parameters.access }}
+        dataPlan: ${{ parameters.dataPlan }}
+        healthCheck: ${{ parameters.healthCheck }}
+        healthUrl: ${{ parameters.healthUrl }}
+    - id: render-k8s
+      name: Render the Kubernetes manifest skeleton
+      if: ${{ parameters.hosting == 'kubernetes' }}
+      action: fetch:template
+      input:
+        url: ./skeleton/k8s
+        values:
+          name: ${{ parameters.name }}
+          title: ${{ parameters.title }}
+          image: ${{ parameters.image }}
+          port: ${{ parameters.port }}
+          layer: ${{ parameters.layer }}
+          access: ${{ parameters.access }}
+          healthCheck: ${{ parameters.healthCheck }}
+          healthPath: ${{ parameters.healthPath }}
+          dataPlan: ${{ parameters.dataPlan }}
+          pillar: ${{ parameters.pillar }}
+    - id: render-tailnet
+      name: Render the tailnet ingress
+      if: ${{ parameters.hosting == 'kubernetes' and parameters.access == 'tailnet' }}
+      action: fetch:template
+      input:
+        url: ./skeleton/k8s-tailnet
+        values:
+          name: ${{ parameters.name }}
+          port: ${{ parameters.port }}
+    - id: render-cloudflare
+      name: Render the Cloudflare-allowlisted ingress
+      if: ${{ parameters.hosting == 'kubernetes' and parameters.access == 'cloudflare' }}
+      action: fetch:template
+      input:
+        url: ./skeleton/k8s-cloudflare
+        values:
+          name: ${{ parameters.name }}
+          port: ${{ parameters.port }}
+    - id: render-volsync
+      name: Render the volume and VolSync plan
+      if: ${{ parameters.hosting == 'kubernetes' and parameters.dataPlan == 'volsync' }}
+      action: fetch:template
+      input:
+        url: ./skeleton/k8s-volsync
+        values:
+          name: ${{ parameters.name }}
+          storage: ${{ parameters.storage }}
+          backupSchedule: ${{ parameters.backupSchedule }}
+    - id: publish
+      name: Open the draft pull request
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?owner=onemindos&repo=omos
+        branchName: ${{ steps.prepare.output.branchName }}
+        targetBranchName: main
+        title: ${{ steps.prepare.output.title }}
+        description: ${{ steps.prepare.output.body }}
+        commitMessage: ${{ steps.prepare.output.title }}
+        sourcePath: .
+        draft: true
+        update: true
+        forceEmptyGitAuthor: true
+  output:
+    links:
+      - title: Review the draft pull request
+        url: ${{ steps.publish.output.remoteUrl }}

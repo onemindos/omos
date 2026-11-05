@@ -22,11 +22,20 @@
     "@backstage/catalog-model": "1.10.1",
     "@backstage/plugin-catalog-common": "1.2.0",
     "@backstage/plugin-catalog-node": "2.2.5",
+    "@backstage/plugin-permission-common": "^0.9.11",
+    "@backstage/plugin-scaffolder-common": "^2.3.0",
+    "@backstage/plugin-scaffolder-node": "^0.13.7",
     "@internal/plugin-onemind-common-backend": "workspace:^",
-    "express": "4.22.1"
+    "express": "4.22.1",
+    "yaml": "2.9.1"
   },
   "devDependencies": {
-    "@backstage/cli": "0.36.6"
+    "@backstage/backend-test-utils": "1.11.7",
+    "@backstage/cli": "0.36.6",
+    "@backstage/integration": "^2.1.2",
+    "@backstage/plugin-scaffolder-backend": "4.2.0",
+    "@backstage/plugin-scaffolder-backend-module-github": "0.10.0",
+    "ajv": "^8.20.0"
   },
   "files": [
     "dist"

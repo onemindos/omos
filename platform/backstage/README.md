@@ -190,6 +190,61 @@ Backstage 1.55.3 release manifest unless stated. Work order: [F9](../../docs/roa
 
 **Bundle size.** See the F9 work order status for the measured change.
 
+## App lifecycle (F8)
+
+Work order: [F8](../../docs/roadmap/flagship/F8-app-lifecycle.md). Built on `feat/backstage-app-lifecycle`; not deployed until a
+reviewed image digest update (the templates and backend code are in the image; the sidebar flag `onemind.features.retireApp` is `true`
+in the image default).
+
+| Addition | What a person sees | Where |
+| --- | --- | --- |
+| **Add app** (`add-app`) | Create > "Add app to OneMind": hosting (Kubernetes, DigitalOcean, SaaS, home device), pillar, System, owner, health check, data and backup plan, access. Opens a draft PR. | `services/onemind-portal/templates/app-add/` |
+| **Retire app** (`retire-app`) | Create > "Retire app" (also Change > Retire app): pick an app or one workload, see everything attached, choose retention (default: keep the last backup 30 days), open a draft removal PR with a manual teardown checklist. | `templates/app-retire/` |
+| **Stack hygiene** (`/stack-hygiene`) | Insights > Stack hygiene: weekly report plus Refresh now. Each finding links to Add or Retire with pre-filled parameters. | `plugin-onemind-services` (page), `plugin-onemind-services-backend/src/lifecycle/` (task) |
+
+**How the PRs are made.** Two scaffolder actions, `onemind:app-add:prepare` and `onemind:app-retire:plan`, read the catalog, the
+repository (through the existing GitHub App and URL reader, one download per run) and, for retirement, the cluster (the portal's
+existing service account, list calls only). They write file contents into the scaffolder workspace; the template's own
+`publish:github:pull-request` step turns that into a draft PR (`filesToDelete` carries the deletions). There is no token field: the
+GitHub App credential in `integrations.github` is used. **That App must be allowed to write contents and pull requests on
+`onemindos/omos`** (the discovery section above describes it as read-only); until it is, publishing fails with a 403 and nothing is
+changed. No step runs `kubectl`, an Argo sync or a DigitalOcean call; a test scans the steps and the lifecycle source for that.
+
+**Add app, Kubernetes.** The PR contains `platform/argocd/platform-NAME.yaml` (manual sync, no `resources-finalizer`), and
+`platform/NAME/` with namespace (layer label, Pod Security restricted, `Prune=false,Delete=false`), Deployment (pinned digest,
+requests and limits, probes, ecosystem node pool, read-only root), Service, NetworkPolicies, a tailnet or Cloudflare-allowlisted
+ingress, a runbook stub and `NAME.secret.example` (key names only, not applied). With a VolSync plan it adds a claim on
+`do-block-storage-retain` and `backup.yaml` whose ReplicationSource has a non-empty `trigger.schedule`; the snapshot and cache classes
+are `do-block-storage`. It also edits the catalog **inputs**: `workload-map.yaml` (the Argo mapping), `structure.yaml` (app, pillar
+override), three preparation exceptions in `coverage-exceptions.yaml` (no live workload yet; delete them after the first sync), the
+hard-coded Argo application count in `test-catalog-structure.cjs` and `test-coverage.cjs`, and a `docs/STACK.md` section. Generated
+catalog output is not hand-edited: the PR checklist starts with `node scripts/curate-structure.cjs` and the two catalog tests. For
+SaaS, DigitalOcean and home-device apps the template appends one Component document to both `apps.yaml` copies and a `structure.yaml`
+placement; no Argo files.
+
+**Retire app.** The inventory covers workloads, the Argo application (finalizer and whether the parent prunes), PVCs and bound
+volumes, secrets, ingress hosts (Cloudflare and Tailscale names), backup sources, dashboards, alerts and catalog entries. A section the
+portal cannot read is `unavailable`, never "none": DigitalOcean snapshots and volumes (F6 is not built), VolumeSnapshots, live Secrets
+and ReplicationSources (the `backstage-observer` role has no access, and none was added). The PR deletes the Application file and the
+files of its own source directory, removes the app's catalog documents from both copies, its mapping lines, its VolSync
+ReplicationSource and coverage exceptions, lowers the Argo count, adds a retirement record under `docs/operations/retirements/`, and
+keeps markdown, restic credentials, shared directories and protected platform directories (`platform/argocd`, `security`, `backups`,
+and so on), listing each with its reason. Choosing one workload instead of an app removes only manifests named after it. The
+checklist encodes the Paperclip, Tempo and KEDA lessons: a finalizer cascades but a `prune: false` parent never removes the
+Application, stop traffic and remove the backup source before the namespace (stale VolSync series keep an alert firing), CRDs last,
+volumes and snapshots only after the retention date and with owner approval.
+
+**Stack hygiene.** `lifecyclePlugin` (backend plugin `onemind-lifecycle`) runs weekly (Monday 06:00 UTC) and stores the JSON in a
+small table in its own plugin database (last 12 kept). `GET /api/onemind-lifecycle/stack-hygiene` needs a signed-in user;
+`POST .../refresh` is administrators only (it authorizes `scaffolder.task.create`, which the policy gives to administrators; no new
+permission) and is rate-limited to one run a minute. Checks: Argo apps without a catalog entry, catalog apps without a running
+workload, workloads with no owner app, no health check (no probe and no `onemind.io/health-check` annotation), a volume with no
+VolSync source or backup CronJob, no runbook, images without a digest pin. Orphan volumes and old snapshots are `unavailable` until F6
+supplies DigitalOcean data; a check that could not be evaluated says why instead of reporting zero.
+
+**Limits.** The planner trusts the catalog's workload lists; drift shows up in the hygiene report, not in the retire inventory.
+Review the first published PRs as drafts.
+
 ## P4 TechDocs
 
 Operations documentation lives in `services/onemind-portal/runbooks/`. CI generates MkDocs using pinned TechDocs CLI 1.12.0 and mkdocs-techdocs-core 1.7.1, checks metadata and search artifacts, and packages output at `/app/techdocs/default/component/onemind-runbooks`. The existing external builder and local filesystem publisher serve this immutable release content from the self-hosted portal. A failed docs build blocks the image release. Docs changes require a new image digest; Git and prior images provide recovery, and no cloud publishing credentials are added.

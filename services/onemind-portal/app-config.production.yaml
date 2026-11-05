@@ -41,6 +41,14 @@ catalog:
       rules:
         - allow: [Template]
     - type: file
+      target: /app/templates/app-add/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
+      target: /app/templates/app-retire/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
       target: /app/catalog/apps.yaml
     - type: file
       target: /app/catalog/cluster.yaml

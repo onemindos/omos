@@ -128,6 +128,14 @@ catalog:
       rules:
         - allow: [Template]
     - type: file
+      target: ../../templates/app-add/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
+      target: ../../templates/app-retire/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
       target: ../../catalog/apps.yaml
     - type: file
       target: ../../catalog/cluster.yaml
@@ -241,7 +249,7 @@ onemind:
   features:
     pillars: false      # F2: SO/LE/HP/GE Domain pages
     digitalocean: false # F6: /digitalocean
-    retireApp: false    # F8: retire-app template
+    retireApp: true     # F8: retire-app template (ships with the image that contains it)
   alerts:
     # Bearer token Alertmanager presents at POST /api/events/http/alertmanager. OPTIONAL: when
     # the env var is absent the key is dropped, the route rejects every request (503) and the

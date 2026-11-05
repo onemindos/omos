@@ -1,0 +1,27 @@
+# ${{ values.title }}: proposed by the Backstage "Add app" template.
+# Manual sync on purpose: merging creates this Application but deploys nothing until a person syncs it.
+# No resources-finalizer: deleting the Application must never cascade to the volume or namespace.
+# Decide the finalizer and prune policy against docs/gitops/APP-FINALIZERS.md before enabling automated sync.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-${{ values.name }}
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '5'
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/${{ values.name }}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ${{ values.name }}
+  syncPolicy:
+    retry:
+      limit: 3
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 1m
