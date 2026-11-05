@@ -14,7 +14,14 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: forgejo
+  # The daily backup Job advances this marker, so a sync must not reset it.
+  ignoreDifferences:
+  - group: volsync.backube
+    kind: ReplicationSource
+    jsonPointers:
+    - /spec/trigger/manual
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
     - PruneLast=true
+    - RespectIgnoreDifferences=true
