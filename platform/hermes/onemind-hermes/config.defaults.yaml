@@ -389,14 +389,6 @@ mcp_servers:
         - create_file_request
         - get_file_request
         - list_file_requests
-  clickup:
-    url: https://mcp.clickup.com/mcp
-    auth: oauth
-    enabled: true
-    tools:
-      exclude:
-        - clickup_delete_*
-        - clickup_merge_tasks
   zoho-ops:
     url: ${ZOHO_OPS_MCP_URL}
     connect_timeout: 60

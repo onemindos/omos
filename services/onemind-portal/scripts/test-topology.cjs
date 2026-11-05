@@ -69,6 +69,8 @@ require('./test-catalog-structure.cjs');
 require('./test-intelligence-references.cjs');
 // Hermes Home cards remain external references, not installations.
 require('./test-hermes-ecosystem.cjs');
+// Geospatial and commerce references reuse existing canonical systems.
+require('./test-geospatial-commerce-references.cjs');
 // TAK upstream references preserve canonical deployed workload identities.
 require('./test-tak-ecosystem.cjs');
 require('./test-snapshot-cluster.cjs');

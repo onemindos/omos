@@ -24,8 +24,8 @@ import sys
 sys.path.insert(0, "/opt/hermes")
 from ruamel.yaml import YAML  # noqa: E402  (PyYAML is not in Hermes' venv)
 
-# Retired: the LiteLLM MCP hub entry (replaced by the tool gateway, Phase 5).
-REMOVE = ["onemind"]
+# Retired: LiteLLM (replaced by the tool gateway) and owner-retired ClickUp.
+REMOVE = ["onemind", "clickup"]
 
 # Servers in the defaults that are NOT applied unless named with `--include <name>`: `execute` (destructive and physical
 # tools) goes live only after the execute gate is verified (docs/operations/tool-gateway.md).

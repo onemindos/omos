@@ -62,6 +62,20 @@ spec:
                   os.chown(target.parent, owner.pw_uid, owner.pw_gid)
                   os.chown(target, owner.pw_uid, owner.pw_gid)
 
+              # Retire ClickUp on every start, including restoration of an older PVC.
+              # Config only: never touch OAuth files, other profiles or vendor data.
+              import subprocess
+              from ruamel.yaml import YAML
+              current = YAML(typ='safe').load(target.read_text()) or {}
+              if 'clickup' in (current.get('mcp_servers') or {}):
+                  result = subprocess.run([
+                      '/opt/hermes/bin/hermes', 'config', 'unset', 'mcp_servers.clickup',
+                  ], env=dict(os.environ, HERMES_HOME='/opt/data'),
+                      capture_output=True, text=True, check=False)
+                  if result.returncode:
+                      # CLI output may include resolved credentials; never echo it.
+                      raise RuntimeError('ClickUp configuration retirement failed')
+
               # Reconcile Git-owned Zoho entries on BOTH existing and clean PVCs.
               # The manifest holds ${ENV} references only; credentials enter the main
               # container from SealedSecrets, never the config or init container.

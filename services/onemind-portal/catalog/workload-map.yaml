@@ -162,6 +162,7 @@ argoApplications:
   ecosystem-onemind-core: component:default/onemind-core
   ecosystem-opencost: component:default/opencost
   ecosystem-openfga: component:default/openfga
+  ecosystem-trivy-operator: component:default/kyverno
   ecosystem-velero: component:default/velero
   edge-cert-manager: component:default/cert-manager
   edge-ingress-nginx: component:default/ingress-nginx

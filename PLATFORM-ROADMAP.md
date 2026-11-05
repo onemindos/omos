@@ -1451,3 +1451,21 @@ are recorded for serious reconsideration. No Application, plugin, secret, bus
 contract or live setting is added. TAK artifact availability/rights and actual
 free-versus-commercial requirements remain unresolved. Implementation/adoption
 needs a later decision; this entry changes no phase completion or deployment state.
+
+## User-directed Trivy scanning pilot — 2026-10-24
+
+Zeus requested an implementation PR for a limited Trivy Operator pilot.
+The [runbook](docs/operations/trivy-image-scan-pilot.md) records the read-only
+capacity/monitoring preflight, pinned chart/images, scoped RBAC, resource cap,
+namespace-only image scans and Grafana view. The pilot creates reports, not
+deployment blocking or automatic remediation. Authentik work is separate.
+
+| Work | Status | Next gate |
+|---|---|---|
+| Argo-owned Trivy image-only pilot in `auth,nats,onetak,n8n` | Retargeted 2026-11-04 (Nextcloud retired); owner approved deploy; [PR #442](https://github.com/onemindos/omos/pull/442) awaits merge, which auto-syncs via `platform-security`; not live-accepted. Private `ghcr.io/onemindos` images (`heynats`, `nats-dashboard`, `tak-portal`) are not scanned | Merge, actual Argo rollout, per-container digest/report coverage (21 controllers, 3 expected gaps) and deny tests |
+| One scan Job, bounded resources and Grafana visibility | 96 GitOps tests pass, including six rendered Trivy safety contracts; live acceptance pending | Scan resource measurements, metric/CRD parity, 24-hour refresh and safe pause acceptance |
+
+This user-directed security slice does not close portal phases, reverse approved
+retirements, grant broader agent write rights or change application identities.
+Only report reads are added to the chart's standard aggregated viewer roles;
+application Secrets remain inaccessible to the scanner.
