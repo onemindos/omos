@@ -339,3 +339,13 @@ a completed fresh volume snapshot plus private database/config exports.
 Provider deletion and recovery verification must be recorded from live evidence;
 this source change alone does not certify either. Preserve device originals and
 existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
+
+## Forgejo secondary forge — launch-ready 2026-11-04
+
+User-directed private GitHub pull-mirror standby. Source and SealedSecrets are
+committed but the Application is not synced, so no live health, hostname, account
+or backup is claimed. GitHub remains the working forge and Argo source.
+
+| Tier | Application | Namespace | State / recovery | Exposure | Status |
+| --- | --- | --- | --- | --- | --- |
+| 2 | `platform-forgejo` | `forgejo` | Rootless Forgejo 15.0.11 LTS, SQLite/Git/LFS on one 20Gi `do-block-storage-retain` claim; nightly coordinated stop plus VolSync/Restic export (`backups/restic/forgejo/data`); restore acceptance pending | Private `https://forgejo.tail717ba0.ts.net` (Tailscale ingress), local accounts, no SSH or registration; hub pool preferred | Manual Argo, not synced; [owner first sign-in and mirror pilot](../platform/forgejo/README.md#owner-first-sign-in) pending |

@@ -42,6 +42,7 @@ export const mapping: InventoryMapping = {
     'dapr-system/dapr-scheduler-server': 'component:default/dapr',
     'dapr-system/dapr-sentry': 'component:default/dapr',
     'dapr-system/dapr-sidecar-injector': 'component:default/dapr',
+    'forgejo/forgejo': 'component:default/forgejo',
     'github-runner/github-runner': 'component:default/platform-core',
     'github-runner/github-runner-hermes': 'component:default/platform-core',
     'hermes/onemind-hermes': 'component:default/onemind-hermes',
@@ -236,6 +237,12 @@ export const mapping: InventoryMapping = {
     fedhub: {
       title: 'FedHub',
       system: 'tak-ecosystem',
+      pillar: 'so',
+      review: 'proposed',
+    },
+    forgejo: {
+      title: 'Forgejo — independent code mirror',
+      system: 'developer-platform',
       pillar: 'so',
       review: 'proposed',
     },
