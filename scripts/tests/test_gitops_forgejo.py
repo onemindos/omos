@@ -124,7 +124,7 @@ class ForgejoBackup(unittest.TestCase):
         self.assertEqual(len(claims), 1)
         self.assertEqual(claims[0]["spec"]["storageClassName"], "do-block-storage-retain")
         source = next(d for d in docs if d["kind"] == "ReplicationSource")
-        self.assertFalse(source["spec"]["trigger"])
+        self.assertTrue(source["spec"]["trigger"]["manual"])  # an empty trigger syncs continuously
         self.assertEqual(source["spec"]["restic"]["copyMethod"], "Snapshot")
         for key in ["storageClassName", "cacheStorageClassName"]:
             self.assertEqual(source["spec"]["restic"][key], "do-block-storage")
