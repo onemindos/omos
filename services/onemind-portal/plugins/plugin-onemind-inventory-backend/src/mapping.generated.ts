@@ -43,6 +43,7 @@ export const mapping: InventoryMapping = {
     'dapr-system/dapr-sentry': 'component:default/dapr',
     'dapr-system/dapr-sidecar-injector': 'component:default/dapr',
     'forgejo/forgejo': 'component:default/forgejo',
+    'gatus/gatus': 'component:default/gatus',
     'github-runner/github-runner': 'component:default/platform-core',
     'github-runner/github-runner-hermes': 'component:default/platform-core',
     'hermes/onemind-hermes': 'component:default/onemind-hermes',
@@ -249,6 +250,12 @@ export const mapping: InventoryMapping = {
     forgejo: {
       title: 'Forgejo — independent code mirror',
       system: 'developer-platform',
+      pillar: 'so',
+      review: 'proposed',
+    },
+    gatus: {
+      title: 'Gatus status checks',
+      system: 'observability',
       pillar: 'so',
       review: 'proposed',
     },

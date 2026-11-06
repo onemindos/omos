@@ -162,3 +162,16 @@ describe('buildNavModel', () => {
     expect(titles(groups, 'insights')).toBeUndefined();
   });
 });
+
+describe('Not on Kubernetes entry', () => {
+  it('appears under Services once the page exists, and is hidden without it', () => {
+    const withPage = buildNavModel({
+      items: [...pages, item('page:onemind-non-kubernetes', 'Not on Kubernetes', '/non-kubernetes')],
+      flags: off,
+      isAdmin: false,
+    });
+    expect(titles(withPage, 'services')).toContain('Not on Kubernetes');
+    const without = buildNavModel({ items: pages, flags: off, isAdmin: false });
+    expect(titles(without, 'services')).not.toContain('Not on Kubernetes');
+  });
+});

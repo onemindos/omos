@@ -33,6 +33,7 @@ workloads:
   dapr-system/dapr-sentry: component:default/dapr
   dapr-system/dapr-sidecar-injector: component:default/dapr
   forgejo/forgejo: component:default/forgejo
+  gatus/gatus: component:default/gatus
   github-runner/github-runner: component:default/platform-core
   github-runner/github-runner-hermes: component:default/platform-core
   hermes/onemind-hermes: component:default/onemind-hermes
@@ -191,6 +192,7 @@ argoApplications:
   platform-ecosystem-resources: component:default/argocd
   platform-fedhub: component:default/fedhub
   platform-forgejo: component:default/forgejo
+  platform-gatus: component:default/gatus
   platform-hermes-base: component:default/onemind-hermes
   platform-onemind-hermes: component:default/onemind-hermes
   platform-onemind-mcp: component:default/onemind-mcp

@@ -164,6 +164,21 @@ exceptions:
     reason: >-
       Forgejo source is staged with manual Argo and no sync; no live namespace or workload snapshot is recorded.
       Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
+  - app: component:default/gatus
+    capability: kubernetes
+    reason: >-
+      Gatus source is staged with manual Argo and no sync; no live namespace or workload snapshot is recorded.
+      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
+  - app: component:default/gatus
+    capability: grafana-alerts
+    reason: >-
+      Gatus source is staged with manual Argo and no sync; no live namespace or workload snapshot is recorded.
+      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
+  - app: component:default/gatus
+    capability: logs
+    reason: >-
+      Gatus source is staged with manual Argo and no sync; no live namespace or workload snapshot is recorded.
+      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
   - app: component:default/agentgateway
     capability: kubernetes
     reason: >-

@@ -157,3 +157,8 @@ apps:
   description: Private secondary Git forge and GitHub pull mirrors; GitHub remains primary
   enabled: false
   blocked_reason: Prepared source only. Owner enrollment, scoped read-only API adapter/token and authenticated acceptance are pending; no agent repository writes or CI execution.
+
+- id: gatus
+  description: Live endpoint checks and certificate expiry for apps outside Kubernetes
+  enabled: false
+  blocked_reason: Prepared source only (manual Argo, not synced). Check results are already readable through the prometheus adapter once deployed (gatus_results_*); no direct Gatus adapter is planned.

@@ -119,6 +119,13 @@ export const NAV_GROUPS: GroupSpec[] = [
         titles: ['APIs'],
       },
       {
+        key: 'non-kubernetes',
+        title: 'Not on Kubernetes',
+        icon: 'catalog',
+        ids: ['page:onemind-non-kubernetes'],
+        titles: ['Not on Kubernetes'],
+      },
+      {
         key: 'graph',
         title: 'Catalog Graph',
         icon: 'graph',

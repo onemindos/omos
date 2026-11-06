@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gatus
+  labels:
+    app.kubernetes.io/name: gatus
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gatus
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: gatus
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsUser: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: gatus
+        # v5.37.0 (2026-09-24), multi-arch index digest verified with docker buildx imagetools on 2026-11-05.
+        image: twinproduction/gatus:v5.37.0@sha256:094eb186e55235db367e90e9d56140e5897b7044c41de23cde4cc18e6da1242e
+        env:
+        - name: GATUS_CONFIG_PATH
+          value: /config
+        ports:
+        - name: http
+          containerPort: 8080
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          # Measured 16 MiB with two endpoints; ecosystem node was 81% CPU / 84% memory requested on 2026-11-05.
+          requests:
+            cpu: 10m
+            memory: 48Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        volumeMounts:
+        - name: config
+          mountPath: /config
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: gatus-config
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: doks.digitalocean.com/node-pool
+                operator: In
+                values:
+                - onemind-ecosystem-cpu
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gatus
+  labels:
+    app.kubernetes.io/name: gatus
+spec:
+  selector:
+    app.kubernetes.io/name: gatus
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http
+---
+# Tailnet-only admin UI at https://status.tail717ba0.ts.net, like the other admin UIs.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gatus
+  annotations:
+    tailscale.com/hostname: status
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: gatus
+      port:
+        number: 8080
+  tls:
+  - hosts:
+    - status

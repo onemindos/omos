@@ -30,3 +30,34 @@ test('hosting badge: planned and unrecorded entries are never promoted', () => {
   expect(hostingBadge(e({ 'onemind.io/hosting': 'digitalocean-nyc3', 'onemind.io/documented-status': 'Planned' })).badge).toBe('Planned');
   expect(hostingBadge(e({})).badge).toBe('Unknown');
 });
+
+import { HOSTING_VALUES, hostingKind } from './hosting';
+
+test('hosting kind: canonical values map to themselves', () => {
+  for (const kind of ['kubernetes', 'digitalocean', 'saas', 'home', 'device', 'desktop', 'mobile', 'web', 'planned', 'unknown'])
+    expect(hostingKind(e({ 'onemind.io/hosting': kind }))).toBe(kind);
+});
+test('hosting kind: every legacy value keeps its meaning', () => {
+  expect(hostingKind(e({ 'onemind.io/hosting': 'digitalocean-nyc3', 'argocd/app-name': 'platform-x' }))).toBe('kubernetes');
+  expect(hostingKind(e({ 'onemind.io/hosting': 'digitalocean-nyc3' }))).toBe('digitalocean');
+  expect(hostingKind(e({ 'onemind.io/hosting': 'external-provider-unverified' }))).toBe('saas');
+  expect(hostingKind(e({ 'onemind.io/hosting': 'mesh-endpoint-unverified' }))).toBe('home');
+  expect(hostingKind(e({ 'onemind.io/hosting': 'native-application' }))).toBe('desktop');
+  expect(hostingKind(e({ 'onemind.io/hosting': 'vehicle-firmware' }))).toBe('device');
+  expect(hostingKind(e({ 'onemind.io/hosting': 'external-website' }))).toBe('web');
+  expect(hostingKind(e({ 'onemind.io/hosting': 'planned-not-deployed' }))).toBe('planned');
+});
+test('hosting kind: missing or invalid is unknown, never promoted', () => {
+  expect(hostingKind(e({}))).toBe('unknown');
+  expect(hostingKind(e({ 'onemind.io/hosting': 'cloud' }))).toBe('unknown');
+  expect(HOSTING_VALUES).toContain('digitalocean-nyc3');
+  expect(HOSTING_VALUES).toContain('saas');
+});
+test('hosting badge: canonical values get the same badges', () => {
+  expect(hostingBadge(e({ 'onemind.io/hosting': 'kubernetes' })).badge).toBe('K8s');
+  expect(hostingBadge(e({ 'onemind.io/hosting': 'saas' })).badge).toBe('SaaS');
+  expect(hostingBadge(e({ 'onemind.io/hosting': 'home' })).badge).toBe('Home');
+  expect(hostingBadge(e({ 'onemind.io/hosting': 'mobile' })).badge).toBe('Device');
+  expect(hostingBadge(e({ 'onemind.io/hosting': 'planned-not-deployed' })).badge).toBe('Planned');
+  expect(hostingBadge(e({ 'onemind.io/hosting': 'unknown' })).badge).toBe('Unknown');
+});

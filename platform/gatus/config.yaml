@@ -1,0 +1,13 @@
+# Gatus settings. Endpoints are not listed here: Gatus reads every file in /config and merges them
+# (endpoints.yaml is generated from the catalog, test-endpoints.yaml is the deliberate failure).
+metrics: true
+storage:
+  # In memory on purpose: no volume, nothing to back up. Check history resets when the pod restarts.
+  # State of record is the catalog plus this directory; Prometheus keeps the long history (gatus_results_*).
+  type: memory
+web:
+  port: 8080
+ui:
+  title: OneMind status
+  header: OneMind status
+  description: Live checks for apps that run outside Kubernetes, and for cluster apps with no probe of their own.

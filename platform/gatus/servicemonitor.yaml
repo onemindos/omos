@@ -1,0 +1,17 @@
+# kube-prometheus-stack selects ServiceMonitors by the label release=monitoring in any namespace.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: gatus
+  labels:
+    release: monitoring
+    app.kubernetes.io/name: gatus
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gatus
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s

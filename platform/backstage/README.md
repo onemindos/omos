@@ -157,6 +157,10 @@ The same server reads fixed Prometheus queries for five namespaces: backstage, a
 
 `/api/proxy/opencost/allocation` forwards GET requests to the in-cluster OpenCost allocation API (`opencost.opencost.svc.cluster.local:9003/allocation`). Backstage credentials are required and are not forwarded; other OpenCost routes are not reachable through it. It returns raw OpenCost estimates. The Cost page (see [Plugin pack](#plugin-pack-f9)) is its only consumer; `scripts/cost-allocation.cjs` defines the validation (`docs/operations/backstage-cost-workstream.md`). The OpenCost catalog component links to the tailnet UI.
 
+## Gatus status proxy
+
+`/api/proxy/gatus/statuses` forwards GET requests to the in-cluster Gatus statuses list (`gatus.gatus.svc.cluster.local:8080/api/v1/endpoints/statuses`). Backstage credentials are required and are not forwarded; other Gatus routes are not reachable through it. The app page Status card (F7) is its only consumer. It answers with an error until the manual Argo Application `platform-gatus` is synced; the card then says "Gatus is not reachable" and never shows a green state. The gatus namespace `NetworkPolicy` admits the backstage pods.
+
 ## Plugin pack (F9)
 
 Five additions, one commit each so any can be reverted alone. Exact versions are the ones in the
