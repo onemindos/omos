@@ -20,7 +20,7 @@ function favoriteIconColor(isFavorite: boolean, theme: Theme) {
   return isFavorite ? theme.palette.warning.main : theme.palette.text.secondary;
 }
 
-const abbreviation = (app: AppEntry) => ({ 'github': 'GH', '1password': '1P', 'argocd': 'CD', 'digitalocean': 'DO', 'grafana': 'GF', 'headlamp': 'HL' }[app.name] ?? (app.title.match(/[A-Za-z0-9]+/g) ?? []).map(abbreviationWord).join('').toUpperCase());
+export const abbreviation = (app: AppEntry) => ({ 'github': 'GH', '1password': '1P', 'argocd': 'CD', 'digitalocean': 'DO', 'grafana': 'GF', 'headlamp': 'HL' }[app.name] ?? (app.title.match(/[A-Za-z0-9]+/g) ?? []).map(abbreviationWord).join('').toUpperCase());
 
 export function useAppFavorites() {
   const {directory,all,personal}=useDirectory();

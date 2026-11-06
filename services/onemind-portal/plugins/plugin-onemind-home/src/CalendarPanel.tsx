@@ -15,6 +15,8 @@ export type CalendarSummary = {
     id: string;
     title: string;
     start: string | null;
+    /** Not sent by the current backend; used when present. */
+    end?: string | null;
     allDay: boolean;
   }[];
   link: string;

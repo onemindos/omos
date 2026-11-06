@@ -20,18 +20,21 @@ jest.mock('./HomeHeader', () => ({
   ),
 }));
 jest.mock('./CommandBar', () => ({ CommandBar: mockStub('Command bar') }));
-jest.mock('./TodayCard', () => ({ TodayCard: mockStub('Today') }));
-jest.mock('./WaitingCard', () => ({ WaitingCard: mockStub('Waiting on you') }));
-jest.mock('./QuickActions', () => ({ QuickActions: mockStub('Do it now') }));
+jest.mock('./NextUpHero', () => ({ NextUpHero: mockStub('Next up') }));
+jest.mock('./PlatformScore', () => ({
+  PlatformScore: mockStub('Platform score'),
+}));
+jest.mock('./WaitingOnYou', () => ({
+  WaitingOnYou: mockStub('Waiting on you'),
+}));
+jest.mock('./TasksCard', () => ({ TasksCard: mockStub('Tasks') }));
+jest.mock('./ActionTiles', () => ({ ActionTiles: mockStub('Do it now') }));
 jest.mock('./JumpBackIn', () => ({ JumpBackIn: mockStub('Jump back in') }));
 jest.mock('./PinnedChips', () => ({ PinnedChips: mockStub('Pinned') }));
 jest.mock('./BrowseAllApps', () => ({
   BrowseAllApps: ({ children }: any) => (
     <section aria-label="Browse all apps">{children}</section>
   ),
-}));
-jest.mock('./StatusStrip', () => ({
-  StatusStrip: () => <section aria-label="Live status" />,
 }));
 jest.mock('./PillarTiles', () => ({
   PillarTiles: () => <section aria-label="Pillars" />,
@@ -50,9 +53,10 @@ const order = () =>
 const top = [
   'Welcome',
   'Command bar',
-  'Live status',
-  'Today',
+  'Next up',
+  'Platform score',
   'Waiting on you',
+  'Tasks',
   'Do it now',
   'Jump back in',
   'Pinned',
