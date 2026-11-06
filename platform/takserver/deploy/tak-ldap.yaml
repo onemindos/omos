@@ -485,7 +485,7 @@ spec:
             periodSeconds: 30
             failureThreshold: 5
           resources:
-            requests: {cpu: 100m, memory: 512Mi}
+            requests: {cpu: 50m, memory: 64Mi}
             limits: {cpu: 1000m, memory: 8Gi}
           volumeMounts:
             - {name: ldap-data, mountPath: /var/lib/ldap}
