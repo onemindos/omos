@@ -28,18 +28,6 @@ def stac(add, upstream):
     add(search)
 
 
-def ollama(add, upstream):
-    async def models() -> dict:
-        """List locally installed Ollama models without loading, downloading or running inference."""
-        return await upstream.get('/api/tags')
-
-    async def running_models() -> dict:
-        """List currently loaded Ollama models and memory use."""
-        return await upstream.get('/api/ps')
-    add(models)
-    add(running_models)
-
-
 def alertmanager(add, upstream):
     async def alerts() -> list:
         """Read active alerts from Alertmanager. Does not silence or change routing."""
@@ -109,15 +97,6 @@ def grafana(add, upstream):
         """Find dashboards by title using the dedicated Grafana read-only service identity."""
         return await upstream.get('/api/search', {'query': query, 'type': 'dash-db', 'limit': limit})
     add(dashboards)
-
-
-def litellm(add, upstream):
-    async def models() -> dict:
-        """List the model names routed by the LiteLLM gateway. Read only; no spend, keys, provider settings or completions."""
-        data = await upstream.get('/v1/models')
-        ids = [row['id'] for row in data.get('data', []) if isinstance(row, dict) and isinstance(row.get('id'), str)]
-        return {'count': len(ids), 'models': ids[:200]}
-    add(models)
 
 
 ArgoName = Annotated[str, Field(pattern=r'^[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?$')]

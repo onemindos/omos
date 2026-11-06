@@ -8,6 +8,17 @@ six targets: `onemind` and `kubernetes` (`ops`), `stac`, `core` and `clickhouse`
 answer with an empty tool list until their backends join (they wait on owner credentials); `/identity` (deferred) and `/execute` (closed
 until Phase 4 is deployed) always do. Hermes `onemind-hermes` uses `ops`, `data` and `tak` (Phase 5, config in `platform/hermes/onemind-hermes/`, live config updated with `mcp/apply.sh`); `/execute` is not wired until Phase 4 is deployed. The Hermes cron scripts call `/ops` too; LiteLLM no longer serves MCP (Phase 6).
 
+## LiteLLM and in-cluster Ollama retired (2026-11-06)
+
+Owner decision: agentgateway replaces LiteLLM as the hub, and Hermes uses Ollama Cloud (an external service, not the in-cluster Ollama). LiteLLM logged no traffic and its only consumer was `onemind-mcp`. This change removed from Git: Applications `ecosystem-litellm` and `ecosystem-ollama`, their values and chart-lock entry, the `litellm-clients` and `cpu-model-gateway-only` NetworkPolicies, `helm-oci-litellm`, the `onemind-model-clients-v1` bootstrap Job, the six `onemind-ai--litellm-*` sealed secrets, the `onemind-cpu-model` VolSync source, the `onemind-mcp` `ollama`/`litellm` adapters, env vars and egress rules, and the `litellm_models`, `ollama_models` and `ollama_running_models` gateway tools.
+
+Left in place on purpose (owner decides later):
+
+- Database `onemind-litellm`, the `litellm` managed role and `onemind-data/db-litellm` stay in the shared Postgres. Drop them only after a verified `pg_dump`.
+- The DigitalOcean volume behind PVC `onemind-cpu-model` (20 GiB, `do-block-storage-retain`) stays; its restic repository secret `volume-aeb2c9c4e472-restic` is still in `platform/backups/volsync/sealed/` so existing backups stay restorable.
+- `onemind-core` still reads `MODEL_GATEWAY_URL` (`http://litellm.onemind-ai.svc.cluster.local:4000/v1`) from its sealed `core-runtime` secret for `model_summary`. That path will fail until `onemind-core` is pointed at another model endpoint.
+- Live cleanup (the parent does not prune; `ecosystem-litellm` carries a finalizer so deleting it cascades to its resources, `ecosystem-ollama` has none and would leave the PVC): delete Applications, the Deployments/Services, leftover Secrets and the PVC object by hand with owner approval; the PV is Retain.
+
 ## What runs
 
 | Thing | Where |

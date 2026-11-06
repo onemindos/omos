@@ -83,7 +83,6 @@ def main():
         import asyncio
         targets = {
             "stac": "http://stac-api.stac.svc.cluster.local:8080/collections",
-            "ollama": "http://onemind-cpu-model.onemind-ai.svc.cluster.local:11434/api/tags",
             "alertmanager": "http://monitoring-kube-prometheus-alertmanager.monitoring.svc.cluster.local:9093/api/v2/alerts",
             "loki": "http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/labels",
             "opencost": "http://opencost.opencost.svc.cluster.local:9003/allocation?window=1h&aggregate=namespace&accumulate=true",

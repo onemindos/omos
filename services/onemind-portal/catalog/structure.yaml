@@ -265,10 +265,6 @@ apps:
     title: n8n
     system: ai-agents
     description: Workflow automation.
-  - name: litellm
-    title: LiteLLM
-    system: ai-agents
-    description: Model gateway.
   - name: onemind-hermes
     title: Legacy (onemind-hermes)
     system: ai-agents

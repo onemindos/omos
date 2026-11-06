@@ -16,14 +16,6 @@ applications:
     apps:
     - onemind_core
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  ecosystem-litellm:
-    apps:
-    - litellm
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  ecosystem-ollama:
-    apps:
-    - ollama
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   ecosystem-onemind-core:
     apps:
     - onemind_core
@@ -222,16 +214,15 @@ applications:
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-tool-gateway:
     apps:
-    - litellm
     - kubernetes
     - stac
     - onemind_core
     - mediamtx
     - tile38
     reason: >-
-      Legacy's tool front door (agentgateway) replaces LiteLLM as the MCP hub and adds no app of its own to
+      Legacy's tool front door (agentgateway) replaced LiteLLM (retired 2026-11-06) as the MCP hub and adds no app of its own to
       apps.yaml. Its backends are served by gateway targets and routes, not by apps.yaml entries, and Hermes is not
-      cut over yet (Phase 5), so Legacy still reaches these apps through onemind-mcp and LiteLLM. kubernetes:
+      cut over yet (Phase 5), so Legacy still reaches these apps through onemind-mcp. kubernetes:
       target kubernetes (Deployment mcp-kubernetes, 10 read and 1 write tool on /ops, three destructive tools held for
       /execute, no Secrets in its RBAC); the kubernetes app in apps.yaml stays disabled until the cutover. stac:
       OpenAPI target stac, 5 read tools on /data. onemind_core: OpenAPI target core, 6 read tools on /data, using

@@ -5,7 +5,9 @@
 User authorization: 2026-10-27, implement an extensible internal MCP and deploy it
 for the cluster Hermes agent. Keep the existing services and their APIs. This is
 a bounded addition, not a new cluster administration gateway or a replacement for
-the app catalog, NATS, LiteLLM or Backstage's existing MCP.
+the app catalog, NATS or Backstage's existing MCP.
+
+> **2026-11-06.** The `litellm` and `ollama` adapters, their `LITELLM_*`/`OLLAMA_URL` environment variables, their NetworkPolicy egress rules and the `litellm_models`, `ollama_models` and `ollama_running_models` tools were removed from Git when LiteLLM and the in-cluster Ollama were retired (see [tool-gateway.md](tool-gateway.md#litellm-and-in-cluster-ollama-retired-2026-11-06)). The deployed `onemind-mcp` image still contains the adapter code until its next build; it is inert because `apps.yaml` no longer lists them.
 
 ## Source and activation status
 

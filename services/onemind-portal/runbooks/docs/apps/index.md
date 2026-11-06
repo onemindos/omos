@@ -32,7 +32,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Karakeep](karakeep.md) | personal-tools |
 | [Kubernetes system services](kubernetes-system.md) | infrastructure |
 | [Kyverno](kyverno.md) | identity-access |
-| [LiteLLM](litellm.md) | ai-agents |
 | [Loki](loki.md) | observability |
 | [Matrix Synapse](matrix-synapse.md) | communication |
 | [n8n](n8n.md) | ai-agents |
@@ -40,7 +39,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [NATS Dashboard](nats-dashboard.md) | messaging-nats |
 | [NATS Surveyor](nats-surveyor.md) | messaging-nats |
 | [NATS UI](nats-ui.md) | messaging-nats |
-| [Ollama](ollama.md) | ai-agents |
 | [OMOS data pipeline](omos-data-pipeline.md) | messaging-nats |
 | [OneMind core services](onemind-core.md) | infrastructure |
 | [Legacy (onemind-hermes)](onemind-hermes.md) | ai-agents |

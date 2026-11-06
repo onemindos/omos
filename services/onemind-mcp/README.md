@@ -9,9 +9,10 @@ replace app APIs, operate Kubernetes, or grant access to every app automatically
 
 - Official Python MCP SDK, Streamable HTTP at `/mcp`, stateless JSON responses.
 - `apps_list` searches all access domains; `apps_describe` explains available operations and blockers.
-- STAC imagery, Ollama model inventory, Alertmanager alerts, Loki logs and OpenCost estimates.
+- STAC imagery, Alertmanager alerts, Loki logs and OpenCost estimates.
 - Credential-gated adapters for bookmarks, workflows, Grafana and MediaMTX.
-- Read-only adapters for the LiteLLM model list, Argo CD application status and the Backstage catalog.
+- Read-only adapters for Argo CD application status and the Backstage catalog.
+  The `ollama` and `litellm` adapters were removed on 2026-11-06 with the in-cluster services they read.
   A catalog entry may set `ca_file` (a PEM under `/etc/onemind-ca/`) to pin a private or self-signed CA.
 - `onemind://apps` exposes the same catalog as a resource.
 - NATS: `nats_server_stats`, `nats_jetstream_stats`. Each reports one node, not a

@@ -1,5 +1,7 @@
 # OneMind MCP hub
 
+> **LiteLLM itself was retired on 2026-11-06** (Application, values, secrets and the `onemind-mcp` adapters removed from Git; see `docs/operations/tool-gateway.md`). Everything below about LiteLLM is historical.
+>
 > **The hub is the tool gateway (agentgateway), since Phase 6 on 2026-10-31.** LiteLLM no longer serves MCP:
 > its `mcp_servers` registration, the `litellm-mcp-upstreams` env reference and the `onemind-hermes`
 > egress/ingress rules to port 4000 are gone; LiteLLM remains the model gateway only. Legacy

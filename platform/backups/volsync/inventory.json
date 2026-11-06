@@ -166,11 +166,5 @@
     "pvc": "dapr-scheduler-data-dir-dapr-scheduler-server-2",
     "source": "volume-5b6b57939ee3",
     "size": "5Gi"
-  },
-  {
-    "namespace": "onemind-ai",
-    "pvc": "onemind-cpu-model",
-    "source": "volume-aeb2c9c4e472",
-    "size": "20Gi"
   }
 ]

@@ -123,8 +123,6 @@
   "component:default/k8s-omos-omos-tak-projector-ac850041",
   "component:default/k8s-omos-redpanda-connect-0c0b667d",
   "component:default/k8s-omos-sink-clickhouse-29b3c0a3",
-  "component:default/k8s-onemind-ai-litellm-fa4fe9be",
-  "component:default/k8s-onemind-ai-onemind-cpu-model-aeb2c9c4",
   "component:default/k8s-onemind-core-onemind-core-dfe02fba",
   "component:default/k8s-onemind-core-onemind-ingestion-e7c0a1fa",
   "component:default/k8s-onemind-core-openfga-2a5ad6d4",

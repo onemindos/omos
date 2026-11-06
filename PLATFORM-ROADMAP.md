@@ -172,7 +172,7 @@ patches; Telegram remains selected. See the updated approval record below.
 | `cnpg-system`, `onemind-data` | CloudNativePG operator and the `onemind-data` cluster | 2 | Argo CD; databases as an OpenChoreo ResourceType |
 | `clickhouse` | ClickHouse | 2 | Argo CD; ResourceType later |
 | `onemind-search` | OpenSearch | 2 | Argo CD; also the observability plane's log store |
-| `onemind-ai` | LiteLLM, CPU model | 2 | Argo CD. LiteLLM stays the model gateway |
+| `onemind-ai` | (LiteLLM and CPU model retired 2026-11-06) | 2 | Argo CD. agentgateway is the hub; Hermes uses Ollama Cloud |
 | `dapr-system` | Dapr | 2 | Argo CD |
 | `keda` | KEDA | 2 | Argo CD; OpenChoreo autoscaling module |
 | `monitoring` | Prometheus, Alertmanager, Grafana, Loki, Tempo, OTel collector | 2 | Argo CD; becomes the observability plane's metrics and events modules |
@@ -893,7 +893,7 @@ delivered; the broader Phase 8/home-runtime work is not marked complete.
       ARM64 Linux VM/K3s pilot; Talos remains a dedicated-host candidate, not a
       requirement to replace macOS. Register approved cluster visibility/GitOps
       and separately prove any second OpenChoreo data-plane integration.
-- [ ] Hermes gets a model through LiteLLM and the same read-only tools through the tool gateway.
+- [ ] Hermes gets a model from Ollama Cloud (LiteLLM retired 2026-11-06) and the same read-only tools through the tool gateway.
 - [ ] Revisit `takserver` placement.
 
 ## Decision log
@@ -905,6 +905,7 @@ delivered; the broader Phase 8/home-runtime work is not marked complete.
 | 2026-10-18 | Claude Code is the AI operator. Hermes is deferred to Phase 8. |
 | 2026-10-18 | Keep the custom portal as the long-term home; use the built-in console only until Phase 6. |
 | 2026-10-18 | LiteLLM stays the model gateway. The tool gateway (LiteLLM MCP or agentgateway) is decided in phase 8, when an in-cluster agent needs it. |
+| 2026-11-06 | Owner retired **LiteLLM** (`ecosystem-litellm`) and the in-cluster **Ollama** (`ecosystem-ollama`, PVC `onemind-cpu-model`): agentgateway replaces LiteLLM as the hub and Hermes uses Ollama Cloud. LiteLLM logged no traffic; its only consumer was `onemind-mcp`. Removed from Git; live cleanup and the kept `litellm` database are recorded in [tool-gateway.md](docs/operations/tool-gateway.md#litellm-and-in-cluster-ollama-retired-2026-11-06). |
 | 2026-10-30 | Owner chose **agentgateway** (standalone chart, no CRDs) as Legacy's tool front door, replacing the LiteLLM MCP hub of 2026-10-29; LiteLLM returns to model routing only. Destructive and physical tools sit on a separate `execute` route behind an out-of-band `execute <id>` approval. Design: [onemind-tool-gateway.md](docs/architecture/onemind-tool-gateway.md). |
 | 2026-10-18 | Cilium Gateway API backends need a component-scoped `fromEntities: ingress` policy; keep OpenChoreo's generated policy and add an opt-in trait rather than allowing all ingress. |
 | 2026-10-18 | AI read access to the cluster uses ServiceAccount `kube/ai-operator` (built-in `view` plus platform CRDs, no Secrets) through kubernetes-mcp-server in read-only mode. No separate Argo CD MCP. |

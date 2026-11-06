@@ -282,13 +282,13 @@ def build_entities(inv: dict) -> list[dict]:
         entities.append(component(
             f"mcp-adapter-{slug(aid)}", f"MCP adapter: {aid}",
             f"{app['description']}. " + (
-                "Read-only adapter served by onemind-mcp and reached by Hermes through the LiteLLM MCP hub." if status == "live"
+                "Read-only adapter served by onemind-mcp and reached by Hermes through the tool gateway (agentgateway)." if status == "live"
                 else "Adapter implemented but disabled in apps.yaml until the blocker is cleared." if status == "parked"
                 else "No adapter implemented yet; the entry reserves the application in apps.yaml."
             ),
             "mcp-adapter", status, "onemind", runs_kind="cluster",
             runs_on="ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)",
-            connects=[aid.replace("_", "-"), "onemind-mcp", "litellm"],
+            connects=[aid.replace("_", "-"), "onemind-mcp"],
             subtype=app.get("adapter"), source="platform/hermes/mcp/apps.yaml",
             build="services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/",
             verified=f"{VERIFIED_DATE} onemind-mcp pod Running; enabled flag from apps.yaml, upstream health not probed",

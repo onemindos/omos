@@ -71,8 +71,6 @@ spec:
               value: http://tile38.onetak.svc.cluster.local:9851
             - name: STAC_URL
               value: http://stac-api.stac.svc.cluster.local:8080
-            - name: OLLAMA_URL
-              value: http://onemind-cpu-model.onemind-ai.svc.cluster.local:11434
             - name: ALERTMANAGER_URL
               value: http://monitoring-kube-prometheus-alertmanager.monitoring.svc.cluster.local:9093
             - name: LOKI_URL
@@ -84,11 +82,6 @@ spec:
             - name: GRAFANA_API_TOKEN
               valueFrom:
                 secretKeyRef: {name: onemind-mcp-auth, key: GRAFANA_API_TOKEN}
-            - name: LITELLM_URL
-              value: http://litellm.onemind-ai.svc.cluster.local:4000
-            - name: LITELLM_API_KEY
-              valueFrom:
-                secretKeyRef: {name: onemind-mcp-auth, key: LITELLM_API_KEY}
             - name: BACKSTAGE_URL
               value: http://backstage.backstage.svc.cluster.local:7007
             - name: BACKSTAGE_API_TOKEN

@@ -2584,7 +2584,7 @@ metadata:
   name: mcp-adapter-nats
   title: 'MCP adapter: nats'
   description: NATS node and JetStream statistics (read only, one node per call, any of the 3 nodes). Read-only
-    adapter served by onemind-mcp and reached by Hermes through the LiteLLM MCP hub.
+    adapter served by onemind-mcp and reached by Hermes through the tool gateway (agentgateway).
   tags:
   - plugin
   - mcp-adapter
@@ -2604,7 +2604,7 @@ metadata:
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
     onemind.io/plugin-subtype: nats
-    onemind.io/connects-to: nats,onemind-mcp,litellm
+    onemind.io/connects-to: nats,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -2628,7 +2628,7 @@ metadata:
   name: mcp-adapter-prometheus
   title: 'MCP adapter: prometheus'
   description: Cluster and application metrics via PromQL (read only). Read-only adapter served by onemind-mcp and
-    reached by Hermes through the LiteLLM MCP hub.
+    reached by Hermes through the tool gateway (agentgateway).
   tags:
   - plugin
   - mcp-adapter
@@ -2648,7 +2648,7 @@ metadata:
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
     onemind.io/plugin-subtype: prometheus
-    onemind.io/connects-to: prometheus,onemind-mcp,litellm
+    onemind.io/connects-to: prometheus,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -2672,7 +2672,7 @@ metadata:
   name: mcp-adapter-stac
   title: 'MCP adapter: stac'
   description: Geospatial imagery collections and bounding-box search. Read-only adapter served by onemind-mcp and
-    reached by Hermes through the LiteLLM MCP hub.
+    reached by Hermes through the tool gateway (agentgateway).
   tags:
   - plugin
   - mcp-adapter
@@ -2692,7 +2692,7 @@ metadata:
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
     onemind.io/plugin-subtype: stac
-    onemind.io/connects-to: stac,onemind-mcp,litellm
+    onemind.io/connects-to: stac,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -2713,54 +2713,10 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: mcp-adapter-ollama
-  title: 'MCP adapter: ollama'
-  description: Local AI model inventory and current memory residency. Read-only adapter served by onemind-mcp and
-    reached by Hermes through the LiteLLM MCP hub.
-  tags:
-  - plugin
-  - mcp-adapter
-  - live
-  - cluster
-  - mcp
-  labels:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/pillar: so
-  annotations:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/plugin-subtype: ollama
-    onemind.io/connects-to: ollama,onemind-mcp,litellm
-    onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
-    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
-    onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
-    onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
-      not probed
-    onemind.io/mcp-app-id: ollama
-    onemind.io/mcp-url-env: OLLAMA_URL
-spec:
-  type: mcp-adapter
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: onemind-plugin-ecosystem
-  subcomponentOf: component:default/onemind-mcp
-  dependsOn:
-  - component:default/k8s-hermes-onemind-mcp-07887746
-  - component:default/ollama
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: mcp-adapter-alertmanager
   title: 'MCP adapter: alertmanager'
   description: Active operational alerts without silence or routing changes. Read-only adapter served by onemind-mcp
-    and reached by Hermes through the LiteLLM MCP hub.
+    and reached by Hermes through the tool gateway (agentgateway).
   tags:
   - plugin
   - mcp-adapter
@@ -2780,7 +2736,7 @@ metadata:
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
     onemind.io/plugin-subtype: alertmanager
-    onemind.io/connects-to: alertmanager,onemind-mcp,litellm
+    onemind.io/connects-to: alertmanager,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -2803,7 +2759,7 @@ metadata:
   name: mcp-adapter-loki
   title: 'MCP adapter: loki'
   description: Recent application and Kubernetes logs through bounded LogQL queries. Read-only adapter served by
-    onemind-mcp and reached by Hermes through the LiteLLM MCP hub.
+    onemind-mcp and reached by Hermes through the tool gateway (agentgateway).
   tags:
   - plugin
   - mcp-adapter
@@ -2823,7 +2779,7 @@ metadata:
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
     onemind.io/plugin-subtype: loki
-    onemind.io/connects-to: loki,onemind-mcp,litellm
+    onemind.io/connects-to: loki,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -2847,7 +2803,7 @@ metadata:
   name: mcp-adapter-opencost
   title: 'MCP adapter: opencost'
   description: Estimated Kubernetes cost allocations by namespace. Read-only adapter served by onemind-mcp and reached
-    by Hermes through the LiteLLM MCP hub.
+    by Hermes through the tool gateway (agentgateway).
   tags:
   - plugin
   - mcp-adapter
@@ -2867,7 +2823,7 @@ metadata:
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
     onemind.io/plugin-subtype: opencost
-    onemind.io/connects-to: opencost,onemind-mcp,litellm
+    onemind.io/connects-to: opencost,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -2891,7 +2847,7 @@ metadata:
   name: mcp-adapter-mediamtx
   title: 'MCP adapter: mediamtx'
   description: Live media stream paths, readiness and traffic without camera control. Read-only adapter served by
-    onemind-mcp and reached by Hermes through the LiteLLM MCP hub.
+    onemind-mcp and reached by Hermes through the tool gateway (agentgateway).
   tags:
   - plugin
   - mcp-adapter
@@ -2911,7 +2867,7 @@ metadata:
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
     onemind.io/plugin-subtype: mediamtx
-    onemind.io/connects-to: mediamtx,onemind-mcp,litellm
+    onemind.io/connects-to: mediamtx,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -2954,7 +2910,7 @@ metadata:
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
     onemind.io/plugin-subtype: karakeep
-    onemind.io/connects-to: karakeep,onemind-mcp,litellm
+    onemind.io/connects-to: karakeep,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3000,7 +2956,7 @@ metadata:
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
     onemind.io/plugin-subtype: n8n
-    onemind.io/connects-to: n8n,onemind-mcp,litellm
+    onemind.io/connects-to: n8n,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3026,7 +2982,7 @@ metadata:
   name: mcp-adapter-grafana
   title: 'MCP adapter: grafana'
   description: Dashboard discovery and observability navigation. Read-only adapter served by onemind-mcp and reached
-    by Hermes through the LiteLLM MCP hub.
+    by Hermes through the tool gateway (agentgateway).
   tags:
   - plugin
   - mcp-adapter
@@ -3046,7 +3002,7 @@ metadata:
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
     onemind.io/plugin-subtype: grafana
-    onemind.io/connects-to: grafana,onemind-mcp,litellm
+    onemind.io/connects-to: grafana,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3089,7 +3045,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: nextcloud,onemind-mcp,litellm
+    onemind.io/connects-to: nextcloud,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3132,7 +3088,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: matrix,onemind-mcp,litellm
+    onemind.io/connects-to: matrix,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3157,7 +3113,7 @@ metadata:
   name: mcp-adapter-backstage
   title: 'MCP adapter: backstage'
   description: OneMind service catalog and developer workspace. Read-only adapter served by onemind-mcp and reached
-    by Hermes through the LiteLLM MCP hub.
+    by Hermes through the tool gateway (agentgateway).
   tags:
   - plugin
   - mcp-adapter
@@ -3177,7 +3133,7 @@ metadata:
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
     onemind.io/plugin-subtype: backstage
-    onemind.io/connects-to: backstage,onemind-mcp,litellm
+    onemind.io/connects-to: backstage,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3220,7 +3176,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: tak,onemind-mcp,litellm
+    onemind.io/connects-to: tak,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3264,7 +3220,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: fedhub,onemind-mcp,litellm
+    onemind.io/connects-to: fedhub,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3308,7 +3264,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: webodm,onemind-mcp,litellm
+    onemind.io/connects-to: webodm,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3351,7 +3307,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: tiles,onemind-mcp,litellm
+    onemind.io/connects-to: tiles,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3375,7 +3331,7 @@ metadata:
   name: mcp-adapter-tile38
   title: 'MCP adapter: tile38'
   description: Live geospatial entities and geofences (fixed reviewed commands; no command passthrough). Read-only
-    adapter served by onemind-mcp and reached by Hermes through the LiteLLM MCP hub.
+    adapter served by onemind-mcp and reached by Hermes through the tool gateway (agentgateway).
   tags:
   - plugin
   - mcp-adapter
@@ -3395,7 +3351,7 @@ metadata:
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
     onemind.io/plugin-subtype: tile38
-    onemind.io/connects-to: tile38,onemind-mcp,litellm
+    onemind.io/connects-to: tile38,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3436,7 +3392,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: cloudtak,onemind-mcp,litellm
+    onemind.io/connects-to: cloudtak,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3480,7 +3436,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: takml,onemind-mcp,litellm
+    onemind.io/connects-to: takml,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3524,7 +3480,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: home-assistant,onemind-mcp,litellm
+    onemind.io/connects-to: home-assistant,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3542,50 +3498,6 @@ spec:
   dependsOn:
   - component:default/k8s-hermes-onemind-mcp-07887746
   - component:default/home-assistant
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: mcp-adapter-litellm
-  title: 'MCP adapter: litellm'
-  description: Model gateway and available routed AI models. Read-only adapter served by onemind-mcp and reached
-    by Hermes through the LiteLLM MCP hub.
-  tags:
-  - plugin
-  - mcp-adapter
-  - live
-  - cluster
-  - mcp
-  labels:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/pillar: so
-  annotations:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: live
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/plugin-subtype: litellm
-    onemind.io/connects-to: litellm,onemind-mcp,litellm
-    onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
-    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
-    onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
-    onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
-      not probed
-    onemind.io/mcp-app-id: litellm
-    onemind.io/mcp-url-env: LITELLM_URL
-spec:
-  type: mcp-adapter
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: onemind-plugin-ecosystem
-  subcomponentOf: component:default/onemind-mcp
-  dependsOn:
-  - component:default/k8s-hermes-onemind-mcp-07887746
-  - component:default/litellm
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -3612,7 +3524,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: onemind-core,onemind-mcp,litellm
+    onemind.io/connects-to: onemind-core,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3656,7 +3568,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: agent-fabric,onemind-mcp,litellm
+    onemind.io/connects-to: agent-fabric,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3699,7 +3611,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: vaultwarden,onemind-mcp,litellm
+    onemind.io/connects-to: vaultwarden,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3743,7 +3655,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: authentik,onemind-mcp,litellm
+    onemind.io/connects-to: authentik,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3787,7 +3699,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: kubernetes,onemind-mcp,litellm
+    onemind.io/connects-to: kubernetes,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3811,7 +3723,7 @@ metadata:
   name: mcp-adapter-argocd
   title: 'MCP adapter: argocd'
   description: GitOps application delivery and rollout. Read-only adapter served by onemind-mcp and reached by Hermes
-    through the LiteLLM MCP hub.
+    through the tool gateway (agentgateway).
   tags:
   - plugin
   - mcp-adapter
@@ -3831,7 +3743,7 @@ metadata:
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
     onemind.io/plugin-subtype: argocd
-    onemind.io/connects-to: argocd,onemind-mcp,litellm
+    onemind.io/connects-to: argocd,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3874,7 +3786,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: data-backups,onemind-mcp,litellm
+    onemind.io/connects-to: data-backups,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3917,7 +3829,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: openremote,onemind-mcp,litellm
+    onemind.io/connects-to: openremote,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -3961,7 +3873,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: thingsboard,onemind-mcp,litellm
+    onemind.io/connects-to: thingsboard,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -4005,7 +3917,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: forgejo,onemind-mcp,litellm
+    onemind.io/connects-to: forgejo,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
@@ -4049,7 +3961,7 @@ metadata:
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
     onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: gatus,onemind-mcp,litellm
+    onemind.io/connects-to: gatus,onemind-mcp
     onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
     onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
