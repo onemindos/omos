@@ -83,7 +83,7 @@ spec:
                       "grant_types": ["authorization_code", "refresh_token"],
                       "redirect_uris": [{
                           "matching_mode": "strict",
-                          "url": "https://onemind-preview.tail717ba0.ts.net/api/auth/oidc/handler/frame",
+                          "url": "https://portal.tail717ba0.ts.net/api/auth/oidc/handler/frame",
                           "redirect_uri_type": "authorization"
                       }],
                       "include_claims_in_id_token": True,
@@ -99,7 +99,7 @@ spec:
                           "slug": "onemind-backstage",
                           "provider": provider["pk"],
                           "policy_engine_mode": "any",
-                          "meta_launch_url": "https://onemind-preview.tail717ba0.ts.net",
+                          "meta_launch_url": "https://portal.tail717ba0.ts.net",
                           "meta_description": "OneMind service catalog and operations portal",
                       })
                       print("Created application onemind-backstage")

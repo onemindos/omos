@@ -91,7 +91,7 @@ spec:
               key: AUTHENTIK_CATALOG_TOKEN
               optional: true
         - name: PORTAL_URL
-          value: https://onemind-preview.tail717ba0.ts.net
+          value: https://portal.tail717ba0.ts.net
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -212,10 +212,10 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: onemind-preview
+  name: portal
   namespace: backstage
   annotations:
-    tailscale.com/hostname: onemind-preview
+    tailscale.com/hostname: portal
 spec:
   ingressClassName: tailscale
   defaultBackend:
@@ -225,4 +225,4 @@ spec:
         number: 7007
   tls:
   - hosts:
-    - onemind-preview
+    - portal

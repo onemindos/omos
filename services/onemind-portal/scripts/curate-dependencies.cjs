@@ -4,7 +4,7 @@ const path = require('node:path');
 const YAML = require('yaml');
 const { curateTopology, renderCluster } = require('./curate-topology.cjs');
 
-const portalUrl = 'https://onemind-preview.tail717ba0.ts.net';
+const portalUrl = 'https://portal.tail717ba0.ts.net';
 const reviewedWorkloads = [
   {
     name: 'k8s-backstage-backstage-21b99354',

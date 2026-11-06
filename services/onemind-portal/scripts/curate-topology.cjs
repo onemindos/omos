@@ -1,6 +1,6 @@
 // Catalog-only projection of reviewed source wiring. Never a traffic or health map.
 const YAML = require('yaml');
-const portalUrl = 'https://onemind-preview.tail717ba0.ts.net';
+const portalUrl = 'https://portal.tail717ba0.ts.net';
 const cluster = 'resource:default/do-nyc3-omos-cloud';
 const names = {
   portal: 'k8s-backstage-backstage-21b99354',

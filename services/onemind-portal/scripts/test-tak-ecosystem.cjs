@@ -101,7 +101,7 @@ test('XMPP for TAK is a deferred Home planning card, not a running endpoint', ()
     ? YAML.parseAllDocuments(fs.readFileSync(deployment, 'utf8')).map(doc => doc.toJS())
       .find(doc => doc.kind === 'Deployment' && doc.metadata.name === 'backstage').spec.template.spec.containers
       .flatMap(container => container.env || []).find(env => env.name === 'PORTAL_URL').value
-    : 'https://onemind-preview.tail717ba0.ts.net'; // Repo absent in image build context.
+    : 'https://portal.tail717ba0.ts.net'; // Repo absent in image build context.
   assert.equal(new URL(baseUrl).protocol, 'https:');
   const destination = `${baseUrl}/catalog/default/component/xmpp-for-tak`;
   assert.equal(annotations['onemind.io/launcher-url'], destination);

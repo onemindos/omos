@@ -118,7 +118,7 @@ spec:
       - title: Review draft pull request
         url: ${{ steps.publish.output.remoteUrl }}
       - title: Register descriptor after merge
-        url: https://onemind-preview.tail717ba0.ts.net/catalog-import
+        url: https://portal.tail717ba0.ts.net/catalog-import
       - title: Descriptor (after merge)
         url: https://github.com/onemindos/omos/blob/main/catalog/services/${{
           parameters.name }}/catalog-info.yaml

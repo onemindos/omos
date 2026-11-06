@@ -30,13 +30,13 @@ if not provider:
         'invalidation_flow':flows['default-provider-invalidation-flow'],
         'property_mappings':scopes,'signing_key':key,'issuer_mode':'per_provider',
         'grant_types':['authorization_code','refresh_token'],
-        'redirect_uris':[{'matching_mode':'strict','url':'https://'+h+'.tail717ba0.ts.net/api/auth/oidc/handler/frame'} for h in ['onemind-preview','homepage']],
+        'redirect_uris':[{'matching_mode':'strict','url':'https://'+h+'.tail717ba0.ts.net/api/auth/oidc/handler/frame'} for h in ['portal','onemind-preview']],
     })
 apps=api('core/applications/?page_size=100')['results']
 app=next((a for a in apps if a['slug']=='onemind-backstage'),None)
 if not app:
     app=api('core/applications/',{'name':'OneMind','slug':'onemind-backstage','provider':provider['pk'],
-        'meta_launch_url':'https://onemind-preview.tail717ba0.ts.net','meta_description':'OneMind service catalog and operations portal','policy_engine_mode':'any'})
+        'meta_launch_url':'https://portal.tail717ba0.ts.net','meta_description':'OneMind service catalog and operations portal','policy_engine_mode':'any'})
 # The first release permits only the existing administrator to authenticate.
 admin=next(u for u in api('core/users/?page_size=100')['results'] if u['username']=='akadmin' and u['is_active'])
 bindings=api('policies/bindings/?target='+app['pk'])['results']

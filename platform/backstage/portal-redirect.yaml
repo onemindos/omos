@@ -1,9 +1,10 @@
-# Tailnet alias https://portal.tail717ba0.ts.net for the portal.
+# Old tailnet host https://onemind-preview.tail717ba0.ts.net, kept so bookmarks and links
+# still work after portal became the canonical host (2026-11-05).
 #
 # Backstage takes a single origin from PORTAL_URL (deployment.yaml): app.baseUrl,
 # backend.baseUrl, the CORS origin, the CSP 'self' source and the OIDC callback all
 # derive from it. A second host serving Backstage directly would load the app and then
-# call the API cross-origin, which CORS and CSP block, so the alias does not route to
+# call the API cross-origin, which CORS and CSP block, so the old host does not route to
 # the backstage Service. This nginx answers every request with a temporary redirect to
 # the same path on the canonical host (portal-redirect.conf). No Backstage pod changes.
 apiVersion: apps/v1
@@ -98,7 +99,7 @@ spec:
     port: 80
     targetPort: http
 ---
-# Only the portal Ingress proxy may connect; nginx needs no egress at all.
+# Only the onemind-preview Ingress proxy may connect; nginx needs no egress at all.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -118,7 +119,7 @@ spec:
           kubernetes.io/metadata.name: tailscale
       podSelector:
         matchLabels:
-          tailscale.com/parent-resource: portal
+          tailscale.com/parent-resource: onemind-preview
           tailscale.com/parent-resource-ns: backstage
           tailscale.com/parent-resource-type: ingress
     ports:
@@ -128,10 +129,10 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: portal
+  name: onemind-preview
   namespace: backstage
   annotations:
-    tailscale.com/hostname: portal
+    tailscale.com/hostname: onemind-preview
 spec:
   ingressClassName: tailscale
   defaultBackend:
@@ -141,4 +142,4 @@ spec:
         number: 80
   tls:
   - hosts:
-    - portal
+    - onemind-preview

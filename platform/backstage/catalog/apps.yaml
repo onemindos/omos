@@ -559,11 +559,11 @@ metadata:
     - tak-ecosystem
     - planned
   links:
-    - url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/xmpp-for-tak
+    - url: https://portal.tail717ba0.ts.net/catalog/default/component/xmpp-for-tak
       title: Planning card
       icon: dashboard
   annotations:
-    onemind.io/launcher-url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/xmpp-for-tak
+    onemind.io/launcher-url: https://portal.tail717ba0.ts.net/catalog/default/component/xmpp-for-tak
     onemind.io/launcher-category: TAK Ecosystem
     onemind.io/documented-status: Planned — deferred, not deployed; plugin
       compatibility and integration untested
@@ -667,7 +667,7 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81899931d63301bfe25d.md
       title: "Archived registry: Headlamp"
-    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/monitoring/
+    - url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/monitoring/
       title: Operations runbook
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81899931d63301bfe25d.md
       title: "Archived registry: Headlamp"
@@ -956,7 +956,7 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8123b817ccdf71662d03.md
       title: "Archived registry: NATS Dashboard"
-    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
+    - url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
       title: Operations runbook
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8123b817ccdf71662d03.md
       title: "Archived registry: NATS Dashboard"
@@ -1257,7 +1257,7 @@ metadata:
     - url: https://tak.tail717ba0.ts.net:8446
       title: Open application
       icon: dashboard
-    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
+    - url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
       title: Operations runbook
   annotations:
     backstage.io/techdocs-entity: component:default/onemind-runbooks
@@ -1315,7 +1315,7 @@ metadata:
       title: "Archived registry: OneTAK"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a98fb4e78fdda75950.md
       title: "Archived registry: OneTAK"
-    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
+    - url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
       title: Operations runbook
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e815eb011df18773e15dc.md
       title: "Archived registry: OneTAK"
@@ -1689,7 +1689,7 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e39fd6f5e8cda2cb01.md
       title: "Archived registry: Grafana"
-    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/monitoring/
+    - url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/monitoring/
       title: Operations runbook
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e39fd6f5e8cda2cb01.md
       title: "Archived registry: Grafana"
@@ -3350,7 +3350,7 @@ spec:
       },
       "servers": [
         {
-          "url": "https://onemind-preview.tail717ba0.ts.net/api/onemind"
+          "url": "https://portal.tail717ba0.ts.net/api/onemind"
         }
       ],
       "security": [
@@ -4732,7 +4732,7 @@ metadata:
     - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-volume-backups
       title: Portable volume backup sources
       icon: dashboard
-    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/backups/
+    - url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/backups/
       title: Recovery runbook
     - url: https://github.com/onemindos/omos/blob/main/docs/operations/cluster-readiness-2026-10-08.md
       title: Restore evidence and remaining gaps

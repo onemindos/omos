@@ -13,12 +13,12 @@ metadata:
   links:
     - title: Core service topology (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-backstage-backstage-21b99354&rootEntityRe\
-        fs%5B%5D=component%3Adefault%2Fk8s-nats-nats-0dee54ac&rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&sel\
-        ectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRela\
-        tions=true"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-backstage-backstage-21b99354&rootEntityRefs%5B%5D=\
+        component%3Adefault%2Fk8s-nats-nats-0dee54ac&rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&selectedRela\
+        tions%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=tru\
+        e"
   labels:
     onemind.io/pillar: so
 spec:
@@ -284,19 +284,17 @@ metadata:
   links:
     - title: Dependency topology (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-argocd-argocd-server-4414022f&selectedRel\
-        ations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=tr\
-        ue"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-argocd-argocd-server-4414022f&selectedRelations%5B\
+        %5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true"
     - title: Dependent services (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-argocd-argocd-server-4414022f&selectedRel\
-        ations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations\
-        =true"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-argocd-argocd-server-4414022f&selectedRelations%5B\
+        %5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=true"
     - title: Deployment location — NYC3
       type: location
-      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
+      url: https://portal.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload
@@ -369,19 +367,19 @@ metadata:
   links:
     - title: Dependency topology (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-auth-platform-auth-helm-authentik-server-\
-        78f74c27&selectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=tr\
-        ue&mergeRelations=true"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-auth-platform-auth-helm-authentik-server-78f74c27&\
+        selectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeR\
+        elations=true"
     - title: Dependent services (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-auth-platform-auth-helm-authentik-server-\
-        78f74c27&selectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional\
-        =true&mergeRelations=true"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-auth-platform-auth-helm-authentik-server-78f74c27&\
+        selectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mer\
+        geRelations=true"
     - title: Deployment location — NYC3
       type: location
-      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
+      url: https://portal.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload
@@ -470,36 +468,34 @@ metadata:
       url: https://grafana.tail717ba0.ts.net/d/onemind-backstage
     - title: Live Kubernetes resources
       type: kubernetes
-      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-21b99354/kubernetes
+      url: https://portal.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-21b99354/kubernetes
     - title: Argo CD deployment summary
       type: argocd
-      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-21b99354/deployment-summary
+      url: https://portal.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-21b99354/deployment-summary
     - title: Portal recovery runbook
       type: runbook
-      url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/
+      url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/
     - title: Dependency topology (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-backstage-backstage-21b99354&selectedRela\
-        tions%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=tru\
-        e"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-backstage-backstage-21b99354&selectedRelations%5B%\
+        5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true"
     - title: Dependent services (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-backstage-backstage-21b99354&selectedRela\
-        tions%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=\
-        true"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-backstage-backstage-21b99354&selectedRelations%5B%\
+        5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=true"
     - title: Deployment location — NYC3
       type: location
-      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
+      url: https://portal.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
     - title: Core service topology (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-backstage-backstage-21b99354&rootEntityRe\
-        fs%5B%5D=component%3Adefault%2Fk8s-nats-nats-0dee54ac&rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&sel\
-        ectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRela\
-        tions=true"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-backstage-backstage-21b99354&rootEntityRefs%5B%5D=\
+        component%3Adefault%2Fk8s-nats-nats-0dee54ac&rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&selectedRela\
+        tions%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=tru\
+        e"
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload
@@ -1468,19 +1464,19 @@ metadata:
   links:
     - title: Dependency topology (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-monitoring-monitoring-grafana-8ed6cac6&se\
-        lectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRel\
-        ations=true"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-monitoring-monitoring-grafana-8ed6cac6&selectedRel\
+        ations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=tr\
+        ue"
     - title: Dependent services (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-monitoring-monitoring-grafana-8ed6cac6&se\
-        lectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&merge\
-        Relations=true"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-monitoring-monitoring-grafana-8ed6cac6&selectedRel\
+        ations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations\
+        =true"
     - title: Deployment location — NYC3
       type: location
-      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
+      url: https://portal.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload
@@ -3083,28 +3079,28 @@ metadata:
       url: https://grafana.tail717ba0.ts.net/d/onemind-backstage-postgres
     - title: Live Kubernetes resources
       type: kubernetes
-      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-postgres-17d2f351/kubernetes
+      url: https://portal.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-postgres-17d2f351/kubernetes
     - title: Argo CD deployment summary
       type: argocd
-      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-postgres-17d2f351/deployment-summary
+      url: https://portal.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-postgres-17d2f351/deployment-summary
     - title: Database recovery runbook
       type: runbook
-      url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/
+      url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/
     - title: Dependency topology (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&sel\
-        ectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRela\
-        tions=true"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&selectedRela\
+        tions%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=tru\
+        e"
     - title: Dependent services (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&sel\
-        ectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeR\
-        elations=true"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&selectedRela\
+        tions%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=\
+        true"
     - title: Deployment location — NYC3
       type: location
-      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
+      url: https://portal.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload
@@ -3453,26 +3449,26 @@ metadata:
       url: https://grafana.tail717ba0.ts.net/d/onemind-nats
     - title: Live Kubernetes resources
       type: kubernetes
-      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-nats-nats-0dee54ac/kubernetes
+      url: https://portal.tail717ba0.ts.net/catalog/default/component/k8s-nats-nats-0dee54ac/kubernetes
     - title: Argo CD deployment summary
       type: argocd
-      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-nats-nats-0dee54ac/deployment-summary
+      url: https://portal.tail717ba0.ts.net/catalog/default/component/k8s-nats-nats-0dee54ac/deployment-summary
     - title: NATS operations runbook
       type: runbook
-      url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
+      url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
     - title: Dependency topology (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-nats-nats-0dee54ac&selectedRelations%5B%5\
-        D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-nats-nats-0dee54ac&selectedRelations%5B%5D=depends\
+        On&maxDepth=2&unidirectional=true&mergeRelations=true"
     - title: Dependent services (documented)
       type: topology
-      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
-        %5D=component%3Adefault%2Fk8s-nats-nats-0dee54ac&selectedRelations%5B%5\
-        D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=true"
+      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
+        nent%3Adefault%2Fk8s-nats-nats-0dee54ac&selectedRelations%5B%5D=depende\
+        ncyOf&maxDepth=1&unidirectional=true&mergeRelations=true"
     - title: Deployment location — NYC3
       type: location
-      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
+      url: https://portal.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload

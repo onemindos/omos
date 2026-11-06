@@ -3,7 +3,7 @@
 Shows every plugin, adapter and bridge OneMind builds or runs, what it connects to and where it runs.
 System: `onemind-plugin-ecosystem` (Domain `onemind-so`). 137 entities as of 2026-10-29.
 
-## Where to look (tailnet Backstage, https://onemind-preview.tail717ba0.ts.net)
+## Where to look (tailnet Backstage, https://portal.tail717ba0.ts.net)
 
 - `/catalog/default/system/onemind-plugin-ecosystem` : the system page; its Diagram tab draws every plugin, subject and host with their relations.
 - `/catalog?filters[kind]=component&filters[type]=hermes-plugin` : the plugin list by type. Types: `tak-server-plugin`, `atak-plugin`, `hermes-plugin`, `mcp-adapter`, `bridge`, `backstage-plugin`. The Lifecycle filter separates `production` (live or installed), `parked` and `planned`; the Tag filter has `plugin`, `nats`, `third-party`, `flagged`, `device`, `cluster`, `edge`.
