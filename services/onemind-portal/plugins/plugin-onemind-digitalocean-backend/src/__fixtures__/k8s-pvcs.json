@@ -1,0 +1,965 @@
+{
+  "items": [
+    {
+      "metadata": {
+        "namespace": "auth",
+        "name": "pgdata-authentik-postgres-0",
+        "labels": {
+          "app": "authentik-postgres"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-db980e6e-ed0d-438b-aacd-07ba4100e651"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "auth",
+        "name": "volsync-src-volume-86c342dd8d39-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-3db42084-bd82-4cc2-af7a-26cff55b57f9"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "backstage",
+        "name": "data-backstage-postgres-0",
+        "labels": {
+          "app": "backstage-postgres"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-297f90bd-740a-4f51-aa13-095bdede9801"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "backstage",
+        "name": "volsync-src-volume-eb04d2fe651f-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-d5027bee-b12f-471f-a8d1-060d5b7e77ac"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "clickhouse",
+        "name": "data-storage-chi-onemind-onemind-0-0-0",
+        "labels": {
+          "clickhouse.altinity.com/app": "chop",
+          "clickhouse.altinity.com/chi": "onemind",
+          "clickhouse.altinity.com/cluster": "onemind",
+          "clickhouse.altinity.com/namespace": "clickhouse",
+          "clickhouse.altinity.com/object-version": "x",
+          "clickhouse.altinity.com/reclaimPolicy": "Delete",
+          "clickhouse.altinity.com/replica": "0",
+          "clickhouse.altinity.com/shard": "0"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-a0bba117-7650-4177-a4c3-58977b63ad55"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "clickhouse",
+        "name": "volsync-src-volume-ab4fbd87295d-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-6c25e9f6-8603-4541-aec2-93d24c901062"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "dapr-system",
+        "name": "dapr-scheduler-data-dir-dapr-scheduler-server-0",
+        "labels": {
+          "app": "dapr-scheduler-server"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-42d5b430-8c18-467c-ac14-1facd2d06972"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "dapr-system",
+        "name": "dapr-scheduler-data-dir-dapr-scheduler-server-1",
+        "labels": {
+          "app": "dapr-scheduler-server"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-9a7258b5-0f50-43f9-a53a-87a67c4a0db4"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "dapr-system",
+        "name": "dapr-scheduler-data-dir-dapr-scheduler-server-2",
+        "labels": {
+          "app": "dapr-scheduler-server"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-c08ec23f-eabc-4c40-a872-973c32bd18d7"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "dapr-system",
+        "name": "volsync-src-volume-5b6b57939ee3-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-cba63716-f5ab-451b-a6f9-a609abbd0280"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "dapr-system",
+        "name": "volsync-src-volume-cc7912733ca4-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-715efc06-8f5f-49b1-a7e3-90ebe9a38fca"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "dapr-system",
+        "name": "volsync-src-volume-e18340617b8d-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-a3d00498-1327-41f3-a943-6ef61880e4ff"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "forgejo",
+        "name": "forgejo-data",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-35a721be-0fb0-4555-a8fd-c7d63f3186b4"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "forgejo",
+        "name": "volsync-src-forgejo-data-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-53e7de75-60f0-4587-a059-f35b13c331ad"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "hermes",
+        "name": "onemind-hermes-data",
+        "labels": {
+          "app.kubernetes.io/name": "onemind-hermes"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-ef504aef-de76-47ca-af2e-01abeda20c2e"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "hermes",
+        "name": "volsync-src-onemind-hermes-data-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-2ed4337e-635f-4de3-ae1c-f7de9e12330d"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "karakeep",
+        "name": "data-pvc",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-f70f6845-7107-4eaf-a3f9-64f5c94b00b0"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "karakeep",
+        "name": "meilisearch-pvc",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-10ba0c58-3371-4137-ae77-0047a626a81e"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "karakeep",
+        "name": "volsync-src-karakeep-data-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-a49bcf07-e987-45cb-ac1f-397a555b49b6"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "karakeep",
+        "name": "volsync-src-karakeep-meilisearch-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-63a3c639-4333-46d1-ab51-286c6647c075"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "matrix",
+        "name": "data-postgres-0",
+        "labels": {
+          "app": "postgres"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-b9e35f4a-49c1-4161-ac1a-b5c40c10965c"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "matrix",
+        "name": "data-redis-0",
+        "labels": {
+          "app": "redis"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-05ec2c51-af38-4b48-a48c-c7843aea9652"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "matrix",
+        "name": "synapse-data",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-fe402421-ae59-44c1-ab81-0208ed9cc2cd"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "matrix",
+        "name": "volsync-src-volume-0af77b22c7a2-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-90768619-1e47-4177-a08c-0ca97a9d96d5"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "matrix",
+        "name": "volsync-src-volume-197d8a9e297d-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-84f447f2-cd02-45ad-a2a7-49780235145b"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "matrix",
+        "name": "volsync-src-volume-d946eeb02a16-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-717a5dc0-e2fc-40e0-a9e6-b050ad2e7d61"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "monitoring",
+        "name": "grafana-data",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-ffdf24d0-fe51-46c5-ac27-69587d312b95"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "monitoring",
+        "name": "prometheus-monitoring-kube-prometheus-prometheus-db-prometheus-monitoring-kube-prometheus-prometheus-0",
+        "labels": {
+          "app.kubernetes.io/instance": "monitoring-kube-prometheus-prometheus",
+          "app.kubernetes.io/managed-by": "prometheus-operator",
+          "app.kubernetes.io/name": "prometheus",
+          "operator.prometheus.io/name": "monitoring-kube-prometheus-prometheus",
+          "operator.prometheus.io/shard": "0",
+          "prometheus": "monitoring-kube-prometheus-prometheus"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-a43a0c47-0d39-40a7-aa6f-0cbb6ebf6780"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "monitoring",
+        "name": "storage-loki-0",
+        "labels": {
+          "app.kubernetes.io/component": "single-binary",
+          "app.kubernetes.io/instance": "loki",
+          "app.kubernetes.io/name": "loki"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-6cdfb644-7cd8-4ef3-a7f8-e595d65d3107"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "monitoring",
+        "name": "volsync-src-volume-0a77d3a320c8-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-b4f963a8-4d8a-49b4-a0de-9b4d0f92c821"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "n8n",
+        "name": "data-postgres-0",
+        "labels": {
+          "app": "n8n-postgres"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-cfba98ce-bff1-4626-a465-6fab9c2db9e7"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "n8n",
+        "name": "n8n-data",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-4c7ed6d5-f92b-4c3d-a4a4-f330db29fa98"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "n8n",
+        "name": "volsync-src-volume-b98c04b6228d-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-6fb2206c-0e43-466d-ac4c-2ad8a548618e"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "n8n",
+        "name": "volsync-src-volume-e0d2f2fea651-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-a6897a72-9c78-4fce-ae64-f4eea7687160"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "nats",
+        "name": "nats-js-nats-0",
+        "labels": {
+          "app.kubernetes.io/component": "nats",
+          "app.kubernetes.io/instance": "nats",
+          "app.kubernetes.io/name": "nats"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-35bbe9b4-318f-4926-a844-3784d54577c7"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "nats",
+        "name": "nats-js-nats-1",
+        "labels": {
+          "app.kubernetes.io/component": "nats",
+          "app.kubernetes.io/instance": "nats",
+          "app.kubernetes.io/name": "nats"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-cfe09087-2810-4759-a44e-ffea6023bbea"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "nats",
+        "name": "nats-js-nats-2",
+        "labels": {
+          "app.kubernetes.io/component": "nats",
+          "app.kubernetes.io/instance": "nats",
+          "app.kubernetes.io/name": "nats"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-072c8ef5-4242-4ac7-af31-39995d33fce8"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "nats",
+        "name": "volsync-src-volume-bf2e7be6c2ff-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-2927aa4d-e6d5-401d-a558-5235f54373fe"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "nats",
+        "name": "volsync-src-volume-cedf723508b6-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-39e01354-afae-482b-a6df-da76ba29c7da"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "nats",
+        "name": "volsync-src-volume-f49adedad17d-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-8b03d188-ddd8-4a13-aff5-90b795612696"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onemind-ai",
+        "name": "onemind-cpu-model",
+        "labels": {
+          "app.kubernetes.io/instance": "ollama",
+          "app.kubernetes.io/managed-by": "Helm",
+          "app.kubernetes.io/name": "ollama",
+          "app.kubernetes.io/version": "0.40.0",
+          "helm.sh/chart": "ollama-1.86.0"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-c40cc27d-6e02-46e0-a1f2-02ad6c027645"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onemind-ai",
+        "name": "volsync-src-volume-aeb2c9c4e472-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-6aeeec72-b72f-4283-aaa9-5e52ac98ee96"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onemind-data",
+        "name": "onemind-data-1",
+        "labels": {
+          "app.kubernetes.io/component": "database",
+          "app.kubernetes.io/managed-by": "cloudnative-pg",
+          "app.kubernetes.io/name": "postgresql",
+          "cnpg.io/cluster": "onemind-data",
+          "cnpg.io/instanceName": "onemind-data-1",
+          "cnpg.io/instanceRole": "replica",
+          "cnpg.io/pvcRole": "PG_DATA",
+          "role": "replica"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-ab67b77c-aa4e-4f1c-afed-265a1138352c"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onemind-data",
+        "name": "onemind-data-2",
+        "labels": {
+          "app.kubernetes.io/component": "database",
+          "app.kubernetes.io/managed-by": "cloudnative-pg",
+          "app.kubernetes.io/name": "postgresql",
+          "cnpg.io/cluster": "onemind-data",
+          "cnpg.io/instanceName": "onemind-data-2",
+          "cnpg.io/instanceRole": "replica",
+          "cnpg.io/pvcRole": "PG_DATA",
+          "role": "replica"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-17a42810-546d-4b88-ac14-5a2336f44e81"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onemind-data",
+        "name": "onemind-data-3",
+        "labels": {
+          "app.kubernetes.io/component": "database",
+          "app.kubernetes.io/managed-by": "cloudnative-pg",
+          "app.kubernetes.io/name": "postgresql",
+          "cnpg.io/cluster": "onemind-data",
+          "cnpg.io/instanceName": "onemind-data-3",
+          "cnpg.io/instanceRole": "primary",
+          "cnpg.io/pvcRole": "PG_DATA",
+          "role": "primary"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-b412a661-c9e7-415e-a85c-c815c9785b67"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "name": "nodeodm-data",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-2146a05c-10d4-4518-ad2e-1b6a50fa3944"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "name": "tile38-data",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-6265d2fe-2925-42ec-aba3-8eb89d4910a6"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "name": "tileserver-tiles",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-59408b17-df90-4bac-a468-2d7185304a9a"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "name": "volsync-src-volume-5503f74cbdce-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-1b230495-4b1a-4517-abcd-136344a3dbfe"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "name": "volsync-src-volume-adf3fcd472a7-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-09d01ca6-a45d-4294-a6da-e8270b902b28"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "name": "volsync-src-volume-cafdaa0bfb4a-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-c103d0e9-89d0-4e5d-ac4f-2b334bcf67be"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "name": "volsync-src-volume-e0dfcd35f5a7-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-255f5800-15c2-4f84-a8ca-adb3e768d0ac"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "name": "volsync-src-volume-e39c1f238e64-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-5489888a-c407-4883-a23f-b8caee1f8760"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "name": "webodm-db-data",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-108a8156-8b04-4f4c-abf2-747ea7842e7d"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "name": "webodm-media",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-408a5130-c46c-47cc-a3f6-d18f7632125b"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "openremote",
+        "name": "database",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-e1cc38da-8db5-4515-af66-a63211b3cfda"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "openremote",
+        "name": "storage",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-76f97632-60d0-49ad-a1c9-7523d9847cd7"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "openremote",
+        "name": "volsync-src-openremote-database-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-02852cdd-0fd2-4893-a26d-bb745fda4771"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "openremote",
+        "name": "volsync-src-openremote-storage-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-5567f541-68fb-4be7-a2e3-c6fbe5e6f2bd"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takml",
+        "name": "takml-db-data",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-30c87033-a4d6-40e7-aa3f-8897b6dc6a70"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takml",
+        "name": "takml-models",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-a544544b-0887-4a4c-a283-0c8e9667d2d4"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takml",
+        "name": "takml-server-jar",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-e2d3bfcc-4ddb-444c-a1ed-ad0ceeaf1dac"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takml",
+        "name": "volsync-src-volume-0800db843c3a-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-8af9e7cd-d388-4ecd-a4df-a9a144532b9b"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takml",
+        "name": "volsync-src-volume-45a600854340-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-73c6f203-1722-4fed-ad3b-f85b3037a1c9"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takml",
+        "name": "volsync-src-volume-a9d9abb1777a-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-d47b5194-8863-4b9c-a561-f98661f449c7"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "name": "data-takserver-postgresql-0",
+        "labels": {
+          "app.kubernetes.io/component": "primary",
+          "app.kubernetes.io/instance": "takserver",
+          "app.kubernetes.io/name": "postgresql"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-35260f30-2868-41f7-a252-0f9639cb4f6a"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "name": "ldap-config-tak-ldap-0",
+        "labels": {
+          "app": "tak-ldap"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-8fc8dbb3-9c1d-4a81-a235-4d783438283c"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "name": "ldap-data-tak-ldap-0",
+        "labels": {
+          "app": "tak-ldap"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-5914218a-7784-494f-a01c-30eb35f7c7e8"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "name": "mongo-data-fedhub-mongodb-0",
+        "labels": {
+          "app": "fedhub-mongodb"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-6065f69e-79ee-40b2-aec1-ad8aa53665e1"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "name": "takserver-nats-js-takserver-nats-0",
+        "labels": {
+          "app.kubernetes.io/component": "nats",
+          "app.kubernetes.io/instance": "takserver",
+          "app.kubernetes.io/name": "nats"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-de4b6ddc-3d6f-4991-af5e-f4ce0ca99b26"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "name": "volsync-src-volume-2b88c0eca294-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-18e92246-7d27-4c84-a64d-7761c7530e57"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "name": "volsync-src-volume-31bf7f4ddcf1-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-b591857b-7113-4dcc-ab20-d8dc962fa48e"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "name": "volsync-src-volume-b5898fcc79f1-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-1a702c48-ff6c-4353-a757-37f79be6cb23"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "name": "volsync-src-volume-ca153ea90369-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-728613b8-e5dd-4c64-ac4f-daf13551fa07"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "name": "volsync-src-volume-cccc1afaa021-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-1dad0c1c-a8f9-4d2a-a722-ee795f37cf46"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "thingsboard",
+        "name": "database",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-70b643ba-344e-4a4a-a466-47ddf1f2ba49"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "thingsboard",
+        "name": "volsync-src-thingsboard-database-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-18f8aab0-efc5-482a-a3a9-66b02067f890"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "vaultwarden",
+        "name": "data-pvc",
+        "labels": {}
+      },
+      "spec": {
+        "volumeName": "pvc-1827845e-3bd6-496e-a3b5-d94a0472af8f"
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "vaultwarden",
+        "name": "volsync-src-vaultwarden-data-cache",
+        "labels": {
+          "app.kubernetes.io/created-by": "volsync"
+        }
+      },
+      "spec": {
+        "volumeName": "pvc-1497a977-91b4-4aba-a0a4-cbb56c4c6b06"
+      }
+    }
+  ]
+}

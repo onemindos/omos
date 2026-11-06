@@ -35,6 +35,13 @@ backend.add(import('@backstage/plugin-catalog-backend-module-github'));
 backend.add(import('@internal/plugin-onemind-machine-backend'));
 // Live cluster inventory. Disabled unless onemind.inventory.live.enabled is true; see docs/catalog/live-inventory.md.
 backend.add(import('@internal/plugin-onemind-inventory-backend'));
+// F6 DigitalOcean: read-only summary route plus catalog Resources. Inert without DIGITALOCEAN_TOKEN; see docs/operations/digitalocean.md.
+backend.add(import('@internal/plugin-onemind-digitalocean-backend'));
+backend.add(
+  import('@internal/plugin-onemind-digitalocean-backend').then(m => ({
+    default: m.catalogModuleOnemindDigitalOcean,
+  })),
+);
 // Authentik users and groups. Disabled unless authentik.orgSync.enabled is true; see docs/catalog/authentik-org-sync.md.
 backend.add(import('@internal/plugin-onemind-org-backend'));
 

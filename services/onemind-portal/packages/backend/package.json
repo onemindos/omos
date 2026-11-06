@@ -64,6 +64,7 @@
     "@internal/plugin-onemind-common-backend": "workspace:^",
     "@internal/plugin-onemind-community-backend": "workspace:^",
     "@internal/plugin-onemind-context-backend": "workspace:^",
+    "@internal/plugin-onemind-digitalocean-backend": "workspace:^",
     "@internal/plugin-onemind-events-backend": "workspace:^",
     "@internal/plugin-onemind-inventory-backend": "workspace:^",
     "@internal/plugin-onemind-machine-backend": "workspace:^",

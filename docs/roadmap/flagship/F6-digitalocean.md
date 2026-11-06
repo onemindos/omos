@@ -86,4 +86,18 @@ after Zeus provides it), tests and `docs/operations/digitalocean.md`.
 
 ## Status
 
-(Implementing agent: write progress here.)
+2026-11-05, branch `feat/f6-digitalocean` (not yet merged). Built and tested with the recorded fixture;
+not yet checked against the live account.
+
+- Done: backend plugin `plugin-onemind-digitalocean-backend` (read-only client with pagination, 429
+  backoff, size and time limits; summary route for administrators; catalog provider with PVC and app
+  links; "What changed" list), frontend plugin `plugin-onemind-digitalocean` (page at `/digitalocean`
+  and the "Runs on DigitalOcean" card), registration in `packages/app` and `packages/backend`,
+  `onemind.features.digitalocean: true` so the sidebar entry shows, `DIGITALOCEAN_TOKEN` and
+  `DO_BILLING_READ_TOKEN` in `platform/backstage/deployment.yaml`, and
+  [docs/operations/digitalocean.md](../../operations/digitalocean.md). Owner sealed
+  `backstage-digitalocean`.
+- Spaces buckets: the DigitalOcean API v2 cannot list buckets with an API token, so the page says
+  "not available".
+- Open: live acceptance (counts match `doctl`, spend matches the DigitalOcean billing page), node pool
+  per app (reached through the cluster Resource, not per pod), spend on the Home status strip (F1).

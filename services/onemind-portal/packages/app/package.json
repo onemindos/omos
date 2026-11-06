@@ -58,6 +58,7 @@
     "@internal/plugin-onemind-auth": "workspace:^",
     "@internal/plugin-onemind-common": "workspace:^",
     "@internal/plugin-onemind-cost": "workspace:^",
+    "@internal/plugin-onemind-digitalocean": "workspace:^",
     "@internal/plugin-onemind-home": "workspace:^",
     "@internal/plugin-onemind-live": "workspace:^",
     "@internal/plugin-onemind-missions": "workspace:^",
