@@ -75,29 +75,18 @@ export function AppTile({ app, controls, compact = false }: { app: AppEntry; con
 }
 export const appGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: 12 };
 
-export function QuickAccess({ dense = false }: { dense?: boolean }) {
+export function FavoritesPicker({ open, onClose, controls }: { open: boolean; onClose: () => void; controls: FavoriteControls }) {
   const searchId=useId();
   const titleId=useId();
   const {directory:launcherApps}=useDirectory();
-  const controls = useAppFavorites();
-  const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
-    if (open) searchInputRef.current?.focus();
+    if (open) { setQuery(''); searchInputRef.current?.focus(); }
   }, [open]);
   const matches = launcherApps.filter(app => `${app.title} ${app.description} ${app.groupTitle}`.toLowerCase().includes(query.trim().toLowerCase()));
-  const starters = ['zoho-mail', 'github', 'grafana', 'headlamp', '1password', 'mercury'].flatMap(name => launcherApps.find(app => app.name === name) ?? []);
-  return (<Box className="onemind-workspace onemind-favorites">
-    <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" style={{ gap: 12 }} mb={1}>
-      <Box><Typography variant="h5" component="h2" style={{ fontWeight: 700 }}>Favorites</Typography>{!dense&&<Typography variant="body2" color="textSecondary">Your apps, one click away. Stars are shared with your catalog favorites.</Typography>}</Box>
-      <Button variant="contained" color="primary" disableElevation onClick={() => { setQuery(''); setOpen(true); }}>Manage favorites</Button>
-    </Box>
-    {controls.error && <Typography color="error" role="alert">{controls.error}</Typography>}
-    {!controls.loaded && <Typography role="status">Loading saved favorites…</Typography>}
-    {controls.loaded && (controls.favorites.length ? <Box mt={dense?1:2} style={appGridStyle}>{controls.favorites.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box> : <Box mt={2}><Typography>No favorite apps yet. Use a star below or choose apps in Manage favorites.</Typography><Typography variant="overline" component="p" style={{ marginTop: 16 }}>Suggested starting points</Typography><Box style={appGridStyle}>{starters.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box></Box>)}
-    <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md" aria-labelledby={titleId}>
-      <DialogTitle><Box display="flex" justifyContent="space-between" alignItems="center"><span id={titleId}>Choose your quick-access apps</span><IconButton aria-label="Close favorites picker" onClick={() => setOpen(false)}><Close /></IconButton></Box></DialogTitle>
+  return (<Dialog open={open} onClose={onClose} fullWidth maxWidth="md" aria-labelledby={titleId}>
+      <DialogTitle><Box display="flex" justifyContent="space-between" alignItems="center"><span id={titleId}>Choose your quick-access apps</span><IconButton aria-label="Close favorites picker" onClick={onClose}><Close /></IconButton></Box></DialogTitle>
       <DialogContent><TextField id={searchId} inputRef={searchInputRef}
  fullWidth label="Find an app to favorite" value={query} onChange={event => setQuery(event.target.value)} variant="outlined" size="small" />
         <Typography variant="caption" component="p" role="status" style={{ margin: '12px 0' }}>{matches.length} apps · {controls.favorites.length} favorites</Typography>
@@ -105,6 +94,22 @@ export function QuickAccess({ dense = false }: { dense?: boolean }) {
         <Box mb={3} style={appGridStyle}>{matches.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box>
         {!matches.length && <Typography>No matching apps. Try another name or category.</Typography>}
       </DialogContent>
-    </Dialog>
+    </Dialog>);
+}
+
+export function QuickAccess({ dense = false }: { dense?: boolean }) {
+  const {directory:launcherApps}=useDirectory();
+  const controls = useAppFavorites();
+  const [open, setOpen] = useState(false);
+  const starters = ['zoho-mail', 'github', 'grafana', 'headlamp', '1password', 'mercury'].flatMap(name => launcherApps.find(app => app.name === name) ?? []);
+  return (<Box className="onemind-workspace onemind-favorites">
+    <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" style={{ gap: 12 }} mb={1}>
+      <Box><Typography variant="h5" component="h2" style={{ fontWeight: 700 }}>Favorites</Typography>{!dense&&<Typography variant="body2" color="textSecondary">Your apps, one click away. Stars are shared with your catalog favorites.</Typography>}</Box>
+      <Button variant="contained" color="primary" disableElevation onClick={() => setOpen(true)}>Manage favorites</Button>
+    </Box>
+    {controls.error && <Typography color="error" role="alert">{controls.error}</Typography>}
+    {!controls.loaded && <Typography role="status">Loading saved favorites…</Typography>}
+    {controls.loaded && (controls.favorites.length ? <Box mt={dense?1:2} style={appGridStyle}>{controls.favorites.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box> : <Box mt={2}><Typography>No favorite apps yet. Use a star below or choose apps in Manage favorites.</Typography><Typography variant="overline" component="p" style={{ marginTop: 16 }}>Suggested starting points</Typography><Box style={appGridStyle}>{starters.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box></Box>)}
+    <FavoritesPicker open={open} onClose={() => setOpen(false)} controls={controls} />
   </Box>);
 }

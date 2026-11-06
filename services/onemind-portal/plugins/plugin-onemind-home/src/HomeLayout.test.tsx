@@ -11,8 +11,24 @@ jest.mock('@backstage/plugin-home-react/alpha', () => ({}));
 jest.mock('./homeModule', () => ({
   Directory: () => <section aria-label="Launcher" />,
 }));
-jest.mock('./Launcher', () => ({
-  QuickAccess: () => <section aria-label="Favorites" />,
+function mockStub(label: string) {
+  return () => <section aria-label={label} />;
+}
+jest.mock('./HomeHeader', () => ({
+  HomeHeader: ({ action }: any) => (
+    <section aria-label="Welcome">{action}</section>
+  ),
+}));
+jest.mock('./CommandBar', () => ({ CommandBar: mockStub('Command bar') }));
+jest.mock('./TodayCard', () => ({ TodayCard: mockStub('Today') }));
+jest.mock('./WaitingCard', () => ({ WaitingCard: mockStub('Waiting on you') }));
+jest.mock('./QuickActions', () => ({ QuickActions: mockStub('Do it now') }));
+jest.mock('./JumpBackIn', () => ({ JumpBackIn: mockStub('Jump back in') }));
+jest.mock('./PinnedChips', () => ({ PinnedChips: mockStub('Pinned') }));
+jest.mock('./BrowseAllApps', () => ({
+  BrowseAllApps: ({ children }: any) => (
+    <section aria-label="Browse all apps">{children}</section>
+  ),
 }));
 jest.mock('./StatusStrip', () => ({
   StatusStrip: () => <section aria-label="Live status" />,
@@ -31,26 +47,37 @@ const props = { widgets: [], defaultConfig: [] } as any;
 const order = () =>
   screen.getAllByRole('region').map(node => node.getAttribute('aria-label'));
 
+const top = [
+  'Welcome',
+  'Command bar',
+  'Live status',
+  'Today',
+  'Waiting on you',
+  'Do it now',
+  'Jump back in',
+  'Pinned',
+];
+
 test('home sections flow in the specified order with pillars hidden by default', () => {
   pillars = false;
   render(<HomeLayout {...props} />);
   expect(order()).toEqual([
-    'Live status',
-    'Favorites',
+    ...top,
     'Recently changed',
+    'Browse all apps',
     'Launcher',
     'Active stack',
   ]);
 });
 
-test('pillar tiles appear between favorites and recent changes when enabled', () => {
+test('pillar tiles appear before recent changes when enabled', () => {
   pillars = true;
   render(<HomeLayout {...props} />);
   expect(order()).toEqual([
-    'Live status',
-    'Favorites',
+    ...top,
     'Pillars',
     'Recently changed',
+    'Browse all apps',
     'Launcher',
     'Active stack',
   ]);

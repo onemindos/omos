@@ -4,15 +4,24 @@ import { Content } from '@backstage/core-components';
 import { CustomHomepageGrid } from '@backstage/plugin-home';
 import { HomePageLayoutProps } from '@backstage/plugin-home-react/alpha';
 import { Directory } from './homeModule';
-import { QuickAccess } from './Launcher';
+import { HomeHeader } from './HomeHeader';
+import { CommandBar } from './CommandBar';
+import { TodayCard } from './TodayCard';
+import { WaitingCard } from './WaitingCard';
+import { QuickActions } from './QuickActions';
+import { JumpBackIn } from './JumpBackIn';
+import { PinnedChips } from './PinnedChips';
+import { BrowseAllApps } from './BrowseAllApps';
+import { cardGridStyle } from './HomeCard';
 import { StatusStrip } from './StatusStrip';
 import { PillarTiles } from './PillarTiles';
 import { RecentlyChanged } from './RecentlyChanged';
 import { ActiveStack } from './ActiveStack';
 import { useHomeFeature } from './features';
 
-// Natural page flow, top to bottom, with no fixed heights so there is no blank
-// region: status strip, favorites, pillars, recent changes, launcher. Backstage's
+// Command-center home, top to bottom, with no fixed heights: header, command
+// bar, live status, Today / Waiting / Do it now, Jump back in / Pinned, recent
+// changes (+ pillars), a collapsed app launcher and the active stack. Backstage's
 // native editor and saved layout stay available in the optional widget view.
 export function HomeLayout({ widgets, defaultConfig }: HomePageLayoutProps) {
   const theme = useTheme();
@@ -41,26 +50,18 @@ export function HomeLayout({ widgets, defaultConfig }: HomePageLayoutProps) {
         flexDirection="column"
         style={{ gap }}
       >
-        <Box
-          className="onemind-home-toolbar"
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          flexWrap="wrap"
-          style={{ gap: theme.spacing(1) }}
-        >
-          <Typography variant="h5" component="h1" style={{ fontWeight: 700 }}>
-            Home
-          </Typography>
-          <Button
-            variant="outlined"
-            color="primary"
-            size="small"
-            onClick={() => setCustomize(value => !value)}
-          >
-            {customize ? 'Back to home' : 'Customize widgets'}
-          </Button>
-        </Box>
+        <HomeHeader
+          action={
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              onClick={() => setCustomize(value => !value)}
+            >
+              {customize ? 'Back to home' : 'Customize widgets'}
+            </Button>
+          }
+        />
         {customize ? (
           <Box>
             <Typography variant="body2" color="textSecondary">
@@ -75,21 +76,24 @@ export function HomeLayout({ widgets, defaultConfig }: HomePageLayoutProps) {
           </Box>
         ) : (
           <>
+            <CommandBar />
             <StatusStrip />
-            <QuickAccess dense />
-            <Box
-              style={{
-                display: 'grid',
-                gridTemplateColumns:
-                  'repeat(auto-fit,minmax(min(100%,360px),1fr))',
-                gap,
-                alignItems: 'start',
-              }}
-            >
+            <Box style={cardGridStyle()}>
+              <TodayCard />
+              <WaitingCard />
+              <QuickActions />
+            </Box>
+            <Box style={cardGridStyle()}>
+              <JumpBackIn />
+              <PinnedChips />
+            </Box>
+            <Box style={cardGridStyle(360)}>
               {pillars && <PillarTiles />}
               <RecentlyChanged />
             </Box>
-            <Directory fluid launcherOnly />
+            <BrowseAllApps>
+              <Directory fluid launcherOnly />
+            </BrowseAllApps>
             <ActiveStack />
           </>
         )}
