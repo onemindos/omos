@@ -766,6 +766,75 @@ metadata:
     - url: https://adsbexchange.com
       title: External reference
       icon: dashboard
+    - url: https://www.adsbexchange.com
+      title: Official website (www reference)
+      icon: dashboard
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: openstreetmap
+  title: OpenStreetMap (external reference)
+  description: >-
+    External reference. Collaborative geographic data and maps, created by
+    contributors and available under an open license. Distinct from the archived
+    OpenStreetMap registry record. No approved API feed, complete coverage or
+    flight-safety suitability claimed. No OneMind deployment, compatibility or
+    integration verified.
+  tags:
+    - reference
+    - geospatial
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
+    onemind.io/launcher-url: https://www.openstreetmap.org
+    onemind.io/launcher-category: Geospatial
+    onemind.io/pillar-review: proposed
+  links:
+    - url: https://www.openstreetmap.org
+      title: Official website (external reference)
+      icon: dashboard
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: opensky-network
+  title: OpenSky Network (external reference)
+  description: >-
+    External reference. Aircraft-tracking research network providing air traffic
+    data for research; not an OpenStreetMap or geocoding service. Distinct from
+    the archived OpenSky registry record. No approved API feed, complete
+    coverage or flight-safety suitability claimed. No OneMind deployment,
+    compatibility or integration verified.
+  tags:
+    - reference
+    - intelligence
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
+    onemind.io/launcher-url: https://opensky-network.org
+    onemind.io/launcher-category: Intelligence
+    onemind.io/pillar-review: approved
+  links:
+    - url: https://opensky-network.org
+      title: Official website (external reference)
+      icon: dashboard
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

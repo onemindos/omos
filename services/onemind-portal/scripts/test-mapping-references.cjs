@@ -45,7 +45,9 @@ for (const [name, ...addresses] of references) {
     assert.equal(a['onemind.io/inventory-review'], 'imported-link');
     assert.equal(a['onemind.io/launcher-url'], `https://${addresses[0]}`);
     assert.equal(a['onemind.io/launcher-category'], system === 'intelligence' ? 'Intelligence' : 'Geospatial');
-    assert.deepEqual(e.metadata.links.map(l => l.url), addresses.map(u => `https://${u}`));
+    const expectedLinks = addresses.map(u => `https://${u}`);
+    if (name === 'adsb-exchange') expectedLinks.push('https://www.adsbexchange.com');
+    assert.deepEqual(e.metadata.links.map(l => l.url), expectedLinks);
     for (const url of e.metadata.links.map(l => l.url)) {
       assert.equal(inventory.flatMap(x => x.metadata.links || []).filter(l => l.url === url).length, 1, url);
       const parsed = new URL(url);

@@ -73,6 +73,8 @@ require('./test-hermes-ecosystem.cjs');
 require('./test-geospatial-commerce-references.cjs');
 // Mapping references preserve all thirteen owner-supplied URLs without integrations.
 require('./test-mapping-references.cjs');
+// Exact website variants augment canonical references; no provider activation.
+require('./test-aircraft-map-references.cjs');
 // TAK upstream references preserve canonical deployed workload identities.
 require('./test-tak-ecosystem.cjs');
 require('./test-snapshot-cluster.cjs');
