@@ -95,7 +95,6 @@ deployed**: `platform-gatus` has manual sync and has not been synced, and the po
   exact date is the Prometheus series `gatus_results_certificate_expiration_seconds`.
 - Not done: the existing combined status dot does not include Gatus yet. `backstage-cli repo build` fails in this
   environment on a rollup error in `plugin-onemind-theme` type output (untouched by this branch); tsc, lint and tests pass.
-- **Owner steps after merge**: build and roll the portal image; sync `platform-gatus` in Argo CD; open
-  `https://status.tail717ba0.ts.net`; confirm 10+ green and `test-deliberate-failure` red, then wait five minutes for
-  `GatusEndpointDown`; then remove the deliberate failure ([how](../../../platform/gatus/README.md#remove-the-deliberate-failure)).
-- Acceptance still open: green endpoints, the red page and the alert are **not verified live**.
+- **Live (2026-11-06)**: portal image pinned (#675), `platform-gatus` synced. 13 checks green, the deliberate failure
+  red, and `GatusEndpointDown` fired for it alone (Prometheus). The deliberate failure was then removed
+  ([alert proof](../../../platform/gatus/README.md#alert-proof-done-2026-11-06)).

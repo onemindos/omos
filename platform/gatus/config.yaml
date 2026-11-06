@@ -1,5 +1,5 @@
 # Gatus settings. Endpoints are not listed here: Gatus reads every file in /config and merges them
-# (endpoints.yaml is generated from the catalog, test-endpoints.yaml is the deliberate failure).
+# (endpoints.yaml is generated from the catalog).
 metrics: true
 storage:
   # In memory on purpose: no volume, nothing to back up. Check history resets when the pod restarts.

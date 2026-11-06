@@ -13,4 +13,3 @@ configMapGenerator:
   files:
   - config.yaml
   - endpoints.yaml
-  - test-endpoints.yaml
