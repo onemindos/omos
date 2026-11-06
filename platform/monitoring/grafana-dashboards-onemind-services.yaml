@@ -83,7 +83,7 @@ data:
     \   }\n      ],\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 8,\n        \"w\": 12,\n        \"h\": 8\n \
     \     },\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"none\"\n        },\n        \"overrides\"\
     : []\n      }\n    }\n  ],\n  \"links\": [\n    {\n      \"title\": \"Backstage service and runbook\",\n      \"url\"\
-    : \"https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-postgres-17d2f351\",\n\
+    : \"https://portal.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-postgres-17d2f351\",\n\
     \      \"type\": \"link\",\n      \"targetBlank\": true\n    }\n  ]\n}\n"
   onemind-nats.json: "{\n  \"uid\": \"onemind-nats\",\n  \"title\": \"OneMind / NATS workload\",\n  \"description\": \"Observed\
     \ Kubernetes workload telemetry only: nats/nats (statefulset). Pod health is not app correctness, NATS delivery, data\
@@ -120,5 +120,5 @@ data:
     \      \"range\": true\n        }\n      ],\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 8,\n        \"w\"\
     : 12,\n        \"h\": 8\n      },\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"none\"\n \
     \       },\n        \"overrides\": []\n      }\n    }\n  ],\n  \"links\": [\n    {\n      \"title\": \"Backstage service\
-    \ and runbook\",\n      \"url\": \"https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-nats-nats-0dee54ac\"\
+    \ and runbook\",\n      \"url\": \"https://portal.tail717ba0.ts.net/catalog/default/component/k8s-nats-nats-0dee54ac\"\
     ,\n      \"type\": \"link\",\n      \"targetBlank\": true\n    }\n  ]\n}\n"

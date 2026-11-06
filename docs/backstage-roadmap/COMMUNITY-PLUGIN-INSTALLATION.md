@@ -26,7 +26,7 @@ The following setup requirements explain the deployed configuration and its reco
 ### GitHub
 
 Create or reuse a dedicated OAuth app. Callback:
-`https://onemind-preview.tail717ba0.ts.net/api/auth/github/handler/frame`.
+`https://portal.tail717ba0.ts.net/api/auth/github/handler/frame`.
 
 Add `auth.providers.github.production.clientId` and `clientSecret` through sealed server-side configuration. Do **not** add a GitHub sign-in resolver or change the Authentik sign-in page: GitHub is supplementary authorization for the plugin APIs. Private repository access may require OAuth `repo` scope (broader than read-only); inspect the actual consent and plugin controls before activation. If that grant is unacceptable, assess plugin support for a constrained GitHub App instead of granting a broad token blindly. Repository entities need `github.com/project-slug: onemindos/omos` or their actual verified repository.
 

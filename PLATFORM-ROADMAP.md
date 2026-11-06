@@ -13,6 +13,10 @@ does. Source/review preparation is separate from hostname registration, Argo
 rollout and browser acceptance. Phase 6 remains In progress; Phases 7/8 stay
 Not started. No identity-provider mutation or deployment is recorded here.
 
+2026-11-05: `portal` is now the canonical host (`PORTAL_URL`, the `portal` Ingress
+routes to Backstage); `onemind-preview` keeps working as a 302 redirect. The Authentik
+`onemind-backstage` provider allows callbacks on both hosts.
+
 2026-10-26 user-directed work: launch an independent `hermes-fresh` beside Legacy
 through `platform-hermes-fresh`, with new storage and no imported agent state or
 operational credentials. Source and isolated image smoke checks are prepared;

@@ -158,7 +158,7 @@ browser (any `/api/...` request's `Authorization: Bearer` header):
 
 ```bash
 cd services/onemind-portal/plugins/plugin-onemind-events-backend/scripts
-export PORTAL_URL=https://onemind-preview.tail717ba0.ts.net     # the portal base URL
+export PORTAL_URL=https://portal.tail717ba0.ts.net     # the portal base URL
 read -rs PORTAL_TOKEN && export PORTAL_TOKEN                    # paste the token; not echoed
 node mark-deployment-notifications-read.cjs                     # dry run: prints matched/kept counts
 node mark-deployment-notifications-read.cjs --apply --expect=<matched count from the dry run>

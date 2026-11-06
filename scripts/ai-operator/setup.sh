@@ -15,7 +15,7 @@ set -euo pipefail
 ADMIN_CONTEXT="${ADMIN_CONTEXT:-do-nyc3-omos-cloud}"
 KUBECONFIG_OUT="${KUBECONFIG_OUT:-$HOME/.kube/ai-operator.kubeconfig}"
 BACKSTAGE_TOKEN_FILE="${BACKSTAGE_TOKEN_FILE:-$HOME/.config/onemind/backstage-mcp.token}"
-BACKSTAGE_MCP_URL="https://onemind-preview.tail717ba0.ts.net/api/mcp-actions/v1"
+BACKSTAGE_MCP_URL="https://portal.tail717ba0.ts.net/api/mcp-actions/v1"
 K8S_MCP_VERSION="0.0.67"
 CODEX_CONFIG="${CODEX_CONFIG:-$HOME/.codex/config.toml}"
 
