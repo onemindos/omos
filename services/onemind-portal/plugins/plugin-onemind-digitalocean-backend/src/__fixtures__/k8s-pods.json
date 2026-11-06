@@ -1,0 +1,954 @@
+{
+  "items": [
+    {
+      "metadata": {
+        "namespace": "auth",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "authentik-postgres"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "pgdata-authentik-postgres-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "backstage",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "backstage-postgres"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "data-backstage-postgres-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "clickhouse",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "chi-onemind-onemind-0-0"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "data-storage-chi-onemind-onemind-0-0-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "dapr-system",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "dapr-scheduler-server"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "dapr-scheduler-data-dir-dapr-scheduler-server-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "dapr-system",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "dapr-scheduler-server"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "dapr-scheduler-data-dir-dapr-scheduler-server-1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "dapr-system",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "dapr-scheduler-server"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "dapr-scheduler-data-dir-dapr-scheduler-server-2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "forgejo",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "forgejo-578f554575"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "forgejo-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "hermes",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "onemind-hermes-7d89d5d954"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "onemind-hermes-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "karakeep",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "meilisearch-5644d68c47"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "meilisearch-pvc"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "karakeep",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "web-77689895f7"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "data-pvc"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "matrix",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "postgres"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "data-postgres-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "matrix",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "redis"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "data-redis-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "matrix",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "synapse-58cc4f7b6"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "synapse-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "monitoring",
+        "ownerReferences": [
+          {
+            "kind": "Job",
+            "name": "backup-grafana-sqlite-29894665"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "grafana-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "monitoring",
+        "ownerReferences": [
+          {
+            "kind": "Job",
+            "name": "backup-grafana-sqlite-29896105"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "grafana-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "monitoring",
+        "ownerReferences": [
+          {
+            "kind": "Job",
+            "name": "backup-grafana-sqlite-29897545"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "grafana-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "monitoring",
+        "ownerReferences": [
+          {
+            "kind": "Job",
+            "name": "grafana-state-seed-20261020"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "grafana-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "monitoring",
+        "ownerReferences": [
+          {
+            "kind": "Job",
+            "name": "grafana-state-verify-20261020"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "grafana-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "monitoring",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "loki"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "storage-loki-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "monitoring",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "monitoring-grafana-6bc597f4b4"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "grafana-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "monitoring",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "prometheus-monitoring-kube-prometheus-prometheus"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "prometheus-monitoring-kube-prometheus-prometheus-db-prometheus-monitoring-kube-prometheus-prometheus-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "n8n",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "n8n-85f9cf555c"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "n8n-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "n8n",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "postgres"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "data-postgres-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "nats",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "nats"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "nats-js-nats-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "nats",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "nats"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "nats-js-nats-1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "nats",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "nats"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "nats-js-nats-2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onemind-ai",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "onemind-cpu-model-647cb944c5"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "onemind-cpu-model"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onemind-data",
+        "ownerReferences": [
+          {
+            "kind": "Cluster",
+            "name": "onemind-data"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "onemind-data-1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onemind-data",
+        "ownerReferences": [
+          {
+            "kind": "Cluster",
+            "name": "onemind-data"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "onemind-data-2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onemind-data",
+        "ownerReferences": [
+          {
+            "kind": "Cluster",
+            "name": "onemind-data"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "onemind-data-3"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "nodeodm-5855bc78bf"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "nodeodm-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "tile38-5c47967dcd"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "tile38-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "tileserver-gl-5bb8f68559"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "tileserver-tiles"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "webodm-86757c6869"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "webodm-media"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "onetak",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "webodm-db-b87fb8b56"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "webodm-db-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "openremote",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "manager-79f4bf9cf8"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "storage"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "openremote",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "postgresql-5bbfd86f5f"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "database"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takml",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "takml-db-78bfcf9c4f"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "takml-db-data"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takml",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "takml-server-d98f44fcc"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "takml-server-jar"
+            }
+          },
+          {
+            "persistentVolumeClaim": {
+              "claimName": "takml-models"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takml",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "takml-vision-worker-5d56bc98c9"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "takml-models"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "fedhub-mongodb"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "mongo-data-fedhub-mongodb-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "tak-ldap"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "ldap-data-tak-ldap-0"
+            }
+          },
+          {
+            "persistentVolumeClaim": {
+              "claimName": "ldap-config-tak-ldap-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "takserver-nats"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "takserver-nats-js-takserver-nats-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "takserver",
+        "ownerReferences": [
+          {
+            "kind": "StatefulSet",
+            "name": "takserver-postgresql"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "data-takserver-postgresql-0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "thingsboard",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "postgres-6c4655ddff"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "database"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "vaultwarden",
+        "ownerReferences": [
+          {
+            "kind": "ReplicaSet",
+            "name": "vaultwarden-f44dc66d7"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "data-pvc"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "namespace": "vaultwarden",
+        "ownerReferences": [
+          {
+            "kind": "Job",
+            "name": "vaultwarden-sqlite-backup-29898080"
+          }
+        ]
+      },
+      "spec": {
+        "volumes": [
+          {
+            "persistentVolumeClaim": {
+              "claimName": "data-pvc"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

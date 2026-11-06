@@ -90,6 +90,21 @@ spec:
               name: backstage-authentik-catalog
               key: AUTHENTIK_CATALOG_TOKEN
               optional: true
+        # Read-only DigitalOcean token (F6, docs/operations/digitalocean.md). Optional: until the owner
+        # seals backstage-digitalocean the page shows "Not connected". The same token feeds the /today
+        # cost card (DO_BILLING_READ_TOKEN, billing:read).
+        - name: DIGITALOCEAN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: backstage-digitalocean
+              key: DIGITALOCEAN_TOKEN
+              optional: true
+        - name: DO_BILLING_READ_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: backstage-digitalocean
+              key: DIGITALOCEAN_TOKEN
+              optional: true
         - name: PORTAL_URL
           value: https://portal.tail717ba0.ts.net
         - name: POSTGRES_PASSWORD

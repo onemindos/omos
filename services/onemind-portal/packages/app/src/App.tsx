@@ -10,6 +10,7 @@ import announcementsPlugin from '@backstage-community/plugin-announcements/alpha
 import { assistantPlugin } from '@internal/plugin-onemind-assistant';
 import { authModule } from '@internal/plugin-onemind-auth';
 import { costPlugin } from '@internal/plugin-onemind-cost';
+import { digitalOceanPlugin } from '@internal/plugin-onemind-digitalocean';
 import { missionsPlugin } from '@internal/plugin-onemind-missions';
 import { navModule } from '@internal/plugin-onemind-nav';
 import offlinePlugin from '@internal/plugin-onemind-offline';
@@ -59,6 +60,7 @@ export default createApp({
     todayPlugin,
     livePlugin,
     costPlugin,
+    digitalOceanPlugin,
     shortcutsFeature,
     devtoolsFeature,
     unprocessedEntitiesFeature,

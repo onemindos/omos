@@ -1,0 +1,2570 @@
+{
+  "/v2/account": {
+    "account": {
+      "droplet_limit": 15,
+      "volume_limit": 5000,
+      "email": "redacted@example.invalid",
+      "name": "Example",
+      "uuid": "00000000-0000-4000-a000-000000000000",
+      "email_verified": true,
+      "status": "active",
+      "team": {
+        "name": "Example Team",
+        "uuid": "00000000-0000-4000-a000-000000000001"
+      }
+    }
+  },
+  "/v2/customers/my/balance": {
+    "month_to_date_balance": "0.03",
+    "account_balance": "0.03",
+    "month_to_date_usage": "0.00",
+    "generated_at": "2026-11-05T06:18:07Z"
+  },
+  "/v2/customers/my/invoices": {
+    "invoices": [
+      {
+        "invoice_uuid": "e1681d83-40a1-436d-a3e1-c42e8a67a5ed",
+        "amount": "0.03",
+        "invoice_period": "2026-10",
+        "updated_at": "0001-01-01T00:00:00Z"
+      },
+      {
+        "invoice_uuid": "9d1d6bf2-a598-40f8-a44c-2e783874df28",
+        "amount": "0.00",
+        "invoice_period": "2026-09",
+        "updated_at": "0001-01-01T00:00:00Z"
+      },
+      {
+        "invoice_uuid": "d05e170a-0858-46ec-a059-642478c4f024",
+        "amount": "0.00",
+        "invoice_period": "2026-08",
+        "updated_at": "0001-01-01T00:00:00Z"
+      },
+      {
+        "invoice_uuid": "1523d168-d21b-4340-a97c-3da69d532881",
+        "amount": "0.00",
+        "invoice_period": "2026-07",
+        "updated_at": "0001-01-01T00:00:00Z"
+      },
+      {
+        "invoice_uuid": "7ecd6fd4-0863-4382-a7d5-da61c0699918",
+        "amount": "2.71",
+        "invoice_period": "2026-06",
+        "updated_at": "0001-01-01T00:00:00Z"
+      },
+      {
+        "invoice_uuid": "d9798709-d229-4cdc-aa57-064219662356",
+        "amount": "0.04",
+        "invoice_period": "2026-05",
+        "updated_at": "0001-01-01T00:00:00Z"
+      },
+      {
+        "invoice_uuid": "6f81f911-57f9-4262-a104-8fddd945ae3f",
+        "amount": "0.00",
+        "invoice_period": "2026-04",
+        "updated_at": "0001-01-01T00:00:00Z"
+      },
+      {
+        "invoice_uuid": "b35b3581-2106-4525-aa61-c4c88b797218",
+        "amount": "0.00",
+        "invoice_period": "2026-03",
+        "updated_at": "0001-01-01T00:00:00Z"
+      }
+    ],
+    "invoice_preview": {
+      "invoice_uuid": "560fb13d-cd25-4f60-a9a0-20311e25ee56",
+      "amount": "0.00",
+      "invoice_period": "2026-11",
+      "updated_at": "2026-11-05T06:18:07Z"
+    },
+    "links": {},
+    "meta": {
+      "total": 8
+    }
+  },
+  "/v2/kubernetes/clusters": {
+    "kubernetes_clusters": [
+      {
+        "id": "e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9",
+        "name": "omos-cloud",
+        "region": "nyc3",
+        "version": "1.36.5-do.1",
+        "tags": ["k8s", "k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"],
+        "vpc_uuid": "23f230a7-c491-4689-ae41-f7802bc09063",
+        "worker_subnet_uuid": "69cf254b-2d01-418d-a427-3a5c74c5caaf",
+        "ha": true,
+        "node_pools": [
+          {
+            "id": "dd7d7d7d-3580-441b-a47b-56566fd0f479",
+            "name": "onemind-hub-core-v2",
+            "size": "s-8vcpu-16gb",
+            "count": 3,
+            "tags": [
+              "k8s",
+              "k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9",
+              "k8s:worker"
+            ],
+            "labels": {
+              "role": "core"
+            },
+            "nodes": [
+              {
+                "id": "2534b015-d53f-4c88-a3ca-d49590cdec62",
+                "name": "onemind-hub-core-v2-3rtf47",
+                "status": {
+                  "state": "running"
+                },
+                "droplet_id": "810000008",
+                "created_at": "2026-10-18T11:22:36Z",
+                "updated_at": "2026-10-18T11:24:34Z"
+              },
+              {
+                "id": "5e27043e-a007-4e7b-a1d8-e4a10ddc7d3e",
+                "name": "onemind-hub-core-v2-3rtf4m",
+                "status": {
+                  "state": "running"
+                },
+                "droplet_id": "810000015",
+                "created_at": "2026-10-18T11:22:36Z",
+                "updated_at": "2026-10-18T11:24:25Z"
+              },
+              {
+                "id": "81572b1e-2d2f-45dd-a764-4bda79355a12",
+                "name": "onemind-hub-core-v2-3rtf4q",
+                "status": {
+                  "state": "running"
+                },
+                "droplet_id": "810000001",
+                "created_at": "2026-10-18T11:22:36Z",
+                "updated_at": "2026-10-18T11:24:34Z"
+              }
+            ]
+          },
+          {
+            "id": "b8ce0643-cc8a-4ab5-addc-55d6cc8c5844",
+            "name": "onemind-ecosystem-cpu",
+            "size": "s-8vcpu-32gb-amd",
+            "count": 1,
+            "tags": [
+              "k8s",
+              "k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9",
+              "k8s:worker"
+            ],
+            "labels": {
+              "onemind.io/compute-role": "ecosystem",
+              "onemind.io/site": "cloud"
+            },
+            "auto_scale": true,
+            "min_nodes": 1,
+            "max_nodes": 4,
+            "nodes": [
+              {
+                "id": "610daa0b-3837-426a-a71c-2f3a9560e1e4",
+                "name": "onemind-ecosystem-cpu-3rhwrp",
+                "status": {
+                  "state": "running"
+                },
+                "droplet_id": "810000022",
+                "created_at": "2026-10-19T01:54:15Z",
+                "updated_at": "2026-10-19T01:55:42Z"
+              }
+            ]
+          }
+        ],
+        "maintenance_policy": {
+          "start_time": "07:00",
+          "duration": "4h0m0s",
+          "day": "sunday"
+        },
+        "auto_upgrade": true,
+        "surge_upgrade": true,
+        "routing_agent": {
+          "enabled": false
+        },
+        "amd_gpu_device_plugin": {
+          "enabled": false
+        },
+        "amd_gpu_device_metrics_exporter_plugin": {
+          "enabled": false
+        },
+        "nvidia_gpu_device_plugin": {
+          "enabled": false
+        },
+        "rdma_shared_dev_plugin": {
+          "enabled": false
+        },
+        "coredns_autoscaler": {
+          "enabled": true
+        },
+        "status": {
+          "state": "running"
+        },
+        "created_at": "2026-07-04T18:23:08Z",
+        "updated_at": "2026-11-06T01:22:24Z",
+        "endpoint": "https://redacted.k8s.example.invalid"
+      }
+    ],
+    "links": {},
+    "meta": {
+      "total": 1
+    }
+  },
+  "/v2/kubernetes/clusters/e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9/upgrades": {
+    "available_upgrade_versions": [
+      {
+        "slug": "1.36.5-do.3",
+        "kubernetes_version": "1.36.5"
+      }
+    ]
+  },
+  "/v2/droplets": {
+    "droplets": [
+      {
+        "id": 810000001,
+        "name": "onemind-hub-core-v2-3rtf4q",
+        "memory": 16384,
+        "vcpus": 8,
+        "disk": 320,
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "size_slug": "s-8vcpu-16gb",
+        "features": ["private_networking"],
+        "status": "active",
+        "created_at": "2026-10-18T11:22:36Z",
+        "tags": [
+          "k8s",
+          "k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9",
+          "k8s:worker"
+        ],
+        "volume_ids": [
+          "c8658e56-f430-458a-afca-ed91f2145f32",
+          "b98cb636-3172-4a75-a2cd-00eebf721f6b",
+          "f26cd598-f2ce-4120-ad9c-a0c8783dff3c",
+          "dc46058c-af31-4dea-a79b-8ada1b8b2ac3",
+          "53dc1a0a-133e-4d40-a48f-fce33e5dd69b"
+        ],
+        "vpc_uuid": "23f230a7-c491-4689-ae41-f7802bc09063"
+      },
+      {
+        "id": 810000008,
+        "name": "onemind-hub-core-v2-3rtf47",
+        "memory": 16384,
+        "vcpus": 8,
+        "disk": 320,
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "size_slug": "s-8vcpu-16gb",
+        "features": ["private_networking"],
+        "status": "active",
+        "created_at": "2026-10-18T11:22:36Z",
+        "tags": [
+          "k8s",
+          "k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9",
+          "k8s:worker"
+        ],
+        "volume_ids": [
+          "13a9fd62-5072-4e02-a8fe-d24e9b8de837",
+          "39ac89cb-6410-4b32-ab14-414b8d19b32e",
+          "a4442e0a-504d-4329-a0f5-b360e8353bf8",
+          "21130294-2b94-4bd7-abb3-8f2286bf47ce",
+          "5a233b9f-dfa2-401b-a40a-405ad7fcec87",
+          "ca7a510c-366e-4473-a331-1bef99ba02fb",
+          "c134a3d6-aa8f-4515-a451-38024a0cb6ed",
+          "9b9fa889-b923-412e-a2f4-a074fea1b4c6",
+          "2fcce840-e61e-4937-a888-3560f5b2133b"
+        ],
+        "vpc_uuid": "23f230a7-c491-4689-ae41-f7802bc09063"
+      },
+      {
+        "id": 810000015,
+        "name": "onemind-hub-core-v2-3rtf4m",
+        "memory": 16384,
+        "vcpus": 8,
+        "disk": 320,
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "size_slug": "s-8vcpu-16gb",
+        "features": ["private_networking"],
+        "status": "active",
+        "created_at": "2026-10-18T11:22:36Z",
+        "tags": [
+          "k8s",
+          "k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9",
+          "k8s:worker"
+        ],
+        "volume_ids": [
+          "2f1a45d3-d0d4-45ce-a378-50593e9a01d7",
+          "e7756875-260c-4a2a-a760-1a6b57934904",
+          "cfcbd4db-4e4d-47af-abd3-ee2a165d400c",
+          "89af693a-79cb-4fba-ad3e-129a408a6625",
+          "80dde1d7-a803-4398-a1b9-b79d7f99f0a5",
+          "81363631-2024-49f1-a6c5-b60311fdad27",
+          "37b2eff2-8868-439c-a31d-787fdcb48ef1",
+          "ebf86b49-8352-4150-ae43-273a589ddc3e",
+          "dd51ad65-131a-49dc-a427-e5b87f7de667",
+          "22b409db-a3f2-4ed0-ae9e-d39e2ee3f4a4",
+          "3a7337a9-e18a-459c-a3ef-5302144aafa0",
+          "440c3d66-1cf5-4220-a555-515725745f0e",
+          "2382f5e1-aab2-4abf-a5f7-b49c6f02f01b"
+        ],
+        "vpc_uuid": "23f230a7-c491-4689-ae41-f7802bc09063"
+      },
+      {
+        "id": 810000022,
+        "name": "onemind-ecosystem-cpu-3rhwrp",
+        "memory": 32768,
+        "vcpus": 8,
+        "disk": 400,
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "size_slug": "s-8vcpu-32gb-amd",
+        "features": ["private_networking"],
+        "status": "active",
+        "created_at": "2026-10-19T01:54:15Z",
+        "tags": [
+          "k8s",
+          "k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9",
+          "k8s:worker"
+        ],
+        "volume_ids": [
+          "7d59bb0e-c09f-40c3-a234-8118ccdaedcb",
+          "e6ba5de0-bcc8-4081-a945-e76b7fdf95dc",
+          "515771f2-88f2-41c3-a8de-6d52ce52cd5c",
+          "73f9fbc2-2b4a-4574-a453-f3d40e07d89e",
+          "b984fefa-d463-4bf7-ad20-02e2bd98737c",
+          "3a6b2b0e-999c-4d40-a9ef-119d0e003147",
+          "824edc7a-50f9-4045-a23e-bc35a162340c",
+          "6297d624-7a8b-4d21-a8d7-8823b1ad5b7c",
+          "0f6e8f2c-e187-4dc5-a6be-b6cb2f417b48",
+          "e035afb9-92f7-4ded-a189-ed3dbbd0411d",
+          "9ad74e31-342d-47f6-a385-ec95325b0e38",
+          "8fe52277-6a28-4d6e-af24-04ef02c5eeed",
+          "f7634fdc-281d-4b26-ab9d-5031f57b430e",
+          "613f38ad-a2ca-46c9-a74a-facca39f7db4",
+          "a4c375d3-27c9-4e49-a92d-dacfd7809ba3"
+        ],
+        "vpc_uuid": "23f230a7-c491-4689-ae41-f7802bc09063"
+      }
+    ],
+    "links": {},
+    "meta": {
+      "total": 4
+    }
+  },
+  "/v2/volumes": {
+    "volumes": [
+      {
+        "id": "7d59bb0e-c09f-40c3-a234-8118ccdaedcb",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-70b643ba-344e-4a4a-a466-47ddf1f2ba49",
+        "size_gigabytes": 10,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-11-05T01:50:50Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "7f452c66-85c2-4f30-a6d3-f5c8f50c0743",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-6c25e9f6-8603-4541-aec2-93d24c901062",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:10Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "6c2cbc97-de96-4968-ad13-47ae5114e76b",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-8af9e7cd-d388-4ecd-a4df-a9a144532b9b",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:40:39Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "3a6b2b0e-999c-4d40-a9ef-119d0e003147",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-ab67b77c-aa4e-4f1c-afed-265a1138352c",
+        "size_gigabytes": 40,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-10-08T23:17:42Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "35cb478b-be1c-47b0-ae8e-dde253fbeb3e",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-84f447f2-cd02-45ad-a2a7-49780235145b",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:00Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "21130294-2b94-4bd7-abb3-8f2286bf47ce",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-4c7ed6d5-f92b-4c3d-a4a4-f330db29fa98",
+        "size_gigabytes": 5,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000008],
+        "created_at": "2026-10-07T23:35:42Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "c8658e56-f430-458a-afca-ed91f2145f32",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-6065f69e-79ee-40b2-aec1-ad8aa53665e1",
+        "size_gigabytes": 5,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000001],
+        "created_at": "2026-09-12T07:24:43Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "89af693a-79cb-4fba-ad3e-129a408a6625",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-1827845e-3bd6-496e-a3b5-d94a0472af8f",
+        "size_gigabytes": 5,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000015],
+        "created_at": "2026-10-25T23:05:58Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "824edc7a-50f9-4045-a23e-bc35a162340c",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-59408b17-df90-4bac-a468-2d7185304a9a",
+        "size_gigabytes": 80,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-09-09T12:02:05Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "2df95809-c0ae-4564-a81b-50d0494a8e67",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-a6897a72-9c78-4fce-ae64-f4eea7687160",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:21Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "9b9fa889-b923-412e-a2f4-a074fea1b4c6",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-b412a661-c9e7-415e-a85c-c815c9785b67",
+        "size_gigabytes": 40,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000008],
+        "created_at": "2026-10-08T23:19:26Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "c2379e92-fa5f-47f0-a94e-c18b95faba1d",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-cba63716-f5ab-451b-a6f9-a609abbd0280",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-09T10:42:30Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "9ad74e31-342d-47f6-a385-ec95325b0e38",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-ffdf24d0-fe51-46c5-ac27-69587d312b95",
+        "size_gigabytes": 5,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-10-20T22:06:09Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "73f9fbc2-2b4a-4574-a453-f3d40e07d89e",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-f70f6845-7107-4eaf-a3f9-64f5c94b00b0",
+        "size_gigabytes": 20,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-10-25T16:34:27Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "22b409db-a3f2-4ed0-ae9e-d39e2ee3f4a4",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-35260f30-2868-41f7-a252-0f9639cb4f6a",
+        "size_gigabytes": 20,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000015],
+        "created_at": "2026-07-05T07:16:45Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "b99f8cda-9866-4449-ac5e-769cda21293e",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-717a5dc0-e2fc-40e0-a9e6-b050ad2e7d61",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:22Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "3f74ed28-1952-4984-ac4b-4e93ce5c30fa",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-90768619-1e47-4177-a08c-0ca97a9d96d5",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:00Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "dc46058c-af31-4dea-a79b-8ada1b8b2ac3",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-a544544b-0887-4a4c-a283-0c8e9667d2d4",
+        "size_gigabytes": 2,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000001],
+        "created_at": "2026-08-12T23:53:08Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "5e98691d-6cd7-4be8-a495-4d9c8a22242e",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-d47b5194-8863-4b9c-a561-f98661f449c7",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:08Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "2fcce840-e61e-4937-a888-3560f5b2133b",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-42d5b430-8c18-467c-ac14-1facd2d06972",
+        "size_gigabytes": 5,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000008],
+        "created_at": "2026-10-08T23:02:36Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "2382f5e1-aab2-4abf-a5f7-b49c6f02f01b",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-db980e6e-ed0d-438b-aacd-07ba4100e651",
+        "size_gigabytes": 5,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000015],
+        "created_at": "2026-09-10T03:45:30Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "440c3d66-1cf5-4220-a555-515725745f0e",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-a0bba117-7650-4177-a4c3-58977b63ad55",
+        "size_gigabytes": 20,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000015],
+        "created_at": "2026-07-06T02:36:53Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "5f8a54b1-4730-4381-a644-5b0b63f35b02",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-18e92246-7d27-4c84-a64d-7761c7530e57",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T12:19:31Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "cbb32561-1d23-48a9-ad40-fdd3ebd6aa36",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-a49bcf07-e987-45cb-ac1f-397a555b49b6",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-25T16:34:34Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "613f38ad-a2ca-46c9-a74a-facca39f7db4",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-408a5130-c46c-47cc-a3f6-d18f7632125b",
+        "size_gigabytes": 5,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-09-09T12:02:05Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "8fe52277-6a28-4d6e-af24-04ef02c5eeed",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-a43a0c47-0d39-40a7-aa6f-0cbb6ebf6780",
+        "size_gigabytes": 20,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-10-17T07:23:03Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "e7756875-260c-4a2a-a760-1a6b57934904",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-30c87033-a4d6-40e7-aa3f-8897b6dc6a70",
+        "size_gigabytes": 5,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000015],
+        "created_at": "2026-08-12T23:53:17Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "75ba2098-4c70-4362-a90a-957e4c6a8a9c",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-1dad0c1c-a8f9-4d2a-a722-ee795f37cf46",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T12:19:49Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "20eb2899-f399-4d1e-a3fe-95691bd3abbf",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-2ed4337e-635f-4de3-ae1c-f7de9e12330d",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-29T18:52:48Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "cfcbd4db-4e4d-47af-abd3-ee2a165d400c",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-de4b6ddc-3d6f-4991-af5e-f4ce0ca99b26",
+        "size_gigabytes": 10,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000015],
+        "created_at": "2026-07-05T07:16:46Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "a4442e0a-504d-4329-a0f5-b360e8353bf8",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-05ec2c51-af38-4b48-a48c-c7843aea9652",
+        "size_gigabytes": 10,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000008],
+        "created_at": "2026-10-01T17:56:04Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "80dde1d7-a803-4398-a1b9-b79d7f99f0a5",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-fe402421-ae59-44c1-ab81-0208ed9cc2cd",
+        "size_gigabytes": 50,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000015],
+        "created_at": "2026-10-01T17:56:04Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "6d5eac77-beef-48cf-a10b-5d8ca6c9d765",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-8b03d188-ddd8-4a13-aff5-90b795612696",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:23Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "b984fefa-d463-4bf7-ad20-02e2bd98737c",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-10ba0c58-3371-4137-ae77-0047a626a81e",
+        "size_gigabytes": 5,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-10-25T16:34:28Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "593569c6-ed5e-4f69-a72a-c1ebad1a75ff",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-728613b8-e5dd-4c64-ac4f-daf13551fa07",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T12:19:47Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "a4c375d3-27c9-4e49-a92d-dacfd7809ba3",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-c40cc27d-6e02-46e0-a1f2-02ad6c027645",
+        "size_gigabytes": 20,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-10-09T00:43:49Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "37b2eff2-8868-439c-a31d-787fdcb48ef1",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-072c8ef5-4242-4ac7-af31-39995d33fce8",
+        "size_gigabytes": 50,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000015],
+        "created_at": "2026-07-04T19:29:54Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "0f6e8f2c-e187-4dc5-a6be-b6cb2f417b48",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-2146a05c-10d4-4518-ad2e-1b6a50fa3944",
+        "size_gigabytes": 50,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-09-09T12:02:06Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "2f1a45d3-d0d4-45ce-a378-50593e9a01d7",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-35a721be-0fb0-4555-a8fd-c7d63f3186b4",
+        "size_gigabytes": 20,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000015],
+        "created_at": "2026-11-05T00:49:28Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "1caea3a2-b9f8-4f4a-a356-7f8313b5e7f9",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-63a3c639-4333-46d1-ab51-286c6647c075",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-25T16:34:35Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "3a7337a9-e18a-459c-a3ef-5302144aafa0",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-cfba98ce-bff1-4626-a465-6fab9c2db9e7",
+        "size_gigabytes": 10,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000015],
+        "created_at": "2026-10-07T23:35:43Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "c134a3d6-aa8f-4515-a451-38024a0cb6ed",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-35bbe9b4-318f-4926-a844-3784d54577c7",
+        "size_gigabytes": 50,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000008],
+        "created_at": "2026-07-04T19:29:53Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "ebf86b49-8352-4150-ae43-273a589ddc3e",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-9a7258b5-0f50-43f9-a53a-87a67c4a0db4",
+        "size_gigabytes": 5,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000015],
+        "created_at": "2026-10-08T23:02:35Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "9624ebe0-7748-44eb-a5dc-3452181d05b7",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-3db42084-bd82-4cc2-af7a-26cff55b57f9",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:08Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "2f0071e1-ad04-488e-a679-6dad14f7794c",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-b591857b-7113-4dcc-ab20-d8dc962fa48e",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T12:19:32Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "87fd66b4-594c-4e00-ae2e-08e251ff038b",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-02852cdd-0fd2-4893-a26d-bb745fda4771",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-11-05T01:10:56Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "f7634fdc-281d-4b26-ab9d-5031f57b430e",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-6cdfb644-7cd8-4ef3-a7f8-e595d65d3107",
+        "size_gigabytes": 30,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-07-04T19:16:09Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "13a9fd62-5072-4e02-a8fe-d24e9b8de837",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-ef504aef-de76-47ca-af2e-01abeda20c2e",
+        "size_gigabytes": 25,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000008],
+        "created_at": "2026-10-29T18:52:45Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "6297d624-7a8b-4d21-a8d7-8823b1ad5b7c",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-6265d2fe-2925-42ec-aba3-8eb89d4910a6",
+        "size_gigabytes": 10,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-09-09T11:51:31Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "dd51ad65-131a-49dc-a427-e5b87f7de667",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-297f90bd-740a-4f51-aa13-095bdede9801",
+        "size_gigabytes": 10,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000015],
+        "created_at": "2026-10-06T09:11:28Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "01628d7d-621e-4d1a-ad5c-a5fd98e5c84e",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-18f8aab0-efc5-482a-a3a9-66b02067f890",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-11-05T01:50:55Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "b54902b2-67d1-43ef-a252-8f9c00c5dec3",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-1b230495-4b1a-4517-abcd-136344a3dbfe",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:05Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "5a7f9498-1c92-4c0d-afdf-92e9cb7be1ee",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-a3d00498-1327-41f3-a943-6ef61880e4ff",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-09T10:42:33Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "595ea60f-4941-47c0-a5d5-228d04620d94",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-255f5800-15c2-4f84-a8ca-adb3e768d0ac",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:22Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "81363631-2024-49f1-a6c5-b60311fdad27",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-17a42810-546d-4b88-ac14-5a2336f44e81",
+        "size_gigabytes": 40,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000015],
+        "created_at": "2026-10-08T23:18:36Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "ea263a57-9121-46f9-a15e-e9838cd0a833",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-53e7de75-60f0-4587-a059-f35b13c331ad",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-11-05T00:49:31Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "53dc1a0a-133e-4d40-a48f-fce33e5dd69b",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-cfe09087-2810-4759-a44e-ffea6023bbea",
+        "size_gigabytes": 50,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000001],
+        "created_at": "2026-07-04T19:29:54Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "bc67e43e-7eeb-4ccd-acc1-eaead329d366",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-09d01ca6-a45d-4294-a6da-e8270b902b28",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:13Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "ca1a5206-f64d-4e3a-a30f-d8e484098647",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-39e01354-afae-482b-a6df-da76ba29c7da",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:20Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "b98cb636-3172-4a75-a2cd-00eebf721f6b",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-e2d3bfcc-4ddb-444c-a1ed-ad0ceeaf1dac",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000001],
+        "created_at": "2026-08-13T04:14:06Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "5a233b9f-dfa2-401b-a40a-405ad7fcec87",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-8fc8dbb3-9c1d-4a81-a235-4d783438283c",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000008],
+        "created_at": "2026-09-12T18:35:00Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "9932d0be-5950-4109-aba3-74f8b1be4236",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-c103d0e9-89d0-4e5d-ac4f-2b334bcf67be",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:17Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "2048f0b0-5337-47bb-a4a1-df7b22c76f4a",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-1497a977-91b4-4aba-a0a4-cbb56c4c6b06",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-25T23:06:46Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "e6ba5de0-bcc8-4081-a945-e76b7fdf95dc",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-76f97632-60d0-49ad-a1c9-7523d9847cd7",
+        "size_gigabytes": 5,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-11-05T01:10:50Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "ddbf3480-8cfa-4ded-af15-1d0d06aa7126",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-2927aa4d-e6d5-401d-a558-5235f54373fe",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:15Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "7a3af7f4-638e-438b-a8de-bc76e588e645",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-73c6f203-1722-4fed-ad3b-f85b3037a1c9",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:01Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "39ac89cb-6410-4b32-ab14-414b8d19b32e",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-b9e35f4a-49c1-4161-ac1a-b5c40c10965c",
+        "size_gigabytes": 20,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000008],
+        "created_at": "2026-10-01T17:56:05Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "f932c980-55ac-48b8-ae63-70f77293db0b",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-715efc06-8f5f-49b1-a7e3-90ebe9a38fca",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-09T10:42:32Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "b0cde8c0-4553-4204-a4bc-ddba3c8c0161",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-6aeeec72-b72f-4283-aaa9-5e52ac98ee96",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-09T10:42:32Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "ca7a510c-366e-4473-a331-1bef99ba02fb",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-5914218a-7784-494f-a01c-30eb35f7c7e8",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000008],
+        "created_at": "2026-09-12T18:34:59Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "9c30f55d-888a-40c9-a59b-feb37789598c",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-1a702c48-ff6c-4353-a757-37f79be6cb23",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T12:19:45Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "17efd0e2-acf1-4ccb-abdf-b4ef874f6663",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-b4f963a8-4d8a-49b4-a0de-9b4d0f92c821",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:40:46Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "515771f2-88f2-41c3-a8de-6d52ce52cd5c",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-e1cc38da-8db5-4515-af66-a63211b3cfda",
+        "size_gigabytes": 10,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-11-05T01:10:50Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "6f5b5b2f-f3ca-4449-a820-fed95c956c37",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-5567f541-68fb-4be7-a2e3-c6fbe5e6f2bd",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-11-05T01:10:56Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "1116d398-eb57-4b20-a442-a0ad62c91284",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-5489888a-c407-4883-a23f-b8caee1f8760",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:22Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "4bfe057f-1ca7-409a-ac2b-890c52ed0cca",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-6fb2206c-0e43-466d-ac4c-2ad8a548618e",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:15Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "e035afb9-92f7-4ded-a189-ed3dbbd0411d",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-108a8156-8b04-4f4c-abf2-747ea7842e7d",
+        "size_gigabytes": 5,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000022],
+        "created_at": "2026-09-09T12:02:05Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "8f78a820-7fff-4429-a5fb-0c5cf63aeabd",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-d5027bee-b12f-471f-a8d1-060d5b7e77ac",
+        "size_gigabytes": 1,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [],
+        "created_at": "2026-10-08T11:41:22Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "f26cd598-f2ce-4120-ad9c-a0c8783dff3c",
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "name": "pvc-c08ec23f-eabc-4c40-a872-973c32bd18d7",
+        "size_gigabytes": 5,
+        "description": "Created by DigitalOcean CSI driver",
+        "droplet_ids": [810000001],
+        "created_at": "2026-10-08T23:02:35Z",
+        "filesystem_type": "",
+        "filesystem_label": "",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      }
+    ],
+    "links": {},
+    "meta": {
+      "total": 79
+    }
+  },
+  "/v2/snapshots": {
+    "snapshots": [
+      {
+        "id": "7d20fdb5-76db-49b1-a341-54086aa41ec2",
+        "name": "snapshot-5d3e3cf2-71dc-4e8f-a645-f797a7facc96",
+        "resource_id": "c8658e56-f430-458a-afca-ed91f2145f32",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 5,
+        "size_gigabytes": 0.7623,
+        "created_at": "2026-10-08T10:56:16Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "cf09b2c3-9ac0-4294-a0f9-2b1be9f7be00",
+        "name": "snapshot-fcd632c3-1db0-429d-a7bf-cfd4fe49f658",
+        "resource_id": "f7634fdc-281d-4b26-ab9d-5031f57b430e",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 20,
+        "size_gigabytes": 19.7539,
+        "created_at": "2026-10-08T10:56:16Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "e2d06fc5-4f35-4812-aca4-84edb6a4e93f",
+        "name": "snapshot-a066b10c-5e6d-4378-a06b-7f11f4541e8b",
+        "resource_id": "c134a3d6-aa8f-4515-a451-38024a0cb6ed",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 50,
+        "size_gigabytes": 48.0996,
+        "created_at": "2026-10-08T10:56:17Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "38deb147-83ba-484d-a63d-ac0b0d533bb4",
+        "name": "snapshot-d906d6fd-719e-4b51-ae97-8b06a3d68eb5",
+        "resource_id": "e7756875-260c-4a2a-a760-1a6b57934904",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 5,
+        "size_gigabytes": 0.0714,
+        "created_at": "2026-10-08T10:56:18Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "e7dd6d7b-afde-4c45-a96e-de2c52d9f50b",
+        "name": "snapshot-f0a0226f-3969-4588-a21e-43f84649e21a",
+        "resource_id": "6297d624-7a8b-4d21-a8d7-8823b1ad5b7c",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 10,
+        "size_gigabytes": 0.0165,
+        "created_at": "2026-10-08T10:56:18Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "e2e8597d-e10f-453c-a427-5be3600ace2e",
+        "name": "snapshot-966c4b6b-b0f5-4696-ac41-e7c9a62518fd",
+        "resource_id": "cfcbd4db-4e4d-47af-abd3-ee2a165d400c",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 10,
+        "size_gigabytes": 0.0203,
+        "created_at": "2026-10-08T10:56:19Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "25247c3a-0665-4afd-a353-a17c1cdf6d39",
+        "name": "snapshot-978b37c9-126b-49e6-ad9f-8b15cd5d243a",
+        "resource_id": "440c3d66-1cf5-4220-a555-515725745f0e",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 20,
+        "size_gigabytes": 11.507,
+        "created_at": "2026-10-08T10:56:19Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "e84e200a-145e-4a79-a8ae-12648d6d9d42",
+        "name": "snapshot-09197deb-a0d8-45d8-a615-8cc1f9275607",
+        "resource_id": "80dde1d7-a803-4398-a1b9-b79d7f99f0a5",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 50,
+        "size_gigabytes": 0.0589,
+        "created_at": "2026-10-08T10:56:21Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "92bdd932-44fd-4947-a68a-371f687ac113",
+        "name": "snapshot-627410d1-8986-4725-a938-96b2a93d8548",
+        "resource_id": "a4442e0a-504d-4329-a0f5-b360e8353bf8",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 10,
+        "size_gigabytes": 0.0169,
+        "created_at": "2026-10-08T10:56:22Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "751bd28e-9eb4-4e9e-ac8e-53a8c35f63c4",
+        "name": "snapshot-a2ce81fd-0a98-4613-a01e-6113e71222b5",
+        "resource_id": "2382f5e1-aab2-4abf-a5f7-b49c6f02f01b",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 5,
+        "size_gigabytes": 0.2937,
+        "created_at": "2026-10-08T10:56:23Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "809f2501-d7e6-4496-a239-e33fc64d9457",
+        "name": "snapshot-34531f47-946b-47ea-a781-bf7143ce041a",
+        "resource_id": "b98cb636-3172-4a75-a2cd-00eebf721f6b",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 1,
+        "size_gigabytes": 0.1272,
+        "created_at": "2026-10-08T10:56:25Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "6648f352-e714-4653-aa53-13b0db940caf",
+        "name": "snapshot-8c4471e5-6531-4898-ad67-50ea09fabbac",
+        "resource_id": "dd51ad65-131a-49dc-a427-e5b87f7de667",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 10,
+        "size_gigabytes": 0.4482,
+        "created_at": "2026-10-08T10:56:27Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "6ebbabb5-a449-4511-a680-ff73417b1df3",
+        "name": "snapshot-d78b4380-4cda-4f0b-ae2b-713b3c1ee2d3",
+        "resource_id": "824edc7a-50f9-4045-a23e-bc35a162340c",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 80,
+        "size_gigabytes": 0.0878,
+        "created_at": "2026-10-08T10:56:28Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "9f98d66e-0012-4fcf-a156-8a5b69766e93",
+        "name": "snapshot-8c6e8214-012d-4337-aecf-09000f73ea7f",
+        "resource_id": "39ac89cb-6410-4b32-ab14-414b8d19b32e",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 20,
+        "size_gigabytes": 0.2328,
+        "created_at": "2026-10-08T10:56:28Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "bcedee08-c631-4d5e-abc1-961ddd35600e",
+        "name": "snapshot-f44fce7c-c1ba-4c05-aa3f-fde68f2355d2",
+        "resource_id": "e035afb9-92f7-4ded-a189-ed3dbbd0411d",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 5,
+        "size_gigabytes": 0.2344,
+        "created_at": "2026-10-08T10:56:29Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "60f0435e-d979-46ea-a00f-9ec0541f6aef",
+        "name": "snapshot-f463c275-7485-45b9-a9d0-10a2919d6e0d",
+        "resource_id": "dc46058c-af31-4dea-a79b-8ada1b8b2ac3",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 2,
+        "size_gigabytes": 0.0663,
+        "created_at": "2026-10-08T10:56:29Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "8e17e48b-365b-4c23-adcf-2a0f0efc4e27",
+        "name": "snapshot-881c09f7-9f09-4946-a8d7-47a5516454f1",
+        "resource_id": "5a233b9f-dfa2-401b-a40a-405ad7fcec87",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 1,
+        "size_gigabytes": 0.0092,
+        "created_at": "2026-10-08T10:56:30Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "d2276cd4-0913-4668-ab31-2dc981d7503a",
+        "name": "snapshot-88c28d33-3aad-465f-a60f-475df0308554",
+        "resource_id": "0f6e8f2c-e187-4dc5-a6be-b6cb2f417b48",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 50,
+        "size_gigabytes": 0.0806,
+        "created_at": "2026-10-08T10:56:31Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "4162551d-b6fc-4b64-a7af-a03a8ea40cbf",
+        "name": "snapshot-2c20d3e2-db80-498f-ae5a-960e4369c63b",
+        "resource_id": "3a7337a9-e18a-459c-a3ef-5302144aafa0",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 10,
+        "size_gigabytes": 0.0991,
+        "created_at": "2026-10-08T10:56:33Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "d0f3109a-65c8-40a2-ab44-a4343b4e43bd",
+        "name": "snapshot-ea465a24-e2ee-473d-ac4d-c89f8b0adf03",
+        "resource_id": "613f38ad-a2ca-46c9-a74a-facca39f7db4",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 5,
+        "size_gigabytes": 0.0101,
+        "created_at": "2026-10-08T10:56:38Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "745109fb-6199-4830-adf6-a20bda521a85",
+        "name": "snapshot-bdf77d88-49d1-4ebf-a7de-c78268bfb282",
+        "resource_id": "92b893c8-ff5c-4a81-a22d-077d0512851b",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 5,
+        "size_gigabytes": 0.0718,
+        "created_at": "2026-10-08T10:56:38Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "142fcb0f-b554-4585-a672-cacd0b94b968",
+        "name": "snapshot-65cd0b57-5104-44c2-ab9b-896883f85ad5",
+        "resource_id": "21130294-2b94-4bd7-abb3-8f2286bf47ce",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 5,
+        "size_gigabytes": 0.0117,
+        "created_at": "2026-10-08T10:56:38Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "1bd4222f-cc7e-4492-a7b6-f6b59d76b1ef",
+        "name": "snapshot-2a26f344-8ba9-44a5-aace-1782f9cf5318",
+        "resource_id": "7379cd3f-3d29-44f7-a972-727a1f132bf3",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 20,
+        "size_gigabytes": 0.0264,
+        "created_at": "2026-10-08T10:56:39Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "78c9d0d3-ad8d-4f56-afa7-ae59abc0561b",
+        "name": "snapshot-77eb4cc1-8b92-4f64-a4c5-6e7c2dcb4b1c",
+        "resource_id": "3bb21a7e-bb7a-4f97-a269-650c2f562ab7",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 25,
+        "size_gigabytes": 14.6205,
+        "created_at": "2026-10-08T10:56:41Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "ea328f2b-fa91-4f66-a714-6d6d702550b7",
+        "name": "snapshot-643c6d4e-6b9e-4f53-a1dd-6e26e66b5f49",
+        "resource_id": "37b2eff2-8868-439c-a31d-787fdcb48ef1",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 50,
+        "size_gigabytes": 46.2685,
+        "created_at": "2026-10-08T10:56:41Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "47d91faf-a50d-4206-ad8a-7cf0963829ed",
+        "name": "snapshot-06675d8e-1e9a-4de2-ad48-ff7dca94c7ee",
+        "resource_id": "22b409db-a3f2-4ed0-ae9e-d39e2ee3f4a4",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 20,
+        "size_gigabytes": 18.6869,
+        "created_at": "2026-10-08T10:56:43Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "4576fd49-52db-4bfe-aa68-1a55a79e85d8",
+        "name": "snapshot-e9662acd-452c-44b4-aba3-fedc24a1cf41",
+        "resource_id": "ca7a510c-366e-4473-a331-1bef99ba02fb",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 1,
+        "size_gigabytes": 0.0383,
+        "created_at": "2026-10-08T10:56:47Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "337e29f4-0c47-4809-a82b-38f42d826004",
+        "name": "snapshot-ba248dd0-122f-4d3b-ac25-275ab5fa920f",
+        "resource_id": "53dc1a0a-133e-4d40-a48f-fce33e5dd69b",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 50,
+        "size_gigabytes": 46.3216,
+        "created_at": "2026-10-08T10:56:48Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "31693713-30c9-4ab5-a9f6-14a4139adaa6",
+        "name": "snapshot-10b95940-d55f-44bb-a23a-d289bcd97d70",
+        "resource_id": "f26cd598-f2ce-4120-ad9c-a0c8783dff3c",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 5,
+        "size_gigabytes": 0.0138,
+        "created_at": "2026-10-09T10:27:22Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "8ec95419-5304-407f-ab78-7ac31ac96301",
+        "name": "snapshot-d6488c5e-177c-4e89-a4cf-2704a219d561",
+        "resource_id": "3a6b2b0e-999c-4d40-a9ef-119d0e003147",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 40,
+        "size_gigabytes": 0.7786,
+        "created_at": "2026-10-09T10:27:23Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "5585073b-4d59-494d-afac-870eb3e7dc30",
+        "name": "snapshot-fe1a65dc-6783-413f-a39b-43f6097bdc41",
+        "resource_id": "ebf86b49-8352-4150-ae43-273a589ddc3e",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 5,
+        "size_gigabytes": 0.0157,
+        "created_at": "2026-10-09T10:27:24Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "c2dd9097-6bd5-4e64-a6d6-c7977c0419fe",
+        "name": "snapshot-5dff7aff-8131-43b5-a213-a886d88bfd48",
+        "resource_id": "81363631-2024-49f1-a6c5-b60311fdad27",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 40,
+        "size_gigabytes": 0.7671,
+        "created_at": "2026-10-09T10:27:24Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "6cfa04ab-5891-45d3-af9a-377bb8a2b8cc",
+        "name": "snapshot-d09778db-d271-42d8-ac64-c7a209538b90",
+        "resource_id": "9b9fa889-b923-412e-a2f4-a074fea1b4c6",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 40,
+        "size_gigabytes": 0.7649,
+        "created_at": "2026-10-09T10:27:27Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "4b7b0446-0159-4398-acba-be71a06fdcfa",
+        "name": "snapshot-72037350-903b-4200-aabb-8e2b65089efe",
+        "resource_id": "a4c375d3-27c9-4e49-a92d-dacfd7809ba3",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 20,
+        "size_gigabytes": 4.9008,
+        "created_at": "2026-10-09T10:27:32Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "d004aec6-df70-4849-a7dc-f4f9b0ab60c5",
+        "name": "snapshot-17c133f6-e9ee-409f-a692-3da3ed69c909",
+        "resource_id": "2fcce840-e61e-4937-a888-3560f5b2133b",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 5,
+        "size_gigabytes": 0.0137,
+        "created_at": "2026-10-09T10:27:33Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "249119877",
+        "name": "wp-zeus-final-2026-10-10",
+        "resource_id": "605391425",
+        "resource_type": "droplet",
+        "regions": ["nyc3"],
+        "min_disk_size": 25,
+        "size_gigabytes": 3.58,
+        "created_at": "2026-10-10T05:36:30Z"
+      },
+      {
+        "id": "5dbd4c6f-2b03-4f3a-aefc-2fc9f50c86eb",
+        "name": "snapshot-3f0888b8-f883-405c-a7d0-73af14853c34",
+        "resource_id": "5a233b9f-dfa2-401b-a40a-405ad7fcec87",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 1,
+        "size_gigabytes": 0.0092,
+        "created_at": "2026-10-17T12:06:13Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "06b75a48-eaa5-4c2b-a8ab-d873d23bb562",
+        "name": "snapshot-23717f59-38f9-474c-ae69-e0a41aac40ff",
+        "resource_id": "22b409db-a3f2-4ed0-ae9e-d39e2ee3f4a4",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 20,
+        "size_gigabytes": 18.6869,
+        "created_at": "2026-10-17T12:06:13Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "65055c5a-3f92-46a7-a227-8833e9501cf9",
+        "name": "snapshot-0753df8d-ceb6-4962-a42c-3268e5c4f2c6",
+        "resource_id": "ca7a510c-366e-4473-a331-1bef99ba02fb",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 1,
+        "size_gigabytes": 0.0383,
+        "created_at": "2026-10-17T12:06:14Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "d9ec3f51-a225-4a4f-a5aa-0733dfcb394d",
+        "name": "snapshot-c48f4383-ffe3-4ad1-aff6-f8ad7e27acc6",
+        "resource_id": "c8658e56-f430-458a-afca-ed91f2145f32",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 5,
+        "size_gigabytes": 0.8949,
+        "created_at": "2026-10-17T12:06:15Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "040676ef-d0c2-4f3e-a818-d425645bb199",
+        "name": "snapshot-6cf8ad36-7d3f-4d63-a2cc-1b1324b30d05",
+        "resource_id": "cfcbd4db-4e4d-47af-abd3-ee2a165d400c",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 10,
+        "size_gigabytes": 0.0204,
+        "created_at": "2026-10-17T12:06:15Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "f645d3e4-bfa2-42ad-a87a-58af24ee6970",
+        "name": "snapshot-2d12562d-487d-4389-ae46-a52df4d2fa27",
+        "resource_id": "8fe52277-6a28-4d6e-af24-04ef02c5eeed",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 20,
+        "size_gigabytes": 1.3774,
+        "created_at": "2026-10-17T12:50:51Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "9eea6e55-c817-4b33-ab94-c57cd46dfca8",
+        "name": "snapshot-94374295-a08f-41ce-aaa5-620166c05069",
+        "resource_id": "f7634fdc-281d-4b26-ab9d-5031f57b430e",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 30,
+        "size_gigabytes": 19.9785,
+        "created_at": "2026-10-17T12:50:51Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "ebd74df3-66a4-43e5-a09d-5168f36d3537",
+        "name": "snapshot-39ef52f3-732e-4362-aba0-17bad5dbfb20",
+        "resource_id": "7379cd3f-3d29-44f7-a972-727a1f132bf3",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 20,
+        "size_gigabytes": 0.0265,
+        "created_at": "2026-10-17T12:50:52Z",
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"]
+      },
+      {
+        "id": "267e907c-c329-42f1-a346-612d5b2ed6c3",
+        "name": "nextcloud-retirement-20261101",
+        "resource_id": "dbb2ca88-0bdb-4f47-ad61-8f7807714635",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 200,
+        "size_gigabytes": 190.5253,
+        "created_at": "2026-11-01T04:13:14Z"
+      },
+      {
+        "id": "29ec34e5-ef12-49cc-a7d2-809dccf3ab5a",
+        "name": "hermes-data-final-2026-11-01",
+        "resource_id": "3bb21a7e-bb7a-4f97-a269-650c2f562ab7",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 25,
+        "size_gigabytes": 15.6122,
+        "created_at": "2026-11-01T05:39:09Z",
+        "tags": ["hermes-legacy-retirement"]
+      },
+      {
+        "id": "b30dee77-fec1-48a6-a22e-cb0481299d3e",
+        "name": "paperclip-postgres-final-2026-11-01",
+        "resource_id": "08ed2e5e-8230-487a-af52-2be78669c924",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 10,
+        "size_gigabytes": 0.1109,
+        "created_at": "2026-11-01T05:41:00Z",
+        "tags": ["paperclip-retirement"]
+      },
+      {
+        "id": "b0cfa82c-1071-48ed-ae82-5b35f84a4fe7",
+        "name": "paperclip-data-final-2026-11-01",
+        "resource_id": "5226ef84-483c-4222-ab7b-ea7ca64a5772",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 10,
+        "size_gigabytes": 0.0258,
+        "created_at": "2026-11-01T05:41:00Z",
+        "tags": ["paperclip-retirement"]
+      },
+      {
+        "id": "0ede7789-ad15-4a48-aa7f-a80327877b7c",
+        "name": "hermes-data-predelete-2026-11-03",
+        "resource_id": "3bb21a7e-bb7a-4f97-a269-650c2f562ab7",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 25,
+        "size_gigabytes": 15.6122,
+        "created_at": "2026-11-03T20:55:23Z",
+        "tags": ["hermes-legacy-retirement"]
+      },
+      {
+        "id": "cceb7a38-e724-4fda-a0c2-42a71150200b",
+        "name": "paperclip-predelete-2026-11-03-postgres",
+        "resource_id": "08ed2e5e-8230-487a-af52-2be78669c924",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 10,
+        "size_gigabytes": 0.1112,
+        "created_at": "2026-11-03T20:55:51Z",
+        "tags": ["paperclip-retirement"]
+      },
+      {
+        "id": "47ea4699-63ee-4f24-a593-cea8f45659ea",
+        "name": "paperclip-predelete-2026-11-03-data",
+        "resource_id": "5226ef84-483c-4222-ab7b-ea7ca64a5772",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 10,
+        "size_gigabytes": 0.0258,
+        "created_at": "2026-11-03T20:55:54Z",
+        "tags": ["paperclip-retirement"]
+      },
+      {
+        "id": "36e730fe-f11a-48b4-a0f3-1eed9d13cc23",
+        "name": "hermes-fresh-data-predelete-2026-11-03",
+        "resource_id": "eec2d6b7-7475-487e-a9c5-b7bc726b0d14",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 25,
+        "size_gigabytes": 0.2716,
+        "created_at": "2026-11-04T01:06:01Z",
+        "tags": ["hermes-legacy-retirement"]
+      },
+      {
+        "id": "6d112ee7-da7d-46a2-abbc-2d3adb020df9",
+        "name": "onemind-hermes-pre-v0227-2026-11-04",
+        "resource_id": "13a9fd62-5072-4e02-a8fe-d24e9b8de837",
+        "resource_type": "volume",
+        "regions": ["nyc3"],
+        "min_disk_size": 25,
+        "size_gigabytes": 5.3198,
+        "created_at": "2026-11-04T14:42:42Z",
+        "tags": ["onemind-hermes-upgrade"]
+      }
+    ],
+    "links": {},
+    "meta": {
+      "total": 53
+    }
+  },
+  "/v2/load_balancers": {
+    "load_balancers": [
+      {
+        "id": "d7fb86c8-249b-41d2-aaf1-c1d0d1406e4a",
+        "name": "a05f5bf5f3666440fa1fed96b5ddb4f4",
+        "ip": "192.0.2.10",
+        "size": "lb-small",
+        "size_unit": 1,
+        "type": "REGIONAL_NETWORK",
+        "algorithm": "round_robin",
+        "status": "active",
+        "created_at": "2026-07-12T08:26:54Z",
+        "forwarding_rules": [
+          {
+            "entry_protocol": "tcp",
+            "entry_port": 80,
+            "target_protocol": "tcp",
+            "target_port": 80
+          },
+          {
+            "entry_protocol": "tcp",
+            "entry_port": 443,
+            "target_protocol": "tcp",
+            "target_port": 443
+          }
+        ],
+        "sticky_sessions": {
+          "type": "none"
+        },
+        "region": {
+          "slug": "nyc3",
+          "name": "New York 3"
+        },
+        "droplet_ids": [810000001, 810000008, 810000015, 810000022],
+        "vpc_uuid": "23f230a7-c491-4689-ae41-f7802bc09063",
+        "disable_lets_encrypt_dns_records": false,
+        "project_id": "aa7769ca-2818-4c47-aedf-d3b04f34c86e",
+        "http_idle_timeout_seconds": 60,
+        "network_stack": "IPV4"
+      }
+    ],
+    "links": {},
+    "meta": {
+      "total": 1
+    }
+  },
+  "/v2/firewalls": {
+    "firewalls": [
+      {
+        "id": "8208a96b-4713-4361-a468-d8628b82f3c7",
+        "name": "k8s-e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9-worker",
+        "status": "succeeded",
+        "inbound_rules": [
+          {
+            "protocol": "icmp",
+            "ports": "0",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "0",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "udp",
+            "ports": "0",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          }
+        ],
+        "outbound_rules": [
+          {
+            "protocol": "icmp",
+            "ports": "0",
+            "destinations": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "0",
+            "destinations": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "udp",
+            "ports": "0",
+            "destinations": {
+              "addresses": ["REDACTED"]
+            }
+          }
+        ],
+        "droplet_ids": [],
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"],
+        "created_at": "2026-07-04T18:27:57Z",
+        "pending_changes": []
+      },
+      {
+        "id": "1dd7b931-c44b-48bd-aaad-712955e50768",
+        "name": "k8s-public-access-e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9",
+        "status": "succeeded",
+        "inbound_rules": [
+          {
+            "protocol": "tcp",
+            "ports": "80",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "443",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "4222",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "7422",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "8080",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "8089",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "8443",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "8446",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "9100",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "9443",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "10256",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "32520",
+            "sources": {
+              "load_balancer_uids": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "64738",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          }
+        ],
+        "outbound_rules": [
+          {
+            "protocol": "icmp",
+            "ports": "0",
+            "destinations": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "0",
+            "destinations": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "udp",
+            "ports": "0",
+            "destinations": {
+              "addresses": ["REDACTED"]
+            }
+          }
+        ],
+        "droplet_ids": [],
+        "tags": ["k8s:e3d28beb-f63f-4d1f-a2ac-a1d16c1b3fd9"],
+        "created_at": "2026-07-04T18:26:13Z",
+        "pending_changes": []
+      },
+      {
+        "id": "466b9e0f-12eb-4170-a627-bd27760c6044",
+        "name": "onemindos-cloud-fw",
+        "status": "succeeded",
+        "inbound_rules": [
+          {
+            "protocol": "icmp",
+            "ports": "0",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "22",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "80",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "443",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "18790",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "udp",
+            "ports": "41641",
+            "sources": {
+              "addresses": ["REDACTED"]
+            }
+          }
+        ],
+        "outbound_rules": [
+          {
+            "protocol": "icmp",
+            "ports": "0",
+            "destinations": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "tcp",
+            "ports": "0",
+            "destinations": {
+              "addresses": ["REDACTED"]
+            }
+          },
+          {
+            "protocol": "udp",
+            "ports": "0",
+            "destinations": {
+              "addresses": ["REDACTED"]
+            }
+          }
+        ],
+        "droplet_ids": [],
+        "tags": [],
+        "created_at": "2026-04-15T17:29:00Z",
+        "pending_changes": []
+      }
+    ],
+    "links": {},
+    "meta": {
+      "total": 3
+    }
+  },
+  "/v2/vpcs": {
+    "vpcs": [
+      {
+        "id": "fa92d124-2926-4219-a322-9c6ea5e89f5e",
+        "urn": "do:vpc:fa92d124-2926-4219-a322-9c6ea5e89f5e",
+        "name": "default-sfo3",
+        "ip_range": "10.124.0.0/20",
+        "region": "sfo3",
+        "created_at": "2026-07-05T10:17:10Z",
+        "default": true
+      },
+      {
+        "id": "1c5bc62e-a36f-4902-abd3-7723f2e1835a",
+        "urn": "do:vpc:1c5bc62e-a36f-4902-abd3-7723f2e1835a",
+        "name": "default-nyc1",
+        "ip_range": "10.116.0.0/20",
+        "region": "nyc1",
+        "created_at": "2026-04-14T17:32:05Z",
+        "default": true
+      },
+      {
+        "id": "f1f5676b-1c72-4b91-a47a-d04d2276a24e",
+        "urn": "do:vpc:f1f5676b-1c72-4b91-a47a-d04d2276a24e",
+        "name": "default-nyc3",
+        "ip_range": "10.108.0.0/20",
+        "region": "nyc3",
+        "created_at": "2026-03-03T22:04:35Z",
+        "default": true
+      },
+      {
+        "id": "23f230a7-c491-4689-ae41-f7802bc09063",
+        "urn": "do:vpc:23f230a7-c491-4689-ae41-f7802bc09063",
+        "name": "onemind-hub-vpc",
+        "ip_range": "10.10.0.0/16",
+        "region": "nyc3",
+        "created_at": "2026-07-04T18:23:07Z"
+      }
+    ],
+    "links": {},
+    "meta": {
+      "total": 4
+    }
+  },
+  "/v2/uptime/checks": {
+    "checks": [
+      {
+        "id": "dadf1de2-52dd-4dd2-a0e4-79266c5175ca",
+        "name": "onemindos-cloud gateway",
+        "type": "https",
+        "target": "https://gateway.example.invalid",
+        "regions": ["eu_west", "us_east", "us_west"],
+        "enabled": true
+      }
+    ],
+    "links": {},
+    "meta": {
+      "total": 1
+    }
+  },
+  "/v2/uptime/checks/dadf1de2-52dd-4dd2-a0e4-79266c5175ca/state": {
+    "state": {
+      "regions": {
+        "us_east": {
+          "status": "UP",
+          "status_changed_at": "2026-11-01T00:00:00Z",
+          "thirty_day_uptime_percentage": 99.98
+        },
+        "eu_west": {
+          "status": "UP",
+          "status_changed_at": "2026-11-01T00:00:00Z",
+          "thirty_day_uptime_percentage": 99.97
+        },
+        "us_west": {
+          "status": "UP",
+          "status_changed_at": "2026-11-01T00:00:00Z",
+          "thirty_day_uptime_percentage": 99.99
+        }
+      },
+      "previous_outage": {
+        "region": "eu_west",
+        "started_at": "2026-10-12T04:00:00Z",
+        "duration_seconds": 180
+      }
+    }
+  },
+  "/v2/domains": {
+    "domains": [],
+    "links": {},
+    "meta": {
+      "total": 0
+    }
+  },
+  "/v2/monitoring/alerts": {
+    "policies": [],
+    "links": {},
+    "meta": {
+      "total": 0
+    }
+  },
+  "_meta": {
+    "recordedAt": "2026-11-05",
+    "source": "doctl read-only list/get on the live account, ids replaced by stable fake ids, IPs/email/team/sources removed; uptime state is synthesised per the DO API docs (no doctl command) ; domains and alert policies are empty on the live account",
+    "counts": {
+      "clusters": 1,
+      "nodePools": 2,
+      "droplets": 4,
+      "volumes": 79,
+      "unattachedVolumes": 37,
+      "snapshots": 53,
+      "loadBalancers": 1,
+      "firewalls": 3,
+      "vpcs": 4,
+      "uptimeChecks": 1,
+      "invoices": 8
+    }
+  }
+}

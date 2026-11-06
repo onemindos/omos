@@ -248,7 +248,7 @@ onemind:
   # true in the PR that builds its target (see docs/roadmap/flagship).
   features:
     pillars: false      # F2: SO/LE/HP/GE Domain pages
-    digitalocean: false # F6: /digitalocean
+    digitalocean: true  # F6: /digitalocean (shows "Not connected" until the token exists)
     retireApp: true     # F8: retire-app template (ships with the image that contains it)
   alerts:
     # Bearer token Alertmanager presents at POST /api/events/http/alertmanager. OPTIONAL: when
