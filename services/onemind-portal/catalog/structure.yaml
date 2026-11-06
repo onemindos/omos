@@ -319,6 +319,8 @@ placement:
   suncalc: geospatial
   komoot: geospatial
   adsb-exchange: intelligence
+  openstreetmap: geospatial
+  opensky-network: intelligence
   google-earth: geospatial
   cesium-native: geospatial
   3d-tiles: geospatial
