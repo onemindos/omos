@@ -6512,9 +6512,11 @@ __metadata:
     "@types/react": "npm:18.3.28"
     jest: "npm:~30.2.0"
     react-dom: "npm:^18.0.2"
+    react-router-dom: "npm:^6.30.2"
   peerDependencies:
     react: ^18.0.2
     react-dom: ^18.0.2
+    react-router-dom: ^6.30.2
   languageName: unknown
   linkType: soft
 

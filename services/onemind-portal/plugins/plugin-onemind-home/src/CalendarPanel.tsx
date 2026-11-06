@@ -6,7 +6,7 @@ import {
 } from '@backstage/core-plugin-api';
 import { Box, Link, Typography } from '@material-ui/core';
 
-type Summary = {
+export type CalendarSummary = {
   state: string;
   coverage: string;
   observedAt: string | null;
@@ -19,27 +19,29 @@ type Summary = {
   }[];
   link: string;
 };
+type Summary = CalendarSummary;
 function formatEventTime(event: Summary['events'][number]) {
   if (!event.start) return 'Time unavailable';
   if (event.allDay) return `${event.start} · all day`;
   return new Date(event.start).toLocaleString();
 }
 
-export function CalendarPanel() {
+/** Reads the existing `GET /api/onemind/calendar` route every five minutes. */
+export function useCalendarSummary() {
   const discovery = useApi(discoveryApiRef);
-    const api = useApi(fetchApiRef);
-    const [data, setData] = useState<Summary>();
-    const [error, setError] = useState('');
+  const api = useApi(fetchApiRef);
+  const [data, setData] = useState<Summary>();
+  const [error, setError] = useState('');
   useEffect(() => {
     let active = true;
-      let pending = false;
+    let pending = false;
     const controller = new AbortController();
     const refresh = async () => {
       if (pending) return;
       pending = true;
       try {
         const base = await discovery.getBaseUrl('onemind');
-        const response = await api.fetch(`${base  }/calendar`, {
+        const response = await api.fetch(`${base}/calendar`, {
           signal: controller.signal,
         });
         if (!response.ok)
@@ -68,6 +70,11 @@ export function CalendarPanel() {
       clearInterval(timer);
     };
   }, [discovery, api]);
+  return { data, error };
+}
+
+export function CalendarPanel() {
+  const { data, error } = useCalendarSummary();
   const stale =
     !!data &&
     (!!error ||
