@@ -2,6 +2,8 @@
 
 > **Kubernetes Dashboard retired 2026-10-27.** `kubernetes-dashboard` v2.7.0 in `kube` ran with `--enable-insecure-login --enable-skip-login` under a cluster-admin ServiceAccount on the tailnet (`k8s-dashboard`); Headlamp covers the use case. Its manifests and catalog entries were removed through a reviewed Git change (`platform-kube` prunes them); the hand-made `ClusterRoleBinding/kubernetes-dashboard-admin` needs a manual delete. Earlier snapshots in this file that mention it are historical.
 
+> **LiteLLM and in-cluster Ollama retired 2026-11-06.** Argo Applications `ecosystem-litellm` and `ecosystem-ollama`, their values, network policies, sealed secrets, the model-client bootstrap Job and the VolSync source for PVC `onemind-cpu-model` were removed from Git (agentgateway is the hub; Hermes uses Ollama Cloud). The `litellm` database, role and `db-litellm` secret in `onemind-data` are kept for an owner decision, and the `onemind-cpu-model` DigitalOcean volume is retained. See `docs/operations/tool-gateway.md`. Rows below that mention them are historical until the cluster is cleaned up.
+
 > **OpenClaw retired 2026-10-22** (Zeus: not needed any more). Its Application, manifests, namespace, volume and backup source were removed through reviewed Git changes (PRs #379 and the retirement series). Earlier snapshots in this file that mention it are historical.
 
 Tiered inventory of everything running on the DOKS cluster `omos-cloud` (nyc3), what owns it, what state it holds, whether it is backed up, who can reach it, and whether Git or a laptop controls it.
@@ -175,8 +177,8 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 | `ecosystem-barman` | cnpg-system | plugin-barman-cloud 0.8.1 | CNPG backup plugin | none | Git | internal |
 | `ecosystem-onemind-core` | onemind-core | local `platform/ecosystem/charts/onemind-core` | OneMind core runtime. CNPG cluster `onemind-data` (3 instances, 120 GiB) lives in `onemind-data` | PostgreSQL | `Velero`, `Barman` | internal |
 | `ecosystem-openfga` | onemind-core | openfga 0.3.16 | Fine-grained authorization | PostgreSQL (CNPG) | `Velero`, `Barman` | internal |
-| `ecosystem-litellm` | onemind-ai | litellm-helm 1.104.2 (OCI) | Model gateway | PostgreSQL (CNPG) | `Velero`, `Barman` | internal. `/metrics` scrape returns 401 (A6) |
-| `ecosystem-ollama` | onemind-ai | ollama 1.86.0 | Local model runtime | 20 GiB models | `Velero` (`onemind-ai`), `VolSync` | internal |
+| ~~`ecosystem-litellm`~~ | onemind-ai | litellm-helm 1.104.2 (OCI) | **Retired 2026-11-06** (removed from Git). Database `litellm` kept in `onemind-data` | PostgreSQL (CNPG) | `Velero`, `Barman` | none after cleanup |
+| ~~`ecosystem-ollama`~~ | onemind-ai | ollama 1.86.0 | **Retired 2026-11-06** (removed from Git). Volume `onemind-cpu-model` (20 GiB, Retain) kept | 20 GiB models | `Velero` (`onemind-ai`); VolSync source removed | none after cleanup |
 | `ecosystem-dapr` | dapr-system | dapr 1.18.5 | Dapr runtime | 15 GiB | `VolSync` | internal |
 | `ecosystem-kyverno` | kyverno | kyverno 3.9.1 | Policy engine | none | Git | internal |
 | `ecosystem-falco` | falco | falco 9.2.0 | Runtime security | none | Git | internal |

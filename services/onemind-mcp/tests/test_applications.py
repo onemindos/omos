@@ -58,7 +58,7 @@ def test_media_source_credentials_omitted(monkeypatch):
 
 
 @pytest.mark.parametrize('adapter,name,path,result', [
-    ('ollama', 'models', '/api/tags', {'models': []}), ('alertmanager', 'alerts', '/api/v2/alerts', []),
+    ('alertmanager', 'alerts', '/api/v2/alerts', []),
     ('opencost', 'allocation', '/allocation', {'code': 200}), ('grafana', 'dashboards', '/api/search', []),
     ('karakeep', 'bookmarks', '/api/v1/bookmarks', {}), ('loki', 'query', '/loki/api/v1/query_range', {'status': 'success'}),
 ])
@@ -84,17 +84,6 @@ def test_basic_auth_scheme_sends_user_and_password(monkeypatch):
         return httpx.Response(200, json={'items': []})
     with TestClient(build(cat, handler)) as client:
         assert not rpc(client, 'tools/call', {'name': 'app_paths', 'arguments': {}})['result'].get('isError')
-
-
-def test_litellm_lists_only_model_ids(monkeypatch):
-    data = {'data': [{'id': 'hermes-agent', 'owned_by': 'secret-org', 'litellm_params': {'api_key': 'sk-x'}}]}
-    def handler(request):
-        assert request.url.path == '/v1/models'
-        return httpx.Response(200, json=data)
-    with TestClient(build(catalog(monkeypatch, 'litellm'), handler)) as client:
-        result = rpc(client, 'tools/call', {'name': 'app_models', 'arguments': {}})
-        assert 'hermes-agent' in json.dumps(result)
-        assert 'sk-x' not in json.dumps(result)
 
 
 def test_argocd_summaries_and_name_validation(monkeypatch):
@@ -155,7 +144,7 @@ def test_production_catalog_boots_and_does_not_expose_blocked_apps(monkeypatch):
                 monkeypatch.setenv(app.token_env, 'user:' + secrets.token_urlsafe(24))
     with TestClient(build(cat, lambda _: pytest.fail('Discovery must not probe apps'))) as client:
         tools = rpc(client, 'tools/list')['result']['tools']
-        assert len(tools) == 26  # 19 read adapters + 6 tile38 reads + tile38_set_point
+        assert len(tools) == 23  # 16 read adapters + 6 tile38 reads + tile38_set_point
         # The one write is the tile38 point SET (allow_writes); destructive tile38 tools are not registered.
         assert [t['name'] for t in tools if not t['annotations']['readOnlyHint']] == ['tile38_set_point']
         assert not any(t['name'] in ('tile38_delete_object', 'tile38_drop_collection') for t in tools)

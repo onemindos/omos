@@ -182,7 +182,7 @@ class Classification(unittest.TestCase):
         classes = cl.load_all(render.CLASSIFICATION)
         self.assertIn("onemind", classes)
         # Every onemind-mcp tool is read only except the tile38 adapter's gated write and destructive tools.
-        self.assertEqual(len(classes["onemind"]["read"]), 26)
+        self.assertEqual(len(classes["onemind"]["read"]), 23)
         self.assertEqual(classes["onemind"]["write"], ["tile38_set_point"])
         self.assertEqual(classes["onemind"]["destructive"], ["tile38_delete_object", "tile38_drop_collection"])
         self.assertEqual(classes["onemind"]["physical"], [])

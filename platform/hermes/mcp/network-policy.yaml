@@ -63,16 +63,6 @@ spec:
     ports:
     - protocol: TCP
       port: 8080
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: onemind-ai
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: ollama
-    ports:
-    - protocol: TCP
-      port: 11434
   # Tile38 command API (adapter tile38; reads, plus SET when allow_writes).
   - to:
     - namespaceSelector:
@@ -120,17 +110,6 @@ spec:
     ports:
     - protocol: TCP
       port: 3000
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: onemind-ai
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: litellm
-          app.kubernetes.io/instance: litellm
-    ports:
-    - protocol: TCP
-      port: 4000
   - to:
     - namespaceSelector:
         matchLabels:

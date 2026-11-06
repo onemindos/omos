@@ -5769,19 +5769,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://ollama.com
     onemind.io/verification: planned
-    argocd/app-name: ecosystem-ollama
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: onemind-ai
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=ollama,app.kubernetes.io/name=ollama
     onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: onemind-ai
-    grafana/alert-label-selector: namespace=onemind-ai
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-ai&var-workload=onemind-cpu-model
-    onemind.io/logs-query: '{k8s_namespace_name="onemind-ai", k8s_pod_name=~"(onemind-cpu-model)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/ollama/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: onemind-ai/onemind-cpu-model
   links:
     - url: https://ollama.com/
       title: Open application
@@ -9082,39 +9071,6 @@ metadata:
     onemind.io/recovery-runbook: apps/n8n/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: n8n/n8n,n8n/postgres
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: ai-agents
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: litellm
-  tags:
-    - kubernetes
-  title: LiteLLM
-  description: Model gateway.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-litellm
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: onemind-ai
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=litellm,app.kubernetes.io/name=litellm
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: onemind-ai
-    grafana/alert-label-selector: namespace=onemind-ai
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-ai&var-workload=litellm
-    onemind.io/logs-query: '{k8s_namespace_name="onemind-ai", k8s_pod_name=~"(litellm)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/litellm/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: onemind-ai/litellm
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

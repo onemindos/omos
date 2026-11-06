@@ -96,8 +96,6 @@ export const mapping: InventoryMapping = {
     'omos/omos-tak-projector': 'component:default/omos-data-pipeline',
     'omos/redpanda-connect': 'component:default/redpanda-connect',
     'omos/sink-clickhouse': 'component:default/omos-data-pipeline',
-    'onemind-ai/litellm': 'component:default/litellm',
-    'onemind-ai/onemind-cpu-model': 'component:default/ollama',
     'onemind-core/onemind-core': 'component:default/onemind-core',
     'onemind-core/onemind-ingestion': 'component:default/onemind-core',
     'onemind-core/openfga': 'component:default/openfga',
@@ -313,12 +311,6 @@ export const mapping: InventoryMapping = {
       pillar: 'so',
       review: 'proposed',
     },
-    litellm: {
-      title: 'LiteLLM',
-      system: 'ai-agents',
-      pillar: 'so',
-      review: 'proposed',
-    },
     loki: {
       title: 'Loki',
       system: 'observability',
@@ -370,12 +362,6 @@ export const mapping: InventoryMapping = {
     'nats-ui': {
       title: 'NATS UI',
       system: 'messaging-nats',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    ollama: {
-      title: 'Ollama',
-      system: 'ai-agents',
       pillar: 'so',
       review: 'proposed',
     },

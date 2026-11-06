@@ -61,23 +61,16 @@ def main():
         uris[role] = uri
         add(app_namespaces[role], role.replace("_", "-") + "-db", {**pair, "uri": uri})
 
-    master = "sk-" + secrets.token_urlsafe(40)
-    clients = {n: "sk-" + secrets.token_urlsafe(40) for n in ["core"]}
-    add("onemind-ai", "litellm-auth", {"master-key": master})
-    add("onemind-ai", "litellm-client-keys", clients)
-    # Provider credentials come from the existing LiteLLM provider secret (OpenClaw, their former source, was retired).
-    provider = existing("onemind-ai", "litellm-providers")
-    keys = {k: provider[k] for k in ["OPENROUTER_API_KEY", "OPENAI_API_KEY", "ANTHROPIC_API_KEY"] if provider.get(k)}
-    if not keys.get("OPENROUTER_API_KEY"):
-        raise RuntimeError("The selected model provider has no configured credential")
-    add("onemind-ai", "litellm-providers", keys)
+    # LiteLLM was retired 2026-11-06: its auth, client-key and provider secrets are no longer generated.
+    # The model gateway key below is only kept so the core-runtime secret keeps its shape (onemind-core model_summary still points at the retired LiteLLM URL).
+    core_model_key = "sk-" + secrets.token_urlsafe(40)
     gateway = secrets.token_urlsafe(48)
     nats = existing("hermes", "omos-nats-creds")
     add("onemind-core", "core-runtime", {
         "DATABASE_URL": uris["onemind"], "UI_GATEWAY_KEY": gateway,
         "READ_API_KEY": secrets.token_urlsafe(48),
         "MODEL_GATEWAY_URL": "http://litellm.onemind-ai.svc.cluster.local:4000/v1",
-        "MODEL_GATEWAY_KEY": clients["core"],
+        "MODEL_GATEWAY_KEY": core_model_key,
         "NATS_URL": "nats://nats.nats.svc.cluster.local:4222",
         "NATS_USER": nats["user"], "NATS_PASSWORD": nats["password"],
     })

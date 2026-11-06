@@ -283,16 +283,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "onemind-ai",
-      "name": "litellm"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onemind-ai",
-      "name": "onemind-cpu-model"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "onemind-core",
       "name": "onemind-core"
     },
@@ -1230,16 +1220,6 @@
       "kind": "Service",
       "namespace": "omos",
       "name": "redpanda-connect"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-ai",
-      "name": "litellm"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-ai",
-      "name": "onemind-cpu-model"
     },
     {
       "kind": "Service",

@@ -12,10 +12,6 @@ apps:
   adapter: stac
   description: Geospatial imagery collections and bounding-box search
   url_env: STAC_URL
-- id: ollama
-  adapter: ollama
-  description: Local AI model inventory and current memory residency
-  url_env: OLLAMA_URL
 - id: alertmanager
   adapter: alertmanager
   description: Active operational alerts without silence or routing changes
@@ -104,11 +100,6 @@ apps:
   enabled: false
   blocked_reason: Edge host previously offline; verify reachability, dedicated token and device action policy before enabling. No physical actuation
     granted.
-- id: litellm
-  description: Model gateway and available routed AI models
-  adapter: litellm
-  url_env: LITELLM_URL
-  token_env: LITELLM_API_KEY
 - id: onemind_core
   description: Core entities, ingestion and workflow runtime
   enabled: false

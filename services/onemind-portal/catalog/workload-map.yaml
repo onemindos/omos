@@ -80,8 +80,6 @@ workloads:
   omos/omos-tak-projector: component:default/omos-data-pipeline
   omos/redpanda-connect: component:default/redpanda-connect
   omos/sink-clickhouse: component:default/omos-data-pipeline
-  onemind-ai/litellm: component:default/litellm
-  onemind-ai/onemind-cpu-model: component:default/ollama
   onemind-core/onemind-core: component:default/onemind-core
   onemind-core/onemind-ingestion: component:default/onemind-core
   onemind-core/openfga: component:default/openfga
@@ -164,8 +162,6 @@ argoApplications:
   ecosystem-dapr: component:default/dapr
   ecosystem-falco: component:default/falco
   ecosystem-kyverno: component:default/kyverno
-  ecosystem-litellm: component:default/litellm
-  ecosystem-ollama: component:default/ollama
   ecosystem-onemind-core: component:default/onemind-core
   ecosystem-opencost: component:default/opencost
   ecosystem-openfga: component:default/openfga

@@ -49,9 +49,9 @@ config:
                 "resources_list"])
             - allow: mcp.tool.target == "onemind" && (mcp.tool.name in ["alertmanager_alerts", "apps_describe", "apps_list",
                 "argocd_application", "argocd_applications", "backstage_entities", "backstage_entity", "grafana_dashboards",
-                "litellm_models", "loki_query", "mediamtx_paths", "nats_jetstream_stats", "nats_server_stats", "ollama_models",
-                "ollama_running_models", "opencost_allocation", "prometheus_query", "stac_collections", "stac_search", "tempo_trace",
-                "tile38_get", "tile38_keys", "tile38_nearby", "tile38_scan", "tile38_server", "tile38_set_point", "tile38_within"])
+                "loki_query", "mediamtx_paths", "nats_jetstream_stats", "nats_server_stats", "opencost_allocation", "prometheus_query",
+                "stac_collections", "stac_search", "tempo_trace", "tile38_get", "tile38_keys", "tile38_nearby", "tile38_scan",
+                "tile38_server", "tile38_set_point", "tile38_within"])
         backends:
         - mcp:
             prefixMode: always
