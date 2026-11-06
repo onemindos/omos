@@ -308,6 +308,17 @@ apps:
     system: home-homestead
     description: Private ThingsBoard Community 4.3 IoT evaluation with a manual Argo Application; first sync, owner login, telemetry and restore acceptance are pending.
 placement:
+  opencage: geospatial
+  graphhopper: geospatial
+  overpass-api: geospatial
+  overpass-turbo: geospatial
+  valhalla: geospatial
+  nominatim-upstream: geospatial
+  organic-maps: geospatial
+  maputnik: geospatial
+  suncalc: geospatial
+  komoot: geospatial
+  adsb-exchange: intelligence
   google-earth: geospatial
   cesium-native: geospatial
   3d-tiles: geospatial
