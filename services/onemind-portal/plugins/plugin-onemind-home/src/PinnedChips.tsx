@@ -1,9 +1,18 @@
 import { useState } from 'react';
-import { Box, Button, Chip, Typography } from '@material-ui/core';
-import { FavoritesPicker, useAppFavorites } from './Launcher';
+import {
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Typography,
+  useTheme,
+} from '@material-ui/core';
+import { appColors } from '@internal/plugin-onemind-common';
+import { abbreviation, FavoritesPicker, useAppFavorites } from './Launcher';
 import { HomeCard } from './HomeCard';
 
 export function PinnedChips() {
+  const theme = useTheme();
   const controls = useAppFavorites();
   const [open, setOpen] = useState(false);
   return (
@@ -49,6 +58,18 @@ export function PinnedChips() {
               rel="noopener noreferrer"
               label={app.title}
               variant="outlined"
+              avatar={
+                <Avatar
+                  style={{
+                    background: appColors(app.name, app.groupTitle).base,
+                    color: theme.palette.common.white,
+                    fontSize: 10,
+                    fontWeight: 700,
+                  }}
+                >
+                  {abbreviation(app)}
+                </Avatar>
+              }
             />
           ))}
         </Box>

@@ -6,25 +6,29 @@ import { HomePageLayoutProps } from '@backstage/plugin-home-react/alpha';
 import { Directory } from './homeModule';
 import { HomeHeader } from './HomeHeader';
 import { CommandBar } from './CommandBar';
-import { TodayCard } from './TodayCard';
-import { WaitingCard } from './WaitingCard';
-import { QuickActions } from './QuickActions';
+import { NextUpHero } from './NextUpHero';
+import { PlatformScore } from './PlatformScore';
+import { WaitingOnYou } from './WaitingOnYou';
+import { TasksCard } from './TasksCard';
+import { ActionTiles } from './ActionTiles';
+import { useBentoStyles } from './bento';
 import { JumpBackIn } from './JumpBackIn';
 import { PinnedChips } from './PinnedChips';
 import { BrowseAllApps } from './BrowseAllApps';
 import { cardGridStyle } from './HomeCard';
-import { StatusStrip } from './StatusStrip';
 import { PillarTiles } from './PillarTiles';
 import { RecentlyChanged } from './RecentlyChanged';
 import { ActiveStack } from './ActiveStack';
 import { useHomeFeature } from './features';
 
 // Command-center home, top to bottom, with no fixed heights: header, command
-// bar, live status, Today / Waiting / Do it now, Jump back in / Pinned, recent
-// changes (+ pillars), a collapsed app launcher and the active stack. Backstage's
-// native editor and saved layout stay available in the optional widget view.
+// bar, Row A (Next up hero + Platform score), Row B (Waiting on you + Tasks),
+// Row C (action tiles), Jump back in / Pinned, recent changes (+ pillars), a
+// collapsed app launcher and the active stack. Backstage's native editor and
+// saved layout stay available in the optional widget view.
 export function HomeLayout({ widgets, defaultConfig }: HomePageLayoutProps) {
   const theme = useTheme();
+  const bento = useBentoStyles();
   const pillars = useHomeFeature('pillars');
   const [customize, setCustomize] = useState(false);
   const gridConfig = useMemo(
@@ -77,12 +81,15 @@ export function HomeLayout({ widgets, defaultConfig }: HomePageLayoutProps) {
         ) : (
           <>
             <CommandBar />
-            <StatusStrip />
-            <Box style={cardGridStyle()}>
-              <TodayCard />
-              <WaitingCard />
-              <QuickActions />
+            <Box className={bento.rowA}>
+              <NextUpHero />
+              <PlatformScore />
             </Box>
+            <Box className={bento.rowB}>
+              <WaitingOnYou />
+              <TasksCard />
+            </Box>
+            <ActionTiles />
             <Box style={cardGridStyle()}>
               <JumpBackIn />
               <PinnedChips />

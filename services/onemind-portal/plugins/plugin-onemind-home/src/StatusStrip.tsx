@@ -6,7 +6,7 @@ import {
   useOperationsStatus,
 } from './status';
 
-type Tile = {
+export type Tile = {
   key: keyof StripCounts;
   label: string;
   href: string;
@@ -15,7 +15,7 @@ type Tile = {
 };
 
 // Links reuse the destinations `/today` already offers for each source.
-const TILES: Tile[] = [
+export const TILES: Tile[] = [
   {
     key: 'alerts',
     label: 'Alerts firing',
