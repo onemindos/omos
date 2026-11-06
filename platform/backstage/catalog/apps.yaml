@@ -420,6 +420,361 @@ spec:
   owner: group:default/onemind-admins
   domain: domain:default/onemind
 ---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: opencage
+  title: OpenCage
+  description: >-
+    External reference. Hosted geocoding and geosearch provider, not a sovereign
+    self-hosted backend. No OneMind installation, hosting or integration
+    verified.
+  tags:
+    - reference
+    - geospatial
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
+    onemind.io/launcher-url: https://opencagedata.com
+    onemind.io/launcher-category: Geospatial
+    onemind.io/pillar-review: proposed
+  links:
+    - url: https://opencagedata.com
+      title: External reference
+      icon: dashboard
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: graphhopper
+  title: GraphHopper
+  description: >-
+    External reference. Routing provider with an open-source routing engine and
+    a separate hosted Directions API; hosted optimization and API features are
+    not assumed to ship with the engine. No OneMind installation, hosting or
+    integration verified.
+  tags:
+    - reference
+    - geospatial
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
+    onemind.io/launcher-url: https://graphhopper.com
+    onemind.io/launcher-category: Geospatial
+    onemind.io/pillar-review: proposed
+  links:
+    - url: https://graphhopper.com
+      title: External reference
+      icon: dashboard
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: overpass-api
+  title: Overpass API
+  description: >-
+    External reference. OpenStreetMap query service for spatial and tag-based
+    data extraction. Public instances have usage policies and capacity limits;
+    not an approved automated operational dependency. No OneMind installation,
+    hosting or integration verified.
+  tags:
+    - reference
+    - geospatial
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
+    onemind.io/launcher-url: https://overpass-api.de
+    onemind.io/launcher-category: Geospatial
+    onemind.io/pillar-review: proposed
+  links:
+    - url: https://overpass-api.de
+      title: External reference
+      icon: dashboard
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: overpass-turbo
+  title: Overpass Turbo
+  description: >-
+    External reference. Browser GUI for developing Overpass queries and
+    exploring OpenStreetMap results. Includes a community-curated examples and
+    learning list; public query backends remain subject to their usage policies.
+    No OneMind installation, hosting or integration verified.
+  tags:
+    - reference
+    - geospatial
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
+    onemind.io/launcher-url: https://github.com/tyrasd/overpass-turbo
+    onemind.io/launcher-category: Geospatial
+    onemind.io/pillar-review: proposed
+  links:
+    - url: https://github.com/tyrasd/overpass-turbo
+      title: External reference
+      icon: dashboard
+    - url: https://github.com/cipher387/awesome-overpass-turbo
+      title: Community examples and learning resources
+      icon: docs
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: valhalla
+  title: Valhalla
+  description: >-
+    External reference. Open-source OpenStreetMap routing engine with matrices,
+    isochrones, map matching and elevation sampling. The additional FOSSGIS
+    public demo is third-party, fair-use limited and not an approved automated
+    operational dependency. No OneMind installation, hosting or integration
+    verified.
+  tags:
+    - reference
+    - geospatial
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
+    onemind.io/launcher-url: https://github.com/valhalla/valhalla
+    onemind.io/launcher-category: Geospatial
+    onemind.io/pillar-review: proposed
+  links:
+    - url: https://github.com/valhalla/valhalla
+      title: External reference
+      icon: dashboard
+    - url: https://valhalla.openstreetmap.de
+      title: FOSSGIS public demo (fair-use limited)
+      icon: dashboard
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nominatim-upstream
+  title: Nominatim (upstream reference)
+  description: >-
+    External reference. Self-hostable OpenStreetMap name/address and reverse
+    geocoder. Distinct from the archived OneMind Nominatim registry record; no
+    local availability claimed. Public service use requires usage-policy review
+    and is not an approved automated operational dependency. No OneMind
+    installation, hosting or integration verified.
+  tags:
+    - reference
+    - geospatial
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
+    onemind.io/launcher-url: https://nominatim.org
+    onemind.io/launcher-category: Geospatial
+    onemind.io/pillar-review: proposed
+  links:
+    - url: https://nominatim.org
+      title: External reference
+      icon: dashboard
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: organic-maps
+  title: Organic Maps
+  description: >-
+    External reference. Privacy-focused offline OpenStreetMap maps and
+    navigation for hiking, cycling and driving. No OneMind installation, hosting
+    or integration verified.
+  tags:
+    - reference
+    - geospatial
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
+    onemind.io/launcher-url: https://organicmaps.app
+    onemind.io/launcher-category: Geospatial
+    onemind.io/pillar-review: proposed
+  links:
+    - url: https://organicmaps.app
+      title: External reference
+      icon: dashboard
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: maputnik
+  title: Maputnik
+  description: >-
+    External reference. Open-source visual editor for the MapLibre Style
+    Specification, not a tile generator or proof of ATAK style compatibility. No
+    OneMind installation, hosting or integration verified.
+  tags:
+    - reference
+    - geospatial
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
+    onemind.io/launcher-url: https://maputnik.github.io
+    onemind.io/launcher-category: Geospatial
+    onemind.io/pillar-review: proposed
+  links:
+    - url: https://maputnik.github.io
+      title: External reference
+      icon: dashboard
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: suncalc
+  title: SunCalc
+  description: >-
+    External reference. Solar position, sunrise, sunset, daylight and
+    shadow-length reference; not a complete terrain shade assessment. No OneMind
+    installation, hosting or integration verified.
+  tags:
+    - reference
+    - geospatial
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
+    onemind.io/launcher-url: https://suncalc.org
+    onemind.io/launcher-category: Geospatial
+    onemind.io/pillar-review: proposed
+  links:
+    - url: https://suncalc.org
+      title: External reference
+      icon: dashboard
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: komoot
+  title: Komoot
+  description: >-
+    External reference. Hosted outdoor route planning and discovery for hiking
+    and cycling; not a self-hosted routing backend. No OneMind installation,
+    hosting or integration verified.
+  tags:
+    - reference
+    - geospatial
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
+    onemind.io/launcher-url: https://komoot.com
+    onemind.io/launcher-category: Geospatial
+    onemind.io/pillar-review: proposed
+  links:
+    - url: https://komoot.com
+      title: External reference
+      icon: dashboard
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: adsb-exchange
+  title: ADS-B Exchange
+  description: >-
+    External reference. External aircraft monitoring and flight-data provider.
+    Any future CoT bridge requires API, licensing and redistribution review; no
+    complete coverage or flight-safety suitability claimed. No OneMind
+    installation, hosting or integration verified.
+  tags:
+    - reference
+    - intelligence
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
+    onemind.io/launcher-url: https://adsbexchange.com
+    onemind.io/launcher-category: Intelligence
+    onemind.io/pillar-review: approved
+  links:
+    - url: https://adsbexchange.com
+      title: External reference
+      icon: dashboard
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
 # Upstream reference only: deployed MediaMTX remains the OneTAK media workload.
 apiVersion: backstage.io/v1alpha1
 kind: Component

@@ -71,6 +71,8 @@ require('./test-intelligence-references.cjs');
 require('./test-hermes-ecosystem.cjs');
 // Geospatial and commerce references reuse existing canonical systems.
 require('./test-geospatial-commerce-references.cjs');
+// Mapping references preserve all thirteen owner-supplied URLs without integrations.
+require('./test-mapping-references.cjs');
 // TAK upstream references preserve canonical deployed workload identities.
 require('./test-tak-ecosystem.cjs');
 require('./test-snapshot-cluster.cjs');
