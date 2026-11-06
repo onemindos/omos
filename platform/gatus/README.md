@@ -9,7 +9,6 @@ its own UI, in Prometheus and on the portal app page.
 | File | Purpose |
 | --- | --- |
 | `endpoints.yaml` | **Generated** from the catalog. Do not edit. |
-| `test-endpoints.yaml` | One deliberate failure, `test-deliberate-failure`. |
 | `config.yaml` | Gatus settings: metrics on, in-memory storage, UI title. |
 | `deployment.yaml` | Pod (hardened), Service and the Tailscale Ingress `status`. |
 | `network.yaml` | Ingress only from the Tailscale proxy, Prometheus and the portal. |
@@ -41,11 +40,11 @@ policy that admits the `gatus` namespace before it can be checked.
 Gmail and Monarch are named in the F7 work order but have no catalog Component yet, so they have no check. Add the
 Component first, then the two annotations.
 
-## Remove the deliberate failure
+## Alert proof (done 2026-11-06)
 
-`test-deliberate-failure` points at a Service that does not exist. It is red on purpose, shows red on the Gatus page,
-and fires `GatusEndpointDown` after five minutes. Once you have seen the alert, delete `test-endpoints.yaml`, delete
-its line under `configMapGenerator` in `kustomization.yaml`, commit, and sync `platform-gatus`.
+A deliberate failing check, `test-deliberate-failure`, pointed at a Service that does not exist. It showed red and
+fired `GatusEndpointDown` after five minutes; it was then removed. To repeat the proof, add a file with one such
+endpoint, list it under `configMapGenerator` in `kustomization.yaml`, sync, and remove it again afterwards.
 
 ## Storage and backup
 
@@ -70,6 +69,6 @@ Telegram receiver (on hold).
 1. Review and merge the PR that adds this directory.
 2. Sync `platform-gatus` in Argo CD. It creates the namespace, the pod, the Tailscale Ingress `status` and the rules.
 3. Open `https://status.tail717ba0.ts.net`: the cluster and SaaS checks should be green after one interval and
-   `test-deliberate-failure` red.
+   (historical; the deliberate failure has since been removed).
 4. The portal status card reads Gatus through the `/api/proxy/gatus` route. That route ships in the portal config
    (`platform/backstage/app-config.cluster.yaml`) and needs the portal to restart after the PR merges.

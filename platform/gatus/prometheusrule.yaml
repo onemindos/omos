@@ -23,7 +23,6 @@ spec:
         description: >-
           Endpoint {{ $labels.name }} (group {{ $labels.group }}) failed its conditions on every check for 5 minutes.
           Open the app page in the portal or the Gatus UI (status on the tailnet) to see which condition failed.
-          test-deliberate-failure is expected to fire this alert until it is removed (platform/gatus/README.md).
     - alert: GatusCertificateExpiring
       # Only HTTPS endpoints export this series. 14 days = 1209600 seconds.
       expr: gatus_results_certificate_expiration_seconds{job="gatus"} < 1209600

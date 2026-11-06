@@ -60,18 +60,16 @@ class GatusApp(unittest.TestCase):
         self.assertEqual(config["storage"]["type"], "memory")
         docs = render()
         cm = next(d for d in docs if d["kind"] == "ConfigMap")
-        self.assertEqual(sorted(cm["data"]), ["config.yaml", "endpoints.yaml", "test-endpoints.yaml"])
+        self.assertEqual(sorted(cm["data"]), ["config.yaml", "endpoints.yaml"])
         # The pod mounts the whole directory, so Gatus merges every file.
         env = {e["name"]: e["value"] for e in next(d for d in docs if d["kind"] == "Deployment")["spec"]["template"]["spec"]["containers"][0]["env"]}
         self.assertEqual(env["GATUS_CONFIG_PATH"], "/config")
 
-    def test_deliberate_failure_endpoint_is_named_and_points_nowhere(self):
-        test = yaml.safe_load((APP / "test-endpoints.yaml").read_text())["endpoints"]
-        self.assertEqual([e["name"] for e in test], ["test-deliberate-failure"])
-        self.assertIn("test-deliberate-failure.gatus.svc", test[0]["url"])
+    def test_generated_endpoints_are_unique_and_no_deliberate_failure_remains(self):
         generated = yaml.safe_load((APP / "endpoints.yaml").read_text())["endpoints"]
         self.assertGreaterEqual(len(generated), 10)
-        self.assertEqual(len({e["name"] for e in generated + test}), len(generated) + len(test))
+        self.assertEqual(len({e["name"] for e in generated}), len(generated))
+        self.assertFalse((APP / "test-endpoints.yaml").exists())
 
     def test_ui_is_tailnet_only_and_metrics_are_discovered(self):
         docs = render()
