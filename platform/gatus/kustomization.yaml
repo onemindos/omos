@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: gatus
+resources:
+- namespace.yaml
+- deployment.yaml
+- network.yaml
+- servicemonitor.yaml
+- prometheusrule.yaml
+configMapGenerator:
+# The generated name suffix changes with the content, so editing a check restarts Gatus with the new config.
+- name: gatus-config
+  files:
+  - config.yaml
+  - endpoints.yaml
+  - test-endpoints.yaml

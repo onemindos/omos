@@ -1,0 +1,38 @@
+# Ingress is restricted to the three readers: the Tailscale proxy for the UI, Prometheus for /metrics and the
+# portal backend for the status card. Egress stays open on purpose: Gatus has to reach services in many
+# namespaces and public SaaS sites, so a narrower egress rule would only break checks.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: gatus-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: gatus
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: tailscale
+      podSelector:
+        matchLabels:
+          tailscale.com/parent-resource: gatus
+          tailscale.com/parent-resource-ns: gatus
+          tailscale.com/parent-resource-type: ingress
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: prometheus
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: backstage
+      podSelector:
+        matchLabels:
+          app: backstage
+    ports:
+    - protocol: TCP
+      port: 8080

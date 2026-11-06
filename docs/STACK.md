@@ -360,3 +360,14 @@ or backup is claimed. GitHub remains the working forge and Argo source.
 | Tier | Application | Namespace | State / recovery | Exposure | Status |
 | --- | --- | --- | --- | --- | --- |
 | 2 | `platform-forgejo` | `forgejo` | Rootless Forgejo 15.0.11 LTS, SQLite/Git/LFS on one 20Gi `do-block-storage-retain` claim; nightly coordinated stop plus VolSync/Restic export (`backups/restic/forgejo/data`); restore acceptance pending | Private `https://forgejo.tail717ba0.ts.net` (Tailscale ingress), local accounts, no SSH or registration; hub pool preferred | Manual Argo, not synced; [owner first sign-in and mirror pilot](../platform/forgejo/README.md#owner-first-sign-in) pending |
+
+## Gatus status checks — prepared 2026-11-05
+
+Flagship F7. Live HTTP(S) and certificate-expiry checks for apps that run outside Kubernetes (SaaS) and for
+cluster apps with no probe of their own. Source is committed but the Application is not synced, so no live
+health, hostname or alert is claimed. Endpoints are generated from catalog annotations
+(`onemind.io/health-check`, `onemind.io/health-url`); see [the app contract](catalog/app-contract.md).
+
+| Tier | Application | Namespace | State / recovery | Exposure | Status |
+| --- | --- | --- | --- | --- | --- |
+| 2 | `platform-gatus` | `gatus` | Gatus v5.37.0 pinned by digest, in-memory storage (no PVC, nothing to back up; check history resets on restart, Prometheus keeps it); requests 10m CPU / 48Mi, limits 200m / 128Mi; ecosystem pool preferred | Private `https://status.tail717ba0.ts.net` (Tailscale ingress); `/metrics` scraped by Prometheus; portal reads it through `/api/proxy/gatus/statuses` | Manual Argo, not synced; includes the deliberate failure `test-deliberate-failure` ([remove it after the alert is seen](../platform/gatus/README.md#remove-the-deliberate-failure)) |

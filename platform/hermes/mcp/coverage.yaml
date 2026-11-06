@@ -262,3 +262,7 @@ applications:
     apps:
     - forgejo
     reason: Private secondary forge owns Git mirrors and recovery state. Agent API remains disabled until authenticated read-only enrollment is reviewed.
+  platform-gatus:
+    apps:
+    - gatus
+    reason: Status checker owns the endpoint list generated from the catalog. Agent access stays disabled; check results are already readable through Prometheus.

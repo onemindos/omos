@@ -1,0 +1,49 @@
+# Picked up by the stack's ruleSelector ({}) in any namespace. Routed like the other alerts: severity warning
+# goes to the default Alertmanager route. No Telegram receiver (on hold).
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: onemind-gatus
+  labels:
+    release: monitoring
+    app: kube-prometheus-stack
+spec:
+  groups:
+  - name: onemind.gatus
+    rules:
+    - alert: GatusEndpointDown
+      # gatus_results_endpoint_success is 1 while the last check passed all conditions, 0 otherwise.
+      expr: gatus_results_endpoint_success{job="gatus"} == 0
+      for: 5m
+      labels:
+        severity: warning
+        service: gatus
+      annotations:
+        summary: "Gatus check {{ $labels.name }} has been failing for 5 minutes"
+        description: >-
+          Endpoint {{ $labels.name }} (group {{ $labels.group }}) failed its conditions on every check for 5 minutes.
+          Open the app page in the portal or the Gatus UI (status on the tailnet) to see which condition failed.
+          test-deliberate-failure is expected to fire this alert until it is removed (platform/gatus/README.md).
+    - alert: GatusCertificateExpiring
+      # Only HTTPS endpoints export this series. 14 days = 1209600 seconds.
+      expr: gatus_results_certificate_expiration_seconds{job="gatus"} < 1209600
+      for: 15m
+      labels:
+        severity: warning
+        service: gatus
+      annotations:
+        summary: "Certificate for {{ $labels.name }} expires in under 14 days"
+        description: >-
+          The TLS certificate served by endpoint {{ $labels.name }} (group {{ $labels.group }}) has less than 14 days left.
+          The provider normally renews it; if it does not, renew or contact the provider.
+    - alert: GatusDown
+      expr: absent(up{job="gatus"} == 1)
+      for: 10m
+      labels:
+        severity: warning
+        service: gatus
+      annotations:
+        summary: "Gatus is not being scraped"
+        description: >-
+          Prometheus has no healthy gatus target for 10 minutes, so endpoint alerts cannot fire.
+          Check the gatus pod in namespace gatus.

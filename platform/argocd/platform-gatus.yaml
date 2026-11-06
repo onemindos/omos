@@ -1,0 +1,21 @@
+# Manual sync: there is no `automated` block, so nothing deploys until Zeus syncs this Application in Argo CD.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-gatus
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '5'
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/gatus
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gatus
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - PruneLast=true

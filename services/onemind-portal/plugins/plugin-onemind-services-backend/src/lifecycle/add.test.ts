@@ -79,7 +79,7 @@ describe('prepareAdd', () => {
         metadata: { name: 'acme-crm', links: [{ url: 'https://crm.example.com', title: 'Open application' }] },
         spec: { owner: 'group:default/onemind-admins', system: 'productivity-saas' },
       });
-      expect(added.metadata.annotations['onemind.io/hosting']).toBe('external-provider');
+      expect(added.metadata.annotations['onemind.io/hosting']).toBe('saas');
     }
     expect(result.files.get(apps[0])).toBe(result.files.get(apps[1]));
     expect([...result.files.keys()]).not.toContain('services/onemind-portal/catalog/workload-map.yaml');

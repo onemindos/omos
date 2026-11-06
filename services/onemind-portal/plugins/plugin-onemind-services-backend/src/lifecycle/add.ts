@@ -47,9 +47,9 @@ export type AddResult = {
 const NAME = /^[a-z][a-z0-9-]{2,39}$/;
 const HOSTING_ANNOTATION: Record<Hosting, string> = {
   kubernetes: 'digitalocean-nyc3',
-  digitalocean: 'digitalocean-nyc3',
-  saas: 'external-provider',
-  'home-device': 'private-mesh',
+  digitalocean: 'digitalocean',
+  saas: 'saas',
+  'home-device': 'home',
 };
 
 export class LifecycleInputError extends Error {
@@ -105,8 +105,11 @@ export function catalogEntity(p: AddParams) {
     'onemind.io/inventory-review': 'proposed',
     'onemind.io/pillar-review': 'proposed',
   };
-  if (p.healthCheck === 'url' && p.healthUrl)
-    annotations['onemind.io/health-check'] = p.healthUrl;
+  // F7 contract: health-check is the Gatus endpoint name, health-url is what Gatus probes.
+  if (p.healthCheck === 'url' && p.healthUrl) {
+    annotations['onemind.io/health-check'] = p.name;
+    annotations['onemind.io/health-url'] = p.healthUrl;
+  }
   const metadata: Record<string, unknown> = {
     name: p.name,
     title: p.title,

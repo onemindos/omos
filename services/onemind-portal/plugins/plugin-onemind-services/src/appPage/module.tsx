@@ -57,6 +57,32 @@ export const statusSummaryCard = EntityCardBlueprint.make({
   },
 });
 
+/** Uptime check from Gatus: only apps that declare `onemind.io/health-check` get this card. */
+export const gatusStatusCard = EntityCardBlueprint.make({
+  name: 'onemind-gatus-status',
+  params: {
+    type: 'content',
+    filter: e => kindIs('component')(e) && !!(e as unknown as Filterable).metadata.annotations?.['onemind.io/health-check'],
+    loader: async () => {
+      const { GatusStatusCard } = await import('./GatusStatusCard');
+      return <GatusStatusCard />;
+    },
+  },
+});
+
+/** Owner, hosting, plan, renewal, export, backup, recovery and access; "Not recorded" for what nobody wrote down. */
+export const factsCard = EntityCardBlueprint.make({
+  name: 'onemind-app-facts',
+  params: {
+    type: 'info',
+    filter: e => kindIs('component')(e),
+    loader: async () => {
+      const { FactsCard } = await import('./FactsCard');
+      return <FactsCard />;
+    },
+  },
+});
+
 export const keyLinksCard = EntityCardBlueprint.make({
   name: 'onemind-key-links',
   params: {
@@ -130,6 +156,8 @@ export const standardAppPageModule = createFrontendModule({
     appStatusApiExtension,
     appHeaderExtension,
     statusSummaryCard,
+    gatusStatusCard,
+    factsCard,
     keyLinksCard,
     membersStatusCard,
     logsContent,

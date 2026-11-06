@@ -165,3 +165,79 @@ describe('MembersStatusCard', () => {
     await waitFor(() => expect(screen.getByRole('alert').textContent).toMatch(/could not be loaded/));
   });
 });
+
+import { discoveryApiRef, fetchApiRef } from '@backstage/core-plugin-api';
+import { FactsCard } from './FactsCard';
+import { GatusStatusCard } from './GatusStatusCard';
+
+describe('FactsCard', () => {
+  it('shows recorded facts and "Not recorded" for the rest', async () => {
+    await renderInTestApp(
+      <EntityProvider entity={component('dropbox', { 'onemind.io/hosting': 'external-provider-unverified', 'onemind.io/renewal': '2027-01-31' })}>
+        <FactsCard />
+      </EntityProvider>,
+      { mountedRoutes },
+    );
+    expect(screen.getByText('App facts')).toBeTruthy();
+    expect(screen.getByTestId('fact-Renewal').textContent).toBe('2027-01-31');
+    expect(screen.getByTestId('fact-Hosting').textContent).toBe('SaaS');
+    for (const label of ['Plan', 'Data export', 'Backup location', 'Recovery', 'Who has access'])
+      expect(screen.getByTestId(`fact-${label}`).textContent).toBe('Not recorded');
+  });
+});
+
+describe('GatusStatusCard', () => {
+  const apis = (respond: () => Promise<Response>) =>
+    [
+      [discoveryApiRef, { getBaseUrl: async () => 'http://x/api/proxy' }],
+      [fetchApiRef, { fetch: jest.fn(respond) }],
+    ] as never;
+  const app = component('dropbox', { 'onemind.io/health-check': 'dropbox' });
+  const json = (body: unknown, status = 200) => async () => new Response(JSON.stringify(body), { status });
+  const nowIso = () => new Date().toISOString();
+
+  it('shows up, last check, response time and certificate', async () => {
+    await renderInTestApp(
+      <TestApiProvider apis={apis(json([{ name: 'dropbox', results: [{ success: true, timestamp: nowIso(), duration: 250_000_000, status: 200, conditionResults: [{ condition: '[CERTIFICATE_EXPIRATION] > 336h', success: true }] }] }]))}>
+        <EntityProvider entity={app}><GatusStatusCard /></EntityProvider>
+      </TestApiProvider>,
+      { mountedRoutes },
+    );
+    await waitFor(() => expect(screen.getByTestId('gatus-response').textContent).toMatch(/250 ms/));
+    expect(screen.getByText('Healthy')).toBeTruthy();
+    expect(screen.getByTestId('gatus-last-check').textContent).toMatch(/Last check/);
+    expect(screen.getByTestId('gatus-certificate').textContent).toMatch(/more than 14 days/);
+  });
+
+  it('shows down with the failing condition', async () => {
+    await renderInTestApp(
+      <TestApiProvider apis={apis(json([{ name: 'dropbox', results: [{ success: false, timestamp: nowIso(), conditionResults: [{ condition: '[STATUS] < 400', success: false }] }] }]))}>
+        <EntityProvider entity={app}><GatusStatusCard /></EntityProvider>
+      </TestApiProvider>,
+      { mountedRoutes },
+    );
+    await waitFor(() => expect(screen.getByText('Down')).toBeTruthy());
+    expect(screen.getByTestId('gatus-failing').textContent).toMatch(/STATUS/);
+  });
+
+  it('is never green when Gatus is unreachable or has no result', async () => {
+    await renderInTestApp(
+      <TestApiProvider apis={apis(json({}, 502))}>
+        <EntityProvider entity={app}><GatusStatusCard /></EntityProvider>
+      </TestApiProvider>,
+      { mountedRoutes },
+    );
+    await waitFor(() => expect(screen.getByRole('alert').textContent).toMatch(/not reachable/));
+    expect(screen.queryByText('Healthy')).toBeNull();
+  });
+
+  it('says not checked yet when the endpoint is absent (history resets on restart)', async () => {
+    await renderInTestApp(
+      <TestApiProvider apis={apis(json([]))}>
+        <EntityProvider entity={app}><GatusStatusCard /></EntityProvider>
+      </TestApiProvider>,
+      { mountedRoutes },
+    );
+    await waitFor(() => expect(screen.getByText(/Not checked yet/)).toBeTruthy());
+  });
+});

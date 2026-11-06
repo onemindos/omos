@@ -1,0 +1,23 @@
+{
+  "canonical": {
+    "kubernetes": "Runs on the OneMind Kubernetes cluster (DOKS).",
+    "digitalocean": "Other DigitalOcean infrastructure that is not Kubernetes (droplet, managed database, Spaces, App Platform).",
+    "saas": "A provider-hosted service we use as a customer (Zoho, Gmail, Dropbox, 1Password and similar).",
+    "home": "Home, edge or on-premises service reached over the tailnet or a leaf node.",
+    "device": "A physical device or vehicle firmware.",
+    "desktop": "A desktop application installed on a computer.",
+    "mobile": "A mobile application installed on a phone or tablet.",
+    "web": "A reference website. Not an app OneMind runs or depends on operationally.",
+    "planned": "Recorded for future use; not deployed anywhere yet.",
+    "unknown": "Hosting has not been established. Shown visibly, never hidden."
+  },
+  "legacy": {
+    "digitalocean-nyc3": "kubernetes (when the entity carries an Argo, workload or Kubernetes selector annotation), otherwise digitalocean",
+    "external-provider-unverified": "saas",
+    "mesh-endpoint-unverified": "home",
+    "native-application": "desktop",
+    "vehicle-firmware": "device",
+    "external-website": "web",
+    "planned-not-deployed": "planned"
+  }
+}

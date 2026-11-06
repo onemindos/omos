@@ -1027,6 +1027,8 @@ metadata:
     onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
     onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
+    onemind.io/health-check: element-chat
+    onemind.io/health-url: http://element-web.matrix.svc.cluster.local/
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
     backstage.io/kubernetes-namespace: matrix
@@ -1068,6 +1070,8 @@ metadata:
     onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
     onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
+    onemind.io/health-check: matrix-synapse
+    onemind.io/health-url: http://synapse.matrix.svc.cluster.local:8008/health
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
     argocd/app-name: platform-matrix
@@ -1265,7 +1269,7 @@ metadata:
     onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: certificate-untrusted-from-operator-mac
     onemind.io/inventory-review: imported-link
-    onemind.io/hosting: external-provider-unverified
+    onemind.io/hosting: digitalocean-nyc3
     argocd/app-name: platform-takserver
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
@@ -1325,7 +1329,7 @@ metadata:
     onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
-    onemind.io/hosting: external-provider-unverified
+    onemind.io/hosting: digitalocean-nyc3
     onemind.io/documented-purpose: OneMind fork of CloudTAK — AI-native, NATS-fabric TAK COP platform
     onemind.io/documented-host: ☁️ DOKS Cluster
     onemind.io/documented-status: ⚠️ Degraded
@@ -1709,6 +1713,8 @@ metadata:
         }
       ]
     onemind.io/hosting: digitalocean-nyc3
+    onemind.io/health-check: grafana
+    onemind.io/health-url: http://monitoring-grafana.monitoring.svc.cluster.local/api/health
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
     onemind.io/documented-purpose: Dashboards — Prometheus metrics, Loki logs, Tempo traces
@@ -1879,7 +1885,7 @@ metadata:
     onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
-    onemind.io/hosting: mesh-endpoint-unverified
+    onemind.io/hosting: digitalocean-nyc3
     onemind.io/tech-stack-status: Active
     onemind.io/tech-stack-category: Database
     onemind.io/license: Open Source
@@ -2051,7 +2057,9 @@ metadata:
     onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
-    onemind.io/hosting: mesh-endpoint-unverified
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/health-check: prometheus
+    onemind.io/health-url: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090/-/healthy
     onemind.io/tech-stack-status: Active
     onemind.io/tech-stack-category: DevOps / Infra
     onemind.io/license: Open Source
@@ -2123,7 +2131,7 @@ metadata:
         }
       ]
     onemind.io/inventory-review: imported-link
-    onemind.io/hosting: mesh-endpoint-unverified
+    onemind.io/hosting: digitalocean-nyc3
     onemind.io/documented-purpose: NATS cluster health monitor — scrapes JetStream
       stats and exports Prometheus metrics
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -2267,7 +2275,7 @@ metadata:
         }
       ]
     onemind.io/inventory-review: imported-link
-    onemind.io/hosting: external-provider-unverified
+    onemind.io/hosting: digitalocean-nyc3
     onemind.io/documented-purpose: Drone image processing & photogrammetry
     onemind.io/documented-host: ☁️ DOKS Cluster
     onemind.io/documented-status: ✅ Live
@@ -2317,6 +2325,8 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/health-check: zoho-one
+    onemind.io/health-url: https://www.zoho.com
     onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
@@ -2637,6 +2647,8 @@ metadata:
       ]
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/health-check: 1password
+    onemind.io/health-url: https://1password.com
     onemind.io/documented-purpose: Secrets management — all credentials, API keys,
       service accounts across 5 vaults (SO, HP, LE, GE, Review)
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -2696,6 +2708,8 @@ metadata:
       ]
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/health-check: dropbox
+    onemind.io/health-url: https://www.dropbox.com
     onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
@@ -7060,7 +7074,9 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
-    onemind.io/hosting: external-provider-unverified
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/health-check: loki
+    onemind.io/health-url: http://loki.monitoring.svc.cluster.local:3100/ready
     onemind.io/documented-status: Active
     onemind.io/documented-category: DevOps / Infra
     onemind.io/license: Open Source
@@ -7683,6 +7699,7 @@ metadata:
   annotations:
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/forgejo
     onemind.io/deployment-status: prepared-not-deployed
+    onemind.io/hosting: digitalocean-nyc3
     argocd/app-name: platform-forgejo
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
@@ -7702,6 +7719,39 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: developer-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: gatus
+  title: Gatus status checks
+  description: Live HTTP(S) checks and certificate expiry for apps that run
+    outside Kubernetes or have no probe of their own. Prepared with manual Argo;
+    not synced.
+  annotations:
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/gatus
+    onemind.io/deployment-status: prepared-not-deployed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/health-check: gatus
+    onemind.io/health-url: http://gatus.gatus.svc.cluster.local:8080/health
+    argocd/app-name: platform-gatus
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/gatus/
+    github.com/project-slug: onemindos/omos
+  tags:
+    - gatus
+    - monitoring
+    - planned
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: observability
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -7785,6 +7835,8 @@ metadata:
     backstage.io/techdocs-entity: component:default/onemind-runbooks
     backstage.io/techdocs-entity-path: /tier1/ingress-nginx/
     onemind.io/hosting: digitalocean-nyc3
+    onemind.io/health-check: ingress-nginx
+    onemind.io/health-url: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/healthz
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: edge-ingress-nginx
     argocd/instance-name: onemind-cloud
@@ -7966,6 +8018,8 @@ metadata:
     backstage.io/techdocs-entity: component:default/onemind-runbooks
     backstage.io/techdocs-entity-path: /tier1/authentik/
     onemind.io/hosting: digitalocean-nyc3
+    onemind.io/health-check: authentik
+    onemind.io/health-url: http://platform-auth-helm-authentik-server.auth.svc.cluster.local/-/health/live/
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-auth-helm
     argocd/instance-name: onemind-cloud
@@ -8131,6 +8185,8 @@ metadata:
   description: The OneMind developer portal and its PostgreSQL database.
   annotations:
     onemind.io/hosting: digitalocean-nyc3
+    onemind.io/health-check: backstage
+    onemind.io/health-url: http://backstage.backstage.svc.cluster.local:7007/healthcheck
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-backstage
     argocd/instance-name: onemind-cloud
@@ -8192,6 +8248,8 @@ metadata:
   description: Kubernetes cost allocation.
   annotations:
     onemind.io/hosting: digitalocean-nyc3
+    onemind.io/health-check: opencost
+    onemind.io/health-url: http://opencost.opencost.svc.cluster.local:9003/healthz
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: ecosystem-opencost
     argocd/instance-name: onemind-cloud
