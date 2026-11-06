@@ -32,7 +32,7 @@ takserver:
   config:                   # centralized config service (starts first)
     image: {repository: ghcr.io/onemindos/takserver-base, tag: "config-5.8-onemind"}
     replicas: 1
-    resources: {requests: {cpu: 1, memory: 1Gi}, limits: {cpu: 1, memory: 1Gi}}
+    resources: {requests: {cpu: 250m, memory: 512Mi}, limits: {cpu: 1, memory: 1Gi}}
 
   # messaging = the device-load tier (CoT/TCP 8089). SCALE THIS as EUD count grows (HPA-ready).
   messaging:
@@ -43,12 +43,12 @@ takserver:
     enrollmentSignerSecret: tak-ca-credentials
     image: {repository: ghcr.io/onemindos/takserver-base, tag: "messaging-5.8-onemind"}
     replicas: 1
-    resources: {requests: {cpu: 1, memory: 1.5Gi}, limits: {cpu: 2, memory: 2Gi}}
+    resources: {requests: {cpu: 250m, memory: 1Gi}, limits: {cpu: 2, memory: 2Gi}}
 
   api:                      # Marti API / WebTAK / cert enrollment
     image: {repository: ghcr.io/onemindos/takserver-base, tag: "api-5.8-onemind"}
     replicas: 1
-    resources: {requests: {cpu: 1, memory: 1.5Gi}, limits: {cpu: 2, memory: 2.5Gi}}
+    resources: {requests: {cpu: 250m, memory: 1280Mi}, limits: {cpu: 2, memory: 2.5Gi}}
 
   # plugins tier: the tag below is the UPSTREAM build without the NatsBridgePlugin
   # (build-takserver.yml); the OneMind overlay with the plugin is plugins-5.8-onemind. The
