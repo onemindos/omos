@@ -16,6 +16,7 @@ resources:
   - grafana.sealedsecret.yaml
   - digitalocean.sealedsecret.yaml
   - portal-nats-creds.sealedsecret.yaml
+  - portal-nats-ca.sealedsecret.yaml
   - argocd-ingress.yaml
 configMapGenerator:
   - name: backstage-cluster-config
