@@ -26,8 +26,6 @@ spec:
     repoURL: https://github.com/onemindos/omos.git
     targetRevision: main
     path: platform/omos/entity
-    directory:
-      recurse: false
   destination:
     server: https://kubernetes.default.svc
     namespace: omos
