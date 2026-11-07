@@ -21,11 +21,12 @@ COPY . .
 RUN --mount=type=cache,target=/root/.yarn/berry/cache,sharing=locked \
     yarn install --immutable
 RUN yarn tsc
-RUN yarn test --watch=false --runInBand plugins/plugin-onemind-permissions-backend/src plugins/plugin-onemind-auth/src/scopedFetch.test.ts plugins/plugin-onemind-auth-backend/src/subject.test.ts plugins/plugin-onemind-org-backend/src
+RUN yarn test --watch=false --runInBand plugins/plugin-onemind-permissions-backend/src plugins/plugin-onemind-auth/src/scopedFetch.test.ts plugins/plugin-onemind-auth-backend/src/subject.test.ts plugins/plugin-onemind-org-backend/src plugins/plugin-onemind-ops/src
 RUN yarn workspace app test --watch=false --runInBand ComponentOverview.test.tsx componentOverviewModule.test.ts catalogCompositionModules.test.ts prometheusApi.test.ts prometheusPlugin.test.ts PrometheusAlerts.test.tsx
 RUN yarn test --watch=false --runInBand plugins/plugin-onemind-common-backend/src/evidenceHttp.test.ts plugins/plugin-onemind-services-backend/src/prometheusAlerts.test.ts plugins/plugin-onemind-services-backend/src/prometheusRoutes.test.ts
 RUN node --test scripts/test-audit-catalog.cjs scripts/test-topology.cjs
 RUN bash scripts/build-techdocs.sh
+RUN node scripts/copy-cesium-assets.cjs && node scripts/copy-cesium-assets.cjs --check
 RUN yarn build:backend
 
 FROM node:22.23.3-bookworm-slim AS runtime

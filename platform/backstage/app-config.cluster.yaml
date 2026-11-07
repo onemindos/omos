@@ -26,8 +26,11 @@ search:
 backend:
   csp:
     frame-src: ["'self'", "https://grafana.tail717ba0.ts.net"]
-    connect-src: ["'self'", 'https://api.github.com']
-    img-src: ["'self'", 'data:', 'https://avatars.githubusercontent.com']
+    # Ops Center globe (CesiumJS): OpenStreetMap tiles are fetched from tile.openstreetmap.org, and Cesium
+    # starts its workers from this origin or a blob. No Cesium Ion host is needed or allowed.
+    connect-src: ["'self'", 'https://api.github.com', 'https://tile.openstreetmap.org']
+    img-src: ["'self'", 'data:', 'blob:', 'https://avatars.githubusercontent.com', 'https://tile.openstreetmap.org']
+    worker-src: ["'self'", 'blob:']
   database:
     knexConfig:
       pool:

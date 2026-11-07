@@ -7,8 +7,8 @@
     "role": "frontend"
   },
   "scripts": {
-    "start": "backstage-cli package start",
-    "build": "backstage-cli package build",
+    "start": "node ../../scripts/copy-cesium-assets.cjs && backstage-cli package start",
+    "build": "node ../../scripts/copy-cesium-assets.cjs && backstage-cli package build",
     "clean": "backstage-cli package clean",
     "test": "backstage-cli package test",
     "lint": "backstage-cli package lint"
@@ -64,6 +64,7 @@
     "@internal/plugin-onemind-missions": "workspace:^",
     "@internal/plugin-onemind-nav": "workspace:^",
     "@internal/plugin-onemind-offline": "workspace:^",
+    "@internal/plugin-onemind-ops": "workspace:^",
     "@internal/plugin-onemind-radar": "workspace:^",
     "@internal/plugin-onemind-services": "workspace:^",
     "@internal/plugin-onemind-systems": "workspace:^",

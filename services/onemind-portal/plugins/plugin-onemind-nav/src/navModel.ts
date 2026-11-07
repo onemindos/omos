@@ -82,6 +82,14 @@ export const NAV_GROUPS: GroupSpec[] = [
         ids: ['page:onemind-live'],
         href: '/live',
       },
+      // Real-time globe, bus stream and cluster grid (plugin-onemind-ops).
+      {
+        key: 'ops-center',
+        title: 'Ops Center',
+        icon: 'liveOps',
+        ids: ['page:onemind-ops'],
+        href: '/ops',
+      },
       // Today (inbox, calendar, work) keeps its own entry now that Live Ops has the page.
       { key: 'today', title: 'Today', icon: 'insights', href: '/today' },
       // Notifications render as NotificationsSidebarItem (live unread badge).

@@ -2,3 +2,4 @@ dist
 dist-types
 coverage
 .vscode
+plugins/plugin-onemind-ops/src/contract.ts
