@@ -48,9 +48,9 @@ def main():
         pending.append((OUTPUT / (ns + "--" + name + ".json"), sealed))
 
     roles = {n: secrets.token_urlsafe(40) for n in
-             ["onemind", "dapr_workflows", "litellm", "openfga", "langfuse"]}
+             ["onemind", "dapr_workflows", "openfga", "langfuse"]}
     app_namespaces = {"onemind": "onemind-core", "dapr_workflows": "onemind-core",
-                      "litellm": "onemind-ai", "openfga": "onemind-core",
+                      "openfga": "onemind-core",
                       "langfuse": "onemind-ai"}
     uris = {}
     for role, password in roles.items():
@@ -61,16 +61,13 @@ def main():
         uris[role] = uri
         add(app_namespaces[role], role.replace("_", "-") + "-db", {**pair, "uri": uri})
 
-    # LiteLLM was retired 2026-11-06: its auth, client-key and provider secrets are no longer generated.
-    # The model gateway key below is only kept so the core-runtime secret keeps its shape (onemind-core model_summary still points at the retired LiteLLM URL).
-    core_model_key = "sk-" + secrets.token_urlsafe(40)
+    # LiteLLM was retired 2026-11-06: its secrets are no longer generated. onemind-core runs with model summaries disabled
+    # (no MODEL_GATEWAY_URL) until a model endpoint is configured.
     gateway = secrets.token_urlsafe(48)
     nats = existing("hermes", "omos-nats-creds")
     add("onemind-core", "core-runtime", {
         "DATABASE_URL": uris["onemind"], "UI_GATEWAY_KEY": gateway,
         "READ_API_KEY": secrets.token_urlsafe(48),
-        "MODEL_GATEWAY_URL": "http://litellm.onemind-ai.svc.cluster.local:4000/v1",
-        "MODEL_GATEWAY_KEY": core_model_key,
         "NATS_URL": "nats://nats.nats.svc.cluster.local:4222",
         "NATS_USER": nats["user"], "NATS_PASSWORD": nats["password"],
     })

@@ -649,8 +649,8 @@ Zoho, Whop and Todoist services, TLS to the cluster NATS, and Desktop's UI. Thos
 
 - Ollama Cloud fallback: the key lives in the credential pool (`ollama-pro`), so no `OLLAMA_API_KEY` is needed in
   `onemind-hermes-runtime`. Add a second pool entry if a spare key is wanted.
-- `ONEMIND_LITELLM_MCP_KEY` is still in the sealed `onemind-hermes-runtime` Secret and the pod environment. Nothing
-  reads it since the LiteLLM MCP hub was retired (Phase 6); drop it at the next re-seal of that Secret.
+- `ONEMIND_LITELLM_MCP_KEY` was removed from the sealed `onemind-hermes-runtime` Secret (2026-11-06); nothing read it
+  since the LiteLLM MCP hub was retired (Phase 6).
 
 ## Cleanup after cutover
 

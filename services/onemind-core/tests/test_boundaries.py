@@ -85,3 +85,9 @@ def test_cancelled_mission_cannot_start_an_activity(monkeypatch):
     monkeypatch.setattr(store, "mission", lambda mid: {"state": "cancelled"})
     with pytest.raises(RuntimeError, match="cancelled"):
         execute_capability.__wrapped__(None, {"id": "mission"})
+
+
+def test_model_summary_disabled_without_gateway(monkeypatch):
+    from onemind import capabilities
+    monkeypatch.delenv("MODEL_GATEWAY_URL", raising=False)
+    assert "disabled" in capabilities.model_summary("p", {})
