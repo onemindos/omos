@@ -1,0 +1,7 @@
+# mta-resources.yaml — shared resources for feed-mta.yaml (loaded with -r; streams mode rejects
+# cache_resources inside a stream config).
+cache_resources:
+  - label: mta_last_position
+    memory:
+      default_ttl: 300s
+      compaction_interval: 30s
