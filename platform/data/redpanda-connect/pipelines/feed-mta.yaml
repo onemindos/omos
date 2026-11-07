@@ -6,11 +6,8 @@
 # longer than the heartbeat, so a parked train does not drop off TAK.
 # The MTA feeds carry no speed or bearing, so the CoT <track> element is omitted.
 
-cache_resources:
-  - label: mta_last_position
-    memory:
-      default_ttl: 300s
-      compaction_interval: 30s
+# The dedupe cache `mta_last_position` is defined in mta-resources.yaml: streams mode only
+# accepts resources from a file passed with -r, not inside a stream config.
 
 input:
   generate:

@@ -25,6 +25,15 @@ metadata:
   name: redpanda-connect-pipelines
   namespace: omos
 data:
+  mta-resources.yaml: |
+    # mta-resources.yaml — shared resources for feed-mta.yaml (loaded with -r; streams mode rejects
+    # cache_resources inside a stream config).
+    cache_resources:
+      - label: mta_last_position
+        memory:
+          default_ttl: 300s
+          compaction_interval: 30s
+
   feed-mta.yaml: |
     # feed-mta.yaml — MTA Metro-North + LIRR GTFS-realtime vehicle positions → CoT → tak.cot.inject
     #
@@ -34,11 +43,8 @@ data:
     # longer than the heartbeat, so a parked train does not drop off TAK.
     # The MTA feeds carry no speed or bearing, so the CoT <track> element is omitted.
 
-    cache_resources:
-      - label: mta_last_position
-        memory:
-          default_ttl: 300s
-          compaction_interval: 30s
+    # The dedupe cache `mta_last_position` is defined in mta-resources.yaml: streams mode only
+    # accepts resources from a file passed with -r, not inside a stream config.
 
     input:
       generate:
@@ -150,6 +156,7 @@ data:
         tls:
           enabled: true
           skip_cert_verify: true
+
   feed-hazards.yaml: |
     cache_resources:
       - label: seen_hazards
@@ -563,8 +570,8 @@ spec:
       annotations:
         # Redpanda Connect does not hot-reload pipelines. A ConfigMap volume change
         # alone does not restart the pod, so bump this to the sha256 of
-        # pipelines/feed-mta.yaml whenever that file changes to force a rollout.
-        onemind.io/feed-mta-config-sha256: "2d269e617fce4d557fc929e630efb5214e18bbed28ebef26d877ea15d51428c3"
+        # pipelines/feed-mta.yaml + pipelines/mta-resources.yaml (concatenated) whenever they change.
+        onemind.io/feed-mta-config-sha256: "a4f7088a55ca7ad9d657dc88f7c4a162191782f772d58160ed7e543b798e690c"
       labels:
         app.kubernetes.io/name: redpanda-connect
         app.kubernetes.io/part-of: omos-feeds
@@ -572,7 +579,7 @@ spec:
       containers:
         - name: connect
           image: redpandadata/connect@sha256:b462939a6d7c265df7d6584925a5070beabaf5bc84d35180219e247f438b64ac
-          args: ["streams", "--chilled", "/config/pipelines/feed-mta.yaml"]
+          args: ["-r", "/config/pipelines/mta-resources.yaml", "streams", "--chilled", "/config/pipelines/feed-mta.yaml"]
           env:
             - name: NATS_USER
               valueFrom:
