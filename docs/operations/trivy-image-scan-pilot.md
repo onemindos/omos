@@ -17,7 +17,7 @@ commands inside application pods. Authentik's login program is separate.
 | Helm child | `ecosystem-trivy-operator`, release `trivy-operator`, namespace `trivy-system`, sync wave 5, prune off, no cascading finalizer |
 | Chart | Aqua `trivy-operator` **0.37.0**, operator **0.35.0**, scanner **0.75.0**; archive checksum in both chart metadata/verified foundation lock as appropriate |
 | Image references | Operator and scanner index digests pinned in `platform/ecosystem/values/trivy-operator.yaml`; observed public mirror manifest digests on preparation date |
-| Workloads | Current ReplicaSets and StatefulSets in **auth,nats,onetak,n8n**, including ordinary and init containers. Public images are scanned; the three private `ghcr.io/onemindos` images are **not** (see Private images) |
+| Workloads | Current ReplicaSets and StatefulSets in **auth,nats,onetak,n8n**, including ordinary and init containers. Public images are scanned; the private `ghcr.io/onemindos` image (`tak-portal`) is **not** (see Private images) |
 | Scan jobs | In `trivy-system`; **one concurrent Job**, 15-minute Job deadline, 12-minute scanner timeout, 5-minute retry delay/cleanup TTL |
 | Reports | Namespaced `VulnerabilityReport`; 24-hour TTL triggers refresh, and workload changes trigger new reports |
 | Optional scanners | Configuration, RBAC, nodes/host filesystem, compliance, secret and SBOM generation/cache **disabled**; no compliance specs instantiated |
@@ -60,12 +60,13 @@ Recheck these facts and node ephemeral storage before merge/rollout; they can ch
 
 Workload inventory re-read from the cluster on **2026-11-04** (read-only; current,
 non-zero-replica ReplicaSets and StatefulSets): **21 controllers, 24 ordinary
-containers and 1 init container**.
+containers and 1 init container**. On 2026-11-07 NUI replaced heynats, nats-dashboard and nats-ui (a public image),
+which leaves 19 controllers and 22 ordinary containers; the counts below were not re-read.
 
 | Namespace | Controllers | Containers (init) |
 |---|---|---|
 | `auth` | 4: authentik server, worker, redis, postgres | 4 |
-| `nats` | 7: nats StatefulSet (nats + reloader), nack, heynats, nats-dashboard, nats-ui, nats-surveyor, leafz-exporter | 8 |
+| `nats` | 5: nats StatefulSet (nats + reloader), nack, nui, nats-surveyor, leafz-exporter | 6 |
 | `onetak` | 8: nodeodm, mediamtx, tak-portal, tile38, tileserver-gl, webodm (webapp + worker), webodm-broker, webodm-db | 9 (+1 init: `fix-perms` busybox) |
 | `n8n` | 2: n8n (n8n + task-runners), postgres | 3 |
 
@@ -82,13 +83,11 @@ timeout is recorded.
 
 No registry credential is created or copied (`privateRegistryScanSecretsNames: {}`,
 `accessGlobalSecretsAndServiceAccount: false`, no Secret read outside `trivy-system`).
-These three `ghcr.io/onemindos` images, which pods pull with the `ghcr` image pull
+This `ghcr.io/onemindos` image, which pods pull with the `ghcr` image pull
 secret, **cannot be scanned**:
 
 | Namespace | Workload | Image |
 |---|---|---|
-| `nats` | `heynats` | `ghcr.io/onemindos/heynats@sha256:65f1d5aa...` |
-| `nats` | `nats-dashboard` | `ghcr.io/onemindos/nats-dashboard@sha256:bccc7a25...` |
 | `onetak` | `tak-portal` | `ghcr.io/onemindos/tak-portal@sha256:eaa14729...` |
 
 The scanner pulls anonymously, is refused, and its container fails. In pinned operator
@@ -99,7 +98,7 @@ that workload, no row in the Grafana table (No data), a failed-scan log line in 
 operator, and an events/Job failure in `trivy-system`. It must never be read as
 clean. The operator may attempt the scan again on a later reconcile (operator
 restart, workload change, cache resync); count those attempts during acceptance.
-Other `ghcr.io` images (`goauthentik/server`, `gastbob40/nats-ui`) are public.
+Other `ghcr.io` images (`goauthentik/server`, `nats-nui/nui`) are public.
 
 - Operator request **50m / 128Mi**, limit **500m / 512Mi**; ephemeral storage
   request 64Mi, limit 256Mi.
@@ -109,8 +108,8 @@ Other `ghcr.io` images (`goauthentik/server`, `gastbob40/nats-ui`) are public.
   maximum, limits 4Gi plus the operator's 512Mi (4.5Gi, within the 5Gi quota). This
   is capacity planning from the current workload set, not a universal per-Job maximum.
   The 4 target namespaces add controllers but not concurrency: still **one Job at a
-  time**, so the 21 workloads are scanned serially. Because the 5-minute push-back
-  applies to the 20 waiting workloads, the first full pass can take well over an hour;
+  time**, so the 19 workloads are scanned serially. Because the 5-minute push-back
+  applies to the 18 waiting workloads, the first full pass can take well over an hour;
   this is accepted for a pilot and not tuned.
 - Namespace quota caps total requests at **1 CPU / 2Gi memory / 4Gi ephemeral**
   and limits at **3 CPU / 5Gi memory / 10Gi ephemeral**, with four pods and five
@@ -203,13 +202,13 @@ there is no imperative Helm installation or `kubectl apply` step.
    unchanged; NATS (3-node JetStream) and Authentik are the sensitive ones.
 5. For **each current pilot ReplicaSet/StatefulSet container and init container**,
    enumerate image references/digests and match an actual VulnerabilityReport.
-   Cover all four namespaces (21 controllers). Compare report scanner version,
+   Cover all four namespaces (19 controllers). Compare report scanner version,
    artifact digest, creationTimestamp, summary and a sample package/fixed version.
    Mutable target image tags may move: confirm report digest against running
    `status.containerStatuses[].imageID`. Inactive ReplicaSets are intentionally
    excluded. A private-image failure, OOM, timeout or absent report stays visible
-   as incomplete coverage. Expect exactly three missing reports (`heynats`,
-   `nats-dashboard`, `tak-portal`, private images) and verify the failures are
+   as incomplete coverage. Expect exactly one missing report (`tak-portal`, a
+   private image) and verify the failures are
    logged, not looping. Do not add credentials or change application images
    automatically to obtain a successful report.
 6. Prometheus target must be discovered/up and emit

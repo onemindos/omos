@@ -1369,22 +1369,18 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: nats-dashboard
-  title: NATS Dashboard
-  description: NATS stream monitor
+  name: nui
+  title: NUI
+  description: NATS web UI (official nats-nui/nui) with the in-cluster bus preconfigured
   tags:
-    - ai-agents
+    - messaging
     - deployment-verified
   links:
-    - url: https://nats-dashboard-1.tail717ba0.ts.net/
+    - url: https://nui.tail717ba0.ts.net/
       title: Open application
       icon: dashboard
-    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8123b817ccdf71662d03.md
-      title: "Archived registry: NATS Dashboard"
     - url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
       title: Operations runbook
-    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8123b817ccdf71662d03.md
-      title: "Archived registry: NATS Dashboard"
   annotations:
     onemind.io/access-points: |-
       [
@@ -1395,36 +1391,26 @@ metadata:
           "method": "Kubernetes",
           "location": "OneMind Cloud — NYC3",
           "targetRef": "resource:default/do-nyc3-omos-cloud",
-          "url": "https://nats-dashboard-1.tail717ba0.ts.net/",
-          "evidence": "Catalog snapshot",
-          "observedAt": "2026-10-06"
+          "url": "https://nui.tail717ba0.ts.net/",
+          "evidence": "Ingress nats/nui",
+          "observedAt": "2026-11-07"
         }
       ]
     grafana/dashboard-selector: nats
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
-    onemind.io/inventory-review: imported-link
-    onemind.io/documented-purpose: Primary NATS observability UI — cluster health,
-      streams, consumers, subjects
-    onemind.io/documented-host: ☁️ DOKS Cluster
-    onemind.io/documented-status: ✅ Live
-    onemind.io/documented-category: 🚌 NATS
-    onemind.io/documented-at: 2026-09-03 07:33:16Z
-    onemind.io/registry-review: source-reviewed-runtime-unverified
-    onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
-    onemind.io/runtime-evidence: Deployment nats/nats-dashboard; Service nats/nats-dashboard
-    onemind.io/documented-address: https://nats-dashboard.tail717ba0.ts.net
+    onemind.io/launcher-url: https://nui.tail717ba0.ts.net/
+    onemind.io/runtime-evidence: Deployment nats/nui; Service nats/nui
     backstage.io/kubernetes-namespace: nats
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nats-dashboard
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nui
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: nats
     grafana/alert-label-selector: namespace=nats
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nats-dashboard
-    onemind.io/logs-query: '{k8s_namespace_name="nats", k8s_pod_name=~"(nats-dashboard)-.*"}'
-    onemind.io/recovery-runbook: apps/nats-dashboard/
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nui
+    onemind.io/logs-query: '{k8s_namespace_name="nats", k8s_pod_name=~"(nui)-.*"}'
+    onemind.io/recovery-runbook: apps/nui/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: nats/nats-dashboard
+    onemind.io/kubernetes-workloads: nats/nui
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1434,7 +1420,7 @@ spec:
   owner: group:default/onemind-admins
   system: messaging-nats
   dependsOn:
-    - component:default/k8s-nats-nats-dashboard-3d1c0f96
+    - component:default/k8s-nats-nui-87fa5daa
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1524,75 +1510,6 @@ spec:
   dependsOn:
     - component:default/k8s-matrix-synapse-c02538fc
     - component:default/k8s-matrix-element-web-2e9639d4
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: heynats
-  title: HeyNATS
-  description: NATS pub/sub debugger
-  tags:
-    - communication
-    - deployment-verified
-  links:
-    - url: https://heynats-1.tail717ba0.ts.net/
-      title: Open application
-      icon: dashboard
-    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a9b338c9d2b2f65479.md
-      title: "Archived registry: heynats"
-    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a9b338c9d2b2f65479.md
-      title: "Archived registry: heynats"
-  annotations:
-    onemind.io/access-points: |-
-      [
-        {
-          "id": "cluster-web",
-          "label": "OneMind Kubernetes web deployment",
-          "platform": "Web",
-          "method": "Kubernetes",
-          "location": "OneMind Cloud — NYC3",
-          "targetRef": "resource:default/do-nyc3-omos-cloud",
-          "url": "https://heynats-1.tail717ba0.ts.net/",
-          "evidence": "Catalog snapshot",
-          "observedAt": "2026-10-06"
-        }
-      ]
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/relationship-source: ingress-service-selector
-    onemind.io/inventory-review: imported-link
-    onemind.io/documented-purpose: NATS HTTP/WebSocket gateway — browser access to the NATS bus
-    onemind.io/documented-host: ☁️ DOKS Cluster
-    onemind.io/documented-status: ✅ Live
-    onemind.io/documented-category: 🚌 NATS
-    onemind.io/documented-at: 2026-09-03 08:14:18Z
-    onemind.io/registry-review: source-reviewed-runtime-unverified
-    onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
-    onemind.io/runtime-evidence: Deployment nats/heynats; Service nats/heynats
-    onemind.io/repository-url: https://github.com/onemindos/heynats
-    onemind.io/documented-address: https://github.com/onemindos/heynats
-    backstage.io/kubernetes-namespace: nats
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=heynats
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: nats
-    grafana/alert-label-selector: namespace=nats
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=heynats
-    onemind.io/logs-query: '{k8s_namespace_name="nats", k8s_pod_name=~"(heynats)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/heynats/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: nats/heynats
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: messaging-nats
-  dependsOn:
-    - component:default/k8s-nats-heynats-9ae724e5
-    - resource:default/repo-heynats-5e829a67
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -2192,73 +2109,6 @@ spec:
   system: observability
   dependsOn:
     - component:default/k8s-monitoring-monitoring-grafana-8ed6cac6
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: nats-ui
-  title: NATS UI
-  description: JetStream browser
-  tags:
-    - intelligence
-    - deployment-verified
-  links:
-    - url: https://nats-ui-1.tail717ba0.ts.net/
-      title: Open application
-      icon: dashboard
-    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab4f1cb4d8a159823.md
-      title: "Archived registry: NATS UI"
-    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab4f1cb4d8a159823.md
-      title: "Archived registry: NATS UI"
-  annotations:
-    onemind.io/access-points: |-
-      [
-        {
-          "id": "cluster-web",
-          "label": "OneMind Kubernetes web deployment",
-          "platform": "Web",
-          "method": "Kubernetes",
-          "location": "OneMind Cloud — NYC3",
-          "targetRef": "resource:default/do-nyc3-omos-cloud",
-          "url": "https://nats-ui-1.tail717ba0.ts.net/",
-          "evidence": "Catalog snapshot",
-          "observedAt": "2026-10-06"
-        }
-      ]
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/relationship-source: ingress-service-selector
-    onemind.io/inventory-review: imported-link
-    onemind.io/documented-purpose: NATS UI — browse streams, KV buckets, subjects and messages
-    onemind.io/documented-host: ☁️ DOKS Cluster
-    onemind.io/documented-status: ✅ Live
-    onemind.io/documented-category: 🚌 NATS
-    onemind.io/documented-at: 2026-09-03 07:33:16Z
-    onemind.io/registry-review: source-reviewed-runtime-unverified
-    onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
-    onemind.io/runtime-evidence: Deployment nats/nats-ui; Service nats/nats-ui
-    onemind.io/documented-address: https://nats-ui.tail717ba0.ts.net
-    backstage.io/kubernetes-namespace: nats
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nats-ui
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: nats
-    grafana/alert-label-selector: namespace=nats
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nats-ui
-    onemind.io/logs-query: '{k8s_namespace_name="nats", k8s_pod_name=~"(nats-ui)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/nats-ui/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: nats/nats-ui
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: messaging-nats
-  dependsOn:
-    - component:default/k8s-nats-nats-ui-609d1098
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -8139,37 +7989,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: nats-monitor
-  title: NATS monitor
-  description: NATS server monitoring endpoint (port 8222) of the in-cluster NATS,
-    exposed on the tailnet.
-  tags:
-    - nats
-    - monitoring
-  links:
-    - url: https://nats-monitor.tail717ba0.ts.net
-      title: Open application
-      icon: dashboard
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/launcher-url: https://nats-monitor.tail717ba0.ts.net
-    onemind.io/runtime-evidence: Ingress nats/nats-monitor at
-      nats-monitor.tail717ba0.ts.net (observed 2026-11-07)
-    onemind.io/pillar-review: proposed
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: messaging-nats
-  dependsOn:
-    - component:default/nats
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: stac-browser
   title: STAC Browser
   description: Web browser for the STAC imagery catalog; Deployment
@@ -8330,7 +8149,7 @@ metadata:
     github.com/project-slug: onemindos/omos
     backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
     onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/operator,tailscale/ts-agent-console-8khxt,tailscale/ts-agent-tap-v7ktr,tailscale/ts-argocd-slkzh,tailscale/ts-cloudtak-htdck,tailscale/ts-cloudtak-tiles-p26wj,tailscale/ts-element-tailnet-xzvtx,tailscale/ts-fedhub-tailnet-gzz6j,tailscale/ts-forgejo-qgj96,tailscale/ts-gatus-gl2gp,tailscale/ts-grafana-ksprn,tailscale/ts-headlamp-4qwkc,tailscale/ts-heynats-p5dmf,tailscale/ts-hubble-tw85d,tailscale/ts-karakeep-g8xzs,tailscale/ts-langfuse-rj8v9,tailscale/ts-n8n-pmtds,tailscale/ts-nats-dashboard-242wv,tailscale/ts-nats-monitor-zh589,tailscale/ts-nats-ui-d6rrg,tailscale/ts-nats-ws-4q6bc,tailscale/ts-omos-dell-zeus-f7vnz,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-onemind-hermes-tgjq9,tailscale/ts-onemind-hermes-web-5m4zq,tailscale/ts-onemind-preview-shtd7,tailscale/ts-opencost-rqpmq,tailscale/ts-openremote-xpvxj,tailscale/ts-portal-p86hp,tailscale/ts-stac-browser-gjsms,tailscale/ts-stac-tp9ln,tailscale/ts-synapse-tailnet-qtrg2,tailscale/ts-tak-portal-ingress-xpxhs,tailscale/ts-tak-tailnet-jtgn4,tailscale/ts-thingsboard-cgsbq,tailscale/ts-vaultwarden-rdctp
+    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/operator,tailscale/ts-agent-console-8khxt,tailscale/ts-agent-tap-v7ktr,tailscale/ts-argocd-slkzh,tailscale/ts-cloudtak-htdck,tailscale/ts-cloudtak-tiles-p26wj,tailscale/ts-element-tailnet-xzvtx,tailscale/ts-fedhub-tailnet-gzz6j,tailscale/ts-forgejo-qgj96,tailscale/ts-gatus-gl2gp,tailscale/ts-grafana-ksprn,tailscale/ts-headlamp-4qwkc,tailscale/ts-hubble-tw85d,tailscale/ts-karakeep-g8xzs,tailscale/ts-langfuse-rj8v9,tailscale/ts-n8n-pmtds,tailscale/ts-omos-dell-zeus-f7vnz,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-onemind-hermes-tgjq9,tailscale/ts-onemind-hermes-web-5m4zq,tailscale/ts-onemind-preview-shtd7,tailscale/ts-opencost-rqpmq,tailscale/ts-openremote-xpvxj,tailscale/ts-portal-p86hp,tailscale/ts-stac-browser-gjsms,tailscale/ts-stac-tp9ln,tailscale/ts-synapse-tailnet-qtrg2,tailscale/ts-tak-portal-ingress-xpxhs,tailscale/ts-tak-tailnet-jtgn4,tailscale/ts-thingsboard-cgsbq,tailscale/ts-vaultwarden-rdctp
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

@@ -27,15 +27,10 @@ Tailscale Kubernetes operator and the per-service tailnet proxies it creates.
 | `ts-gatus-gl2gp` | StatefulSet | `tailscale` |
 | `ts-grafana-ksprn` | StatefulSet | `tailscale` |
 | `ts-headlamp-4qwkc` | StatefulSet | `tailscale` |
-| `ts-heynats-p5dmf` | StatefulSet | `tailscale` |
 | `ts-hubble-tw85d` | StatefulSet | `tailscale` |
 | `ts-karakeep-g8xzs` | StatefulSet | `tailscale` |
 | `ts-langfuse-rj8v9` | StatefulSet | `tailscale` |
 | `ts-n8n-pmtds` | StatefulSet | `tailscale` |
-| `ts-nats-dashboard-242wv` | StatefulSet | `tailscale` |
-| `ts-nats-monitor-zh589` | StatefulSet | `tailscale` |
-| `ts-nats-ui-d6rrg` | StatefulSet | `tailscale` |
-| `ts-nats-ws-4q6bc` | StatefulSet | `tailscale` |
 | `ts-omos-dell-zeus-f7vnz` | StatefulSet | `tailscale` |
 | `ts-omos-ha-edge-rlv6k` | StatefulSet | `tailscale` |
 | `ts-omos-mbp-hgq9w` | StatefulSet | `tailscale` |
@@ -54,8 +49,7 @@ Tailscale Kubernetes operator and the per-service tailnet proxies it creates.
 | `ts-tak-portal-ingress-xpxhs` | StatefulSet | `tailscale` |
 | `ts-tak-tailnet-jtgn4` | StatefulSet | `tailscale` |
 | `ts-thingsboard-cgsbq` | StatefulSet | `tailscale` |
-
-1 more workloads are listed in the catalog.
+| `ts-vaultwarden-rdctp` | StatefulSet | `tailscale` |
 
 ## When it looks wrong
 

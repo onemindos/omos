@@ -1,10 +1,12 @@
-# platform-nats-tools: NATS web UIs (agent-web-ui, agenttap, heynats, nats-dashboard, nats-ui) in namespace nats.
+# platform-nats-tools: NUI, the NATS web UI (nats-nui/nui), in namespace nats. NUI replaced HeyNATS, NATS UI
+# and NATS Dashboard on 2026-11-07. This path also holds the Dockerfiles for the agent-fabric images
+# (agent-web-ui, agenttap); those workloads run from platform/hermes/agent-fabric, not from here.
 #
-# Adopted from the live cluster with no functional change; manifests mirror live (see docs/STACK.md).
-# - The `nats` Namespace is not managed here. The nats-tools Namespace and the two *.sealedsecret.yaml files in this
-#   directory target a namespace that does not exist and are excluded; live Secrets nats-creds and ghcr in `nats`
-#   are managed out of band.
-# - prune is off: adoption must never delete anything.
+# - The `nats` Namespace is not managed here. The nats-tools Namespace and the two older *.sealedsecret.yaml files in
+#   this directory target a namespace that does not exist and are excluded; live Secrets nats-creds and ghcr in `nats`
+#   are managed out of band and still used by NATS, the backup Job, Surveyor and leafz-exporter. The NUI SealedSecret
+#   (nui/nui-nats-context.sealedsecret.yaml) targets `nats` and is applied.
+# - prune is off, so objects removed from the repository (the retired UIs) are deleted by hand after the sync.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -20,7 +22,7 @@ spec:
     path: platform/nats-tools
     directory:
       recurse: true
-      exclude: "{namespace.yaml,*.sealedsecret.yaml,*.secret*,*.env}"
+      exclude: "{namespace.yaml,ghcr.sealedsecret.yaml,nats-creds.sealedsecret.yaml,*.secret*,*.env}"
   destination:
     server: https://kubernetes.default.svc
     namespace: nats

@@ -1,16 +1,13 @@
 name: Build NATS Tools → GHCR
 
-# Builds all NATS management UIs and agent observability tools from upstream
-# source and pushes to ghcr.io/onemindos/<name>:latest.
+# Builds the agent observability tools and spare NATS UI experiments from upstream
+# source and pushes to ghcr.io/onemindos/<name>:latest. The NATS web UI that runs in the
+# cluster is NUI, pulled as the upstream image ghcr.io/nats-nui/nui (platform/nats-tools/nui),
+# so it is not built here.
 #
 # Images built:
-#   nats-dashboard  — pre-wired to K8s cluster via sys user
-#   nats-ui         — static nginx, manual connect
-#   heynats         — Go + Vue, raw TCP NATS
-#   nui             — Go + React, persistent KV store
 #   natscope        — Go gRPC, full JetStream management
 #   cobra-nats      — Next.js, KV / streams / object store
-#   gastbob-nats-ui — React 19, lightweight
 #   agenttap        — Wireshark for AI agents (M64GitHub upstream + onemindos patches)
 #   agent-web-ui    — Synadia Agent Protocol browser client (synadia-ai upstream)
 
@@ -19,7 +16,8 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-nats-tools.yml"
-      - "platform/nats-tools/**"
+      - "platform/nats-tools/agenttap/**"
+      - "platform/nats-tools/agent-web-ui/**"
   workflow_dispatch:
     inputs:
       tool:
@@ -39,25 +37,6 @@ jobs:
       fail-fast: false
       matrix:
         tool:
-          - name: nats-dashboard
-            # Original work in onemindos org — not an upstream clone
-            repo: https://github.com/onemindos/nats-dashboard.git
-            dockerfile: Dockerfile
-            context: .
-          - name: nats-ui
-            # Original work in onemindos org — not an upstream clone
-            repo: https://github.com/onemindos/nats-ui.git
-            dockerfile: docker/Dockerfile
-            context: .
-          - name: heynats
-            repo: https://github.com/astergaze-solutions/heynats.git
-            dockerfile: Dockerfile
-            context: .
-          - name: nui
-            repo: https://github.com/nats-nui/nui.git
-            dockerfile: Dockerfile
-            context: .
-            build_args: "VERSION=latest"
           - name: natscope
             repo: https://github.com/dmit-4884/natscope.git
             dockerfile: Dockerfile
@@ -65,10 +44,6 @@ jobs:
           - name: cobra-nats
             repo: https://github.com/maatini/cobra-nats.git
             dockerfile: Dockerfile
-            context: .
-          - name: gastbob-nats-ui
-            repo: https://github.com/gastbob40/nats-ui.git
-            dockerfile: docker/Dockerfile
             context: .
           - name: agenttap
             repo: https://github.com/onemindos/agenttap.git

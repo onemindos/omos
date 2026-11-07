@@ -102,7 +102,7 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 | 3 | `platform/data/` | ClickHouse (Altinity operator), Redpanda Connect |
 | 3 | `platform/vrtak/` | nginx file server (VR-TAK APK/ZIP distribution) |
 | 4 | `platform/monitoring/` | Grafana, Prometheus, Loki, Tempo, Alertmanager, NATS Surveyor |
-| 4 | `platform/nats-tools/` | nats-dashboard, agent-web-ui, agenttap, heynats, nats-ui |
+| 4 | `platform/nats-tools/` | nui (NATS web UI); agent-web-ui and agenttap image Dockerfiles |
 
 ---
 
@@ -124,11 +124,9 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 | TAK Server 5.8 | takserver | ghcr.io/onemindos/takserver-base:* | ✅ live |
 | ClickHouse | clickhouse | altinity/clickhouse-server (operator) | ✅ live |
 | Grafana/Loki/Tempo | monitoring | (Helm) | ✅ live |
-| nats-dashboard | nats | ghcr.io/onemindos/nats-dashboard:latest | ✅ live |
+| nui | nats | ghcr.io/nats-nui/nui (0.10.0, digest-pinned) | ✅ live |
 | agent-web-ui | nats | ghcr.io/onemindos/agent-web-ui:latest | ✅ live |
 | agenttap | nats | ghcr.io/onemindos/agenttap:latest | ✅ live |
-| heynats | nats | ghcr.io/onemindos/heynats:latest | ✅ live |
-| nats-ui | nats | ghcr.io/gastbob40/nats-ui:latest | ✅ live |
 | omos-tak-projector | omos | python:3.12-alpine (inline) | ✅ live |
 | feed-intel | omos | ghcr.io/onemindos/feed-intel:latest | ✅ live |
 | feed-satellites | omos | ghcr.io/onemindos/feed-satellites:latest | ✅ live |
@@ -187,7 +185,7 @@ All DNS: Cloudflare-proxied A records → `143.244.220.155` (ingress-nginx). `ta
 | grafana.tail717ba0.ts.net | Grafana |
 | hermes-agent.tail717ba0.ts.net | Hermes web UI |
 | agent-web-ui-1.tail717ba0.ts.net | Agent Web UI |
-| nats-dashboard-1.tail717ba0.ts.net | NATS Dashboard |
+| nui.tail717ba0.ts.net | NUI (NATS web UI) |
 
 **Cluster access:**
 ```bash

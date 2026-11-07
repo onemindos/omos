@@ -1481,7 +1481,7 @@ deployment blocking or automatic remediation. Authentik work is separate.
 
 | Work | Status | Next gate |
 |---|---|---|
-| Argo-owned Trivy image-only pilot in `auth,nats,onetak,n8n` | Retargeted 2026-11-04 (Nextcloud retired); owner approved deploy; [PR #442](https://github.com/onemindos/omos/pull/442) awaits merge, which auto-syncs via `platform-security`; not live-accepted. Private `ghcr.io/onemindos` images (`heynats`, `nats-dashboard`, `tak-portal`) are not scanned | Merge, actual Argo rollout, per-container digest/report coverage (21 controllers, 3 expected gaps) and deny tests |
+| Argo-owned Trivy image-only pilot in `auth,nats,onetak,n8n` | Retargeted 2026-11-04 (Nextcloud retired); owner approved deploy; [PR #442](https://github.com/onemindos/omos/pull/442) awaits merge, which auto-syncs via `platform-security`; not live-accepted. The private `ghcr.io/onemindos` image `tak-portal` is not scanned | Merge, actual Argo rollout, per-container digest/report coverage (19 controllers, 1 expected gap) and deny tests |
 | One scan Job, bounded resources and Grafana visibility | 96 GitOps tests pass, including six rendered Trivy safety contracts; live acceptance pending | Scan resource measurements, metric/CRD parity, 24-hour refresh and safe pause acceptance |
 
 This user-directed security slice does not close portal phases, reverse approved

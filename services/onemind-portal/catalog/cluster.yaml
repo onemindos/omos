@@ -1430,39 +1430,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: k8s-nats-heynats-9ae724e5
-  title: HeyNATS — Core
-  description: Deployment in nats
-  annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=heynats
-    backstage.io/kubernetes-namespace: nats
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: heynats
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - nats
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: messaging-nats
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/heynats
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: k8s-nats-nack-bd056161
   title: NATS JetStream — Nack
   description: Deployment in nats
@@ -1496,19 +1463,19 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: k8s-nats-nats-dashboard-3d1c0f96
-  title: NATS Dashboard — Core
+  name: k8s-nats-nui-87fa5daa
+  title: NUI — Core
   description: Deployment in nats
   annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nats-dashboard
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nui
     backstage.io/kubernetes-namespace: nats
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
+    onemind.io/inventory-observed-at: 2026-11-07T00:00:00.000Z
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: nats-dashboard
+    onemind.io/kubernetes-workload: nui
     onemind.io/kubernetes-workload-kind: Deployment
     onemind.io/pillar-review: proposed
   tags:
@@ -1524,7 +1491,7 @@ spec:
   system: messaging-nats
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/nats-dashboard
+  subcomponentOf: component:default/nui
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1558,39 +1525,6 @@ spec:
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
   subcomponentOf: component:default/nats-surveyor
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-nats-nats-ui-609d1098
-  title: NATS UI — Core
-  description: Deployment in nats
-  annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nats-ui
-    backstage.io/kubernetes-namespace: nats
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: nats-ui
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - nats
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: messaging-nats
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/nats-ui
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -3348,39 +3282,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: k8s-tailscale-ts-heynats-p5dmf-bab39167
-  title: "Tailscale operator and proxies — Proxy: heynats"
-  description: StatefulSet in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=45324aa8-6e12-4fb9-a93e-bfff8834369b
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: ts-heynats-p5dmf
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: k8s-tailscale-ts-hubble-tw85d-feff3487
   title: "Tailscale operator and proxies — Proxy: hubble"
   description: StatefulSet in tailscale
@@ -3427,138 +3328,6 @@ metadata:
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-n8n-pmtds
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-nats-dashboard-242wv-6989deee
-  title: "Tailscale operator and proxies — Proxy: nats-dashboard"
-  description: StatefulSet in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=3ae70c7a-97dc-43bc-b65f-7b639971c2a0
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: ts-nats-dashboard-242wv
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-nats-monitor-zh589-cc21e30a
-  title: "Tailscale operator and proxies — Proxy: nats-monitor"
-  description: StatefulSet in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=52ac4314-7ad9-48cb-8280-4f097f97fea6
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: ts-nats-monitor-zh589
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-nats-ui-d6rrg-52fb9dd6
-  title: "Tailscale operator and proxies — Proxy: nats-ui"
-  description: StatefulSet in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=de8fe1dc-c7fb-4c42-9a5d-aacdcf8b61b0
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: ts-nats-ui-d6rrg
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-nats-ws-4q6bc-215de653
-  title: "Tailscale operator and proxies — Proxy: nats-ws"
-  description: StatefulSet in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=30fb608e-ed2f-4579-8388-adf3660b2059
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: ts-nats-ws-4q6bc
     onemind.io/kubernetes-workload-kind: StatefulSet
     onemind.io/pillar-review: proposed
   tags:
@@ -4049,33 +3818,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
-  name: mesh-34517c81dc7e
-  title: nats-ui
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
-  annotations:
-    onemind.io/inventory-source: tailscale
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.500Z
-    onemind.io/inventory-review: unreviewed
-    onemind.io/mesh-os: linux
-    onemind.io/mesh-dns: nats-ui-1.tail717ba0.ts.net.
-    onemind.io/observed-online: "true"
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/pillar-review: proposed
-  tags:
-    - mesh
-    - unreviewed
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: mesh-endpoint
-  owner: group:default/onemind-admins
-  system: onemind-mesh
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
   name: mesh-df2d24a50655
   title: omos-nats
   description: linux mesh endpoint. Availability is a discovery snapshot, not a
@@ -4182,33 +3924,6 @@ metadata:
     onemind.io/mesh-os: linux
     onemind.io/mesh-dns: omos-intel.tail717ba0.ts.net.
     onemind.io/observed-online: "false"
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/pillar-review: proposed
-  tags:
-    - mesh
-    - unreviewed
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: mesh-endpoint
-  owner: group:default/onemind-admins
-  system: onemind-mesh
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
-  name: mesh-1831ae02c636
-  title: nats-ws
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
-  annotations:
-    onemind.io/inventory-source: tailscale
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.500Z
-    onemind.io/inventory-review: unreviewed
-    onemind.io/mesh-os: linux
-    onemind.io/mesh-dns: nats-ws.tail717ba0.ts.net.
-    onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
     onemind.io/pillar-review: proposed
@@ -4580,33 +4295,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
-  name: mesh-ae4b9244ad60
-  title: nats-monitor
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
-  annotations:
-    onemind.io/inventory-source: tailscale
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.500Z
-    onemind.io/inventory-review: unreviewed
-    onemind.io/mesh-os: linux
-    onemind.io/mesh-dns: nats-monitor.tail717ba0.ts.net.
-    onemind.io/observed-online: "true"
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/pillar-review: proposed
-  tags:
-    - mesh
-    - unreviewed
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: mesh-endpoint
-  owner: group:default/onemind-admins
-  system: onemind-mesh
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
   name: mesh-cbf398f07679
   title: agent-console
   description: linux mesh endpoint. Availability is a discovery snapshot, not a
@@ -4686,33 +4374,6 @@ metadata:
     onemind.io/inventory-review: unreviewed
     onemind.io/mesh-os: linux
     onemind.io/mesh-dns: onemind-preview.tail717ba0.ts.net.
-    onemind.io/observed-online: "true"
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/pillar-review: proposed
-  tags:
-    - mesh
-    - unreviewed
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: mesh-endpoint
-  owner: group:default/onemind-admins
-  system: onemind-mesh
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
-  name: mesh-e33305b085a1
-  title: heynats
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
-  annotations:
-    onemind.io/inventory-source: tailscale
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.500Z
-    onemind.io/inventory-review: unreviewed
-    onemind.io/mesh-os: linux
-    onemind.io/mesh-dns: heynats-1.tail717ba0.ts.net.
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
@@ -4863,33 +4524,6 @@ metadata:
     onemind.io/inventory-review: unreviewed
     onemind.io/mesh-os: linux
     onemind.io/mesh-dns: onemind-egress-0.tail717ba0.ts.net.
-    onemind.io/observed-online: "true"
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/pillar-review: proposed
-  tags:
-    - mesh
-    - unreviewed
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: mesh-endpoint
-  owner: group:default/onemind-admins
-  system: onemind-mesh
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
-  name: mesh-b872d052c175
-  title: nats-dashboard
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
-  annotations:
-    onemind.io/inventory-source: tailscale
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.500Z
-    onemind.io/inventory-review: unreviewed
-    onemind.io/mesh-os: linux
-    onemind.io/mesh-dns: nats-dashboard-1.tail717ba0.ts.net.
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
@@ -6542,14 +6176,14 @@ kind: Resource
 metadata:
   name: fabric-cobranats-a4df71bf
   title: cobra-nats
-  description: NATS CLI web UI — removed, redundant with nats-dashboard — Notion
-    documentation; deployment and availability unverified.
+  description: NATS CLI web UI — removed, redundant — Notion documentation;
+    deployment and availability unverified.
   tags:
     - fabric-registry
     - reference
     - nats
   annotations:
-    onemind.io/documented-purpose: NATS CLI web UI — removed, redundant with nats-dashboard
+    onemind.io/documented-purpose: NATS CLI web UI — removed, redundant
     onemind.io/documented-host: 🐳 Docker Local
     onemind.io/documented-status: 📚 Reference
     onemind.io/documented-category: 🚌 NATS
@@ -6948,38 +6582,6 @@ spec:
   system: geospatial
   dependsOn:
     - component:default/k8s-onetak-nodeodm-8a68cc40
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
-  name: fabric-gastbobnatsui-9c7c200a
-  title: gastbob-nats-ui
-  description: Third-party NATS UI — removed, redundant — Notion documentation;
-    deployment and availability unverified.
-  tags:
-    - fabric-registry
-    - reference
-    - nats
-  annotations:
-    onemind.io/documented-purpose: Third-party NATS UI — removed, redundant
-    onemind.io/documented-host: 🐳 Docker Local
-    onemind.io/documented-status: 📚 Reference
-    onemind.io/documented-category: 🚌 NATS
-    onemind.io/documented-at: 2026-09-03 07:33:16Z
-    onemind.io/registry-review: source-reviewed-runtime-unverified
-    onemind.io/documented-address: https://github.com/gastbob40/nats-ui
-    onemind.io/documented-tags: NATS
-    onemind.io/verification: reference
-    onemind.io/pillar-review: proposed
-  links:
-    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81379661cd62a0279c31.md
-      title: "Archived registry: gastbob-nats-ui"
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: reference
-  owner: group:default/onemind-admins
-  system: messaging-nats
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -10027,30 +9629,6 @@ metadata:
     - repository-verified
   links:
     - url: https://github.com/onemindos/omos-cortex
-      title: Source repository
-  annotations:
-    onemind.io/verification: repository-verified
-    onemind.io/inventory-state: observed
-    onemind.io/observed-at: 2026-10-20T06:51:11.847Z
-    onemind.io/pillar-review: proposed
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: code-repository
-  owner: group:default/onemind-admins
-  system: repo-onemind
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
-  name: repo-heynats-5e829a67
-  title: heynats
-  description: heynats — Go NATS HTTP/WebSocket gateway for browser access
-  tags:
-    - repository
-    - repository-verified
-  links:
-    - url: https://github.com/onemindos/heynats
       title: Source repository
   annotations:
     onemind.io/verification: repository-verified

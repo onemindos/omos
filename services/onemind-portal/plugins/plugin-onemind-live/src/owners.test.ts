@@ -12,7 +12,7 @@ const components: Parameters<typeof buildOwnerIndex>[0] = [
   },
   {
     metadata: {
-      name: 'nats-dashboard',
+      name: 'nui',
       annotations: { 'backstage.io/kubernetes-namespace': 'nats' },
       labels: { 'onemind.io/pillar': 'so' },
     },
@@ -25,9 +25,9 @@ describe('buildOwnerIndex', () => {
   const index = buildOwnerIndex(components);
   it('finds the owning app by Argo application, then by namespace', () => {
     expect(index.byArgoApp('platform-matrix')).toMatchObject({ name: 'matrix', title: 'Matrix', pillar: 'le', href: '/catalog/default/component/matrix' });
-    expect(index.byNamespace('nats')).toMatchObject({ name: 'nats-dashboard', title: 'nats-dashboard' });
+    expect(index.byNamespace('nats')).toMatchObject({ name: 'nui', title: 'nui' });
     expect(index.resolve({ argoApp: 'platform-matrix', namespace: 'nats' })?.name).toBe('matrix');
-    expect(index.resolve({ argoApp: 'unknown', namespace: 'nats' })?.name).toBe('nats-dashboard');
+    expect(index.resolve({ argoApp: 'unknown', namespace: 'nats' })?.name).toBe('nui');
   });
   it('returns nothing, so the item shows as Unassigned', () => {
     expect(index.resolve({ namespace: 'mystery' })).toBeUndefined();

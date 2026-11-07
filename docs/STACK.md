@@ -92,15 +92,15 @@ Trivy pilot, prepared 2026-10-24 and retargeted 2026-11-04: a bounded Argo-manag
 image-vulnerability pilot for `auth,nats,onetak,n8n` under `platform/security/`, with
 one concurrent scan Job, namespace-scoped operator permissions and a Grafana dashboard.
 Owner approved deploying it 2026-11-04; merging auto-syncs it through `platform-security`.
-It is not live-accepted yet, and the three private `ghcr.io/onemindos` images
-(`heynats`, `nats-dashboard`, `tak-portal`) are not scanned. No new PVC, node or public
+It is not live-accepted yet, and the private `ghcr.io/onemindos` image
+(`tak-portal`) is not scanned. No new PVC, node or public
 route is requested. See [capacity, scope and acceptance](operations/trivy-image-scan-pilot.md).
 
 | Item | Count / value |
 |------|---------------|
 | Argo CD Applications | 47 (45 Synced and Healthy; `app-of-apps` and `platform-ecosystem-resources` OutOfSync) |
 | Helm-CLI releases (not in Git as Applications) | 3 on 2026-10-17: `nats`, `takserver`, `argocd` (11 at capture; `cert-manager`, `ingress-nginx`, `nack`, `tailscale-operator` adopted in PR #176, the four monitoring releases on 2026-10-17) |
-| Workloads that neither Argo nor Helm tracks | DOKS system and Tailscale operator proxies. `matrix` (4) and `nats` UIs (5) have Applications defined in the repo (`platform-matrix`, `platform-nats-tools`) that take ownership once synced; until then they are untracked |
+| Workloads that neither Argo nor Helm tracks | DOKS system and Tailscale operator proxies. `matrix` (4) has an Application defined in the repo (`platform-matrix`) that takes ownership once synced; until then it is untracked. The NATS web UI (NUI) is Argo-managed by `platform-nats-tools` |
 | Namespaces | 48 |
 | Nodes | 5 at capture: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB). 4 on 2026-10-27: the ecosystem pool (autoscale 1–4) was at 1 node |
 | Ingress classes | `nginx` (public, LB `143.244.220.155`), `tailscale` (tailnet only) |
@@ -226,7 +226,7 @@ These run live and are not owned by any Application. Manifests for some of them 
 
 | Namespace | Workloads | Manifests in Git | Tier | Backup | Exposure |
 |-----------|-----------|------------------|------|--------|----------|
-| `nats` (UIs) | `heynats`, `nats-dashboard`, `nats-ui` (digest-pinned 2026-10-23); the agent tools moved to namespace `agent-fabric` (Agent Console, agent-tap, digest-pinned) on 2026-10-17 | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
+| `nats` (UI) | `nui` (NUI 0.10.0, `ghcr.io/nats-nui/nui` digest-pinned, tailnet only at `nui`; no login of its own, so the tailnet ACL is the gate; `/db` is an emptyDir, connection imported from SealedSecret `nui-nats-context`). It replaced `heynats`, `nats-dashboard` and `nats-ui` on 2026-11-07. The agent tools moved to namespace `agent-fabric` (Agent Console, agent-tap, digest-pinned) on 2026-10-17 | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
 | `matrix` | Synapse, Element Web, PostgreSQL, Redis | `platform/matrix/argo/`, Application `platform-matrix` (**manual sync** until `Secret/synapse-homeserver` is sealed, see `platform/matrix/SECRETS-TODO.md`; the older `base/` and `overlays/` are not deployed and not synced) | 2 | `PG dump` (05:40 UTC), `VolSync` x3 (80 GiB) | `matrix.tail717ba0.ts.net`, `element.tail717ba0.ts.net` **tailnet** (public hosts retired 2026-10-29; federation off) |
 | `tailscale` | about 24 operator-generated proxy StatefulSets | generated | n/a | none | tailnet |
 | `kube-system` | Cilium, CoreDNS, Hubble, metrics-server, DO CSI and agents | DOKS-managed | n/a | none | `hubble` tailnet |
@@ -254,7 +254,7 @@ Whether the values in Git still match what is deployed was not checked; `helm ge
 
 Gaps beyond the eleven releases:
 
-- **Adopted workloads (pending first sync):** the `nats` UIs and `matrix` now have Applications whose manifests were reconciled against the live objects (live won every difference). `platform-nats-tools` is auto-sync with `prune: false`; `platform-matrix` is manual because the live Synapse `homeserver.yaml` holds plaintext database, Redis and registration secrets that cannot be committed. Remaining gaps: the Secrets (`matrix-secrets`, `nats-creds`, `ghcr`) and the `matrix` and `nats` Namespaces are still created out of band; `platform/nats-tools/*.sealedsecret.yaml` and `namespace.yaml` target a `nats-tools` namespace that does not exist and are excluded; the `agenttap` Ingress points at port 8080 while its Service listens on 8088 (unchanged from live); `matrix-secrets` was applied with `kubectl apply`, so its values sit in a `last-applied-configuration` annotation and should be rotated.
+- **Adopted workloads (pending first sync):** `matrix` and the former `nats` UIs (now NUI) have Applications whose manifests were reconciled against the live objects (live won every difference). `platform-nats-tools` is auto-sync with `prune: false`; `platform-matrix` is manual because the live Synapse `homeserver.yaml` holds plaintext database, Redis and registration secrets that cannot be committed. Remaining gaps: the Secrets (`matrix-secrets`, `nats-creds`, `ghcr`) and the `matrix` and `nats` Namespaces are still created out of band; `platform/nats-tools/*.sealedsecret.yaml` and `namespace.yaml` target a `nats-tools` namespace that does not exist and are excluded; the `agenttap` Ingress points at port 8080 while its Service listens on 8088 (unchanged from live); `matrix-secrets` was applied with `kubectl apply`, so its values sit in a `last-applied-configuration` annotation and should be rotated.
 - **Two owners of one resource:** `nats` StatefulSet (Helm and `platform-nats`); `SealedSecret auth/ghcr` (`platform-ecosystem-resources` and `platform-backups`).
 - **Terraform vs live:** `infra/main.tf` defaults (`onemind-hub`, `s-4vcpu-8gb` x3, `1.36.0-do.2`, pool `onemind-hub-core`) do not match the live cluster (`omos-cloud`, pool `onemind-hub-core-v2` on 8 vCPU / 16 GiB, `1.36.0-do.3`). `infra/ecosystem-workers/` is a separate root for the ecosystem pool. Terraform state was not inspected; do not apply `infra/` without a clean `terraform plan`.
 
@@ -264,7 +264,7 @@ Gaps beyond the eleven releases:
 |------|-------------------|
 | Public, Cloudflare ranges only (nginx) | `auth.onemindos.dev`, `ws.onemindos.dev` (NATS WebSocket), `onemindos.dev` (tak-portal) |
 | Public, control plane | Kubernetes API endpoint, no control-plane firewall (review finding H3) |
-| Tailnet only | Matrix (`matrix`, `element`), TAK (`tak`: 8089, 8443, 8446, 64738), TAK Portal (`enroll`), FedHub (`fedhub`), Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
+| Tailnet only | Matrix (`matrix`, `element`), TAK (`tak`: 8089, 8443, 8446, 64738), TAK Portal (`enroll`), FedHub (`fedhub`), Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NUI (`nui`), `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
 
 ## Mutable image tags
 

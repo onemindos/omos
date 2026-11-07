@@ -94,7 +94,7 @@ spec:
     - Ingress
   ingress:
     - from:
-        # This namespace: NACK, Surveyor (SYS account), backup-nats-streams, HeyNATS.
+        # This namespace: NACK, Surveyor (SYS account), backup-nats-streams, NUI.
         - podSelector: {}
         # Tailnet clients through the omos-nats Tailscale LB proxy.
         - namespaceSelector:
@@ -163,13 +163,13 @@ spec:
     - Ingress
   ingress:
     - from:
-        # This namespace: NATS Dashboard is configured with a WebSocket URL (NATS_WS_URL).
+        # This namespace (no remaining client of the WebSocket port).
         - podSelector: {}
         # Public wss://ws.onemindos.dev (Ingress nats-ws-ingress).
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: ingress-nginx
-        # Tailnet nats-ws Ingress (browser NATS UI) and the omos-nats LB.
+        # The omos-nats Tailscale LB (tailnet clients).
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: tailscale
@@ -193,13 +193,10 @@ spec:
     - Ingress
   ingress:
     - from:
-        # This namespace: NATS Dashboard (NATS_MONITORING_URL) and nats-leafz-exporter (polls
-        # /leafz on each server; platform/monitoring/nats-leafz-exporter.yaml).
+        # This namespace: nats-leafz-exporter (polls /leafz on each server;
+        # platform/monitoring/nats-leafz-exporter.yaml). The tailnet nats-monitor Ingress was removed
+        # with the old browser UIs; NUI reaches the bus on 4222 only.
         - podSelector: {}
-        # Tailnet nats-monitor Ingress (browser NATS UI).
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: tailscale
         # onemind-mcp: nats_server_stats and nats_jetstream_stats tools.
         - namespaceSelector:
             matchLabels:
