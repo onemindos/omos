@@ -51,7 +51,10 @@ export function parseAlertmanagerWebhook(body: unknown): ParsedWebhook {
   }
   const alerts: AlertmanagerAlert[] = [];
   for (const raw of body.alerts) {
-    if (!isRecord(raw) || (raw.status !== 'firing' && raw.status !== 'resolved')) {
+    if (
+      !isRecord(raw) ||
+      (raw.status !== 'firing' && raw.status !== 'resolved')
+    ) {
       return { ok: false, error: 'Invalid alert status' };
     }
     const labels = stringMap(raw.labels);
@@ -64,7 +67,8 @@ export function parseAlertmanagerWebhook(body: unknown): ParsedWebhook {
     }
     // Older Alertmanagers omit the fingerprint; derive a stable one from the labels.
     const fingerprint =
-      typeof raw.fingerprint === 'string' && /^[a-zA-Z0-9]{1,64}$/.test(raw.fingerprint)
+      typeof raw.fingerprint === 'string' &&
+      /^[a-zA-Z0-9]{1,64}$/.test(raw.fingerprint)
         ? raw.fingerprint
         : createHash('sha256')
             .update(JSON.stringify(Object.entries(labels).sort()))
@@ -103,7 +107,16 @@ const control = /[\u0000-\u001f\u007f]/g;
 const clean = (value: string, max: number) =>
   value.replace(control, ' ').trim().slice(0, max);
 
-const targetLabels = ['deployment', 'statefulset', 'daemonset', 'pod', 'job', 'service', 'instance', 'namespace'];
+const targetLabels = [
+  'deployment',
+  'statefulset',
+  'daemonset',
+  'pod',
+  'job',
+  'service',
+  'instance',
+  'namespace',
+];
 
 // Only https runbooks are linked; the inbox otherwise falls back to the Today page.
 function alertLink(alert: AlertmanagerAlert): string {
@@ -112,31 +125,80 @@ function alertLink(alert: AlertmanagerAlert): string {
   return '/today';
 }
 
+// Falco events reach Alertmanager through falcosidekick: no alertname, every syscall field as a
+// label and a new fingerprint per event. They are recognised by source=falco plus a rule.
+function isFalcoEvent(alert: AlertmanagerAlert): boolean {
+  return alert.labels.source === 'falco' && Boolean(alert.labels.rule);
+}
+
+// One inbox item per rule and workload, so a burst of the same event (every CI run on the
+// runner, say) is one alert instead of hundreds. The pod name and event time are left out
+// because they change on every event.
+function falcoFingerprint(labels: Record<string, string>): string {
+  const key = [
+    'rule',
+    'k8s_ns_name',
+    'container_image_repository',
+    'container_name',
+  ]
+    .map(name => labels[name] ?? '')
+    .join('|');
+  return createHash('sha256').update(`falco|${key}`).digest('hex').slice(0, 16);
+}
+
+function falcoText(labels: Record<string, string>): string {
+  const where = [labels.k8s_ns_name, labels.k8s_pod_name]
+    .filter(Boolean)
+    .join('/');
+  const parts = [
+    labels.rule,
+    where && `in ${where}`,
+    labels.proc_name && `process ${labels.proc_name}`,
+    labels.user_name && `user ${labels.user_name}`,
+    labels.container_image_repository &&
+      `image ${labels.container_image_repository}`,
+  ];
+  return parts.filter(Boolean).join(', ');
+}
+
 // Returns undefined for alerts that are not meant for a human (severity none, Watchdog).
 export function alertNotification(
   alert: AlertmanagerAlert,
 ): AlertNotification | undefined {
   const firingSeverity = alertSeverity(alert.labels.severity);
-  const name = alert.labels.alertname;
+  const falco = isFalcoEvent(alert);
+  const name =
+    alert.labels.alertname ??
+    (falco ? `Falco: ${alert.labels.rule}` : undefined);
   if (!firingSeverity || !name) return undefined;
-  const label = targetLabels.find(item => alert.labels[item]);
+  const fingerprint = falco
+    ? falcoFingerprint(alert.labels)
+    : alert.fingerprint;
+  const label = falco
+    ? ['k8s_ns_name'].find(item => alert.labels[item])
+    : targetLabels.find(item => alert.labels[item]);
   const target = label ? ` (${clean(alert.labels[label], 80)})` : '';
   const heading = `${clean(name, 80)}${target}`;
   const resolved = alert.status === 'resolved';
-  const text = alert.annotations.summary ?? alert.annotations.description ?? '';
+  const text =
+    alert.annotations.summary ??
+    alert.annotations.description ??
+    (falco ? falcoText(alert.labels) : '');
   return {
-    fingerprint: alert.fingerprint,
+    fingerprint,
     status: alert.status,
     severity: resolved ? 'low' : firingSeverity,
     firingSeverity,
     payload: {
       title: resolved ? `Resolved: ${heading}` : `Alert: ${heading}`,
       description: resolved
-        ? `Alertmanager reports this alert resolved${alert.endsAt ? ` at ${clean(alert.endsAt, 40)}` : ''}.`
+        ? `Alertmanager reports this alert resolved${
+            alert.endsAt ? ` at ${clean(alert.endsAt, 40)}` : ''
+          }.`
         : clean(text, 500),
       severity: resolved ? 'low' : firingSeverity,
       topic: 'alerts',
-      scope: alertScope(alert.fingerprint),
+      scope: alertScope(fingerprint),
       link: alertLink(alert),
     },
   };

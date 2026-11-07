@@ -90,3 +90,63 @@ describe('alert to notification mapping', () => {
     expect(result?.payload.description.length).toBeLessThanOrEqual(500);
   });
 });
+
+describe('Falco events from falcosidekick', () => {
+  const falcoLabels = (over: Record<string, string> = {}) => ({
+    source: 'falco',
+    rule: 'Drop and execute new binary in container',
+    priority: 'Critical',
+    severity: 'critical',
+    k8s_ns_name: 'github-runner',
+    k8s_pod_name: 'github-runner-5f5c5d6bfb-sqrl9',
+    container_name: 'runner',
+    container_image_repository: 'docker.io/myoung34/github-runner',
+    proc_name: 'native-context',
+    user_name: 'root',
+    evt_time: '1794067956465324958',
+    ...over,
+  });
+  const falco = (labels: Record<string, string>, fingerprint: string, status = 'firing') => {
+    const parsed = parseAlertmanagerWebhook(
+      payload(alert({ status, labels, annotations: {}, fingerprint })),
+    );
+    if (!parsed.ok) throw new Error(parsed.error);
+    return alertNotification(parsed.alerts[0]);
+  };
+
+  test('an event without alertname becomes a readable alert', () => {
+    const result = falco(falcoLabels(), 'aaaaaaaaaaaaaaa1');
+    expect(result?.severity).toBe('critical');
+    expect(result?.payload.title).toBe(
+      'Alert: Falco: Drop and execute new binary in container (github-runner)',
+    );
+    expect(result?.payload.description).toBe(
+      'Drop and execute new binary in container, in github-runner/github-runner-5f5c5d6bfb-sqrl9, process native-context, user root, image docker.io/myoung34/github-runner',
+    );
+  });
+
+  test('repeats of one rule on one workload share a fingerprint and scope', () => {
+    const first = falco(falcoLabels(), 'aaaaaaaaaaaaaaa1');
+    const again = falco(
+      falcoLabels({ k8s_pod_name: 'github-runner-other', evt_time: '1794067999999999999' }),
+      'bbbbbbbbbbbbbbb2',
+    );
+    expect(again?.fingerprint).toBe(first?.fingerprint);
+    expect(again?.payload.scope).toBe(first?.payload.scope);
+    const otherRule = falco(falcoLabels({ rule: 'Terminal shell in container' }), 'ccccccccccccccc3');
+    expect(otherRule?.fingerprint).not.toBe(first?.fingerprint);
+    const otherNamespace = falco(falcoLabels({ k8s_ns_name: 'hermes' }), 'ddddddddddddddd4');
+    expect(otherNamespace?.fingerprint).not.toBe(first?.fingerprint);
+  });
+
+  test('resolved Falco events keep the same scope', () => {
+    const firing = falco(falcoLabels(), 'aaaaaaaaaaaaaaa1');
+    const resolved = falco(falcoLabels(), 'eeeeeeeeeeeeeee5', 'resolved');
+    expect(resolved?.payload.scope).toBe(firing?.payload.scope);
+    expect(resolved?.severity).toBe('low');
+  });
+
+  test('labels without source=falco and a rule are still ignored without alertname', () => {
+    expect(falco(falcoLabels({ source: 'k8saudit', rule: '' }), 'fffffffffffffff6')).toBeUndefined();
+  });
+});
