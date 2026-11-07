@@ -36,7 +36,7 @@ rules:
   resources: [pods, nodes]
   verbs: [get, list]
 # Platform CRDs that do not aggregate to `view`. Left out on purpose because their specs carry inline credentials:
-# clickhouse.altinity.com (users.*.password), dapr.io (Component metadata). They stay reachable through their own backends.
+# clickhouse.altinity.com (users.*.password). They stay reachable through their own backends.
 - apiGroups:
   - argoproj.io
   - postgresql.cnpg.io

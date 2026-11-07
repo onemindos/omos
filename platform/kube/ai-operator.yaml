@@ -52,7 +52,6 @@ rules:
       - snapshot.storage.k8s.io
       - tailscale.com
       - cilium.io
-      - dapr.io
       - clickhouse.altinity.com
       - clickhouse-keeper.altinity.com
       - wgpolicyk8s.io

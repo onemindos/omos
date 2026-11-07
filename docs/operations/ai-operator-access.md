@@ -10,7 +10,7 @@ ServiceAccount, its token Secret and two ClusterRoleBindings.
 
 | MCP server | Source | Sees | Cannot |
 |---|---|---|---|
-| `onemind-kubernetes` | [kubernetes-mcp-server](https://github.com/containers/kubernetes-mcp-server) 0.0.67, `--read-only` | Every namespace: workloads, pods, logs, events, nodes, ConfigMaps, and the platform CRDs (Argo CD Applications, CNPG, NATS JetStream, Gateway API, Prometheus, KEDA, Velero, VolSync, Tailscale, Cilium, Dapr, ClickHouse, Kyverno reports) | Read Secrets, create, patch, delete, exec, port-forward |
+| `onemind-kubernetes` | [kubernetes-mcp-server](https://github.com/containers/kubernetes-mcp-server) 0.0.67, `--read-only` | Every namespace: workloads, pods, logs, events, nodes, ConfigMaps, and the platform CRDs (Argo CD Applications, CNPG, NATS JetStream, Gateway API, Prometheus, KEDA, Velero, VolSync, Tailscale, Cilium, ClickHouse, Kyverno reports) | Read Secrets, create, patch, delete, exec, port-forward |
 | `onemind-backstage` | Portal MCP actions (`/api/mcp-actions/v1`) | Catalog entities and relations (`catalog_*`), OneMind health checks (`onemind_health`), runbooks (`onemind_runbook`), and the live bridge digest `livebridge.snapshot_summary` (namespace health, Argo applications not Synced/Healthy, CoT track counts, bus rates, last 20 bus events; read-only, one portal replica's view) | Any mutation (machine identity is restricted by the portal) |
 
 This endpoint is for operator clients on the admin Mac. Hermes (Legacy) does not use it: its tools come from the agentgateway tool gateway (`platform/tool-gateway`, `onemind-mcp` hub), where the portal catalog appears as the `backstage_entities` and `backstage_entity` tools.

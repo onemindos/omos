@@ -33,8 +33,8 @@ The `config` toolset (kubeconfig views) is not enabled; the design listed it, bu
 ## RBAC ceiling (what the API server enforces whatever the gateway does)
 
 - **Read**: built-in `view` plus `tool-gateway-k8s-read` (nodes, PVs, storage classes, CRDs, metrics, and the platform CRD groups of
-  `platform/kube/ai-operator.yaml`). **No Secrets**, and the server also denies the `Secret` kind. `clickhouse.altinity.com` and `dapr.io` are
-  left out of the CRD list on purpose: their specs hold inline passwords or connection strings. Logs and ConfigMaps are readable (as for
+  `platform/kube/ai-operator.yaml`). **No Secrets**, and the server also denies the `Secret` kind. `clickhouse.altinity.com` is
+  left out of the CRD list on purpose: its specs hold inline passwords. Logs and ConfigMaps are readable (as for
   `ai-operator`); a secret printed to a log is readable.
 - **Write**: `patch` on Deployments, StatefulSets, DaemonSets and CronJobs; `get/update/patch` on the scale subresources; `patch/update` on the one
   ConfigMap `tool-gateway/gateway-selftest`. **No `create`** anywhere (new objects come from Git through Argo CD).

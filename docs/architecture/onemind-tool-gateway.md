@@ -213,7 +213,7 @@ The existing read adapters for Prometheus, Alertmanager and Loki (`onemind-mcp`)
 | 35 | NATS web UI and exporters (`nui`, `nats-surveyor`) | UIs and exporters |
 | 36 | Redpanda Connect (`omos`) | Internal pipeline; a streams REST API exists but offers nothing Legacy needs |
 | 37 | TAK internals (Ignite, messaging, plugins, config, LDAP, Mumble bridge, murmur) | Reached through TAK Server (row 25) and NATS; admin surface only |
-| 38 | Controllers: cert-manager, ingress-nginx, Tailscale operator, Dapr, Kyverno, Falco, CNPG, Barman, Velero, VolSync, metrics-server | No app API; their custom resources are readable and patchable through row 1 |
+| 38 | Controllers: cert-manager, ingress-nginx, Tailscale operator, Kyverno, Falco, CNPG, Barman, Velero, VolSync, metrics-server | No app API; their custom resources are readable and patchable through row 1 |
 | 39 | Databases: Postgres (authentik, backstage, matrix, n8n, paperclip, takml, TAK, WebODM, CNPG `onemind-data`), Redis, MongoDB | No raw SQL for the agent (existing rule in `apps.yaml`); app APIs instead |
 | 40 | GitHub runner, Hermes itself and its dashboard | CI and the agent are not tools for the agent |
 

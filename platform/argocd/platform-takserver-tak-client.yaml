@@ -27,8 +27,6 @@ spec:
     repoURL: https://github.com/onemindos/omos.git
     targetRevision: main
     path: platform/takserver/tak-client
-    directory:
-      recurse: false
   destination:
     server: https://kubernetes.default.svc
     namespace: takserver
