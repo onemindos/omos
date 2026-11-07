@@ -3532,7 +3532,7 @@ metadata:
       not probed
     onemind.io/mcp-app-id: onemind_core
     onemind.io/blocked-reason: Dedicated core API identity and domain-scoped operations required; do not expose
-      internal database or Dapr admin interfaces.
+      internal database admin interfaces.
 spec:
   type: mcp-adapter
   lifecycle: planned

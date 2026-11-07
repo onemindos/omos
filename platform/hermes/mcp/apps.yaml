@@ -103,7 +103,7 @@ apps:
 - id: onemind_core
   description: Core entities, ingestion and workflow runtime
   enabled: false
-  blocked_reason: Dedicated core API identity and domain-scoped operations required; do not expose internal database or Dapr admin interfaces.
+  blocked_reason: Dedicated core API identity and domain-scoped operations required; do not expose internal database admin interfaces.
 - id: agent_fabric
   description: Agent console, collaboration and bus activity
   enabled: false
