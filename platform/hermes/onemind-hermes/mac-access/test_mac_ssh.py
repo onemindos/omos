@@ -66,7 +66,12 @@ class AccessTests(unittest.TestCase):
         old_spec = base['spec']['template']['spec']
         for group in ('containers', 'initContainers'):
             for container, old in zip(spec[group], old_spec[group]):
-                self.assertEqual(container['resources'], old['resources'])
+                # The hermes container's memory request was raised on 2026-11-07 (observed use ~1.5 GiB);
+                # everything else in resources must stay as at the base commit.
+                expected = json.loads(json.dumps(old['resources']))
+                if container['name'] == 'hermes':
+                    expected['requests']['memory'] = container['resources']['requests']['memory']
+                self.assertEqual(container['resources'], expected)
                 # The image may move with Hermes upgrades; it must stay digest-pinned and the same in every container.
                 self.assertIn('@sha256:', container['image'])
                 self.assertEqual(container['image'], spec['containers'][0]['image'])

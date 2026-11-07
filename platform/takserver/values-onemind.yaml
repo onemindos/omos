@@ -95,7 +95,7 @@ ignite:
   peerClassLoadingEnabled: false
   # 2026-09-09: requests added — pods ran requestless (680Mi each), hiding 1.3Gi
   # of real usage from the scheduler and overcommitting node memory.
-  resources: {requests: {cpu: 250m, memory: 768Mi}, limits: {cpu: "2", memory: 1536Mi}}
+  resources: {requests: {cpu: 250m, memory: 640Mi}, limits: {cpu: "2", memory: 1536Mi}}
   env:
     OPTION_LIBS: "ignite-kubernetes,ignite-rest-http,ignite-json,ignite-slf4j,ignite-urideploy,ignite-web,ignite-calcite"
     IGNITE_QUIET: "false"
@@ -133,7 +133,7 @@ nats:
   container:
     merge:
       resources:
-        requests: {cpu: 50m, memory: 192Mi}
+        requests: {cpu: 50m, memory: 64Mi}
         limits: {memory: 512Mi}
   reloader:
     merge:

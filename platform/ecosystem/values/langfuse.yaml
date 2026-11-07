@@ -65,7 +65,7 @@ langfuse:
     resources:
       requests:
         cpu: 250m
-        memory: 512Mi
+        memory: 896Mi
       limits:
         cpu: '1'
         memory: 1Gi
@@ -92,7 +92,7 @@ langfuse:
     resources:
       requests:
         cpu: 250m
-        memory: 512Mi
+        memory: 960Mi
       limits:
         cpu: '1'
         memory: 1Gi
