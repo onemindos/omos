@@ -97,7 +97,7 @@ describe('live inventory enabled, against a real catalog', () => {
         const count = (
           (await (await fetch(url, { headers })).json()) as Entity[]
         ).length;
-        if (count >= 150) return;
+        if (count >= 143) return;
         await new Promise(r => setTimeout(r, 500));
       }
     };
@@ -113,13 +113,13 @@ describe('live inventory enabled, against a real catalog', () => {
         e => e.metadata.annotations?.[A.checkedAt],
       );
       const flagged = items.find(
-        e => e.metadata.name === entityName('nats', 'heynats'),
+        e => e.metadata.name === entityName('nats', 'nats-surveyor'),
       )?.spec?.lifecycle;
       // Processing is a loop: wait until the new entity exists and every reviewed one was re-stamped.
       if (
         items.some(e => e.metadata.name === worker) &&
         flagged === 'removed' &&
-        reviewedDone.length >= 139
+        reviewedDone.length >= 132
       )
         break;
       await new Promise(r => setTimeout(r, 500));
@@ -148,7 +148,7 @@ describe('live inventory enabled, against a real catalog', () => {
     const portal = byName.get('k8s-backstage-backstage-21b99354')!;
     expect(portal.metadata.annotations![A.state]).toBe('observed');
     expect(portal.spec!.subcomponentOf).toBe('component:default/backstage'); // reviewed placement untouched
-    const gone = byName.get(entityName('nats', 'heynats'))!;
+    const gone = byName.get(entityName('nats', 'nats-surveyor'))!;
     expect(gone.metadata.annotations![A.state]).toBe('missing-review-required');
     expect(gone.spec!.lifecycle).toBe('removed');
   });

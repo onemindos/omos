@@ -112,14 +112,6 @@
     "observedAt": "2026-10-20T06:51:11.847Z"
   },
   {
-    "description": "heynats — Go NATS HTTP/WebSocket gateway for browser access",
-    "isArchived": false,
-    "name": "heynats",
-    "url": "https://github.com/onemindos/heynats",
-    "inventoryState": "observed",
-    "observedAt": "2026-10-20T06:51:11.847Z"
-  },
-  {
     "description": "TAK Server MCP — 11-tool Model Context Protocol bridge for AI↔TAK Server geospatial ops",
     "isArchived": false,
     "name": "tak-server-mcp",

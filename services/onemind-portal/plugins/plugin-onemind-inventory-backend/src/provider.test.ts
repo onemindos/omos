@@ -112,9 +112,9 @@ describe('what the provider publishes', () => {
     await h.connect();
     const summary = await h.provider.refresh();
     expect(summary).toMatchObject({
-      tracked: 169,
+      tracked: 162,
       published: 0,
-      skippedCurated: 169,
+      skippedCurated: 162,
     }); // every live workload is already in cluster.yaml
     expect(h.published.size).toBe(0);
   });

@@ -2,7 +2,7 @@
 
 ## Access and dependencies
 
-NATS runs in namespace `nats`; historical `nats.hermes.svc` addresses are outdated. Use the current catalog and service definitions. Browser investigation tools include `https://nats-dashboard-1.tail717ba0.ts.net/`, `https://nats-ui-1.tail717ba0.ts.net/`, and Grafana. Client traffic uses the configured TLS/authentication settings; a web UI response does not prove broker delivery.
+NATS runs in namespace `nats`; historical `nats.hermes.svc` addresses are outdated. Use the current catalog and service definitions. Browser investigation tools include `https://nui.tail717ba0.ts.net/` (NUI, the NATS web UI, tailnet only) and Grafana. Client traffic uses the configured TLS/authentication settings; a web UI response does not prove broker delivery.
 
 ## Investigate
 

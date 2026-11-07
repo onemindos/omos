@@ -27,7 +27,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Grafana](grafana.md) | observability |
 | [Headlamp](headlamp.md) | developer-platform |
 | [Cluster health observer](health-keeper.md) | observability |
-| [HeyNATS](heynats.md) | messaging-nats |
 | [Hubble UI](hubble-ui.md) | observability |
 | [ingress-nginx](ingress-nginx.md) | infrastructure |
 | [Karakeep](karakeep.md) | personal-tools |
@@ -40,9 +39,8 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Tool gateway Kubernetes backend (mcp-kubernetes)](mcp-kubernetes.md) | ai-agents |
 | [n8n](n8n.md) | ai-agents |
 | [NATS JetStream](nats.md) | messaging-nats |
-| [NATS Dashboard](nats-dashboard.md) | messaging-nats |
 | [NATS Surveyor](nats-surveyor.md) | messaging-nats |
-| [NATS UI](nats-ui.md) | messaging-nats |
+| [NUI](nui.md) | messaging-nats |
 | [OMOS data pipeline](omos-data-pipeline.md) | messaging-nats |
 | [OneMind core services](onemind-core.md) | infrastructure |
 | [Legacy (onemind-hermes)](onemind-hermes.md) | ai-agents |

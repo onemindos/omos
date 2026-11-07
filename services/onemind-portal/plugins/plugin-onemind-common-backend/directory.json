@@ -72,10 +72,10 @@
     "groupTitle": "AI & Agents"
   },
   {
-    "name": "nats-dashboard",
-    "title": "NATS Dashboard",
-    "url": "https://nats-dashboard-1.tail717ba0.ts.net/",
-    "description": "NATS stream monitor",
+    "name": "nui",
+    "title": "NUI",
+    "url": "https://nui.tail717ba0.ts.net/",
+    "description": "NATS web UI: streams, KV buckets, subjects",
     "group": "ai-agents",
     "groupTitle": "AI & Agents"
   },
@@ -108,14 +108,6 @@
     "title": "Matrix Synapse",
     "url": "https://matrix.tail717ba0.ts.net",
     "description": "Homeserver",
-    "group": "communication",
-    "groupTitle": "Communication"
-  },
-  {
-    "name": "heynats",
-    "title": "HeyNATS",
-    "url": "https://heynats-1.tail717ba0.ts.net/",
-    "description": "NATS pub/sub debugger",
     "group": "communication",
     "groupTitle": "Communication"
   },
@@ -200,14 +192,6 @@
     "groupTitle": "Intelligence"
   },
   {
-    "name": "nats-ui",
-    "title": "NATS UI",
-    "url": "https://nats-ui-1.tail717ba0.ts.net/",
-    "description": "JetStream browser",
-    "group": "intelligence",
-    "groupTitle": "Intelligence"
-  },
-  {
     "name": "agent-monitor",
     "title": "Agent Monitor",
     "url": "https://agent-tap.tail717ba0.ts.net",
@@ -268,14 +252,6 @@
     "title": "NATS Surveyor",
     "url": "https://portal.tail717ba0.ts.net/catalog/default/component/nats-surveyor",
     "description": "NATS metrics. Running, no web UI exposed (feeds Grafana); this links to its catalog page",
-    "group": "observability",
-    "groupTitle": "Observability"
-  },
-  {
-    "name": "nats-monitor",
-    "title": "NATS Monitor",
-    "url": "https://nats-monitor.tail717ba0.ts.net",
-    "description": "NATS server monitoring endpoint (port 8222)",
     "group": "observability",
     "groupTitle": "Observability"
   },

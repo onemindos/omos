@@ -219,17 +219,7 @@
     {
       "kind": "Deployment",
       "namespace": "nats",
-      "name": "heynats"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "nats",
       "name": "nack"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "nats",
-      "name": "nats-dashboard"
     },
     {
       "kind": "Deployment",
@@ -244,7 +234,7 @@
     {
       "kind": "Deployment",
       "namespace": "nats",
-      "name": "nats-ui"
+      "name": "nui"
     },
     {
       "kind": "Deployment",
@@ -574,11 +564,6 @@
     {
       "kind": "StatefulSet",
       "namespace": "tailscale",
-      "name": "ts-heynats-p5dmf"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
       "name": "ts-hubble-tw85d"
     },
     {
@@ -590,26 +575,6 @@
       "kind": "StatefulSet",
       "namespace": "tailscale",
       "name": "ts-n8n-pmtds"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-nats-dashboard-242wv"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-nats-monitor-zh589"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-nats-ui-d6rrg"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-nats-ws-4q6bc"
     },
     {
       "kind": "StatefulSet",
@@ -1169,17 +1134,7 @@
     {
       "kind": "Service",
       "namespace": "nats",
-      "name": "heynats"
-    },
-    {
-      "kind": "Service",
-      "namespace": "nats",
       "name": "nats"
-    },
-    {
-      "kind": "Service",
-      "namespace": "nats",
-      "name": "nats-dashboard"
     },
     {
       "kind": "Service",
@@ -1189,17 +1144,12 @@
     {
       "kind": "Service",
       "namespace": "nats",
-      "name": "nats-monitor"
-    },
-    {
-      "kind": "Service",
-      "namespace": "nats",
       "name": "nats-surveyor"
     },
     {
       "kind": "Service",
       "namespace": "nats",
-      "name": "nats-ui"
+      "name": "nui"
     },
     {
       "kind": "Service",
@@ -1394,11 +1344,6 @@
     {
       "kind": "Service",
       "namespace": "tailscale",
-      "name": "ts-heynats-p5dmf"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
       "name": "ts-hubble-tw85d"
     },
     {
@@ -1410,26 +1355,6 @@
       "kind": "Service",
       "namespace": "tailscale",
       "name": "ts-n8n-pmtds"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-nats-dashboard-242wv"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-nats-monitor-zh589"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-nats-ui-d6rrg"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-nats-ws-4q6bc"
     },
     {
       "kind": "Service",

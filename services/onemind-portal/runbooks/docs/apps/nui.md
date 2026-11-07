@@ -1,12 +1,12 @@
-# NATS Dashboard
+# NUI
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-NATS stream monitor
+NATS web UI (official nats-nui/nui) with the in-cluster bus preconfigured
 
 ## Where it runs
 
-- Catalog entity: `component:default/nats-dashboard` in System `messaging-nats`
+- Catalog entity: `component:default/nui` in System `messaging-nats`
 - Argo CD application: none recorded for this app
 - Namespace: `nats`
 
@@ -14,7 +14,7 @@ NATS stream monitor
 
 | Workload | Kind | Namespace |
 | --- | --- | --- |
-| `nats-dashboard` | Deployment | `nats` |
+| `nui` | Deployment | `nats` |
 
 ## When it looks wrong
 
@@ -30,8 +30,8 @@ NATS stream monitor
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name="nats", k8s_pod_name=~"(nats-dashboard)-.*"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nats-dashboard`
+- Loki query: `{k8s_namespace_name="nats", k8s_pod_name=~"(nui)-.*"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nui`
 - Source: `onemindos/omos`
 
 ## Escalate

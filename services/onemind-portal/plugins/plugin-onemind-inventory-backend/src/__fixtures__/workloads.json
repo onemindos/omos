@@ -1051,21 +1051,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "heynats",
-    "namespace": "nats"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/name": "heynats"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "nack",
     "namespace": "nats"
    },
@@ -1090,21 +1075,6 @@
       "app.kubernetes.io/component": "nats",
       "app.kubernetes.io/instance": "nats",
       "app.kubernetes.io/name": "nats"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "nats-dashboard",
-    "namespace": "nats"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/name": "nats-dashboard"
      }
     }
    }
@@ -1145,13 +1115,13 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "nats-ui",
+    "name": "nui",
     "namespace": "nats"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app.kubernetes.io/name": "nats-ui"
+      "app.kubernetes.io/name": "nui"
      }
     }
    }
@@ -1789,21 +1759,6 @@
    "apiVersion": "apps/v1",
    "kind": "StatefulSet",
    "metadata": {
-    "name": "ts-heynats-p5dmf",
-    "namespace": "tailscale"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "45324aa8-6e12-4fb9-a93e-bfff8834369b"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
     "name": "ts-hubble-tw85d",
     "namespace": "tailscale"
    },
@@ -1856,66 +1811,6 @@
     "selector": {
      "matchLabels": {
       "app": "88ed510f-c96d-4e15-8a10-7e3b26147093"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "ts-nats-dashboard-242wv",
-    "namespace": "tailscale"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "3ae70c7a-97dc-43bc-b65f-7b639971c2a0"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "ts-nats-monitor-zh589",
-    "namespace": "tailscale"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "52ac4314-7ad9-48cb-8280-4f097f97fea6"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "ts-nats-ui-d6rrg",
-    "namespace": "tailscale"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "de8fe1dc-c7fb-4c42-9a5d-aacdcf8b61b0"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "ts-nats-ws-4q6bc",
-    "namespace": "tailscale"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "30fb608e-ed2f-4579-8388-adf3660b2059"
      }
     }
    }

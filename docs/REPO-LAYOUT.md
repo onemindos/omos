@@ -9,7 +9,7 @@ What each top-level path in `onemindos/omos` is for, whether it is live, and wha
 | Path | Purpose | Status | Evidence / notes |
 |------|---------|--------|------------------|
 | `platform/` | Everything Argo CD syncs to the cluster: Application CRs (`argocd/`), per-layer manifests, Helm values (`values/`), ecosystem charts and values (`ecosystem/`), backup jobs (`backups/`), NATS config and 39 stream CRs (`nats/`) | **Active** | 552 files, 465 commits. 25 `platform-*` Applications point into it. Sub-directories with **no Application** are listed below |
-| `platform/nats-tools/` | Manifests for five NATS web UIs | **Active but unmanaged** | Pods run, but no Argo Application applies this path (see `docs/STACK.md`, "Not tracked by Argo or Helm") |
+| `platform/nats-tools/` | NUI (the NATS web UI) manifests in `nui/`, plus the Dockerfiles for the agent-fabric images (`agent-web-ui/`, `agenttap/`) | **Active** | Application `platform-nats-tools` |
 | `platform/matrix/` | Matrix/Synapse and Element manifests, deploy script, bridge scripts | **Active but unmanaged** | Pods run in `matrix`; no Application. Mixes manifests with scripts, config and chatops notes |
 | `platform/geo/` | Namespace and sealed secrets for a `geo` namespace | **Legacy** | The `geo` namespace no longer exists live; the geo stack runs in `onetak` |
 | `platform/install.sh` | Imperative bootstrap that runs `helm upgrade --install` for 10 of the 11 Helm-CLI releases (everything except `takserver`) | **Active, risky** | Creates the GitOps gap in `docs/STACK.md`. Keep as a documented cold-start path until the releases are adopted by Argo |

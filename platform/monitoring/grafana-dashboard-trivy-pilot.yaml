@@ -13,7 +13,7 @@ data:
     {
       "uid": "onemind-trivy-pilot",
       "title": "OneMind / Trivy image pilot",
-      "description": "Image vulnerability findings for auth, nats, onetak and n8n only. Private ghcr.io/onemindos images (heynats, nats-dashboard, tak-portal) are not scanned and show no row. No data is not zero vulnerabilities; an up scanner does not prove full coverage. Per-container findings can repeat across images/workloads. Scan freshness and digest coverage require VulnerabilityReport verification.",
+      "description": "Image vulnerability findings for auth, nats, onetak and n8n only. Private ghcr.io/onemindos images (tak-portal) are not scanned and show no row. No data is not zero vulnerabilities; an up scanner does not prove full coverage. Per-container findings can repeat across images/workloads. Scan freshness and digest coverage require VulnerabilityReport verification.",
       "tags": [
         "onemind-security",
         "trivy-pilot"
@@ -267,7 +267,7 @@ data:
           },
           "options": {
             "mode": "markdown",
-            "content": "**Scope:** auth, nats, onetak and n8n ReplicaSets/StatefulSets only; private ghcr.io/onemindos images (heynats, nats-dashboard, tak-portal) are NOT scanned and appear as missing rows; one scan Job at a time, with one scanner container per workload container. Config, secret, node, RBAC, compliance and SBOM scanning are disabled.\n\n**No data means unverified coverage**, not a clean scan. Check report creationTimestamp, scanner version, image digest and expected containers using the Git-owned runbook `docs/operations/trivy-image-scan-pilot.md`. Report refresh target is 24 hours; metrics scrape time is not scan time.\n\nReports do not patch or block applications. This pilot adds no public endpoint or automatic remediation."
+            "content": "**Scope:** auth, nats, onetak and n8n ReplicaSets/StatefulSets only; private ghcr.io/onemindos images (tak-portal) are NOT scanned and appear as missing rows; one scan Job at a time, with one scanner container per workload container. Config, secret, node, RBAC, compliance and SBOM scanning are disabled.\n\n**No data means unverified coverage**, not a clean scan. Check report creationTimestamp, scanner version, image digest and expected containers using the Git-owned runbook `docs/operations/trivy-image-scan-pilot.md`. Report refresh target is 24 hours; metrics scrape time is not scan time.\n\nReports do not patch or block applications. This pilot adds no public endpoint or automatic remediation."
           }
         }
       ]

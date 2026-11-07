@@ -657,15 +657,6 @@
     "unknownBlockCount": 0
   },
   {
-    "source": "https://app.notion.com/3d0d0cf70a7e8123b817ccdf71662d03",
-    "title": "NATS Dashboard",
-    "lastEdited": "2026-09-03T07:33:16.081Z",
-    "blank": true,
-    "content": "",
-    "truncated": false,
-    "unknownBlockCount": 0
-  },
-  {
     "source": "https://app.notion.com/3d0d0cf70a7e8125a316ef1df9160933",
     "title": "Claude Code (Bedrock)",
     "lastEdited": "2026-09-03T07:33:32.761Z",
@@ -705,15 +696,6 @@
     "source": "https://app.notion.com/3d0d0cf70a7e81338840ec1c874371c6",
     "title": "NodeODM",
     "lastEdited": "2026-09-03T07:31:31.248Z",
-    "blank": true,
-    "content": "",
-    "truncated": false,
-    "unknownBlockCount": 0
-  },
-  {
-    "source": "https://app.notion.com/3d0d0cf70a7e81379661cd62a0279c31",
-    "title": "gastbob-nats-ui",
-    "lastEdited": "2026-09-03T07:33:16.081Z",
     "blank": true,
     "content": "",
     "truncated": false,
@@ -903,15 +885,6 @@
     "source": "https://app.notion.com/3d0d0cf70a7e816ab330c7b21cab93c8",
     "title": "Reddit",
     "lastEdited": "2026-09-03T08:46:31.635Z",
-    "blank": true,
-    "content": "",
-    "truncated": false,
-    "unknownBlockCount": 0
-  },
-  {
-    "source": "https://app.notion.com/3d0d0cf70a7e816ab4f1cb4d8a159823",
-    "title": "NATS UI",
-    "lastEdited": "2026-09-03T07:33:16.081Z",
     "blank": true,
     "content": "",
     "truncated": false,
@@ -1166,15 +1139,6 @@
     "lastEdited": "2026-09-03T09:13:48.464Z",
     "blank": false,
     "content": "# OneTAK — Internal Features\n> OneMind fork of CloudTAK — AI-native, NATS-fabric TAK COP platform. All features below are internal to the platform.\n## 🗺️ Map & Visualization\n- Basemaps — switchable tile layers (satellite, street, terrain, custom XYZ/TMS sources)\n- Overlays — toggleable data layers on top of basemap (CoT markers, heatmaps, geo zones, intel feeds)\n- 3D Globe — Cesium integration for photorealistic 3D terrain view\n- Routes — draw, import, and share navigation routes on the map\n- GeoFences — define operational zones, trigger alerts on entry/exit\n- Drawing Tools — shapes, lines, polygons, range rings, threat markers\n- Map Search — search for coordinates, addresses, and TAK callsigns\n## 📦 Data\n- Data Packages — import/export .zip bundles (KML, shapefiles, imagery, missions)\n- Data Sync — real-time CoT sync with TAK Server over SSL/WebSocket\n- File Manager — upload/download mission files, overlays, and media\n- Import — KML, KMZ, GeoJSON, Shapefile, GPX, DRW, TAK data packages\n- Export — export map data, tracks, and packages to share with other TAK clients\n## 💬 Communications & Collaboration\n- Channels — subscribe/unsubscribe to TAK Server data channels for scoped situational awareness\n- Chat — geo-referenced messaging with individual users, groups, or all connected clients\n- Voice (Mumble) — integrated push-to-talk via Murmur/Mumble server (murmur.takserver.svc:64738)\n- Video — MediaMTX RTSP/HLS stream viewer, attach live feeds to map markers\n- Tasks — assign, track, and complete field tasks tied to map locations\n## 🔌 Connections\n- TAK Server — SSL connection to 152.42.155.95:8089 (tcp) / :8443 (ssl)\n- NATS — live fabric connection via AI Bridge for agent-driven map ops\n- Plugin System — load/unload plugins at runtime (NATS, Hermes AI, Ops, Mumble, ClickHouse, Legacy AI)\n- WebSocket — real-time CoT stream browser-native connection\n- External Feeds — connect custom CoT/UDP/TCP feeds and third-party data sources\n## 🧠 AI & Intelligence\n- Legacy AI Panel — floating Hermes chat pane, ask questions about the live map\n- CopilotKit Runtime — AI co-pilot embedded in the COP interface\n- TAK-ML — machine learning model inference on live video/sensor feeds\n- ClickHouse Time Machine — query historical CoT tracks, replay missions\n- Intel Feeds — live OSINT overlays (EMSC, GDACS, EONET, USGS, AIS, ADS-B, satellites)\n## ⚙️ User & Admin\n- User Management — create, enroll, and manage TAK client certificates\n- Groups — assign users to operational groups for scoped data visibility\n- Missions — create named missions, attach tracks, files, and chat history\n- Profiles — save and restore map configurations, overlay settings, and plugin layouts\n- Audit Log — track all user actions and CoT events\n## 🚀 Deployment\n- Live URL: https://atoc.onemindos.dev\n- Namespace: cloudtak (DOKS cluster)\n- Repo: github.com/onemindos/OneTAK (fork of dfpc-coe/CloudTAK)\n- Image: ghcr.io/onemindos/omos:latest\n- Plugins: loaded via WEB_PLUGINS build arg at container build time",
-    "truncated": false,
-    "unknownBlockCount": 0
-  },
-  {
-    "source": "https://app.notion.com/3d0d0cf70a7e81a9b338c9d2b2f65479",
-    "title": "heynats",
-    "lastEdited": "2026-09-03T08:14:18.049Z",
-    "blank": true,
-    "content": "",
     "truncated": false,
     "unknownBlockCount": 0
   },

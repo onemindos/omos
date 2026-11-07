@@ -3,17 +3,7 @@
 # delete it once the annotation exists (a stale exception fails the audit). Capabilities:
 #   argocd, kubernetes, grafana-dashboard, grafana-alerts, logs, runbook, source
 exceptions:
-  - app: component:default/nats-ui
-    capability: argocd
-    reason: >-
-      Deployed from platform/nats-tools by the Argo application platform-nats-tools, which the reviewed workload map
-      attributes to the nats app (one Argo application maps to one app). It has no Argo application of its own.
-  - app: component:default/nats-dashboard
-    capability: argocd
-    reason: >-
-      Deployed from platform/nats-tools by the Argo application platform-nats-tools, which the reviewed workload map
-      attributes to the nats app (one Argo application maps to one app). It has no Argo application of its own.
-  - app: component:default/heynats
+  - app: component:default/nui
     capability: argocd
     reason: >-
       Deployed from platform/nats-tools by the Argo application platform-nats-tools, which the reviewed workload map

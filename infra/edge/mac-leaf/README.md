@@ -17,9 +17,7 @@ Mac (zeus-mac)
 │   ├── om-bridge-constellation
 │   └── om-nex-ui
 └── Services
-    ├── om_presence_v2.py
-    ├── heynats (port 5000)
-    └── nats-dashboard (port 5173)
+    └── om_presence_v2.py
 ```
 
 ## Disaster Recovery — New Mac Setup
@@ -39,8 +37,6 @@ brew install nats-server nats-io/nats-tools/nats nex
 cp launchd/*.plist ~/Library/LaunchAgents/
 launchctl load ~/Library/LaunchAgents/com.nats.server.plist
 launchctl load ~/Library/LaunchAgents/com.onemind.natsdata-guard.plist
-launchctl load ~/Library/LaunchAgents/omos.heynats.plist
-launchctl load ~/Library/LaunchAgents/omos.nats-dashboard.plist
 ```
 6. Verify leaf connection:
 ```bash
@@ -54,8 +50,6 @@ nats server ls
 | `nats-server.conf` | Sanitized config (credentials replaced with placeholders) |
 | `launchd/com.nats.server.plist` | NATS server autostart |
 | `launchd/com.onemind.natsdata-guard.plist` | .DS_Store cleaner for nats-data/ |
-| `launchd/omos.heynats.plist` | HeyNATS web UI autostart |
-| `launchd/omos.nats-dashboard.plist` | NATS dashboard autostart |
 
 ## Credentials Location
 **1Password → 00-24 SO (Sovereign Operations) → "omos-mac-leaf-node"**

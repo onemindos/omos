@@ -113,11 +113,11 @@ export function FabricPanel() {
       )}
       <Box mt={2} display="flex" flexWrap="wrap" style={{ gap: 8 }}>
         <Button
-          href="https://nats-dashboard-1.tail717ba0.ts.net/"
+          href="https://nui.tail717ba0.ts.net/"
           target="_blank"
           rel="noopener noreferrer"
         >
-          NATS dashboard
+          NUI (NATS UI)
         </Button>
         <Button
           href="https://agent-web-ui-1.tail717ba0.ts.net/"

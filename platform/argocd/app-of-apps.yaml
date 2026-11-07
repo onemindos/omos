@@ -23,7 +23,7 @@
 #         │ SERVICES    platform-omos            tak-projector, feeds, mission-engine
 #         │ GEO         platform-geo             STAC, Tile38, geospatial stack
 #         │ AUTH        platform-auth-helm       Authentik IdP (EUD enrollment, LDAP for TAK)
-#  Wave 4 │ OPS         platform-nats-tools      NATS debug toolbox (agenttap, heynats, nats-dashboard)
+#  Wave 4 │ OPS         platform-nats-tools      NATS web UI (NUI)
 #         │             platform-monitoring      Grafana, Prometheus, alerting
 # ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1

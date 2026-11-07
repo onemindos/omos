@@ -264,22 +264,10 @@
     "selector": "app=n8n"
   },
   {
-    "name": "k8s-nats-heynats-9ae724e5",
-    "namespace": "nats",
-    "workload": "heynats",
-    "selector": "app.kubernetes.io/name=heynats"
-  },
-  {
     "name": "k8s-nats-nack-bd056161",
     "namespace": "nats",
     "workload": "nack",
     "selector": "app=nack"
-  },
-  {
-    "name": "k8s-nats-nats-dashboard-3d1c0f96",
-    "namespace": "nats",
-    "workload": "nats-dashboard",
-    "selector": "app.kubernetes.io/name=nats-dashboard"
   },
   {
     "name": "k8s-nats-nats-metrics-scrape-479f0db7",
@@ -294,10 +282,10 @@
     "selector": "app.kubernetes.io/component=metrics,app.kubernetes.io/name=nats-surveyor"
   },
   {
-    "name": "k8s-nats-nats-ui-609d1098",
+    "name": "k8s-nats-nui-87fa5daa",
     "namespace": "nats",
-    "workload": "nats-ui",
-    "selector": "app.kubernetes.io/name=nats-ui"
+    "workload": "nui",
+    "selector": "app.kubernetes.io/name=nui"
   },
   {
     "name": "k8s-omos-feed-intel-4488fd05",
@@ -642,12 +630,6 @@
     "selector": "app=d403c67b-b347-41db-bd05-92c26dfb4db5"
   },
   {
-    "name": "k8s-tailscale-ts-heynats-p5dmf-bab39167",
-    "namespace": "tailscale",
-    "workload": "ts-heynats-p5dmf",
-    "selector": "app=45324aa8-6e12-4fb9-a93e-bfff8834369b"
-  },
-  {
     "name": "k8s-tailscale-ts-hubble-tw85d-feff3487",
     "namespace": "tailscale",
     "workload": "ts-hubble-tw85d",
@@ -658,30 +640,6 @@
     "namespace": "tailscale",
     "workload": "ts-n8n-pmtds",
     "selector": "app=88ed510f-c96d-4e15-8a10-7e3b26147093"
-  },
-  {
-    "name": "k8s-tailscale-ts-nats-dashboard-242wv-6989deee",
-    "namespace": "tailscale",
-    "workload": "ts-nats-dashboard-242wv",
-    "selector": "app=3ae70c7a-97dc-43bc-b65f-7b639971c2a0"
-  },
-  {
-    "name": "k8s-tailscale-ts-nats-monitor-zh589-cc21e30a",
-    "namespace": "tailscale",
-    "workload": "ts-nats-monitor-zh589",
-    "selector": "app=52ac4314-7ad9-48cb-8280-4f097f97fea6"
-  },
-  {
-    "name": "k8s-tailscale-ts-nats-ui-d6rrg-52fb9dd6",
-    "namespace": "tailscale",
-    "workload": "ts-nats-ui-d6rrg",
-    "selector": "app=de8fe1dc-c7fb-4c42-9a5d-aacdcf8b61b0"
-  },
-  {
-    "name": "k8s-tailscale-ts-nats-ws-4q6bc-215de653",
-    "namespace": "tailscale",
-    "workload": "ts-nats-ws-4q6bc",
-    "selector": "app=30fb608e-ed2f-4579-8388-adf3660b2059"
   },
   {
     "name": "k8s-tailscale-ts-observer-pftsp-99f2a772",

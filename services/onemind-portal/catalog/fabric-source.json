@@ -857,7 +857,7 @@
   },
   {
     "Page": "cobra-nats",
-    "Description": "NATS CLI web UI — removed, redundant with nats-dashboard",
+    "Description": "NATS CLI web UI — removed, redundant",
     "Category": "🚌 NATS",
     "Host": "🐳 Docker Local",
     "Status": "📚 Reference",
@@ -935,17 +935,6 @@
     "Tags": []
   },
   {
-    "Page": "NATS Dashboard",
-    "Description": "Primary NATS observability UI — cluster health, streams, consumers, subjects",
-    "Category": "🚌 NATS",
-    "Host": "☁️ DOKS Cluster",
-    "Status": "✅ Live",
-    "userDefined:URL": "https://nats-dashboard.tail717ba0.ts.net",
-    "url": "https://app.notion.com/3d0d0cf70a7e8123b817ccdf71662d03",
-    "Last edited time": "2026-09-03 07:33:16Z",
-    "Tags": []
-  },
-  {
     "Page": "Claude Code (Bedrock)",
     "Description": "Claude Code CLI running on Zeus's MacBook Pro via AWS Bedrock — autonomous coding agent for local development",
     "Category": "🧠 Agents",
@@ -1002,19 +991,6 @@
     "Last edited time": "2026-09-03 07:31:31Z",
     "Tags": [
       "Geo"
-    ]
-  },
-  {
-    "Page": "gastbob-nats-ui",
-    "Description": "Third-party NATS UI — removed, redundant",
-    "Category": "🚌 NATS",
-    "Host": "🐳 Docker Local",
-    "Status": "📚 Reference",
-    "userDefined:URL": "https://github.com/gastbob40/nats-ui",
-    "url": "https://app.notion.com/3d0d0cf70a7e81379661cd62a0279c31",
-    "Last edited time": "2026-09-03 07:33:16Z",
-    "Tags": [
-      "NATS"
     ]
   },
   {
@@ -1255,17 +1231,6 @@
     "userDefined:URL": "https://reddit.com",
     "url": "https://app.notion.com/3d0d0cf70a7e816ab330c7b21cab93c8",
     "Last edited time": "2026-09-03 08:46:31Z",
-    "Tags": []
-  },
-  {
-    "Page": "NATS UI",
-    "Description": "NATS UI — browse streams, KV buckets, subjects and messages",
-    "Category": "🚌 NATS",
-    "Host": "☁️ DOKS Cluster",
-    "Status": "✅ Live",
-    "userDefined:URL": "https://nats-ui.tail717ba0.ts.net",
-    "url": "https://app.notion.com/3d0d0cf70a7e816ab4f1cb4d8a159823",
-    "Last edited time": "2026-09-03 07:33:16Z",
     "Tags": []
   },
   {
@@ -1589,17 +1554,6 @@
     "userDefined:URL": "https://atoc.onemindos.dev",
     "url": "https://app.notion.com/3d0d0cf70a7e81a98fb4e78fdda75950",
     "Last edited time": "2026-09-03 09:13:48Z",
-    "Tags": []
-  },
-  {
-    "Page": "heynats",
-    "Description": "NATS HTTP/WebSocket gateway — browser access to the NATS bus",
-    "Category": "🚌 NATS",
-    "Host": "☁️ DOKS Cluster",
-    "Status": "✅ Live",
-    "userDefined:URL": "https://github.com/onemindos/heynats",
-    "url": "https://app.notion.com/3d0d0cf70a7e81a9b338c9d2b2f65479",
-    "Last edited time": "2026-09-03 08:14:18Z",
     "Tags": []
   },
   {

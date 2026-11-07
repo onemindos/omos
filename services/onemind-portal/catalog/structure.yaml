@@ -411,7 +411,6 @@ placement:
   google-messages: communication
   grafana: observability
   headlamp: developer-platform
-  heynats: messaging-nats
   home-assistant: home-homestead
   hubble-ui: observability
   innovis: personal-finance
@@ -420,7 +419,6 @@ placement:
   langfuse: observability
   forgejo: developer-platform
   onemind-hermes-web: ai-agents
-  nats-monitor: messaging-nats
   stac-browser: geospatial
   gatus: observability
   lf-edge: reference-links
@@ -438,13 +436,12 @@ placement:
   mta: communication
   nats-agent-protocol: messaging-nats
   nats-commands: messaging-nats
-  nats-dashboard: messaging-nats
   nats-events: messaging-nats
   nats-intel: messaging-nats
   nats-service-rpc: messaging-nats
   nats-surveyor: messaging-nats
   nats-telemetry: messaging-nats
-  nats-ui: messaging-nats
+  nui: messaging-nats
   nemotron-models: ai-agents
   notion: productivity-saas
   notion-backups: data-storage
