@@ -1,7 +1,7 @@
 # OneMind operational core
 
-App-owned object relationships, audited mission requests and versioned Dapr
-workflows. PostgreSQL retains requests, idempotency keys and results. Kubernetes
+App-owned object relationships, audited mission requests and in-process
+mission execution (a bridge until missions move to Hermes; no Dapr, no durable replay). PostgreSQL retains requests, idempotency keys and results. Kubernetes
 and Synadia Agent Protocol discovery provide fresh observations; the agent
 harness remains the owner of agent configuration.
 
