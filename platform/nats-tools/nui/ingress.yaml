@@ -1,4 +1,4 @@
-# NUI -- tailnet only: https://nui.tail717ba0.ts.net (see deployment.yaml for the access model).
+# NUI -- tailnet only: https://nui.tail717ba0.ts.net, behind the Authentik proxy outpost nui-auth (auth-outpost.yaml).
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -8,9 +8,9 @@ spec:
   ingressClassName: tailscale
   defaultBackend:
     service:
-      name: nui
+      name: nui-auth
       port:
-        number: 31311
+        number: 9000
   tls:
     - hosts:
         - nui

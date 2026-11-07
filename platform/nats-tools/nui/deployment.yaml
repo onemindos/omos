@@ -1,9 +1,9 @@
 # NUI: the official NATS web UI (https://github.com/nats-nui/nui), replacing HeyNATS, NATS UI
 # (gastbob40) and NATS Dashboard (mdawar). Tailnet only: https://nui.tail717ba0.ts.net
 #
-# - NUI has no login of its own and its API returns the stored connection credentials. The gate is
-#   the tailnet itself: only group:admins reach admin UIs (platform/core/policy.hujson). Do not
-#   expose this with an nginx or Funnel ingress.
+# - NUI has no login of its own and its API returns the stored connection credentials. It is gated by
+#   an Authentik proxy outpost (auth-outpost.yaml; admins only) on top of the tailnet ACL (group:admins).
+#   Only the outpost (and the portal health probe) may reach port 31311. Never expose NUI directly.
 # - The one connection (`nats`, user `onemind`) is imported at start from a NATS CLI context file
 #   in the SealedSecret nui-nats-context, mounted at /clicontexts (--nats-cli-contexts).
 # - /db is an emptyDir on purpose (no PVC, volume slots are scarce). Anything created in the UI
