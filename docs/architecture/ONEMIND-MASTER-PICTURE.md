@@ -113,7 +113,7 @@ NEX places them; K8s hosts the always-on gateway. No new framework needed.
 ### CUT AFTER REPLACEMENT PROVEN (your build→prove→delete rule)
 | Item | Replaced by | Gate |
 |---|---|---|
-| Mac Docker stacks: logtrace-system (grafana/loki/jaeger) | Cloud hub observability (Prometheus/Loki/Tempo/Grafana) ✅ already live | Point NATS/NEX exporters at hub, verify dashboards, then decommission |
+| Mac Docker stacks: logtrace-system (grafana/loki/jaeger) | Cloud hub observability (Prometheus/Loki/Grafana; Tempo removed 2026-11-03) ✅ already live | Point NATS/NEX exporters at hub, verify dashboards, then decommission |
 | go-events stack (postgres/redis/api/grafana/prometheus) | EVT stream + ClickHouse Time Machine + hub observability | Confirm nothing publishes to it that isn't on the bus |
 | lets-bet / omos-missions (postgres/redis) | om-mission (cloud hub, planned) | Extract "mission economics" idea only if om-mission design wants it |
 | peering stack (redis/minio/chitra/mudra) | om-media-registry + object stores (media OS bucket) + MediaMTX for video | Media path design first — video does NOT ride NATS payloads |
