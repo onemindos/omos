@@ -66,6 +66,16 @@ customRules:
           comps: [=, startswith]
           values:
             - [github-runner, /opt/hostedtoolcache/]
+        # CI test scripts/tests/test_gitops_kyverno_history.py (KyvernoNativeNumberContext) builds
+        # scripts/tests/jmespath_native with go build into a fresh tempfile.TemporaryDirectory
+        # (prefix kyverno-native-context-) and runs it from python: 112 of 113 Critical events in
+        # the 24h sample of 2026-11-07. Scoped to the runner container, the python parent, the
+        # binary name and that temp prefix.
+        - name: omos_github_runner_kyverno_native_test
+          fields: [k8s.ns.name, container.name, proc.pname, proc.name, proc.exepath]
+          comps: [=, =, =, =, startswith]
+          values:
+            - [github-runner, runner, python, native-context, /tmp/kyverno-native-context-]
       override:
         exceptions: append
 falcoctl:
