@@ -1,0 +1,18 @@
+# Shared Tailscale ProxyGroup for tailnet Ingresses (ingressClassName: tailscale).
+# An Ingress joins it with the annotation tailscale.com/proxy-group: ingress. Each such Ingress becomes a
+# Tailscale Service (svc:<first tls host>) served by these 2 pods, instead of one proxy pod per Ingress.
+# The Service hostname is the first label of spec.tls[0].hosts[0], so existing names (status.tail717ba0.ts.net)
+# are kept. Needs autoApprovers.services for tag:k8s in platform/core/policy.hujson.
+# NetworkPolicies that allow the old per-ingress proxy pods must also allow pods labelled
+# tailscale.com/parent-resource=ingress, tailscale.com/parent-resource-type=proxygroup.
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyGroup
+metadata:
+  name: ingress
+spec:
+  type: ingress
+  replicas: 2
+  hostnamePrefix: onemind-ingress
+  tags:
+    - tag:k8s
+  proxyClass: tailscale-default

@@ -98,6 +98,7 @@ metadata:
   name: gatus
   annotations:
     tailscale.com/hostname: status
+    tailscale.com/proxy-group: ingress
 spec:
   ingressClassName: tailscale
   defaultBackend:
