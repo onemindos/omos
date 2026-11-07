@@ -177,10 +177,6 @@ apps:
     title: Tailscale operator and proxies
     system: infrastructure
     description: Tailscale Kubernetes operator and the per-service tailnet proxies it creates.
-  - name: dapr
-    title: Dapr
-    system: infrastructure
-    description: Dapr control plane.
   - name: kubernetes-system
     title: Kubernetes system services
     system: infrastructure
@@ -533,7 +529,6 @@ fallbackSystems:
   cluster-cert-manager: infrastructure
   cluster-cloudflare: infrastructure
   cluster-cnpg-system: data-storage
-  cluster-dapr-system: infrastructure
   cluster-dp-default-onetak-development-b188bf98: geospatial
   cluster-external-dns: infrastructure
   cluster-external-secrets: identity-access

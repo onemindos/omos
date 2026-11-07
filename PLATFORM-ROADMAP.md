@@ -173,7 +173,6 @@ patches; Telegram remains selected. See the updated approval record below.
 | `clickhouse` | ClickHouse | 2 | Argo CD; ResourceType later |
 | `onemind-search` | OpenSearch | 2 | Argo CD; also the observability plane's log store |
 | `onemind-ai` | (LiteLLM and CPU model retired 2026-11-06) | 2 | Argo CD. agentgateway is the hub; Hermes uses Ollama Cloud |
-| `dapr-system` | Dapr | 2 | Argo CD |
 | `keda` | KEDA | 2 | Argo CD; OpenChoreo autoscaling module |
 | `monitoring` | Prometheus, Alertmanager, Grafana, Loki, Tempo, OTel collector | 2 | Argo CD; becomes the observability plane's metrics and events modules |
 | `opencost` | OpenCost | 2 | Argo CD; OpenChoreo FinOps module |

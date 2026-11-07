@@ -12,10 +12,6 @@ applications:
     apps:
     - data_backups
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  ecosystem-dapr:
-    apps:
-    - onemind_core
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   ecosystem-langfuse:
     apps:
     - kubernetes

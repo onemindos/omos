@@ -16,7 +16,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [ClickHouse](clickhouse.md) | data-storage |
 | [CloudNativePG](cloudnative-pg.md) | data-storage |
 | [CloudTAK](cloudtak.md) | tak-ecosystem |
-| [Dapr](dapr.md) | infrastructure |
 | [Element Chat](element-chat.md) | communication |
 | [Tool gateway execute gate (execute-gate)](execute-gate.md) | ai-agents |
 | [Falco](falco.md) | identity-access |

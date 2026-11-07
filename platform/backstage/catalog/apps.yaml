@@ -8343,40 +8343,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: dapr
-  tags:
-    - kubernetes
-  title: Dapr
-  description: Dapr control plane.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-dapr
-    argocd/instance-name: onemind-cloud
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: dapr-system
-    backstage.io/kubernetes-namespace: dapr-system
-    backstage.io/kubernetes-label-selector: app in
-      (dapr-operator,dapr-placement-server,dapr-scheduler-server,dapr-sentry,dapr-sidecar-injector)
-    grafana/alert-label-selector: namespace=dapr-system
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=dapr-system
-    onemind.io/logs-query: '{k8s_namespace_name="dapr-system"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/dapr/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: dapr-system/dapr-operator,dapr-system/dapr-placement-server,dapr-system/dapr-scheduler-server,dapr-system/dapr-sentry,dapr-system/dapr-sidecar-injector
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: kubernetes-system
   tags:
     - kubernetes

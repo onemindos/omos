@@ -10,16 +10,6 @@
     "sha256": "b53d3991fe84bcf38767e7702cae78666265427a127a26fff168ab4207d2b1df"
   },
   {
-    "name": "dapr",
-    "repo": "https://dapr.github.io/helm-charts",
-    "chart": "dapr",
-    "version": "1.18.5",
-    "appVersion": "1.18.5",
-    "url": "https://dapr.github.io/helm-charts/dapr-1.18.5.tgz",
-    "namespace": "dapr-system",
-    "sha256": "9fa3ca7ee9151b7d9bd415565a5a5d67ae3265ff621a6b6e128baf21920d57df"
-  },
-  {
     "name": "opencost",
     "repo": "https://opencost.github.io/opencost-helm-chart",
     "chart": "opencost",

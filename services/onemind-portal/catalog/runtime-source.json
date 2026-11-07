@@ -88,21 +88,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "dapr-system",
-      "name": "dapr-operator"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "dapr-system",
-      "name": "dapr-sentry"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "dapr-system",
-      "name": "dapr-sidecar-injector"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "github-runner",
       "name": "github-runner"
     },
@@ -485,16 +470,6 @@
       "kind": "StatefulSet",
       "namespace": "clickhouse",
       "name": "chi-onemind-onemind-0-0"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "dapr-system",
-      "name": "dapr-placement-server"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "dapr-system",
-      "name": "dapr-scheduler-server"
     },
     {
       "kind": "StatefulSet",
@@ -908,41 +883,6 @@
     },
     {
       "kind": "Service",
-      "namespace": "dapr-system",
-      "name": "dapr-api"
-    },
-    {
-      "kind": "Service",
-      "namespace": "dapr-system",
-      "name": "dapr-placement-server"
-    },
-    {
-      "kind": "Service",
-      "namespace": "dapr-system",
-      "name": "dapr-scheduler-server"
-    },
-    {
-      "kind": "Service",
-      "namespace": "dapr-system",
-      "name": "dapr-scheduler-server-a"
-    },
-    {
-      "kind": "Service",
-      "namespace": "dapr-system",
-      "name": "dapr-sentry"
-    },
-    {
-      "kind": "Service",
-      "namespace": "dapr-system",
-      "name": "dapr-sidecar-injector"
-    },
-    {
-      "kind": "Service",
-      "namespace": "dapr-system",
-      "name": "dapr-webhook"
-    },
-    {
-      "kind": "Service",
       "namespace": "default",
       "name": "kubernetes"
     },
@@ -1225,11 +1165,6 @@
       "kind": "Service",
       "namespace": "onemind-core",
       "name": "onemind-core"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-core",
-      "name": "onemind-core-dapr"
     },
     {
       "kind": "Service",
