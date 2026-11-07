@@ -48,8 +48,8 @@ def main():
         pending.append((OUTPUT / (ns + "--" + name + ".json"), sealed))
 
     roles = {n: secrets.token_urlsafe(40) for n in
-             ["onemind", "dapr_workflows", "openfga", "langfuse"]}
-    app_namespaces = {"onemind": "onemind-core", "dapr_workflows": "onemind-core",
+             ["onemind", "openfga", "langfuse"]}
+    app_namespaces = {"onemind": "onemind-core",
                       "openfga": "onemind-core",
                       "langfuse": "onemind-ai"}
     uris = {}
