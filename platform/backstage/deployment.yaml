@@ -180,6 +180,10 @@ spec:
         - name: onemind-fga-context
           mountPath: /etc/onemind-fga
           readOnly: true
+        # CA of the in-cluster NATS (cert-manager nats-ca, CN onemind-nats-ca) for the live bridge.
+        - name: nats-ca
+          mountPath: /etc/nats-ca
+          readOnly: true
         lifecycle:
           preStop:
             exec:
@@ -203,6 +207,10 @@ spec:
       - name: onemind-fga-context
         configMap:
           name: onemind-fga-context
+      - name: nats-ca
+        secret:
+          secretName: portal-nats-ca
+          optional: true
       terminationGracePeriodSeconds: 45
       affinity:
         # Required, not preferred: hub-core is memory-saturated, so the portal runs only

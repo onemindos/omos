@@ -151,6 +151,11 @@ integrations:
 
 # Internal read-only observation; no public webhook or extra producer token.
 onemind:
+  # The bus serves TLS from a private CA (cert-manager nats-ca); the live bridge trusts it from the
+  # portal-nats-ca secret mounted at /etc/nats-ca.
+  livebridge:
+    nats:
+      caFile: /etc/nats-ca/ca.crt
   operationalEvents:
     enabled: true
   # Objects merge across config layers, so only the flags that differ from the image
