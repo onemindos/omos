@@ -11,6 +11,8 @@ spec:
   accessModes:
     - ReadWriteOnce
   storageClassName: do-block-storage-retain
+  # Bound to the 10Gi volume created by the 2026-11-07 shrink (old 25Gi PV pvc-a0852cec is Released/Retain).
+  volumeName: pvc-f6e10599-4afd-4a86-b42a-fcf26fec6345
   resources:
     requests:
       storage: 10Gi
