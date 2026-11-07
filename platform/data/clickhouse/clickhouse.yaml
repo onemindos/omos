@@ -69,7 +69,7 @@ spec:
                           - onemind-ecosystem-cpu
           containers:
             - name: clickhouse
-              image: clickhouse/clickhouse-server:25.8.33.6@sha256:0152dd511befe6a2c2ef53e930726179669b08116da78500b37c51c96ff5ee77
+              image: clickhouse/clickhouse-server:26.3.62.3@sha256:de3e47c64078aa196dae2349e048fc98ba81947f651f5c20e06e46baea8ae40a
               volumeMounts:
                 - name: data-storage
                   mountPath: /var/lib/clickhouse
