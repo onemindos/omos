@@ -8,7 +8,7 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Feed: Satellites — CelesTrak TLE + SGP4 (propagates every 30s)
+# Feed: Satellites — CelesTrak TLE + SGP4 (propagates every 60s)
 # Groups: stations (ISS), military, starlink — toggle via CELESTRAK_GROUP
 # SGP4 orbital mechanics requires the sgp4 Python library; not portable to Wombat.
 # -----------------------------------------------------------------------------
@@ -52,7 +52,9 @@ spec:
             - name: CELESTRAK_GROUP
               value: "stations"
             - name: PROPAGATE_INTERVAL
-              value: "30"
+              # 60s (was 30s): halves satellite CoT traffic. The script sets CoT
+              # stale to 3 x interval (180s), so it stays longer than the interval.
+              value: "60"
           volumeMounts:
             - name: scripts
               mountPath: /scripts

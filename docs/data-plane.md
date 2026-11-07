@@ -90,7 +90,7 @@ All feed workers are Deployments in namespace `omos`. Scripts live in ConfigMaps
 | feed-ships | `tak.cot.inject` | AISstream WebSocket | real-time stream | 1 | `replicas: 0` |
 | feed-aircraft | `tak.cot.inject` | OpenSky REST | 15s poll | 1 | `replicas: 0` |
 | feed-aprs | `tak.cot.inject` | APRS-IS TCP | real-time stream | 1 | `replicas: 0` |
-| feed-satellites | `tak.cot.inject` | CelesTrak TLE + SGP4 | 30s propagate | 1 | `replicas: 0` |
+| feed-satellites | `tak.cot.inject` | CelesTrak TLE + SGP4 | 60s propagate | 1 | `replicas: 0` |
 | feed-hazards | `tak.cot.inject` | USGS + NWS REST | 60s poll | 1 | `replicas: 0` |
 | feed-intel-noaa | `intel.weather.noaa.alert.*` | NWS CAP API | 300s poll | 1 | `replicas: 0` |
 | feed-intel-usgs | `intel.seismic.usgs.*` | USGS GeoJSON | 60s poll | 1 | `replicas: 0` |
