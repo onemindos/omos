@@ -8,7 +8,7 @@ The platform plan (four layers, AI trust model and phase tracker) is in `PLATFOR
 
 ## What This Repo Is
 
-If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 58 Argo Applications reconcile from `main` (2026-11-04). Of the 11 Helm releases first installed by hand, 7 are adopted into Argo: `edge-cert-manager`, `edge-ingress-nginx`, `edge-nack`, `edge-tailscale-operator` (PR #176) and `monitoring-kube-prometheus-stack`, `monitoring-loki`, `monitoring-otel-collector` (2026-10-17). Tempo was removed on 2026-11-03. **3 are still Helm CLI only**: nats, takserver and argocd. Never `helm upgrade` an adopted release, and do not run `platform/install.sh`, which still upgrades all of them; see `docs/gitops/HELM-ADOPTION.md`. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
+If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 64 Argo Applications exist (2026-11-07; 59 Synced and Healthy, `app-of-apps` and `platform-argocd` OutOfSync, and the manual-sync `platform-omos-entity`, `platform-policy` and `platform-takserver-tak-client` OutOfSync and Missing). Of the 11 Helm releases first installed by hand, 7 are adopted into Argo: `edge-cert-manager`, `edge-ingress-nginx`, `edge-nack`, `edge-tailscale-operator` (PR #176) and `monitoring-kube-prometheus-stack`, `monitoring-loki`, `monitoring-otel-collector` (2026-10-17). Tempo was removed on 2026-11-03 (`helm list -A` and the cluster no longer show it, verified 2026-11-07). **3 are still Helm CLI only**: nats, takserver and argocd (`helm list -A` on 2026-11-07 shows `nats` as `failed` at revision 11 while its three pods run). Never `helm upgrade` an adopted release, and do not run `platform/install.sh`, which still upgrades all of them; see `docs/gitops/HELM-ADOPTION.md`. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
 
 The platform is a NATS-native C2/ISR system. NATS is the nervous system, TAK (ATAK/iTAK/WebTAK) is the tactical display, and Hermes ("Legacy") is the AI agent.
 
@@ -108,7 +108,7 @@ kubectl --context do-nyc3-omos-cloud get nodes
 ```
 
 - The Kubernetes API endpoint is **public** (no control-plane firewall; `docs/operations/cluster-review-2026-10-09.md`, H3). Tailscale gives access to admin UIs, not a private API.
-- Cluster `omos-cloud` (nyc3, DOKS 1.36): pools `onemind-hub-core-v2` (3 x 8 vCPU / 16 GiB) and `onemind-ecosystem-cpu` (8 vCPU / 32 GiB, 1 node, autoscale 1 to 4; 2026-10-27). `infra/main.tf` does not match and has no state; do not `terraform apply` it (see `infra/README.md`).
+- Cluster `omos-cloud` (nyc3, DOKS 1.36): pools `onemind-hub-core-v2` (3 x 8 vCPU / 16 GiB) and `onemind-ecosystem-cpu` (8 vCPU / 32 GiB, 1 node, autoscale 1 to 2; 4 nodes in total, verified with `doctl` 2026-11-07). `infra/main.tf` does not match and has no state; do not `terraform apply` it (see `infra/README.md`).
 - Older local contexts such as `do-nyc3-onemind-hub` may exist. Check the context before running anything.
 
 ## TAK Server
