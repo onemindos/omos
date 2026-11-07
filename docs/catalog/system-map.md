@@ -1,6 +1,6 @@
 # OneMind catalog system map (F2)
 
-Status: **proposed, awaiting Zeus's approval** (flagship work order F2, PR #358). Evidence date: 2026-10-21.
+Status: **proposed, awaiting Zeus's approval** (flagship work order F2, PR #358). Evidence date: 2026-10-21 (a point-in-time proposal; since then Tempo was removed on 2026-11-03, so `monitoring-tempo` and the Tempo rows below are historical).
 Sources: `catalog/apps.yaml` (154 entities), `catalog/cluster.yaml` (514 entities), and read-only
 `kubectl --context do-nyc3-omos-cloud -n argocd get applications` (69 applications) and `get deployments,statefulsets -A` (176 live workloads;
 the catalog also retains 10 workloads that are no longer observed, marked `missing-review-required`).

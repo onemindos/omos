@@ -61,8 +61,8 @@ the pod prefers that pool and can move if it is full.
 ## Alerts
 
 `GatusEndpointDown` (a check failing for 5 minutes), `GatusCertificateExpiring` (under 14 days) and `GatusDown`
-(Prometheus cannot scrape Gatus). All are severity `warning` and use the default Alertmanager route. There is no
-Telegram receiver (on hold).
+(Prometheus cannot scrape Gatus). All are severity `warning` and use the default Alertmanager route, which since 2026-11-07 reaches the portal inbox
+(`AlertmanagerConfig/onemind-backstage`). There is no Telegram receiver (on hold).
 
 ## Before the first sync
 

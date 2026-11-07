@@ -16,6 +16,17 @@ Tiered inventory of everything running on the DOKS cluster `omos-cloud` (nyc3), 
 - **Development phase:** every app is deliberate (system integration). This file ranks apps; it does not recommend removing any.
 - **Owner:** there is one operator, `zeus`, for everything. The "Owner" column is therefore omitted from the tables; the first thing to change when a second person joins is to add it.
 
+## Refresh 2026-11-07 (read-only)
+
+Hand-edited; this file has no generator, so the sections below were updated one by one against the cluster.
+Live on 2026-11-07: 64 Argo Applications (59 Synced and Healthy; `app-of-apps` and `platform-argocd` OutOfSync
+and Healthy; manual-sync `platform-omos-entity`, `platform-policy` and `platform-takserver-tak-client`
+OutOfSync and Missing), 4 nodes (3 `onemind-hub-core-v2`, 1 `onemind-ecosystem-cpu`, autoscale 1 to 2). The
+Karakeep, OpenRemote, ThingsBoard, Forgejo, Gatus and Langfuse sections below describe workloads that are now
+running; the Trivy operator is running too. Tempo is gone (removed 2026-11-03), so older rows that mention it are historical.
+Helm release `nats` shows status `failed` at revision 11 (2026-11-07 00:05) while its three pods are Running; the
+cause is not investigated here.
+
 ## Phase 5 addendum — 2026-10-19, 08:07 UTC
 
 This narrow refresh does not recertify the older inventory below. Live cluster:
@@ -55,15 +66,18 @@ volumes are kept until the owner approves their deletion. Live teardown steps:
 [retirement runbook](operations/paperclip-retirement-2026-11-01.md). The Hermes-side
 pieces (`hermes-paperclip-api`) are retired with the old Hermes, separately.
 
-## Karakeep preparation — 2026-10-24
+## Karakeep — prepared 2026-10-24, running 2026-11-07
 
-User-requested bookmark/read-later workspace, **prepared source only**. No Karakeep,
-Hoarder, Meilisearch or shared crawler Deployment was found in the metadata preflight.
-This entry does not refresh historical counts or certify a working route.
+User-requested bookmark/read-later workspace. Prepared as source on 2026-10-24; deployed on the owner's
+authorization of 2026-10-25 ([README](../platform/karakeep/README.md)). Verified live 2026-11-07: `platform-karakeep`
+Synced and Healthy with automated sync (prune, selfHeal); web, Chrome and Meilisearch pods Running for 36 hours;
+Tailscale ingress `karakeep.tail717ba0.ts.net`; both VolSync sources have synced today. The PVCs (`data-pvc` 20Gi,
+`meilisearch-pvc` 5Gi) are on `do-block-storage`, not the retain class. A recorded isolated restore and the
+mobile/extension compatibility checks are not recorded here, so treat the restore as unproven.
 
 | Tier | Application | Namespace | State / recovery | Exposure | Status |
 | --- | --- | --- | --- | --- | --- |
-| 2 | `platform-karakeep` | `karakeep` | Native SQLite/assets 20Gi + Meilisearch 5Gi; [backup activation and isolated restore](../platform/karakeep/BACKUP.md) required before real use | Private `https://karakeep.tail717ba0.ts.net`, app authentication | Manual Argo, all replicas zero; [first-start gates](../platform/karakeep/README.md) pending |
+| 2 | `platform-karakeep` | `karakeep` | Native SQLite/assets 20Gi + Meilisearch 5Gi on `do-block-storage`; two VolSync sources syncing; [isolated restore](../platform/karakeep/BACKUP.md) not recorded | Private `https://karakeep.tail717ba0.ts.net`, app authentication | Auto-sync, Synced/Healthy, 3 pods Running (2026-11-07) |
 
 ## Policy service preparation — 2026-10-29
 
@@ -76,25 +90,25 @@ two SealedSecrets, pinned image digest).
 | --- | --- | --- | --- | --- | --- |
 | 2 | `platform-policy` | `onemind-core` | No PVC; action records in memory (pending actions are forgotten on restart and cannot be confirmed); audit in `EVT` (`evt.so.>`), commands in `CMD` | None (NATS client only; no Service or ingress); ecosystem pool | Manual Argo, not synced; [owner steps](../platform/policy/README.md) pending |
 
-## Langfuse preparation — 2026-11-07
+## Langfuse — running 2026-11-07
 
-Self-hosted Langfuse v3 for Hermes traces, **prepared source only** (PR `feat/langfuse`): chart `langfuse` 2.2.3 (app 4.75.0),
+Self-hosted Langfuse v3 for Hermes traces. Live 2026-11-07: `ecosystem-langfuse` Synced and Healthy, web, worker and Valkey pods Running (10 to 12 hours), Tailscale ingress `onemind-langfuse.tail717ba0.ts.net`. Source: chart `langfuse` 2.2.3 (app 4.75.0),
 Application `ecosystem-langfuse`, namespace `onemind-ai`, web and worker one replica each on the ecosystem pool. It reuses the
 database `langfuse` in CNPG `onemind-data`, a `langfuse` user and database in ClickHouse `clickhouse/onemind`, Spaces bucket
-`onemind-backups` (prefix `langfuse/`), the bundled Valkey (no PVC) and the Authentik provider `onemind-langfuse`. Hermes is not
-wired to it yet (the `hermes-langfuse` Secret exists, no Deployment references it). Not live until merged and synced.
+`onemind-backups` (prefix `langfuse/`), the bundled Valkey (no PVC) and the Authentik provider `onemind-langfuse`. Hermes is wired to it: the
+`onemind-hermes` Deployment loads Secret `hermes-langfuse` and installs the pinned Langfuse plugin at start. Trace flow and the ClickHouse/CNPG recovery path are not verified here.
 
 | Tier | Application | Namespace | State / recovery | Exposure | Status |
 | --- | --- | --- | --- | --- | --- |
-| 2 | `ecosystem-langfuse` | `onemind-ai` | PostgreSQL (CNPG `onemind-data`, `Velero`, `Barman`), ClickHouse database `langfuse` (VolSync of the ClickHouse PVC), event blobs in Spaces; Valkey queue is disposable | Tailnet only: `https://onemind-langfuse.tail717ba0.ts.net`, Authentik sign-in only | Auto-sync on merge, not yet synced |
+| 2 | `ecosystem-langfuse` | `onemind-ai` | PostgreSQL (CNPG `onemind-data`, `Velero`, `Barman`), ClickHouse database `langfuse` (VolSync of the ClickHouse PVC), event blobs in Spaces; Valkey queue is disposable | Tailnet only: `https://onemind-langfuse.tail717ba0.ts.net`, Authentik sign-in only | Auto-sync, Synced/Healthy (2026-11-07) |
 
 ## Summary
 
 Trivy pilot, prepared 2026-10-24 and retargeted 2026-11-04: a bounded Argo-managed
 image-vulnerability pilot for `auth,nats,onetak,n8n` under `platform/security/`, with
 one concurrent scan Job, namespace-scoped operator permissions and a Grafana dashboard.
-Owner approved deploying it 2026-11-04; merging auto-syncs it through `platform-security`.
-It is not live-accepted yet, and the private `ghcr.io/onemindos` image
+Owner approved deploying it 2026-11-04; `platform-security` is Synced and Healthy and `trivy-operator` is Running in `trivy-system` with scan Jobs completing (2026-11-07).
+Acceptance is not recorded here, and the private `ghcr.io/onemindos` image
 (`tak-portal`) is not scanned. No new PVC, node or public
 route is requested. See [capacity, scope and acceptance](operations/trivy-image-scan-pilot.md).
 
@@ -164,8 +178,8 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | Application | Namespace | Purpose | State / data | Backup | Exposure | GitOps |
 |-------------|-----------|---------|--------------|--------|----------|--------|
 | `platform-fedhub` | takserver | TAK federation hub (`fedhub:5.8`) plus MongoDB, `tak-ldap` | MongoDB | `VolSync` | `fedhub.tail717ba0.ts.net:9100` / `:9443` **tailnet (L4)** | Argo. Health flaps to Progressing |
-| `platform-backstage` | backstage | Backstage developer portal and service catalog | PostgreSQL, 10 GiB | `PG dump` (06:40 UTC), `VolSync` | `portal` tailnet (`onemind-preview` redirects) | Argo |
-| `platform-monitoring` | monitoring, nats | Grafana dashboards, rules, ServiceMonitors, `nats-surveyor`, `nats-leafz-exporter` (per-leaf leafnode metrics, added 2026-10-27 after the capture), `nats-metrics-scrape` (0 replicas). **Alertmanager has no receiver** | none (stack lives in Helm release `monitoring`) | Git | `grafana` tailnet | Argo |
+| `platform-backstage` | backstage | Backstage developer portal and service catalog, 2 replicas. Live since 2026-11-07: the live bridge (`livebridge` backend plugin: read-only NATS subscription plus Kubernetes watch, pushed to the UI as Signals; both replicas logged `livebridge NATS connected`), the Ops Center page `/ops` (CesiumJS globe of CoT tracks, bus stream, namespace health, Argo strip; [README](../services/onemind-portal/plugins/plugin-onemind-ops/README.md)), and the Alertmanager route `AlertmanagerConfig/onemind-backstage` (critical and warning into the `onemind-admins` inbox through `POST /api/events/http/alertmanager`, Falco events included because falcosidekick posts Warning and above to Alertmanager). MCP actions (`/api/mcp-actions/v1`, for operator clients, not Hermes): `catalog_*`, `onemind_health`, `onemind_runbook` and the read-only `livebridge.snapshot_summary` | PostgreSQL, 10 GiB | `PG dump` (06:40 UTC), `VolSync` | `portal` tailnet (`onemind-preview` redirects) | Argo |
+| `platform-monitoring` | monitoring, nats | Grafana dashboards, rules, ServiceMonitors, `nats-surveyor`, `nats-leafz-exporter` (per-leaf leafnode metrics, added 2026-10-27 after the capture), `nats-metrics-scrape` (0 replicas). **Alertmanager receiver `onemind-backstage` (portal) added 2026-11-07**; before that its only receiver was `null`, so alerts went nowhere | none (stack lives in Helm release `monitoring`) | Git | `grafana` tailnet | Argo |
 | `platform-observability` | clickhouse | ClickHouse "Time Machine" (Altinity CHI), server 26.8.36.3 LTS (upgraded from 24.8 on 2026-11-07 via 25.8 and 26.3; Langfuse v4 needs >= 25.12) | 20 GiB time-series | `VolSync`; native backup Job suspended | internal | Argo |
 | `platform-clickhouse-operator` | kube-system | Altinity ClickHouse operator (chart 0.27.3). A second, legacy `clickhouse-operator` Deployment sits at 0 replicas | none | Git | internal | Argo |
 | `platform-takserver-tak-client` | takserver | `omos-tak-client` (A21, **proposed, not synced**): TAK Server streaming client bridge; TAK CoT to `tak.cot.out`, `tak.cot.inject` into TAK (queue group shared with NatsBridgePlugin). Replaces the never-deployed cot-tap | none | Git | internal (client of `takserver-messaging:8089` and `nats:4222`) | Argo, **manual sync**; needs two owner-sealed Secrets and a digest pin (`platform/takserver/tak-client/README.md`) |
@@ -243,7 +257,7 @@ Eleven releases were installed with `helm upgrade --install` (see `platform/inst
 | `cert-manager` | cert-manager | cert-manager-v1.20.3 | 5 | 2026-07-11 | `platform/values/cert-manager.yaml` | No `ClusterIssuer` is deployed (none is needed: public TLS ends at Cloudflare and tailnet TLS is Tailscale's). Add one with its own Cloudflare token the day a direct certificate is needed |
 | `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 | 1 | 2026-07-04 | `platform/values/ingress-nginx.yaml` | LB IP `143.244.220.155` is bound to this release |
 | `loki` | monitoring | loki-7.0.0 | 4 | 2026-07-11 | `platform/values/loki.yaml` | Logs only |
-| `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | 8 | 2026-07-17 | `platform/values/kube-prometheus-stack.yaml` | Alert routing (Alertmanager receiver) is not delivered anywhere (A17) |
+| `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | 8 | 2026-07-17 | `platform/values/kube-prometheus-stack.yaml` | Alert routing: until 2026-11-07 Alertmanager's only receiver was `null` (A17). Now `AlertmanagerConfig/onemind-backstage` routes critical and warning (not `Watchdog`/`InfoInhibitor`) to the portal; there is no Telegram receiver (on hold) |
 | `nack` | nats | nack-0.34.0 | 4 | 2026-07-11 | `platform/nats/nack-values.yaml` | Streams are not reconciled until reinstalled |
 | `nats` | nats | nats-2.14.2 | 10 | 2026-07-11 | `platform/nats/values.template.yaml` plus an **out-of-band, gitignored** `values.secret.yaml` | Passwords exist only on the machine that last ran Helm; Argo and Helm both own the StatefulSet |
 | `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | 3 | 2026-07-17 | `platform/values/otel-collector.yaml` | Telemetry only |
@@ -356,34 +370,33 @@ Provider deletion and recovery verification must be recorded from live evidence;
 this source change alone does not certify either. Preserve device originals and
 existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
 
-## User-requested IoT pilots — November1,2026 (prepared source only)
+## User-requested IoT pilots — prepared November 1, 2026, running 2026-11-07
 
 | Tier | Application | Namespace | State/recovery | Exposure | Status |
 |---|---|---|---|---|---|
-|2|`platform-openremote`|`openremote`|Dedicated PostgreSQL17/Keycloak, retained10Gi DB plus5Gi manager storage; separate crash-consistent VolSync sources, coordinated recovery pending|Proposed private `openremote.tail717ba0.ts.net`; native login; no external MQTT|Manual sync; SealedSecrets committed 2026-11-04; first sync and acceptance pending|
-|2|`platform-thingsboard`|`thingsboard`|Apache CE4.3.1.8 monolith, retained10Gi PostgreSQL; no-demo guarded schema/admin hook; in-memory queue is an evaluation limitation|Proposed private `thingsboard.tail717ba0.ts.net`; native login; no external MQTT|Manual sync, only after OpenRemote is stable; SealedSecrets committed 2026-11-04; first sync and acceptance pending|
+|2|`platform-openremote`|`openremote`|Dedicated PostgreSQL17/Keycloak, retained10Gi DB plus5Gi manager storage; separate crash-consistent VolSync sources, coordinated recovery pending|Private `openremote.tail717ba0.ts.net` (Tailscale ingress); native login; no external MQTT|Manual sync, Synced/Healthy since 2026-11-05; 4 pods Running (2d16h); retained database and storage claims Bound; VolSync sources syncing; coordinated restore and acceptance not recorded|
+|2|`platform-thingsboard`|`thingsboard`|Apache CE4.3.1.8 monolith, retained10Gi PostgreSQL; no-demo guarded schema/admin hook; in-memory queue is an evaluation limitation|Private `thingsboard.tail717ba0.ts.net` (Tailscale ingress); native login; no external MQTT|Manual sync, Synced/Healthy (last sync 2026-11-06); ThingsBoard and PostgreSQL pods Running; VolSync source syncing; acceptance not recorded|
 
-These are fresh evaluation deployments, not migrations of retained Mac volumes,
-verified services or new cluster-count observations. User expressly chose both for
+These are fresh evaluation deployments, not migrations of retained Mac volumes. User expressly chose both for
 comparison. See the owning READMEs for edition, launch and restore requirements.
 
-## Forgejo secondary forge — launch-ready 2026-11-04
+## Forgejo secondary forge — launch-ready 2026-11-04, running 2026-11-07
 
-User-directed private GitHub pull-mirror standby. Source and SealedSecrets are
-committed but the Application is not synced, so no live health, hostname, account
-or backup is claimed. GitHub remains the working forge and Argo source.
+User-directed private GitHub pull-mirror standby. Synced on 2026-11-05 and verified live 2026-11-07: Application
+Synced and Healthy (manual sync), pod Running, Tailscale ingress `forgejo.tail717ba0.ts.net`, the retain-class
+20Gi claim Bound, and the coordinated backup Job plus VolSync source completing (latest sync today). Restore
+acceptance and the owner's first sign-in and mirror pilot are not recorded here. GitHub remains the working forge and Argo source.
 
 | Tier | Application | Namespace | State / recovery | Exposure | Status |
 | --- | --- | --- | --- | --- | --- |
-| 2 | `platform-forgejo` | `forgejo` | Rootless Forgejo 15.0.11 LTS, SQLite/Git/LFS on one 20Gi `do-block-storage-retain` claim; nightly coordinated stop plus VolSync/Restic export (`backups/restic/forgejo/data`); restore acceptance pending | Private `https://forgejo.tail717ba0.ts.net` (Tailscale ingress), local accounts, no SSH or registration; hub pool preferred | Manual Argo, not synced; [owner first sign-in and mirror pilot](../platform/forgejo/README.md#owner-first-sign-in) pending |
+| 2 | `platform-forgejo` | `forgejo` | Rootless Forgejo 15.0.11 LTS, SQLite/Git/LFS on one 20Gi `do-block-storage-retain` claim; nightly coordinated stop plus VolSync/Restic export (`backups/restic/forgejo/data`); restore acceptance not recorded | Private `https://forgejo.tail717ba0.ts.net` (Tailscale ingress), local accounts, no SSH or registration; hub pool preferred | Manual Argo, Synced/Healthy, pod Running (2026-11-07); [owner first sign-in and mirror pilot](../platform/forgejo/README.md#owner-first-sign-in) not recorded |
 
-## Gatus status checks — prepared 2026-11-05
+## Gatus status checks — prepared 2026-11-05, running 2026-11-07
 
 Flagship F7. Live HTTP(S) and certificate-expiry checks for apps that run outside Kubernetes (SaaS) and for
-cluster apps with no probe of their own. Source is committed but the Application is not synced, so no live
-health, hostname or alert is claimed. Endpoints are generated from catalog annotations
+cluster apps with no probe of their own. Verified live 2026-11-07: Application Synced and Healthy (manual sync, last sync 2026-11-06), pod Running 38 hours, Tailscale ingress `status.tail717ba0.ts.net`. Endpoints are generated from catalog annotations
 (`onemind.io/health-check`, `onemind.io/health-url`); see [the app contract](catalog/app-contract.md).
 
 | Tier | Application | Namespace | State / recovery | Exposure | Status |
 | --- | --- | --- | --- | --- | --- |
-| 2 | `platform-gatus` | `gatus` | Gatus v5.37.0 pinned by digest, in-memory storage (no PVC, nothing to back up; check history resets on restart, Prometheus keeps it); requests 10m CPU / 48Mi, limits 200m / 128Mi; ecosystem pool preferred | Private `https://status.tail717ba0.ts.net` (Tailscale ingress); `/metrics` scraped by Prometheus; portal reads it through `/api/proxy/gatus/statuses` | Manual Argo, not synced; includes the deliberate failure `test-deliberate-failure` ([remove it after the alert is seen](../platform/gatus/README.md#remove-the-deliberate-failure)) |
+| 2 | `platform-gatus` | `gatus` | Gatus v5.37.0 pinned by digest, in-memory storage (no PVC, nothing to back up; check history resets on restart, Prometheus keeps it); requests 10m CPU / 48Mi, limits 200m / 128Mi; ecosystem pool preferred | Private `https://status.tail717ba0.ts.net` (Tailscale ingress); `/metrics` scraped by Prometheus; portal reads it through `/api/proxy/gatus/statuses` | Manual Argo, Synced/Healthy, pod Running (2026-11-07); the deliberate failure `test-deliberate-failure` is no longer in the live config (per the [README](../platform/gatus/README.md)) |

@@ -101,7 +101,7 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 | 3 | `platform/takml/` | TAK-ML Server (JAR), TAK-ML DB (PG16), Vision Worker |
 | 3 | `platform/data/` | ClickHouse (Altinity operator), Redpanda Connect |
 | 3 | `platform/vrtak/` | nginx file server (VR-TAK APK/ZIP distribution) |
-| 4 | `platform/monitoring/` | Grafana, Prometheus, Loki, Tempo, Alertmanager, NATS Surveyor |
+| 4 | `platform/monitoring/` | Grafana, Prometheus, Loki, Alertmanager, NATS Surveyor (Tempo removed 2026-11-03) |
 | 4 | `platform/nats-tools/` | nui (NATS web UI); agent-web-ui and agenttap image Dockerfiles |
 
 ---
@@ -123,7 +123,7 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 | OneTAK Media | onetak | ghcr.io/onemindos/onetak-media:latest | ✅ live |
 | TAK Server 5.8 | takserver | ghcr.io/onemindos/takserver-base:* | ✅ live |
 | ClickHouse | clickhouse | altinity/clickhouse-server (operator) | ✅ live |
-| Grafana/Loki/Tempo | monitoring | (Helm) | ✅ live |
+| Grafana/Loki | monitoring | (Helm) | ✅ live |
 | nui | nats | ghcr.io/nats-nui/nui (0.10.0, digest-pinned) | ✅ live |
 | agent-web-ui | nats | ghcr.io/onemindos/agent-web-ui:latest | ✅ live |
 | agenttap | nats | ghcr.io/onemindos/agenttap:latest | ✅ live |
@@ -151,7 +151,7 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 | onetak | OneTAK API/Events/Media/Tiles + all geo services |
 | takserver | TAK Server 5.8 + FedHub + LDAP |
 | clickhouse | ClickHouse (Altinity operator) |
-| monitoring | Prometheus + Grafana + Loki + Tempo + Alertmanager |
+| monitoring | Prometheus + Grafana + Loki + Alertmanager |
 | omos | Runtime services: tak-projector, feeds, sinks, redpanda |
 | geo | Geospatial stack (Tile38, STAC, additional tools) — **EMPTY, consolidate into onetak** |
 | takml | TAK-ML vision pipeline |
@@ -431,7 +431,7 @@ kubectl create secret generic <name> -n <namespace> \
 | **Legacy AI** | Sovereign AI agent (claude-opus-4 on Bedrock). Accessible from every surface via NATS. | Commander's AI |
 | **Authentik** | Identity. Single SSO for all surfaces (OIDC + LDAP). Live at `auth.onemindos.dev`. | Auth authority |
 | **FedHub** | TAK federation. Multi-site connectivity. | Inter-org bridge |
-| **Monitoring stack** | Grafana/Loki/Tempo/Prometheus. | Observability |
+| **Monitoring stack** | Grafana/Loki/Prometheus. | Observability |
 | **VR-TAK** | Simulation, training, Isaac Sim integration — NOT everyday SA | Simulation/training only |
 
 ---

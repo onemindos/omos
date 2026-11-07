@@ -1,6 +1,6 @@
 # AI operational context
 
-Connect an OAuth-capable MCP client to `https://portal.tail717ba0.ts.net/api/mcp-actions/v1` through the private mesh. Authenticate with the existing OIDC identity and approve the client request. Backstage's CIMD authentication is enabled; the default supported client metadata patterns apply. No anonymous or organization-wide machine token is installed.
+Hermes (Legacy) does not use this endpoint; it reaches OneMind tools through the agentgateway tool gateway. The endpoint also serves the read-only `livebridge.snapshot_summary` action next to the catalog, health and runbook actions. Connect an OAuth-capable MCP client to `https://portal.tail717ba0.ts.net/api/mcp-actions/v1` through the private mesh. Authenticate with the existing OIDC identity and approve the client request. Backstage's CIMD authentication is enabled; the default supported client metadata patterns apply. No anonymous or organization-wide machine token is installed.
 
 The actions registry is restricted to read-only, non-destructive actions from catalog and OneMind. Scaffolder mutation actions are excluded. Available context includes catalog queries, catalog model descriptions, documented runbooks and configured live health/metrics. Health includes observation timestamps; documentation reports that it is packaged Git content, not a live assertion. Stale or unknown readings must not be presented as current facts.
 
