@@ -739,3 +739,7 @@ name is set in three places: `SOUL.md` (identity), `API_SERVER_MODEL_NAME: Legac
 `@legacy:onemindos.dev` (set once through the Synapse profile API). The Telegram bot
 (`omos_hermes_bot`, first name `omos-hermes`) can only be renamed in BotFather. The old
 `hermes-legacy` Deployment was the old Legacy instance, retired on 2026-11-03.
+
+## Langfuse tracing
+
+The bundled `observability/langfuse` plugin sends traces to the in-cluster Langfuse (`langfuse-web.onemind-ai:3000`, project `hermes`). Credentials come from the `hermes-langfuse` SealedSecret via `envFrom` (`HERMES_LANGFUSE_*`); `HERMES_LANGFUSE_ENV=production` is set in the Deployment. Egress to Langfuse is in `network.yaml`; the ingress side is `langfuse-web-clients` in `platform/ecosystem/resources/langfuse.yaml`. `config.defaults.yaml` seeds `plugins.enabled` only on an empty volume, so on the running instance the plugin is enabled in `/opt/data/config.yaml` (`hermes plugins enable observability/langfuse`, then restart the gateway). The plugin fails open.

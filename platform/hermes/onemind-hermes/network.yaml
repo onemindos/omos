@@ -62,6 +62,18 @@ spec:
               app: synapse
       ports:
         - {protocol: TCP, port: 8008}
+    # Langfuse web (tracing, observability/langfuse plugin). Matching ingress rule is the
+    # `langfuse-web-clients` policy in platform/ecosystem/resources/langfuse.yaml.
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: onemind-ai
+          podSelector:
+            matchLabels:
+              app: web
+              app.kubernetes.io/name: langfuse
+      ports:
+        - {protocol: TCP, port: 3000}
     # Tailnet devices, one rule per device and port. Each target is the Tailscale operator's proxy pod for the
     # egress Service of the same name in platform/hermes/base/egress.yaml; the tailnet policy
     # (platform/core/policy.hujson) must also allow that port. The public rule below excludes 100.64.0.0/10.

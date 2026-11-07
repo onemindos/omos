@@ -12,7 +12,7 @@ resources:
   # Client key for the tool gateway; deployment.yaml exposes it as ONEMIND_GATEWAY_KEY (Phase 5).
   - gateway-client.sealedsecret.yaml
   - backup.sealedsecret.yaml
-  # Langfuse project keys and in-cluster URL (HERMES_LANGFUSE_*). Not referenced by the Deployment yet; wiring is a separate change.
+  # Langfuse project keys and in-cluster URL (HERMES_LANGFUSE_*). Wired into the Deployment via envFrom.
   - langfuse.sealedsecret.yaml
   - mcp/zoho/zoho-ops.sealedsecret.yaml
   - mcp/zoho/zoho-data-analytics.sealedsecret.yaml
