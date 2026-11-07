@@ -5,6 +5,4 @@ psycopg[binary]==3.3.6
 psycopg-pool==3.3.3
 nats-py==2.16.0
 synadia-ai-agents==0.7.1
-dapr==1.18.3
-dapr-ext-workflow==1.18.3
 python-multipart==0.0.32
