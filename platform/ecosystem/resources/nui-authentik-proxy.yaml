@@ -1,0 +1,131 @@
+# Authentik login in front of NUI (the NATS web UI, platform/nats-tools/nui).
+#
+# NUI has no login of its own and its API returns the stored NATS credentials, so it sits behind an
+# Authentik proxy outpost (platform/nats-tools/nui/auth-outpost.yaml). This hook creates, if missing:
+#   - proxy provider "NUI" (mode proxy): external https://nui.tail717ba0.ts.net,
+#     internal http://nui.nats.svc.cluster.local:31311
+#   - application "nui", bound to the group "authentik Admins" only
+#   - outpost "nui-outpost" (type proxy, no service connection: it runs as our own Deployment in nats)
+# The outpost's API token is sealed into nats/nui-auth-outpost by hand once (see the outpost manifest).
+# Safe to re-run: existing objects are left untouched.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nui-authentik-proxy-bootstrap-v1
+  namespace: auth
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  ttlSecondsAfterFinished: 86400
+  template:
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: bootstrap
+          image: ghcr.io/onemindos/onemind-core@sha256:667f9836cda15e3aadd51c6186eb80839946a0d1c76fc26fcb367e81cbc6ff9a
+          command: [python, -c]
+          args:
+            - |
+              import os, httpx
+              base = "http://platform-auth-helm-authentik-server.auth.svc.cluster.local/api/v3/"
+              headers = {"Authorization": "Bearer " + os.environ["AUTH_TOKEN"]}
+              EXTERNAL = "https://nui.tail717ba0.ts.net"
+              INTERNAL = "http://nui.nats.svc.cluster.local:31311"
+              with httpx.Client(headers=headers, timeout=30) as client:
+                  def request(method, path, body=None):
+                      response = client.request(method, base + path, json=body)
+                      if not response.is_success:
+                          raise RuntimeError("Identity API " + method + " " + path.split("?")[0] +
+                                             " failed with status " + str(response.status_code) +
+                                             ": " + response.text[:500])
+                      return response.json() if response.content else {}
+
+                  flows = {f["slug"]: f["pk"] for f in request("GET", "flows/instances/?page_size=200")["results"]}
+                  for slug in ("default-provider-authorization-implicit-consent", "default-provider-invalidation-flow"):
+                      if slug not in flows:
+                          raise RuntimeError("Flow not found: " + slug)
+
+                  providers = request("GET", "providers/proxy/?page_size=200")["results"]
+                  provider = next((p for p in providers if p["name"] == "NUI"), None)
+                  if provider:
+                      print("Proxy provider NUI already exists pk " + str(provider["pk"]))
+                  else:
+                      provider = request("POST", "providers/proxy/", {
+                          "name": "NUI",
+                          "authorization_flow": flows["default-provider-authorization-implicit-consent"],
+                          "invalidation_flow": flows["default-provider-invalidation-flow"],
+                          "mode": "proxy",
+                          "external_host": EXTERNAL,
+                          "internal_host": INTERNAL,
+                          "internal_host_ssl_validation": True,
+                          "access_token_validity": "hours=8",
+                      })
+                      print("Created proxy provider NUI pk " + str(provider["pk"]))
+
+                  apps = request("GET", "core/applications/?page_size=200")["results"]
+                  app = next((a for a in apps if a["slug"] == "nui"), None)
+                  if app:
+                      print("Application nui already exists")
+                  else:
+                      app = request("POST", "core/applications/", {
+                          "name": "NUI (NATS)",
+                          "slug": "nui",
+                          "provider": provider["pk"],
+                          "policy_engine_mode": "any",
+                          "meta_launch_url": EXTERNAL,
+                          "meta_description": "NATS web UI: streams, consumers, KV, messages",
+                      })
+                      print("Created application nui")
+
+                  groups = request("GET", "core/groups/?name=authentik%20Admins")["results"]
+                  if not groups:
+                      raise RuntimeError("Group 'authentik Admins' not found")
+                  bindings = request("GET", "policies/bindings/?target=" + app["pk"])["results"]
+                  if any(b.get("group") == groups[0]["pk"] for b in bindings):
+                      print("Admins binding already exists")
+                  else:
+                      request("POST", "policies/bindings/", {
+                          "target": app["pk"], "group": groups[0]["pk"],
+                          "order": 0, "enabled": True, "negate": False, "timeout": 30,
+                      })
+                      print("Bound application nui to authentik Admins")
+
+                  outposts = request("GET", "outposts/instances/?page_size=200")["results"]
+                  outpost = next((o for o in outposts if o["name"] == "nui-outpost"), None)
+                  if outpost:
+                      if provider["pk"] not in outpost["providers"]:
+                          request("PATCH", "outposts/instances/" + outpost["pk"] + "/",
+                                  {"providers": outpost["providers"] + [provider["pk"]]})
+                          print("Added NUI provider to outpost nui-outpost")
+                      else:
+                          print("Outpost nui-outpost already exists")
+                  else:
+                      request("POST", "outposts/instances/", {
+                          "name": "nui-outpost",
+                          "type": "proxy",
+                          "providers": [provider["pk"]],
+                          "config": {"authentik_host": "https://auth.onemindos.dev/",
+                                     "authentik_host_browser": "https://auth.onemindos.dev/",
+                                     "log_level": "info"},
+                      })
+                      print("Created outpost nui-outpost")
+          env:
+            - name: AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: AUTHENTIK_BOOTSTRAP_TOKEN
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi
