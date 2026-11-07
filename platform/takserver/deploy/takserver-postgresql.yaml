@@ -142,6 +142,9 @@ spec:
     rollingUpdate:
       partition: 0
     type: RollingUpdate
+  # The live claim data-takserver-postgresql-0 was recreated 2026-11-07 at 10Gi on
+  # do-block-storage-retain. This template is immutable on the live StatefulSet and
+  # is only used if the claim is ever recreated from scratch.
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim
