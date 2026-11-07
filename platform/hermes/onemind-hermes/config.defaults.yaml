@@ -86,7 +86,8 @@ skills:
     - computer-use
 
 plugins:
-  enabled: []
+  enabled:
+    - observability/langfuse
 
 # The Webapp: Hermes Desktop in a browser tab (Hermes v0.23.0). It gets its own listener on 9120, apart from the
 # API server (8642) and the dashboard (9119). A wildcard host turns on dashboard sign-in (the same
