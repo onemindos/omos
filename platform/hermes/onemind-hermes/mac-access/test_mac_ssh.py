@@ -67,7 +67,9 @@ class AccessTests(unittest.TestCase):
         for group in ('containers', 'initContainers'):
             for container, old in zip(spec[group], old_spec[group]):
                 self.assertEqual(container['resources'], old['resources'])
-                self.assertEqual(container['image'], old['image'])
+                # The image may move with Hermes upgrades; it must stay digest-pinned and the same in every container.
+                self.assertIn('@sha256:', container['image'])
+                self.assertEqual(container['image'], spec['containers'][0]['image'])
                 mounts = {m['name']: m for m in container.get('volumeMounts', [])}
                 self.assertEqual('mac-ssh' in mounts, container['name'] in ('hermes', 'initial-config'))
                 self.assertEqual('mac-ssh-input' in mounts, container['name'] == 'initial-config')

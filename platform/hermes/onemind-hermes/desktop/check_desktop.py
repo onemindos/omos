@@ -126,7 +126,7 @@ def webapp_check():
     import urllib.request
     try:
         from hermes_cli.config import read_user_config_raw
-        block = read_user_config_raw(os.path.join(os.environ["HERMES_HOME"], "config.yaml")).get("webapp") or {}
+        block = read_user_config_raw(os.path.join(os.environ.get("HERMES_HOME", "/opt/data"), "config.yaml")).get("webapp") or {}
     except Exception as exc:
         print("webapp: config unreadable (%s)" % type(exc).__name__)
         return 1
