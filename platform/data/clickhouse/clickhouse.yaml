@@ -5,6 +5,23 @@ metadata:
   namespace: clickhouse
 spec:
   configuration:
+    files:
+      # Retention for system log tables that ship without a TTL (they grew to ~5.8 GiB on a 20 Gi volume; asynchronous_metric_log alone
+      # reached 4.3 billion rows). query_log, part_log and trace_log keep the operator's 30-day TTL. Table settings are applied at server
+      # start: ClickHouse renames a table whose definition changed to <name>_N and creates a new one with the TTL. The renamed *_N
+      # tables are old data; dropping them is an owner decision.
+      config.d/90-system-log-ttl.xml: |
+        <clickhouse>
+          <asynchronous_metric_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></asynchronous_metric_log>
+          <metric_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></metric_log>
+          <text_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></text_log>
+          <error_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></error_log>
+          <opentelemetry_span_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></opentelemetry_span_log>
+          <query_metric_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></query_metric_log>
+          <query_views_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></query_views_log>
+          <background_schedule_pool_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></background_schedule_pool_log>
+          <backup_log><ttl>event_date + INTERVAL 30 DAY DELETE</ttl></backup_log>
+        </clickhouse>
     clusters:
       - name: onemind
         templates:
