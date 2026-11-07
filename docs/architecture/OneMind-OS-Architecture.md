@@ -281,7 +281,7 @@ All streams are NACK Stream CRDs in `platform/nats/streams/`. The NACK controlle
 | Stream | Name | Subjects | Retention | Purpose |
 |--------|------|----------|-----------|---------|
 | **TEL** | TEL | `tel.fleet.>` `tel.drone.>` `tel.robot.>` `tel.edge.>` `tel.iot.>` `tel.industrial.>` `tel.sat.>` | 168h | All fleet asset telemetry — GPS, heading, battery, speed |
-| **COT** | COT | `tak.cot.>` | 720h | TAK CoT stream — ATAK position reports, bridge feeds |
+| **COT** | COT | `tak.cot.>` | 168h | TAK CoT stream — ATAK position reports, bridge feeds |
 | **CMD** | CMD | `cmd.>` | 720h | Every command to every actor — drones, robots, nodes, agents |
 | **AGENTS** | AGENTS | `agents.hb.>` `agents.status.>` `agents.discover` `agents.heartbeat` | 168h | Agent fabric — prompts, heartbeats, status, tool calls |
 | **EVT** | EVT | `evt.so.>` `evt.hp.>` `evt.le.>` `evt.ge.>` `evt.task.>` `evt.cloud.>` `evt.bio.>` `evt.robot.>` `evt.drone.>` `evt.sat.>` | 2160h (90d) | Semantic events — homestead, health, cloud, bio alerts, robot/drone/sat |
