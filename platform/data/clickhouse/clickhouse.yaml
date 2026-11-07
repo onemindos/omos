@@ -31,10 +31,12 @@ spec:
       langfuse/networks/ip: "10.0.0.0/8"
       langfuse/profile: langfuse
       langfuse/quota: default
-      # The worker reads system.parts to size partitions; only the four columns it selects are granted (not the table).
+      # Langfuse v4 reads system tables: system.parts (partition listing for the observations table) and system.query_log
+      # (its v3-to-v4 API usage report, which filters on its own log_comment tags). Only the columns it selects are granted.
       langfuse/grants/query:
         - "GRANT ALL ON langfuse.*"
-        - "GRANT SELECT(partition, table, database, active) ON system.parts"
+        - "GRANT SELECT(partition, partition_id, table, database, active) ON system.parts"
+        - "GRANT SELECT(type, event_date, event_time, event_time_microseconds, log_comment) ON system.query_log"
     profiles:
       # Caps one Langfuse query below the 3 GiB pod limit so it cannot OOM the shared server.
       langfuse/max_memory_usage: 2000000000
