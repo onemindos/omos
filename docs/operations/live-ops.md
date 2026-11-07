@@ -74,7 +74,7 @@ Current annotations:
 
 | CronJob | State | Detail |
 |---|---|---|
-| `clickhouse/backup-clickhouse` | superseded | by the daily VolSync snapshot |
+| `clickhouse/backup-clickhouse` | active | native BACKUP of `onemind` and `langfuse` to Spaces, daily 03:00 UTC, next to the VolSync snapshot |
 | `ops/backup-offsite-copy` | pending-setup | waits for SealedSecret `offsite-copy-credentials` (`platform/backups/OFFSITE-COPY.md` steps 1 to 5) |
 
 Both keep `suspend: true`. (`backstage/backstage-backup`, superseded by `backup-postgres-backstage`, was removed from Git on 2026-10-27.) Not covered yet: Velero (exports no metrics) and
