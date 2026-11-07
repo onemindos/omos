@@ -19,26 +19,43 @@ Tailscale Kubernetes operator and the per-service tailnet proxies it creates.
 | `ts-agent-console-8khxt` | StatefulSet | `tailscale` |
 | `ts-agent-tap-v7ktr` | StatefulSet | `tailscale` |
 | `ts-argocd-slkzh` | StatefulSet | `tailscale` |
-| `ts-cilium-gateway-gateway-default-bl4tw` | StatefulSet | `tailscale` |
-| `ts-cilium-gateway-gateway-default-hl5fh` | StatefulSet | `tailscale` |
+| `ts-cloudtak-htdck` | StatefulSet | `tailscale` |
+| `ts-cloudtak-tiles-p26wj` | StatefulSet | `tailscale` |
+| `ts-element-tailnet-xzvtx` | StatefulSet | `tailscale` |
+| `ts-fedhub-tailnet-gzz6j` | StatefulSet | `tailscale` |
+| `ts-forgejo-qgj96` | StatefulSet | `tailscale` |
+| `ts-gatus-gl2gp` | StatefulSet | `tailscale` |
 | `ts-grafana-ksprn` | StatefulSet | `tailscale` |
 | `ts-headlamp-4qwkc` | StatefulSet | `tailscale` |
 | `ts-heynats-p5dmf` | StatefulSet | `tailscale` |
 | `ts-hubble-tw85d` | StatefulSet | `tailscale` |
+| `ts-karakeep-g8xzs` | StatefulSet | `tailscale` |
+| `ts-langfuse-rj8v9` | StatefulSet | `tailscale` |
 | `ts-n8n-pmtds` | StatefulSet | `tailscale` |
 | `ts-nats-dashboard-242wv` | StatefulSet | `tailscale` |
 | `ts-nats-monitor-zh589` | StatefulSet | `tailscale` |
 | `ts-nats-ui-d6rrg` | StatefulSet | `tailscale` |
 | `ts-nats-ws-4q6bc` | StatefulSet | `tailscale` |
-| `ts-observer-pftsp` | StatefulSet | `tailscale` |
+| `ts-omos-dell-zeus-f7vnz` | StatefulSet | `tailscale` |
 | `ts-omos-ha-edge-rlv6k` | StatefulSet | `tailscale` |
 | `ts-omos-mbp-hgq9w` | StatefulSet | `tailscale` |
 | `ts-omos-nats-fs6r4` | StatefulSet | `tailscale` |
 | `ts-omos-s24-44l4v` | StatefulSet | `tailscale` |
 | `ts-onemind-auth-4w5hk` | StatefulSet | `tailscale` |
+| `ts-onemind-hermes-tgjq9` | StatefulSet | `tailscale` |
+| `ts-onemind-hermes-web-5m4zq` | StatefulSet | `tailscale` |
 | `ts-onemind-preview-shtd7` | StatefulSet | `tailscale` |
 | `ts-opencost-rqpmq` | StatefulSet | `tailscale` |
+| `ts-openremote-xpvxj` | StatefulSet | `tailscale` |
+| `ts-portal-p86hp` | StatefulSet | `tailscale` |
+| `ts-stac-browser-gjsms` | StatefulSet | `tailscale` |
+| `ts-stac-tp9ln` | StatefulSet | `tailscale` |
+| `ts-synapse-tailnet-qtrg2` | StatefulSet | `tailscale` |
+| `ts-tak-portal-ingress-xpxhs` | StatefulSet | `tailscale` |
 | `ts-tak-tailnet-jtgn4` | StatefulSet | `tailscale` |
+| `ts-thingsboard-cgsbq` | StatefulSet | `tailscale` |
+
+1 more workloads are listed in the catalog.
 
 ## When it looks wrong
 

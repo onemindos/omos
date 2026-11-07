@@ -2,13 +2,20 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Private ThingsBoard Community 4.3 IoT evaluation with a manual Argo Application; first sync, owner login, telemetry and restore acceptance are pending.
+Private ThingsBoard Community 4.3 IoT evaluation (ThingsBoard and PostgreSQL) deployed by Argo application platform-thingsboard and served over the tailnet; observed 2/2 pods running on 2026-11-07. Owner login, telemetry and restore acceptance are not recorded here.
 
 ## Where it runs
 
 - Catalog entity: `component:default/thingsboard` in System `home-homestead`
 - Argo CD application: `platform-thingsboard`
-- Namespaces: not recorded (no Deployment or StatefulSet observed)
+- Namespace: `thingsboard`
+
+## Workloads
+
+| Workload | Kind | Namespace |
+| --- | --- | --- |
+| `postgres` | Deployment | `thingsboard` |
+| `thingsboard` | Deployment | `thingsboard` |
 
 ## When it looks wrong
 
@@ -24,6 +31,8 @@ Private ThingsBoard Community 4.3 IoT evaluation with a manual Argo Application;
 
 ## Generated links
 
+- Loki query: `{k8s_namespace_name="thingsboard"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=thingsboard`
 - Source: `onemindos/omos`
 
 ## Escalate

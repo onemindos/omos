@@ -13,12 +13,7 @@ metadata:
   links:
     - title: Core service topology (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-backstage-backstage-21b99354&rootEntityRefs%5B%5D=\
-        component%3Adefault%2Fk8s-nats-nats-0dee54ac&rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&selectedRela\
-        tions%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=tru\
-        e"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-backstage-backstage-21b99354&rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-nats-nats-0dee54ac&rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&selectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true
   labels:
     onemind.io/pillar: so
 spec:
@@ -108,39 +103,6 @@ metadata:
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: argocd-applicationset-controller
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - argocd
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: gitops-delivery
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/argocd
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-argocd-argocd-dex-server-bb499535
-  title: ArgoCD — Dex Server
-  description: Deployment in argocd
-  annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=argocd,app.kubernetes.io/name=argocd-dex-server
-    backstage.io/kubernetes-namespace: argocd
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: argocd-dex-server
     onemind.io/kubernetes-workload-kind: Deployment
     onemind.io/pillar-review: proposed
   tags:
@@ -284,14 +246,10 @@ metadata:
   links:
     - title: Dependency topology (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-argocd-argocd-server-4414022f&selectedRelations%5B\
-        %5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-argocd-argocd-server-4414022f&selectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true
     - title: Dependent services (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-argocd-argocd-server-4414022f&selectedRelations%5B\
-        %5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=true"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-argocd-argocd-server-4414022f&selectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=true
     - title: Deployment location — NYC3
       type: location
       url: https://portal.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
@@ -367,16 +325,10 @@ metadata:
   links:
     - title: Dependency topology (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-auth-platform-auth-helm-authentik-server-78f74c27&\
-        selectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeR\
-        elations=true"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-auth-platform-auth-helm-authentik-server-78f74c27&selectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true
     - title: Dependent services (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-auth-platform-auth-helm-authentik-server-78f74c27&\
-        selectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mer\
-        geRelations=true"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-auth-platform-auth-helm-authentik-server-78f74c27&selectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=true
     - title: Deployment location — NYC3
       type: location
       url: https://portal.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
@@ -477,25 +429,16 @@ metadata:
       url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/
     - title: Dependency topology (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-backstage-backstage-21b99354&selectedRelations%5B%\
-        5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-backstage-backstage-21b99354&selectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true
     - title: Dependent services (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-backstage-backstage-21b99354&selectedRelations%5B%\
-        5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=true"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-backstage-backstage-21b99354&selectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=true
     - title: Deployment location — NYC3
       type: location
       url: https://portal.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
     - title: Core service topology (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-backstage-backstage-21b99354&rootEntityRefs%5B%5D=\
-        component%3Adefault%2Fk8s-nats-nats-0dee54ac&rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&selectedRela\
-        tions%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=tru\
-        e"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-backstage-backstage-21b99354&rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-nats-nats-0dee54ac&rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&selectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload
@@ -1464,16 +1407,10 @@ metadata:
   links:
     - title: Dependency topology (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-monitoring-monitoring-grafana-8ed6cac6&selectedRel\
-        ations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=tr\
-        ue"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-monitoring-monitoring-grafana-8ed6cac6&selectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true
     - title: Dependent services (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-monitoring-monitoring-grafana-8ed6cac6&selectedRel\
-        ations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations\
-        =true"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-monitoring-monitoring-grafana-8ed6cac6&selectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=true
     - title: Deployment location — NYC3
       type: location
       url: https://portal.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
@@ -1687,39 +1624,6 @@ spec:
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
   subcomponentOf: component:default/nats-dashboard
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-nats-nats-metrics-scrape-479f0db7
-  title: NATS JetStream — Metrics Scrape
-  description: Deployment in nats
-  annotations:
-    backstage.io/kubernetes-label-selector: app=nats-metrics-scrape
-    backstage.io/kubernetes-namespace: nats
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: nats-metrics-scrape
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - nats
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: messaging-nats
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/nats
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -3022,16 +2926,10 @@ metadata:
       url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/
     - title: Dependency topology (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&selectedRela\
-        tions%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=tru\
-        e"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&selectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true
     - title: Dependent services (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&selectedRela\
-        tions%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=\
-        true"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&selectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=true
     - title: Deployment location — NYC3
       type: location
       url: https://portal.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
@@ -3392,14 +3290,10 @@ metadata:
       url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
     - title: Dependency topology (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-nats-nats-0dee54ac&selectedRelations%5B%5D=depends\
-        On&maxDepth=2&unidirectional=true&mergeRelations=true"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-nats-nats-0dee54ac&selectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true
     - title: Dependent services (documented)
       type: topology
-      url: "https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=compo\
-        nent%3Adefault%2Fk8s-nats-nats-0dee54ac&selectedRelations%5B%5D=depende\
-        ncyOf&maxDepth=1&unidirectional=true&mergeRelations=true"
+      url: https://portal.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B%5D=component%3Adefault%2Fk8s-nats-nats-0dee54ac&selectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=true
     - title: Deployment location — NYC3
       type: location
       url: https://portal.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
@@ -3533,73 +3427,6 @@ metadata:
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-argocd-slkzh
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-cilium-gateway-gateway-default-bl4tw-7f3454f1
-  title: "Tailscale operator and proxies — Proxy: cilium-gateway-gateway-default"
-  description: StatefulSet in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=fe90e2db-68da-48ec-93a8-7e261afa25e6
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: ts-cilium-gateway-gateway-default-bl4tw
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-cilium-gateway-gateway-default-hl5fh-db62a073
-  title: "Tailscale operator and proxies — Proxy: cilium-gateway-gateway-default
-    (hl5fh)"
-  description: StatefulSet in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=fff3da69-c619-43e2-95eb-b6867b73e809
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: ts-cilium-gateway-gateway-default-hl5fh
     onemind.io/kubernetes-workload-kind: StatefulSet
     onemind.io/pillar-review: proposed
   tags:
@@ -3897,39 +3724,6 @@ metadata:
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-nats-ws-4q6bc
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-observer-pftsp-99f2a772
-  title: "Tailscale operator and proxies — Proxy: observer"
-  description: StatefulSet in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=567a3f7d-253e-4739-a079-48b1c85a337a
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: ts-observer-pftsp
     onemind.io/kubernetes-workload-kind: StatefulSet
     onemind.io/pillar-review: proposed
   tags:
@@ -9706,318 +9500,6 @@ spec:
     - component:default/k8s-omos-feed-satellites-e3372fac
 ---
 apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-kube-system-clickhouse-operator-a41fe06e
-  title: ClickHouse — Operator (kube-system)
-  description: Not observed in the latest inventory; review required. Deployment
-    in kube-system
-  annotations:
-    backstage.io/kubernetes-label-selector: app=clickhouse-operator
-    backstage.io/kubernetes-namespace: kube-system
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: missing-review-required
-    onemind.io/inventory-missing-observations: "1"
-    onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
-    onemind.io/kubernetes-workload: clickhouse-operator
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - kube-system
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: data-storage
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/clickhouse
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-nats-agent-web-ui-be5be217
-  title: Agent Web UI — Core
-  description: Not observed in the latest inventory; review required. Deployment in nats
-  annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=agent-web-ui
-    backstage.io/kubernetes-namespace: nats
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: missing-review-required
-    onemind.io/inventory-missing-observations: "1"
-    onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
-    onemind.io/kubernetes-workload: agent-web-ui
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - nats
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: ai-agents
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/agent-web-ui
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-nats-agenttap-3e09fc8c
-  title: Agent Monitor — Agenttap
-  description: Not observed in the latest inventory; review required. Deployment in nats
-  annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=agenttap
-    backstage.io/kubernetes-namespace: nats
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: missing-review-required
-    onemind.io/inventory-missing-observations: "1"
-    onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
-    onemind.io/kubernetes-workload: agenttap
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - nats
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: ai-agents
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/agent-monitor
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-omos-omos-mission-engine-23fd014f
-  title: OMOS data pipeline — Mission Engine
-  description: Not observed in the latest inventory; review required. Deployment in omos
-  annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=omos-mission-engine
-    backstage.io/kubernetes-namespace: omos
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: missing-review-required
-    onemind.io/inventory-missing-observations: "1"
-    onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
-    onemind.io/kubernetes-workload: omos-mission-engine
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - omos
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: messaging-nats
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/omos-data-pipeline
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-agent-web-ui-l74d4-3f9cba27
-  title: "Tailscale operator and proxies — Proxy: agent-web-ui"
-  description: Not observed in the latest inventory; review required. StatefulSet
-    in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=558c1899-1b5d-44b1-9d1a-8bf0033286a6
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: missing-review-required
-    onemind.io/inventory-missing-observations: "1"
-    onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
-    onemind.io/kubernetes-workload: ts-agent-web-ui-l74d4
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-agenttap-8ddc6-c08d03f9
-  title: "Tailscale operator and proxies — Proxy: agenttap"
-  description: Not observed in the latest inventory; review required. StatefulSet
-    in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=8730c2e0-28ca-4dc2-898c-3cf4edf6084d
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: missing-review-required
-    onemind.io/inventory-missing-observations: "1"
-    onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
-    onemind.io/kubernetes-workload: ts-agenttap-8ddc6
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-omos-dell-edge-qfrh9-dc605fd4
-  title: "Tailscale operator and proxies — Proxy: omos-dell-edge"
-  description: Not observed in the latest inventory; review required. StatefulSet
-    in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=ef4a4284-c2ff-445b-a833-5c1dd1d70263
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: missing-review-required
-    onemind.io/inventory-missing-observations: "1"
-    onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
-    onemind.io/kubernetes-workload: ts-omos-dell-edge-qfrh9
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-omos-dell-zeus-wsv6m-3f4d22b4
-  title: "Tailscale operator and proxies — Proxy: omos-dell-zeus"
-  description: Not observed in the latest inventory; review required. StatefulSet
-    in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=f89631ec-d3c1-4a05-a653-baf65eb228f3
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: missing-review-required
-    onemind.io/inventory-missing-observations: "1"
-    onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
-    onemind.io/kubernetes-workload: ts-omos-dell-zeus-wsv6m
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-omos-intel-zzn2k-23daf484
-  title: "Tailscale operator and proxies — Proxy: omos-intel"
-  description: Not observed in the latest inventory; review required. StatefulSet
-    in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=969dc35f-b2ab-4dd6-9775-8aa806bf6284
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: missing-review-required
-    onemind.io/inventory-missing-observations: "1"
-    onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
-    onemind.io/kubernetes-workload: ts-omos-intel-zzn2k
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - tailscale
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/tailscale-operator
----
-apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
   name: mesh-d7c628bfbdf4
@@ -12560,3 +12042,1587 @@ spec:
   system: messaging-nats
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-backstage-portal-redirect-05c355af
+  title: Backstage portal — Portal Redirect
+  description: Deployment in backstage
+  annotations:
+    backstage.io/kubernetes-label-selector: app=portal-redirect
+    backstage.io/kubernetes-namespace: backstage
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: portal-redirect
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - backstage
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: developer-platform
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/backstage
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-cloudtak-cloudtak-api-7201980b
+  title: CloudTAK — API
+  description: Deployment in cloudtak
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=api,app.kubernetes.io/name=cloudtak
+    backstage.io/kubernetes-namespace: cloudtak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: cloudtak-api
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - cloudtak
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/cloudtak
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-cloudtak-cloudtak-events-f331e7da
+  title: CloudTAK — Events
+  description: Deployment in cloudtak
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=events,app.kubernetes.io/name=cloudtak
+    backstage.io/kubernetes-namespace: cloudtak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: cloudtak-events
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - cloudtak
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/cloudtak
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-cloudtak-cloudtak-retention-8a3ee75d
+  title: CloudTAK — Retention
+  description: Deployment in cloudtak
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=retention,app.kubernetes.io/name=cloudtak
+    backstage.io/kubernetes-namespace: cloudtak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: cloudtak-retention
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - cloudtak
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/cloudtak
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-cloudtak-cloudtak-tiles-3a168883
+  title: CloudTAK — Tiles
+  description: Deployment in cloudtak
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=tiles,app.kubernetes.io/name=cloudtak
+    backstage.io/kubernetes-namespace: cloudtak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: cloudtak-tiles
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - cloudtak
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/cloudtak
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-falco-falco-falcosidekick-b9160629
+  title: Falco — Falcosidekick
+  description: Deployment in falco
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=core,app.kubernetes.io/instance=falco,app.kubernetes.io/name=falcosidekick
+    backstage.io/kubernetes-namespace: falco
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: falco-falcosidekick
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - falco
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: identity-access
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/falco
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-forgejo-forgejo-5445701c
+  title: Forgejo — independent code mirror — Core
+  description: Deployment in forgejo
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=forgejo
+    backstage.io/kubernetes-namespace: forgejo
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: forgejo
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - forgejo
+  labels:
+    onemind.io/catalog-role: workload
+    onemind.io/pillar: so
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: developer-platform
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/forgejo
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-gatus-gatus-a4e4d6c5
+  title: Gatus status checks — Core
+  description: Deployment in gatus
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=gatus
+    backstage.io/kubernetes-namespace: gatus
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: gatus
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - gatus
+  labels:
+    onemind.io/catalog-role: workload
+    onemind.io/pillar: so
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: observability
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/gatus
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-karakeep-chrome-5315f0fc
+  title: Karakeep — Chrome
+  description: Deployment in karakeep
+  annotations:
+    backstage.io/kubernetes-label-selector: app=chrome
+    backstage.io/kubernetes-namespace: karakeep
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: chrome
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: approved
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - karakeep
+  labels:
+    onemind.io/pillar: shared
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/karakeep
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-karakeep-meilisearch-42c4c5e7
+  title: Karakeep — Meilisearch
+  description: Deployment in karakeep
+  annotations:
+    backstage.io/kubernetes-label-selector: app=meilisearch
+    backstage.io/kubernetes-namespace: karakeep
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: meilisearch
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: approved
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - karakeep
+  labels:
+    onemind.io/pillar: shared
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/karakeep
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-karakeep-web-181a9c70
+  title: Karakeep — Web
+  description: Deployment in karakeep
+  annotations:
+    backstage.io/kubernetes-label-selector: app=karakeep-web
+    backstage.io/kubernetes-namespace: karakeep
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: web
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: approved
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - karakeep
+  labels:
+    onemind.io/pillar: shared
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/karakeep
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-nats-nats-leafz-exporter-36d3fe9c
+  title: NATS JetStream — Leafz Exporter
+  description: Deployment in nats
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=metrics,app.kubernetes.io/name=nats-leafz-exporter
+    backstage.io/kubernetes-namespace: nats
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: nats-leafz-exporter
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - nats
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: messaging-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/nats
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onemind-ai-langfuse-redis-0a1f87dd
+  title: Langfuse — Redis
+  description: Deployment in onemind-ai
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=langfuse,app.kubernetes.io/name=redis
+    backstage.io/kubernetes-namespace: onemind-ai
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: langfuse-redis
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - onemind-ai
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: observability
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/langfuse
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onemind-ai-langfuse-web-b2a337e1
+  title: Langfuse — Web
+  description: Deployment in onemind-ai
+  annotations:
+    backstage.io/kubernetes-label-selector: app=web,app.kubernetes.io/instance=langfuse,app.kubernetes.io/name=langfuse
+    backstage.io/kubernetes-namespace: onemind-ai
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: langfuse-web
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - onemind-ai
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: observability
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/langfuse
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onemind-ai-langfuse-worker-54f8d17d
+  title: Langfuse — Worker
+  description: Deployment in onemind-ai
+  annotations:
+    backstage.io/kubernetes-label-selector: app=worker,app.kubernetes.io/instance=langfuse,app.kubernetes.io/name=langfuse
+    backstage.io/kubernetes-namespace: onemind-ai
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: langfuse-worker
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - onemind-ai
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: observability
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/langfuse
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-openremote-keycloak-f24d19de
+  title: OpenRemote — Keycloak
+  description: Deployment in openremote
+  annotations:
+    backstage.io/kubernetes-label-selector: app=keycloak
+    backstage.io/kubernetes-namespace: openremote
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: keycloak
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - openremote
+  labels:
+    onemind.io/pillar: le
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: home-homestead
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/openremote
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-openremote-manager-dbf19dbf
+  title: OpenRemote — Manager
+  description: Deployment in openremote
+  annotations:
+    backstage.io/kubernetes-label-selector: app=manager
+    backstage.io/kubernetes-namespace: openremote
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: manager
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - openremote
+  labels:
+    onemind.io/pillar: le
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: home-homestead
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/openremote
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-openremote-postgresql-caa87c7e
+  title: OpenRemote — Postgresql
+  description: Deployment in openremote
+  annotations:
+    backstage.io/kubernetes-label-selector: app=postgresql
+    backstage.io/kubernetes-namespace: openremote
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: postgresql
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - openremote
+  labels:
+    onemind.io/pillar: le
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: home-homestead
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/openremote
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-openremote-proxy-3ba5d9d5
+  title: OpenRemote — Proxy
+  description: Deployment in openremote
+  annotations:
+    backstage.io/kubernetes-label-selector: app=proxy
+    backstage.io/kubernetes-namespace: openremote
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: proxy
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - openremote
+  labels:
+    onemind.io/pillar: le
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: home-homestead
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/openremote
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-stac-stac-api-da8472a8
+  title: STAC imagery catalog — API
+  description: Deployment in stac
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=api,app.kubernetes.io/name=stac
+    backstage.io/kubernetes-namespace: stac
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: stac-api
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - stac
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/stac
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-stac-stac-api-writer-9643fec3
+  title: STAC imagery catalog — API Writer
+  description: Deployment in stac
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=api-writer,app.kubernetes.io/name=stac
+    backstage.io/kubernetes-namespace: stac
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: stac-api-writer
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - stac
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/stac
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-stac-stac-browser-9b69cdea
+  title: STAC imagery catalog — Browser
+  description: Deployment in stac
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=browser,app.kubernetes.io/name=stac
+    backstage.io/kubernetes-namespace: stac
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: stac-browser
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - stac
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/stac
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-thingsboard-postgres-c2920959
+  title: ThingsBoard — Postgres
+  description: Deployment in thingsboard
+  annotations:
+    backstage.io/kubernetes-label-selector: app=postgres
+    backstage.io/kubernetes-namespace: thingsboard
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: postgres
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - thingsboard
+  labels:
+    onemind.io/pillar: le
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: home-homestead
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/thingsboard
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-thingsboard-thingsboard-e7a29ab6
+  title: ThingsBoard — Core
+  description: Deployment in thingsboard
+  annotations:
+    backstage.io/kubernetes-label-selector: app=thingsboard
+    backstage.io/kubernetes-namespace: thingsboard
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: thingsboard
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - thingsboard
+  labels:
+    onemind.io/pillar: le
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: home-homestead
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/thingsboard
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tool-gateway-agentgateway-ab36e150
+  title: Tool gateway (agentgateway) — Core
+  description: Deployment in tool-gateway
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=standalone,app.kubernetes.io/instance=agentgateway,app.kubernetes.io/name=agentgateway-standalone
+    backstage.io/kubernetes-namespace: tool-gateway
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: agentgateway
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tool-gateway
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/agentgateway
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tool-gateway-execute-gate-16018b8b
+  title: Tool gateway execute gate (execute-gate) — Core
+  description: Deployment in tool-gateway
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=execute-gate
+    backstage.io/kubernetes-namespace: tool-gateway
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: execute-gate
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tool-gateway
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/execute-gate
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tool-gateway-mcp-clickhouse-ea2794e8
+  title: Tool gateway ClickHouse backend (mcp-clickhouse) — Core
+  description: Deployment in tool-gateway
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=mcp-clickhouse
+    backstage.io/kubernetes-namespace: tool-gateway
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: mcp-clickhouse
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tool-gateway
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/mcp-clickhouse
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tool-gateway-mcp-kubernetes-2833ef7a
+  title: Tool gateway Kubernetes backend (mcp-kubernetes) — Core
+  description: Deployment in tool-gateway
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=mcp-kubernetes
+    backstage.io/kubernetes-namespace: tool-gateway
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: mcp-kubernetes
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tool-gateway
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/mcp-kubernetes
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-trivy-system-trivy-operator-a51a11e8
+  title: Trivy operator — Core
+  description: Deployment in trivy-system
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=trivy-operator,app.kubernetes.io/name=trivy-operator
+    backstage.io/kubernetes-namespace: trivy-system
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: trivy-operator
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - trivy-system
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: identity-access
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/trivy-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-cloudtak-htdck-16a15ada
+  title: "Tailscale operator and proxies — Proxy: cloudtak"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=c09a97eb-a125-491c-86f6-51aa630af2a0
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-cloudtak-htdck
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-cloudtak-tiles-p26wj-c00354a4
+  title: "Tailscale operator and proxies — Proxy: cloudtak-tiles"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=befc5f61-02e6-47ca-94a0-dcb6338b852d
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-cloudtak-tiles-p26wj
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-element-tailnet-xzvtx-78113bd6
+  title: "Tailscale operator and proxies — Proxy: element-tailnet"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=76de56d6-4e0e-4054-9287-450ec35b4d28
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-element-tailnet-xzvtx
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-fedhub-tailnet-gzz6j-b2e70e2a
+  title: "Tailscale operator and proxies — Proxy: fedhub-tailnet"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=6423df8d-67dd-4d19-b8aa-25a024a55873
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-fedhub-tailnet-gzz6j
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-forgejo-qgj96-572db2d2
+  title: "Tailscale operator and proxies — Proxy: forgejo"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=3c67ea26-358d-489b-8790-ff49b4376fb2
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-forgejo-qgj96
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-gatus-gl2gp-95c6eb36
+  title: "Tailscale operator and proxies — Proxy: gatus"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=474aa219-19b4-4bee-aba1-38514de90e7a
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-gatus-gl2gp
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-karakeep-g8xzs-6bd89dc9
+  title: "Tailscale operator and proxies — Proxy: karakeep"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=50b09ca1-b6db-40e0-abaf-d9d4b8e13124
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-karakeep-g8xzs
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-langfuse-rj8v9-52cafcbe
+  title: "Tailscale operator and proxies — Proxy: langfuse"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=f92c5771-7040-4601-a1d5-da1751f260ef
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-langfuse-rj8v9
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-omos-dell-zeus-f7vnz-cf8e4d5f
+  title: "Tailscale operator and proxies — Proxy: omos-dell-zeus"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=12904508-26f3-43d3-8911-1c05fafa23d2
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-omos-dell-zeus-f7vnz
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-onemind-hermes-tgjq9-393406a6
+  title: "Tailscale operator and proxies — Proxy: onemind-hermes"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=48529e64-fd14-461d-842d-576b578cf5b3
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-onemind-hermes-tgjq9
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-onemind-hermes-web-5m4zq-5bfbe7f7
+  title: "Tailscale operator and proxies — Proxy: onemind-hermes-web"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=ad381ec0-b466-42f2-96ba-d9e91822e4ba
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-onemind-hermes-web-5m4zq
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-openremote-xpvxj-608ea7db
+  title: "Tailscale operator and proxies — Proxy: openremote"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=98dff062-d8a7-4b05-9971-637bd09cc4d4
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-openremote-xpvxj
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-portal-p86hp-a6b78d85
+  title: "Tailscale operator and proxies — Proxy: portal"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=301999da-9fa3-4e1d-9e9e-31520f35ae02
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-portal-p86hp
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-stac-browser-gjsms-909cf387
+  title: "Tailscale operator and proxies — Proxy: stac-browser"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=a7ebdd16-1db5-49c5-92aa-8d9b05ba4d40
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-stac-browser-gjsms
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-stac-tp9ln-ab89458e
+  title: "Tailscale operator and proxies — Proxy: stac"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=d282a33a-5909-43d7-8b19-1a6b4850e888
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-stac-tp9ln
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-synapse-tailnet-qtrg2-5b4f3d09
+  title: "Tailscale operator and proxies — Proxy: synapse-tailnet"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=3549142f-d876-4180-a2f7-6b6877ecc1fc
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-synapse-tailnet-qtrg2
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-tak-portal-ingress-xpxhs-be5ba8cf
+  title: "Tailscale operator and proxies — Proxy: tak-portal-ingress"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=44e183bc-df10-42df-b762-4227efa15bc8
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-tak-portal-ingress-xpxhs
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-thingsboard-cgsbq-edc66039
+  title: "Tailscale operator and proxies — Proxy: thingsboard"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=7a971a4d-ebd9-40eb-911e-27f9c1143e3f
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-thingsboard-cgsbq
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-vaultwarden-rdctp-719211c8
+  title: "Tailscale operator and proxies — Proxy: vaultwarden"
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=beeca8e7-a9cd-4908-bc8f-41b723fea47c
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
+    onemind.io/kubernetes-workload: ts-vaultwarden-rdctp
+    onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+  tags:
+    - kubernetes
+    - tailscale
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/tailscale-operator

@@ -23,6 +23,12 @@ resources:
   - mcp/zoho/zoho-salesiq.sealedsecret.yaml
   - mcp/zoho/zoho-workdrive.sealedsecret.yaml
   - mcp/zoho/zoho-mail-calendar.sealedsecret.yaml
+# Each config change makes new hash-named ConfigMaps. The Application does not prune (prune: false), so the old
+# ones stay in the cluster and kept the app OutOfSync. IgnoreExtraneous stops a leftover copy, which is no longer
+# in Git, from counting toward sync status; the live Deployment only ever references the current names.
+generatorOptions:
+  annotations:
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
 configMapGenerator:
   - name: onemind-hermes-mac-ssh-client
     files:

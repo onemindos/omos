@@ -8,7 +8,13 @@ The tool gateway in front of Legacy's tools, agentgateway v1.7.0, serving one MC
 
 - Catalog entity: `component:default/agentgateway` in System `ai-agents`
 - Argo CD application: `platform-tool-gateway`
-- Namespaces: not recorded (no Deployment or StatefulSet observed)
+- Namespace: `tool-gateway`
+
+## Workloads
+
+| Workload | Kind | Namespace |
+| --- | --- | --- |
+| `agentgateway` | Deployment | `tool-gateway` |
 
 ## When it looks wrong
 
@@ -24,6 +30,8 @@ The tool gateway in front of Legacy's tools, agentgateway v1.7.0, serving one MC
 
 ## Generated links
 
+- Loki query: `{k8s_namespace_name="tool-gateway", k8s_pod_name=~"(agentgateway)-.*"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=tool-gateway&var-workload=agentgateway`
 - Source: `onemindos/omos`
 
 ## Escalate

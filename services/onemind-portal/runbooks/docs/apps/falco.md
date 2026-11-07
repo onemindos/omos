@@ -2,13 +2,19 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Runtime security detection (DaemonSet).
+Runtime security detection (Falco DaemonSet on every node, plus the falcosidekick forwarder; Argo application ecosystem-falco in namespace falco).
 
 ## Where it runs
 
 - Catalog entity: `component:default/falco` in System `identity-access`
 - Argo CD application: `ecosystem-falco`
-- Namespaces: not recorded (no Deployment or StatefulSet observed)
+- Namespace: `falco`
+
+## Workloads
+
+| Workload | Kind | Namespace |
+| --- | --- | --- |
+| `falco-falcosidekick` | Deployment | `falco` |
 
 ## When it looks wrong
 
@@ -24,6 +30,8 @@ Runtime security detection (DaemonSet).
 
 ## Generated links
 
+- Loki query: `{k8s_namespace_name="falco"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=falco`
 - Source: `onemindos/omos`
 
 ## Escalate

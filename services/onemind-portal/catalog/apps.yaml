@@ -1064,7 +1064,7 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/argocd/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: argocd/argocd-application-controller,argocd/argocd-applicationset-controller,argocd/argocd-dex-server,argocd/argocd-notifications-controller,argocd/argocd-redis,argocd/argocd-repo-server,argocd/argocd-server
+    onemind.io/kubernetes-workloads: argocd/argocd-application-controller,argocd/argocd-applicationset-controller,argocd/argocd-notifications-controller,argocd/argocd-redis,argocd/argocd-repo-server,argocd/argocd-server
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1339,7 +1339,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
-    onemind.io/runtime-evidence: Deployment nats/agent-web-ui; Service nats/agent-web-ui
+    onemind.io/runtime-evidence: Deployment agent-fabric/agent-console 1/1 (observed
+      2026-11-07); it moved from the nats namespace to agent-fabric
     onemind.io/documented-address: https://agent-web-ui.tail717ba0.ts.net
     argocd/app-name: platform-agent-fabric
     argocd/instance-name: onemind-cloud
@@ -1637,7 +1638,7 @@ metadata:
     - launcher-review-required
     - tak-ecosystem
   links:
-    - url: https://atoc.onemindos.dev
+    - url: https://cloudtak.tail717ba0.ts.net
       title: Open application
       icon: dashboard
     - url: https://cloudtak.tail717ba0.ts.net
@@ -1663,6 +1664,13 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/cloudtak/
     github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-namespace: cloudtak
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=cloudtak
+    onemind.io/kubernetes-namespaces: cloudtak
+    onemind.io/kubernetes-workloads: cloudtak/cloudtak-api,cloudtak/cloudtak-events,cloudtak/cloudtak-retention,cloudtak/cloudtak-tiles
+    grafana/alert-label-selector: namespace=cloudtak
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=cloudtak
+    onemind.io/logs-query: '{k8s_namespace_name="cloudtak"}'
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1736,7 +1744,7 @@ metadata:
     - tak-server
     - documented-unverified
   links:
-    - url: https://onetak.onemindos.dev
+    - url: https://enroll.tail717ba0.ts.net
       title: Open application
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e815eb011df18773e15dc.md
@@ -2302,7 +2310,7 @@ metadata:
     - launcher-review-required
     - intelligence
   links:
-    - url: https://clickhouse.tail717ba0.ts.net
+    - url: https://portal.tail717ba0.ts.net/catalog/default/component/clickhouse
       title: Open application
       icon: dashboard
   annotations:
@@ -2344,34 +2352,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: minio
-  title: MinIO
-  description: Object storage
-  tags:
-    - launcher-review-required
-    - data-storage
-  links:
-    - url: https://minio.tail717ba0.ts.net
-      title: Open application
-      icon: dashboard
-  annotations:
-    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
-    onemind.io/launcher-review: dns-unresolved-from-operator-mac
-    onemind.io/inventory-review: imported-link
-    onemind.io/hosting: mesh-endpoint-unverified
-    onemind.io/pillar-review: proposed
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: data-storage
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: postgis
   title: PostGIS
   description: Spatial database
@@ -2379,35 +2359,7 @@ metadata:
     - launcher-review-required
     - data-storage
   links:
-    - url: https://pgadmin.tail717ba0.ts.net
-      title: Open application
-      icon: dashboard
-  annotations:
-    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
-    onemind.io/launcher-review: dns-unresolved-from-operator-mac
-    onemind.io/inventory-review: imported-link
-    onemind.io/hosting: mesh-endpoint-unverified
-    onemind.io/pillar-review: proposed
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: data-storage
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: longhorn
-  title: Longhorn
-  description: Distributed block storage
-  tags:
-    - launcher-review-required
-    - data-storage
-  links:
-    - url: https://longhorn.tail717ba0.ts.net
+    - url: https://portal.tail717ba0.ts.net/catalog/default/component/postgis
       title: Open application
       icon: dashboard
   annotations:
@@ -2474,7 +2426,7 @@ metadata:
     - launcher-review-required
     - observability
   links:
-    - url: https://prometheus.tail717ba0.ts.net
+    - url: https://portal.tail717ba0.ts.net/catalog/default/component/prometheus
       title: Open application
       icon: dashboard
   annotations:
@@ -2530,7 +2482,7 @@ metadata:
     - monitoring
     - deployment-verified
   links:
-    - url: https://nats-surveyor-1.tail717ba0.ts.net
+    - url: https://portal.tail717ba0.ts.net/catalog/default/component/nats-surveyor
       title: Open application
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8141870fea96e2732cf7.md
@@ -2674,7 +2626,7 @@ metadata:
     - geo
     - deployment-verified
   links:
-    - url: https://webodm.onemindos.dev
+    - url: https://portal.tail717ba0.ts.net/catalog/default/component/webodm
       title: Open application
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e816c97dfc37ab88251bc.md
@@ -3648,66 +3600,6 @@ spec:
   dependsOn:
     - component:default/k8s-onetak-tak-portal-034c1ce9
     - component:default/k8s-matrix-synapse-c02538fc
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: external-argocd
-  title: ArgoCD (external launcher)
-  description: GitOps CD
-  tags:
-    - external
-  links:
-    - url: https://argocd.tail717ba0.ts.net
-      title: Open application
-      icon: dashboard
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/relationship-source: ingress-service-selector
-    onemind.io/inventory-review: imported-link
-    onemind.io/catalog-role: compatibility-alias
-    onemind.io/canonical-entity-ref: component:default/argocd
-    onemind.io/pillar-review: proposed
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: gitops-delivery
-  dependsOn:
-    - component:default/k8s-argocd-argocd-server-4414022f
-    - component:default/argocd
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: external-tailscale
-  title: Tailscale (external launcher)
-  description: Mesh VPN
-  tags:
-    - external
-  links:
-    - url: https://login.tailscale.com/admin/machines
-      title: Open application
-      icon: dashboard
-  annotations:
-    onemind.io/inventory-review: imported-link
-    onemind.io/hosting: external-provider-unverified
-    onemind.io/catalog-role: compatibility-alias
-    onemind.io/canonical-entity-ref: component:default/tailscale
-    onemind.io/pillar-review: proposed
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - component:default/tailscale
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -7065,17 +6957,25 @@ metadata:
   name: langfuse
   title: Langfuse
   description: LLM observability & tracing. Tracks prompts, completions, latency,
-    cost, and evals for AI agents. Self-hostable.
+    cost, and evals for AI agents. Self-hosted in namespace onemind-ai (web,
+    worker and Redis) by Argo application ecosystem-langfuse over the tailnet;
+    Deployments observed 1/1 on 2026-11-07.
   tags:
     - ai-ml
     - tech-stack
     - documented-unverified
   links:
-    - url: https://langfuse.com
+    - url: https://onemind-langfuse.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+    - url: https://langfuse.com
+      title: Langfuse project
+      icon: web
   annotations:
-    onemind.io/hosting: external-provider-unverified
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/runtime-evidence: Argo application ecosystem-langfuse Synced/Healthy;
+      Deployments langfuse-web, langfuse-worker and langfuse-redis 1/1;
+      Tailscale ingress onemind-langfuse.tail717ba0.ts.net (observed 2026-11-07)
     onemind.io/documented-status: Active
     onemind.io/documented-category: AI / ML
     onemind.io/license: Open Source
@@ -7090,6 +6990,18 @@ metadata:
     onemind.io/tech-stack-url: https://langfuse.com
     onemind.io/inventory-review: imported-link
     onemind.io/pillar-review: proposed
+    argocd/app-name: ecosystem-langfuse
+    argocd/instance-name: onemind-cloud
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/langfuse/
+    github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-namespace: onemind-ai
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=langfuse
+    onemind.io/kubernetes-namespaces: onemind-ai
+    onemind.io/kubernetes-workloads: onemind-ai/langfuse-redis,onemind-ai/langfuse-web,onemind-ai/langfuse-worker
+    grafana/alert-label-selector: namespace=onemind-ai
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-ai
+    onemind.io/logs-query: '{k8s_namespace_name="onemind-ai"}'
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8107,11 +8019,19 @@ kind: Component
 metadata:
   name: forgejo
   title: "Forgejo — independent code mirror"
-  description: Prepared private GitHub pull-mirror/standby forge with coordinated
-    encrypted backups; not deployed or enrolled. GitHub remains primary.
+  description: Private GitHub pull-mirror/standby forge with coordinated encrypted
+    backups, served over the tailnet; Deployment forgejo/forgejo observed 1/1
+    running on 2026-11-07. Mirror enrollment and restore acceptance are not
+    recorded here. GitHub remains primary.
+  links:
+    - url: https://forgejo.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
   annotations:
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/forgejo
-    onemind.io/deployment-status: prepared-not-deployed
+    onemind.io/deployment-status: deployed
+    onemind.io/runtime-evidence: Argo application platform-forgejo Synced/Healthy;
+      Deployment forgejo/forgejo 1/1 (observed 2026-11-07)
     onemind.io/hosting: digitalocean-nyc3
     argocd/app-name: platform-forgejo
     argocd/instance-name: onemind-cloud
@@ -8119,11 +8039,17 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/forgejo/
     github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-namespace: forgejo
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=forgejo
+    onemind.io/kubernetes-namespaces: forgejo
+    onemind.io/kubernetes-workloads: forgejo/forgejo
+    grafana/alert-label-selector: namespace=forgejo
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=forgejo
+    onemind.io/logs-query: '{k8s_namespace_name="forgejo"}'
   tags:
     - forgejo
     - git
     - backup
-    - planned
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8139,11 +8065,18 @@ metadata:
   name: gatus
   title: Gatus status checks
   description: Live HTTP(S) checks and certificate expiry for apps that run
-    outside Kubernetes or have no probe of their own. Prepared with manual Argo;
-    not synced.
+    outside Kubernetes or have no probe of their own. Deployed by Argo
+    application platform-gatus; Deployment gatus/gatus observed 1/1 running on
+    2026-11-07.
+  links:
+    - url: https://status.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
   annotations:
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/gatus
-    onemind.io/deployment-status: prepared-not-deployed
+    onemind.io/deployment-status: deployed
+    onemind.io/runtime-evidence: Argo application platform-gatus Synced/Healthy;
+      Deployment gatus/gatus 1/1 (observed 2026-11-07)
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/health-check: gatus
     onemind.io/health-url: http://gatus.gatus.svc.cluster.local:8080/health
@@ -8153,10 +8086,16 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/gatus/
     github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-namespace: gatus
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=gatus
+    onemind.io/kubernetes-namespaces: gatus
+    onemind.io/kubernetes-workloads: gatus/gatus
+    grafana/alert-label-selector: namespace=gatus
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=gatus
+    onemind.io/logs-query: '{k8s_namespace_name="gatus"}'
   tags:
     - gatus
     - monitoring
-    - planned
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8165,6 +8104,100 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: observability
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: onemind-hermes-web
+  title: Legacy web app (onemind-hermes-web)
+  description: Tailnet web app of the Legacy (onemind-hermes) agent; a Tailscale
+    ingress to the onemind-hermes Service in namespace hermes.
+  tags:
+    - hermes
+    - web
+  links:
+    - url: https://onemind-hermes-web.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/launcher-url: https://onemind-hermes-web.tail717ba0.ts.net
+    onemind.io/runtime-evidence: Ingress hermes/onemind-hermes-web at
+      onemind-hermes-web.tail717ba0.ts.net (observed 2026-11-07)
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+  dependsOn:
+    - component:default/onemind-hermes
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nats-monitor
+  title: NATS monitor
+  description: NATS server monitoring endpoint (port 8222) of the in-cluster NATS,
+    exposed on the tailnet.
+  tags:
+    - nats
+    - monitoring
+  links:
+    - url: https://nats-monitor.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/launcher-url: https://nats-monitor.tail717ba0.ts.net
+    onemind.io/runtime-evidence: Ingress nats/nats-monitor at
+      nats-monitor.tail717ba0.ts.net (observed 2026-11-07)
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: messaging-nats
+  dependsOn:
+    - component:default/nats
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: stac-browser
+  title: STAC Browser
+  description: Web browser for the STAC imagery catalog; Deployment
+    stac/stac-browser, served on the tailnet.
+  tags:
+    - stac
+    - web
+  links:
+    - url: https://stac-browser.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/launcher-url: https://stac-browser.tail717ba0.ts.net
+    onemind.io/runtime-evidence: Ingress stac/stac-browser at
+      stac-browser.tail717ba0.ts.net; Deployment stac-browser 1/1 (observed
+      2026-11-07)
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+  dependsOn:
+    - component:default/stac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -8297,7 +8330,7 @@ metadata:
     github.com/project-slug: onemindos/omos
     backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
     onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/operator,tailscale/ts-agent-console-8khxt,tailscale/ts-agent-tap-v7ktr,tailscale/ts-argocd-slkzh,tailscale/ts-cilium-gateway-gateway-default-bl4tw,tailscale/ts-cilium-gateway-gateway-default-hl5fh,tailscale/ts-grafana-ksprn,tailscale/ts-headlamp-4qwkc,tailscale/ts-heynats-p5dmf,tailscale/ts-hubble-tw85d,tailscale/ts-n8n-pmtds,tailscale/ts-nats-dashboard-242wv,tailscale/ts-nats-monitor-zh589,tailscale/ts-nats-ui-d6rrg,tailscale/ts-nats-ws-4q6bc,tailscale/ts-observer-pftsp,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-onemind-preview-shtd7,tailscale/ts-opencost-rqpmq,tailscale/ts-tak-tailnet-jtgn4
+    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/operator,tailscale/ts-agent-console-8khxt,tailscale/ts-agent-tap-v7ktr,tailscale/ts-argocd-slkzh,tailscale/ts-cloudtak-htdck,tailscale/ts-cloudtak-tiles-p26wj,tailscale/ts-element-tailnet-xzvtx,tailscale/ts-fedhub-tailnet-gzz6j,tailscale/ts-forgejo-qgj96,tailscale/ts-gatus-gl2gp,tailscale/ts-grafana-ksprn,tailscale/ts-headlamp-4qwkc,tailscale/ts-heynats-p5dmf,tailscale/ts-hubble-tw85d,tailscale/ts-karakeep-g8xzs,tailscale/ts-langfuse-rj8v9,tailscale/ts-n8n-pmtds,tailscale/ts-nats-dashboard-242wv,tailscale/ts-nats-monitor-zh589,tailscale/ts-nats-ui-d6rrg,tailscale/ts-nats-ws-4q6bc,tailscale/ts-omos-dell-zeus-f7vnz,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-onemind-hermes-tgjq9,tailscale/ts-onemind-hermes-web-5m4zq,tailscale/ts-onemind-preview-shtd7,tailscale/ts-opencost-rqpmq,tailscale/ts-openremote-xpvxj,tailscale/ts-portal-p86hp,tailscale/ts-stac-browser-gjsms,tailscale/ts-stac-tp9ln,tailscale/ts-synapse-tailnet-qtrg2,tailscale/ts-tak-portal-ingress-xpxhs,tailscale/ts-tak-tailnet-jtgn4,tailscale/ts-thingsboard-cgsbq,tailscale/ts-vaultwarden-rdctp
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8427,6 +8460,10 @@ metadata:
     - kubernetes
   title: Authentik
   description: Identity provider (server, worker, Redis, PostgreSQL).
+  links:
+    - url: https://auth.onemindos.dev
+      title: Open application
+      icon: dashboard
   annotations:
     backstage.io/techdocs-entity: component:default/onemind-runbooks
     backstage.io/techdocs-entity-path: /tier1/authentik/
@@ -8506,7 +8543,7 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: ecosystem-kyverno
     argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: ecosystem-kyverno,ecosystem-trivy-operator,platform-security
+    onemind.io/argocd-apps: ecosystem-kyverno,platform-security
     backstage.io/kubernetes-namespace: kyverno
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=kyverno,app.kubernetes.io/part-of=kyverno
     onemind.io/pillar-review: proposed
@@ -8534,7 +8571,9 @@ metadata:
   tags:
     - kubernetes
   title: Falco
-  description: Runtime security detection (DaemonSet).
+  description: Runtime security detection (Falco DaemonSet on every node, plus the
+    falcosidekick forwarder; Argo application ecosystem-falco in namespace
+    falco).
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
@@ -8544,6 +8583,48 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/falco/
     github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-namespace: falco
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=falco
+    onemind.io/kubernetes-namespaces: falco
+    onemind.io/kubernetes-workloads: falco/falco-falcosidekick
+    grafana/alert-label-selector: namespace=falco
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=falco
+    onemind.io/logs-query: '{k8s_namespace_name="falco"}'
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: identity-access
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: trivy-operator
+  tags:
+    - kubernetes
+  title: Trivy operator
+  description: Trivy operator in trivy-system (Argo application
+    ecosystem-trivy-operator); scans workload images and writes vulnerability
+    reports to the cluster.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: ecosystem-trivy-operator
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/trivy-operator/
+    github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-namespace: trivy-system
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=trivy-operator,app.kubernetes.io/name=trivy-operator
+    onemind.io/kubernetes-namespaces: trivy-system
+    onemind.io/kubernetes-workloads: trivy-system/trivy-operator
+    grafana/alert-label-selector: namespace=trivy-system
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=trivy-system
+    onemind.io/logs-query: '{k8s_namespace_name="trivy-system"}'
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8563,6 +8644,10 @@ metadata:
   description: Private Vaultwarden vault (one replica, SQLite on a 5Gi volume,
     tailnet-only HTTPS, registration disabled), deployed by Argo application
     platform-vaultwarden.
+  links:
+    - url: https://vaultwarden.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
@@ -8614,7 +8699,7 @@ metadata:
       'onemind-backstage-postgres' || uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/backstage/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: backstage/backstage,backstage/backstage-postgres
+    onemind.io/kubernetes-workloads: backstage/backstage,backstage/backstage-postgres,backstage/portal-redirect
     onemind.io/prometheus-scopes: backstage,postgres
   labels:
     onemind.io/pillar: so
@@ -8755,6 +8840,41 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: onemind-data
+  tags:
+    - kubernetes
+  title: onemind-data (CNPG PostgreSQL cluster)
+  description: Shared three-instance CloudNativePG PostgreSQL 16 cluster in
+    namespace onemind-data (pods onemind-data-1 to -3, selector
+    cnpg.io/cluster=onemind-data); the Cluster resource is applied by Argo
+    application platform-ecosystem-resources and managed by the cloudnative-pg
+    operator.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    onemind.io/pillar-review: proposed
+    onemind.io/runtime-evidence: Cluster onemind-data/onemind-data 3/3 ready,
+      primary onemind-data-1 (observed 2026-11-07)
+    backstage.io/kubernetes-namespace: onemind-data
+    backstage.io/kubernetes-label-selector: cnpg.io/cluster=onemind-data
+    onemind.io/kubernetes-namespaces: onemind-data
+    grafana/alert-label-selector: namespace=onemind-data
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-data
+    onemind.io/logs-query: '{k8s_namespace_name="onemind-data"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    github.com/project-slug: onemindos/omos
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: data-storage
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: velero
   tags:
     - kubernetes
@@ -8843,15 +8963,15 @@ metadata:
     onemind.io/kubernetes-namespaces: nats
     backstage.io/kubernetes-namespace: nats
     grafana/alert-label-selector: namespace=nats
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nack&var-workload=nats&var-workload=nats-metrics-scrape
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nack&var-workload=nats&var-workload=nats-leafz-exporter
     onemind.io/logs-query: '{k8s_namespace_name="nats",
-      k8s_pod_name=~"(nack|nats|nats-metrics-scrape)-.*"}'
+      k8s_pod_name=~"(nack|nats|nats-leafz-exporter)-.*"}'
     grafana/dashboard-selector: uid == 'onemind-nats' || uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/nats/
     github.com/project-slug: onemindos/omos
     backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
     onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: nats/nack,nats/nats,nats/nats-metrics-scrape
+    onemind.io/kubernetes-workloads: nats/nack,nats/nats,nats/nats-leafz-exporter
     onemind.io/prometheus-scopes: nats
     onemind.io/api-relationship-source: platform/nats/streams/ (JetStream streams for every modeled subject family)
   labels:
@@ -9025,6 +9145,10 @@ metadata:
     - kubernetes
   title: STAC imagery catalog
   description: STAC API (pgstac on onemind-data), STAC Browser and the WebODM-to-STAC sync.
+  links:
+    - url: https://stac.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
@@ -9038,6 +9162,10 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/stac/
     github.com/project-slug: onemindos/omos
+    onemind.io/kubernetes-namespaces: stac
+    onemind.io/kubernetes-workloads: stac/stac-api,stac/stac-api-writer,stac/stac-browser
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=stac
+    onemind.io/logs-query: '{k8s_namespace_name="stac"}'
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9055,6 +9183,10 @@ metadata:
     - kubernetes
   title: n8n
   description: Workflow automation.
+  links:
+    - url: https://n8n.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
@@ -9090,6 +9222,10 @@ metadata:
   description: Hermes v0.23.0 instance with the single Legacy soul in the hermes
     namespace (Argo application platform-onemind-hermes); no NATS sidecar, no
     imported Legacy data.
+  links:
+    - url: https://onemind-hermes.tail717ba0.ts.net/
+      title: Open application
+      icon: dashboard
   annotations:
     backstage.io/techdocs-entity: component:default/onemind-runbooks
     backstage.io/techdocs-entity-path: /tier1/hermes/
@@ -9188,6 +9324,13 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/agentgateway/
     github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-namespace: tool-gateway
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=standalone,app.kubernetes.io/instance=agentgateway,app.kubernetes.io/name=agentgateway-standalone
+    onemind.io/kubernetes-namespaces: tool-gateway
+    onemind.io/kubernetes-workloads: tool-gateway/agentgateway
+    grafana/alert-label-selector: namespace=tool-gateway
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=tool-gateway&var-workload=agentgateway
+    onemind.io/logs-query: '{k8s_namespace_name="tool-gateway", k8s_pod_name=~"(agentgateway)-.*"}'
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9211,6 +9354,52 @@ metadata:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     onemind.io/pillar-review: proposed
+    backstage.io/kubernetes-namespace: tool-gateway
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=mcp-kubernetes
+    onemind.io/kubernetes-namespaces: tool-gateway
+    onemind.io/kubernetes-workloads: tool-gateway/mcp-kubernetes
+    grafana/alert-label-selector: namespace=tool-gateway
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=tool-gateway&var-workload=mcp-kubernetes
+    onemind.io/logs-query: '{k8s_namespace_name="tool-gateway", k8s_pod_name=~"(mcp-kubernetes)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/mcp-kubernetes/
+    github.com/project-slug: onemindos/omos
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: execute-gate
+  tags:
+    - kubernetes
+  title: Tool gateway execute gate (execute-gate)
+  description: AuthZEN decision point behind the gateway's execute route; approves
+    one exact destructive call after the owner types an approval in the private
+    Matrix room. Replicas 0 is its intended state until the owner creates its
+    three SealedSecrets
+    (platform/tool-gateway/manifests/execute-gate/deployment.yaml); while it is
+    off the execute route fails closed. Observed 0/0 on 2026-11-07.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    onemind.io/pillar-review: proposed
+    backstage.io/kubernetes-namespace: tool-gateway
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=execute-gate
+    onemind.io/kubernetes-namespaces: tool-gateway
+    onemind.io/kubernetes-workloads: tool-gateway/execute-gate
+    grafana/alert-label-selector: namespace=tool-gateway
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=tool-gateway&var-workload=execute-gate
+    onemind.io/logs-query: '{k8s_namespace_name="tool-gateway", k8s_pod_name=~"(execute-gate)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/execute-gate/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9234,6 +9423,16 @@ metadata:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     onemind.io/pillar-review: proposed
+    backstage.io/kubernetes-namespace: tool-gateway
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=mcp-clickhouse
+    onemind.io/kubernetes-namespaces: tool-gateway
+    onemind.io/kubernetes-workloads: tool-gateway/mcp-clickhouse
+    grafana/alert-label-selector: namespace=tool-gateway
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=tool-gateway&var-workload=mcp-clickhouse
+    onemind.io/logs-query: '{k8s_namespace_name="tool-gateway", k8s_pod_name=~"(mcp-clickhouse)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/mcp-clickhouse/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9250,21 +9449,31 @@ metadata:
   tags:
     - kubernetes
   title: Karakeep
-  description: Native bookmark and read-later workspace prepared with manual Argo
-    and zero replicas; first start, owner enrollment and recovery acceptance are
-    pending.
+  description: Native bookmark and read-later workspace (web, headless Chrome and
+    Meilisearch) deployed by Argo application platform-karakeep and served over
+    the tailnet; observed 3/3 pods running on 2026-11-07. Owner enrollment and
+    recovery acceptance are not recorded here.
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-karakeep
     onemind.io/launcher-url: https://karakeep.tail717ba0.ts.net
-    onemind.io/runtime-evidence: Prepared source only; manual Argo and zero
-      replicas; no working-route or application acceptance recorded.
+    onemind.io/runtime-evidence: Argo application platform-karakeep Synced/Healthy;
+      Deployments chrome, meilisearch and web 1/1; Tailscale ingress
+      karakeep.tail717ba0.ts.net (observed 2026-11-07). Application acceptance
+      is not recorded.
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: approved
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/karakeep/
     github.com/project-slug: onemindos/omos
+    onemind.io/kubernetes-namespaces: karakeep
+    onemind.io/kubernetes-workloads: karakeep/chrome,karakeep/meilisearch,karakeep/web
+    backstage.io/kubernetes-namespace: karakeep
+    backstage.io/kubernetes-label-selector: app in (chrome,karakeep-web,meilisearch)
+    grafana/alert-label-selector: namespace=karakeep
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=karakeep
+    onemind.io/logs-query: '{k8s_namespace_name="karakeep"}'
   links:
     - url: https://karakeep.tail717ba0.ts.net
       title: Open application
@@ -9285,21 +9494,31 @@ metadata:
   tags:
     - kubernetes
   title: OpenRemote
-  description: Private OpenRemote IoT evaluation with a manual Argo Application;
-    first sync, owner login, telemetry and restore acceptance are pending.
+  description: Private OpenRemote IoT evaluation (manager, Keycloak, PostgreSQL
+    and proxy) deployed by Argo application platform-openremote and served over
+    the tailnet; observed 4/4 pods running on 2026-11-07. Owner login, telemetry
+    and restore acceptance are not recorded here.
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-openremote
     onemind.io/launcher-url: https://openremote.tail717ba0.ts.net
-    onemind.io/runtime-evidence: Prepared source only; manual Argo, no live
-      namespace or workload; no working-route or application acceptance
-      recorded.
+    onemind.io/runtime-evidence: Argo application platform-openremote
+      Synced/Healthy; Deployments keycloak, manager, postgresql and proxy 1/1;
+      Tailscale ingress openremote.tail717ba0.ts.net (observed 2026-11-07).
+      Application acceptance is not recorded.
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/openremote/
     github.com/project-slug: onemindos/omos
+    onemind.io/kubernetes-namespaces: openremote
+    onemind.io/kubernetes-workloads: openremote/keycloak,openremote/manager,openremote/postgresql,openremote/proxy
+    backstage.io/kubernetes-namespace: openremote
+    backstage.io/kubernetes-label-selector: app in (keycloak,manager,postgresql,proxy)
+    grafana/alert-label-selector: namespace=openremote
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=openremote
+    onemind.io/logs-query: '{k8s_namespace_name="openremote"}'
   links:
     - url: https://openremote.tail717ba0.ts.net
       title: Open application
@@ -9320,22 +9539,31 @@ metadata:
   tags:
     - kubernetes
   title: ThingsBoard
-  description: Private ThingsBoard Community 4.3 IoT evaluation with a manual Argo
-    Application; first sync, owner login, telemetry and restore acceptance are
-    pending.
+  description: Private ThingsBoard Community 4.3 IoT evaluation (ThingsBoard and
+    PostgreSQL) deployed by Argo application platform-thingsboard and served
+    over the tailnet; observed 2/2 pods running on 2026-11-07. Owner login,
+    telemetry and restore acceptance are not recorded here.
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-thingsboard
     onemind.io/launcher-url: https://thingsboard.tail717ba0.ts.net
-    onemind.io/runtime-evidence: Prepared source only; manual Argo, no live
-      namespace or workload; no working-route or application acceptance
-      recorded.
+    onemind.io/runtime-evidence: Argo application platform-thingsboard
+      Synced/Healthy; Deployments postgres and thingsboard 1/1; Tailscale
+      ingress thingsboard.tail717ba0.ts.net (observed 2026-11-07). Application
+      acceptance is not recorded.
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/thingsboard/
     github.com/project-slug: onemindos/omos
+    onemind.io/kubernetes-namespaces: thingsboard
+    onemind.io/kubernetes-workloads: thingsboard/postgres,thingsboard/thingsboard
+    backstage.io/kubernetes-namespace: thingsboard
+    backstage.io/kubernetes-label-selector: app in (postgres,thingsboard)
+    grafana/alert-label-selector: namespace=thingsboard
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=thingsboard
+    onemind.io/logs-query: '{k8s_namespace_name="thingsboard"}'
   links:
     - url: https://thingsboard.tail717ba0.ts.net
       title: Open application
@@ -9406,35 +9634,6 @@ spec:
   system: data-storage
   dependencyOf:
     - component:default/cloudnative-pg
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
-  name: argocd-app-ecosystem-trivy-operator
-  title: Argo CD application ecosystem-trivy-operator
-  description: Argo CD application ecosystem-trivy-operator, one of the
-    applications that deploy Kyverno (component:default/kyverno, whose primary
-    application is ecosystem-kyverno).
-  tags:
-    - argocd
-  links:
-    - url: https://argocd.tail717ba0.ts.net/applications/argocd/ecosystem-trivy-operator
-      title: Argo CD application
-      type: argocd
-  annotations:
-    argocd/app-name: ecosystem-trivy-operator
-    argocd/instance-name: onemind-cloud
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/workload-map.yaml
-    onemind.io/pillar-review: proposed
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: argocd-application
-  owner: group:default/onemind-admins
-  system: identity-access
-  dependencyOf:
-    - component:default/kyverno
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource

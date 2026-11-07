@@ -8,7 +8,15 @@ STAC API (pgstac on onemind-data), STAC Browser and the WebODM-to-STAC sync.
 
 - Catalog entity: `component:default/stac` in System `geospatial`
 - Argo CD applications: `platform-stac`, `platform-stac-validation`
-- Namespaces: not recorded (no Deployment or StatefulSet observed)
+- Namespace: `stac`
+
+## Workloads
+
+| Workload | Kind | Namespace |
+| --- | --- | --- |
+| `stac-api` | Deployment | `stac` |
+| `stac-api-writer` | Deployment | `stac` |
+| `stac-browser` | Deployment | `stac` |
 
 ## When it looks wrong
 
@@ -24,6 +32,8 @@ STAC API (pgstac on onemind-data), STAC Browser and the WebODM-to-STAC sync.
 
 ## Generated links
 
+- Loki query: `{k8s_namespace_name="stac"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=stac`
 - Source: `onemindos/omos`
 
 ## Escalate

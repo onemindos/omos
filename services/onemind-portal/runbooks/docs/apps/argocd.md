@@ -16,7 +16,6 @@ GitOps CD
 | --- | --- | --- |
 | `argocd-application-controller` | StatefulSet | `argocd` |
 | `argocd-applicationset-controller` | Deployment | `argocd` |
-| `argocd-dex-server` | Deployment | `argocd` |
 | `argocd-notifications-controller` | Deployment | `argocd` |
 | `argocd-redis` | Deployment | `argocd` |
 | `argocd-repo-server` | Deployment | `argocd` |

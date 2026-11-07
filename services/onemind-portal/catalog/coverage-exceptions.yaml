@@ -74,19 +74,6 @@ exceptions:
   - app: component:default/platform-backup-recovery
     capability: logs
     reason: "The logs query is scoped by namespace, and no namespace is recorded for this app (no Deployment or StatefulSet in the inventory)."
-  - app: component:default/falco
-    capability: kubernetes
-    reason: >-
-      No Deployment or StatefulSet is recorded for this app (it runs DaemonSets or CronJobs, which the inventory
-      does not read yet), so no namespace or selector can be generated without guessing.
-  - app: component:default/falco
-    capability: grafana-alerts
-    reason: >-
-      The Grafana alert selector is scoped by namespace, and no namespace is recorded for this app (no Deployment or
-      StatefulSet in the inventory).
-  - app: component:default/falco
-    capability: logs
-    reason: "The logs query is scoped by namespace, and no namespace is recorded for this app (no Deployment or StatefulSet in the inventory)."
   - app: component:default/opentelemetry-collector
     capability: kubernetes
     reason: >-
@@ -113,117 +100,18 @@ exceptions:
   - app: component:default/health-keeper
     capability: logs
     reason: "The logs query is scoped by namespace, and no namespace is recorded for this app (no Deployment or StatefulSet in the inventory)."
-  - app: component:default/stac
-    capability: logs
+  - app: component:default/mcp-kubernetes
+    capability: argocd
     reason: >-
-      Not deployed yet. The namespace stac is created by the Argo application platform-stac on its first sync, and the
-      Loki query is generated from the workloads in the runtime snapshot. Delete this exception after the first
-      inventory refresh; the audit then fails it as stale.
-  - app: component:default/cloudtak
-    capability: kubernetes
+      Deployed from platform/tool-gateway by the Argo application platform-tool-gateway, which the reviewed workload map
+      attributes to the agentgateway app (one Argo application maps to one app). It has no Argo application of its own.
+  - app: component:default/mcp-clickhouse
+    capability: argocd
     reason: >-
-      PR #390 adds platform-cloudtak source, but the cloudtak namespace and workloads are not yet observed.
-      Generate the scoped selector from the first verified workload snapshot after deployment; do not invent live inventory.
-  - app: component:default/cloudtak
-    capability: grafana-alerts
+      Deployed from platform/tool-gateway by the Argo application platform-tool-gateway, which the reviewed workload map
+      attributes to the agentgateway app (one Argo application maps to one app). It has no Argo application of its own.
+  - app: component:default/execute-gate
+    capability: argocd
     reason: >-
-      PR #390 adds platform-cloudtak source; the cloudtak namespace and workloads are not yet observed.
-      Namespace-scoped alert routing is generated only after the first verified workload snapshot.
-  - app: component:default/cloudtak
-    capability: logs
-    reason: >-
-      PR #390 adds platform-cloudtak source; no cloudtak pods or namespace are observed yet.
-      The Loki query must be generated from a verified workload snapshot after deployment.
-  - app: component:default/karakeep
-    capability: kubernetes
-    reason: >-
-      Karakeep native source is staged with manual Argo and zero replicas; no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/karakeep
-    capability: grafana-alerts
-    reason: >-
-      Karakeep native source is staged with manual Argo and zero replicas; no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/karakeep
-    capability: logs
-    reason: >-
-      Karakeep native source is staged with manual Argo and zero replicas; no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/forgejo
-    capability: kubernetes
-    reason: >-
-      Forgejo source is staged with manual Argo and no sync; no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/forgejo
-    capability: grafana-alerts
-    reason: >-
-      Forgejo source is staged with manual Argo and no sync; no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/forgejo
-    capability: logs
-    reason: >-
-      Forgejo source is staged with manual Argo and no sync; no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/gatus
-    capability: kubernetes
-    reason: >-
-      Gatus source is staged with manual Argo and no sync; no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/gatus
-    capability: grafana-alerts
-    reason: >-
-      Gatus source is staged with manual Argo and no sync; no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/gatus
-    capability: logs
-    reason: >-
-      Gatus source is staged with manual Argo and no sync; no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/agentgateway
-    capability: kubernetes
-    reason: >-
-      The tool-gateway namespace is live (Argo application platform-tool-gateway, Deployments agentgateway, mcp-kubernetes and
-      mcp-clickhouse) but the committed cluster inventory snapshot predates it, so no workload entry yet generates this
-      annotation. Remove this exception when the inventory is next refreshed from the cluster.
-  - app: component:default/agentgateway
-    capability: grafana-alerts
-    reason: >-
-      The tool-gateway namespace is live (Argo application platform-tool-gateway, Deployments agentgateway, mcp-kubernetes and
-      mcp-clickhouse) but the committed cluster inventory snapshot predates it, so no workload entry yet generates this
-      annotation. Remove this exception when the inventory is next refreshed from the cluster.
-  - app: component:default/agentgateway
-    capability: logs
-    reason: >-
-      The tool-gateway namespace is live (Argo application platform-tool-gateway, Deployments agentgateway, mcp-kubernetes and
-      mcp-clickhouse) but the committed cluster inventory snapshot predates it, so no workload entry yet generates this
-      annotation. Remove this exception when the inventory is next refreshed from the cluster.
-  - app: component:default/openremote
-    capability: kubernetes
-    reason: >-
-      OpenRemote source is staged with a manual Argo Application and no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/openremote
-    capability: grafana-alerts
-    reason: >-
-      OpenRemote source is staged with a manual Argo Application and no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/openremote
-    capability: logs
-    reason: >-
-      OpenRemote source is staged with a manual Argo Application and no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/thingsboard
-    capability: kubernetes
-    reason: >-
-      ThingsBoard source is staged with a manual Argo Application and no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/thingsboard
-    capability: grafana-alerts
-    reason: >-
-      ThingsBoard source is staged with a manual Argo Application and no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
-  - app: component:default/thingsboard
-    capability: logs
-    reason: >-
-      ThingsBoard source is staged with a manual Argo Application and no live namespace or workload snapshot is recorded.
-      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
+      Deployed from platform/tool-gateway by the Argo application platform-tool-gateway, which the reviewed workload map
+      attributes to the agentgateway app (one Argo application maps to one app). It has no Argo application of its own.

@@ -16,7 +16,7 @@ The authority message bus (3-node JetStream), the NACK controller and NATS tools
 | --- | --- | --- |
 | `nack` | Deployment | `nats` |
 | `nats` | StatefulSet | `nats` |
-| `nats-metrics-scrape` | Deployment | `nats` |
+| `nats-leafz-exporter` | Deployment | `nats` |
 
 ## When it looks wrong
 
@@ -32,8 +32,8 @@ The authority message bus (3-node JetStream), the NACK controller and NATS tools
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name="nats", k8s_pod_name=~"(nack|nats|nats-metrics-scrape)-.*"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nack&var-workload=nats&var-workload=nats-metrics-scrape`
+- Loki query: `{k8s_namespace_name="nats", k8s_pod_name=~"(nack|nats|nats-leafz-exporter)-.*"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nack&var-workload=nats&var-workload=nats-leafz-exporter`
 - Source: `onemindos/omos`
 
 ## Escalate
