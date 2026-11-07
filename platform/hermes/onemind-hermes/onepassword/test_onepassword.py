@@ -79,11 +79,11 @@ class NativeTests(unittest.TestCase):
         self.assertFalse((destination / 'op').exists())
 
     def test_active_gitops_is_unchanged_source_only(self):
-        # Exact bytes of the active files (refreshed for the v0.22.7 bump; refresh them again whenever these files change on purpose). The point is that no 1Password wiring reaches them.
+        # Exact bytes of the active files (refreshed for the v0.23.0 bump; refresh them again whenever these files change on purpose). The point is that no 1Password wiring reaches them.
         hashes = {
-            'deployment.yaml': 'cef87bcd0457caec53ad4607a480757284d41041d92e9219a634780700f73de1',
-            'config.defaults.yaml': '3d83fc973ee6595bf968d341c54c1a57ec7b54fea59c0b10940fe831185f29e5',
-            'kustomization.yaml': '596ab726214bcea71ddd87a0944cb18dc1a336bd9c39bd36947d91de4769a5bc',
+            'deployment.yaml': '74fdcf8f980f4699b2c0e26c6aca59dcf36a44ff88f195086d9d6af0c15b7e96',
+            'config.defaults.yaml': '63396cf5db78659a233b1899b8f06c822d32828f99e5b7aac748a0c17f2a5c60',
+            'kustomization.yaml': 'ed3d4ab6507c869006295cd9cdcbefbce6b46e6f0d04a9698eb3b4ec2a57409d',
         }
         for name, digest in hashes.items():
             content = (BASE / name).read_bytes()
@@ -92,8 +92,8 @@ class NativeTests(unittest.TestCase):
             self.assertNotIn(b'OP_SERVICE_ACCOUNT_TOKEN', content, name)
             self.assertNotIn(b'install_cli.py', content, name)
         spec = yaml.safe_load((BASE / 'deployment.yaml').read_text())['spec']['template']['spec']
-        expected = ('nousresearch/hermes-agent:v0.22.7@sha256:'
-                    'e6d81ae52ebf6a43efa529701405509f20054ba818f179ddd748bed4f8af584c')
+        expected = ('nousresearch/hermes-agent:v0.23.0@sha256:'
+                    'adb7890916de63245523492be8f68f9d2095fecbec4e2a6dab7960381f0fc002')
         self.assertEqual(spec['containers'][0]['image'], expected)
         self.assertNotIn('install-onepassword-cli', [c['name'] for c in spec['initContainers']])
         self.assertNotIn('onepassword', yaml.safe_load(

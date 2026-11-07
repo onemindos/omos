@@ -10,6 +10,9 @@ spec:
     - name: dashboard
       port: 9119
       targetPort: dashboard
+    - name: webapp
+      port: 9120
+      targetPort: webapp
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -28,3 +31,22 @@ spec:
   tls:
     - hosts:
         - onemind-hermes
+---
+# The Webapp (Hermes Desktop in a browser tab): tailnet only, own hostname. Sign-in is the dashboard login.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: onemind-hermes-web
+  namespace: hermes
+  annotations:
+    tailscale.com/hostname: onemind-hermes-web
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: onemind-hermes
+      port:
+        number: 9120
+  tls:
+    - hosts:
+        - onemind-hermes-web

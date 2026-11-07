@@ -26,7 +26,7 @@ separate agents here.
 - Private dashboard: `https://onemind-hermes.tail717ba0.ts.net` once the
   Tailscale operator provisions it. Use the existing Hermes dashboard username
   and password.
-- Image: official Hermes v0.22.7 (`nousresearch/hermes-agent:v0.22.7`), pinned by the multi-architecture index digest in all three containers (see [Upgrading Hermes](#upgrading-hermes)).
+- Image: official Hermes v0.23.0 (`nousresearch/hermes-agent:v0.23.0`), pinned by the multi-architecture index digest in all three containers (see [Upgrading Hermes](#upgrading-hermes)).
 - New 25 GiB PVC `onemind-hermes-data` on `do-block-storage-retain`, so deleting
   the claim keeps the volume. No old volume is mounted or cloned; the unused
   `hermes-fresh-data` claim is not carried over.
@@ -88,7 +88,7 @@ These source tests do not establish deployment or a live backup restore.
 
 ## Worker roles and the tool gateway
 
-Hermes v0.22.7 always multiplexes profiles: `gateway.multiplex_profiles: false` is retired and is rewritten to
+Hermes v0.23.0 always multiplexes profiles: `gateway.multiplex_profiles: false` is retired and is rewritten to
 `true` at start (`hermes_cli/gateway_multiplex_mode.py`), and `auto_multiplex_migration` only matters for a
 single-profile install. So it cannot be turned off, and under it a role profile resolves `${ONEMIND_GATEWAY_KEY}`
 in MCP headers from its own `.env` only (`agent/secret_scope.py`); the container environment is the default
@@ -156,7 +156,7 @@ instance. Keep new selectors on `app.kubernetes.io/name`.
 The init container copies it once into the empty PVC with exclusive creation.
 Later pod starts keep configuration authored through Hermes, so changing this
 file after first start has no effect on the running instance. Every key was
-checked against the v0.22.7 code in the image and passed its
+checked against the v0.23.0 code in the image and passed its
 `validate_config_structure`:
 
 | Key | Value | Why |
@@ -309,7 +309,7 @@ command. A flagged command would be denied, not asked.
 
 ### Codex usage per credential
 
-`hermes usage --json` only reports the active credential. In Hermes v0.22.7
+`hermes usage --json` only reports the active credential. In Hermes v0.23.0
 `agent/account_usage.fetch_account_usage(provider, base_url=, api_key=, read_only=)` queries
 the ChatGPT usage endpoint for an explicit token, and `hermes_cli.auth.read_credential_pool()`
 lists the pool entries (`codex-1`, `codex-2`). `legacy_codex_usage.py` calls the first for each
@@ -396,7 +396,7 @@ tokens than before); the role definitions are `roles/roles.yaml`.
 Models are those `provider_models_cache.json` lists for `openai-codex` in the pod. `terra` is the cheaper tier
 (about half of `sol` per token in the models.dev cache); `luna` is cheaper still but too weak for review.
 
-### What Hermes v0.22.7 actually supports (read from `/opt/hermes`)
+### What Hermes v0.23.0 actually supports (read from `/opt/hermes`; same as v0.22.7 unless noted)
 
 - **`delegate_task` has no named roles.** The bundled `default` backend gives every child one route: the
   `delegation.provider` / `delegation.model` section or the parent's own (`plugins/delegation/default/__init__.py`
@@ -408,6 +408,11 @@ Models are those `provider_models_cache.json` lists for `openai-codex` in the po
   one: `roles/plugin/legacy-roles/` adds `worker` (enum of the five) to every task; no `worker` = the default
   route. It is a user plugin (`$HERMES_HOME/plugins/`, `kind: backend`, gated by `plugins.enabled`,
   `hermes_cli/plugins_discovery.py` `gate_manifest`), selected by `delegation.backend: legacy-roles`.
+  New in v0.23.0: the `default` backend is a bundled plugin (`plugins/delegation/default`, log line "Plugin 'default'
+  registered delegation provider"); `legacy-roles` registers beside it and `worker: checker` still routes to the
+  `checker` profile (scratch run: the child got the checker brief and ran a tool). A session with a later-result
+  consumer, such as a NATS chat, now runs `delegate_task` in the background: the call returns "dispatched" at once
+  and the result re-enters the chat as a new message.
 - **`hermes kanban swarm` roles are profiles.** `--worker PROFILE:TITLE[:SKILL,..]`, `--verifier PROFILE`,
   `--synthesizer PROFILE` (`hermes_cli/kanban_parser.py:222`, `kanban_swarm.py`); the card's assignee must satisfy
   `profile_exists` or the dispatcher will not spawn it (`kanban_db_dispatch.py:2077`, `2329`). The worker runs
@@ -466,7 +471,7 @@ Inventory of what Legacy does on NATS, what was ported and the switch order are 
 
 - Identity `agents.{prompt,status,hb}.hermes.zeus.legacy` through the Synadia agent protocol plugin
   `nats-platform` (vendored in `platform/hermes/onemind-hermes/plugins/nats-platform/`; no start-up hot-patch, because
-  Hermes v0.22.7 has no native NATS platform and the one line the patch fixed is now in the vendored file).
+  Hermes v0.23.0 has no native NATS platform and the one line the patch fixed is now in the vendored file).
 - Connection settings are in `deployment.yaml` (URL `tls://nats.nats.svc.cluster.local:4222`, user and password from
   Secret `omos-nats-creds`, CA from Secret `hermes-nats-ca`, identity, `HERMES_NATS_REFUSE_DUPLICATE=true`). They are
   inert until the plugin is listed in `plugins.enabled`.
@@ -522,14 +527,16 @@ Re-run `desktop/apply.sh --check` after any change.
 | Video generation, X search, Discord, Feishu, Yuanbao | DISABLED BY DESIGN | Same list. |
 | Local models | DISABLED BY DESIGN | A cloud pod has no GPU; `local-models` is off. |
 | Approvals | WORKS, differs from the seed | Live `approvals.mode` is `smart` (the seed says `manual`) with a three-entry `command_allowlist`; set from outside Git. See decisions. |
+| Webapp (Desktop in a browser tab) | WORKS from v0.23.0, owner to open | `https://onemind-hermes-web.tail717ba0.ts.net`, tailnet only. Scratch run: sign-in page, then the app bundle after login. See [The Webapp](#the-webapp). |
 | Updates | MANAGED | The pod updates by image bump, not from the app (`/api/hermes/update/check`). |
 
 **Version skew.** Closed by the v0.22.7 image bump (see [Upgrading Hermes](#upgrading-hermes)). The installed Desktop was
 rebuilt on 2026-11-02 from the Mac's `~/.hermes/hermes-agent` at commit `f0d94882e89` (tag `v0.22.6`). Against v0.22.5 only
 `PUT /api/skills/lock` was missing among the calls its Electron paths make; v0.22.7 has it. Still answering 404 on
-v0.22.7 (checked with `desktop/apply.sh --check` logic in a scratch container): `/api/desktop-plugins/*`,
-`/api/ui-preferences` and `/api/webapp-access/status`. They belong to the browser and web-app transport (`hermes webapp`,
-Web Access), which is opt-in and not enabled here, so they are not regressions. The app's `update-check-cache.json`
+v0.22.7 and in the `desktop/apply.sh --check` in-process run on v0.23.0: `/api/desktop-plugins/*`,
+`/api/ui-preferences` and `/api/webapp-access/status`. They belong to the Webapp listener, not the dashboard on 9119. With
+the Webapp on (v0.23.0), port 9120 answers `/api/ui-preferences` and `/api/webapp-access/status` with 401 until you sign
+in, so they exist there. They are not regressions. The app's `update-check-cache.json`
 was last written 2026-09-25 and is stale. The Mac also runs its own old gateway (`ai.hermes.gateway`, platform NATS only,
 identity `legacy-edge`) and a stale `~/.hermes` profile; neither touches this instance.
 
@@ -540,7 +547,7 @@ identity `legacy-edge`) and a stale `~/.hermes` profile; neither touches this in
 2. `OPENAI_API_KEY` for realtime voice, only if wanted.
 3. Install the server halves of the Mac plugins? `hermes-project-stewardship` adds a `pre_llm_call` hook on every
    turn and writes `kanban.db`; both are third-party community code. Not installed without an audit.
-4. Server image bump `v0.22.5` to `v0.22.7`: done (this change; see [Upgrading Hermes](#upgrading-hermes)).
+4. Server image bump `v0.22.5` to `v0.22.7`: done. `v0.22.7` to `v0.23.0` with the Webapp: this change (see [Upgrading Hermes](#upgrading-hermes)).
 5. `approvals.mode`: `smart` (live) or `manual` (seed). `manual` makes flagged commands wait for a person, which the
    Desktop approval prompt serves but Telegram, NATS and cron sessions cannot answer.
 6. `gh` in the image plus a fine-grained GitHub token, only if Desktop "create PR" from the pod is wanted.
@@ -548,9 +555,34 @@ identity `legacy-edge`) and a stale `~/.hermes` profile; neither touches this in
 
 `desktop/apply.sh` is the only thing here that changes the live volume; `desktop/apply.sh --check` is read-only.
 
+### The Webapp
+
+Hermes v0.23.0 can serve Hermes Desktop in a browser tab. Here it is on, and only the tailnet can reach it.
+
+- **URL:** `https://onemind-hermes-web.tail717ba0.ts.net` (Tailscale Ingress `onemind-hermes-web`, `service.yaml`). The
+  dashboard stays at `https://onemind-hermes.tail717ba0.ts.net`. There is no nginx or public route, and the tailnet
+  policy needs no change (`platform/core/policy.hujson` grant 1: your devices reach `*`).
+- **Sign-in:** the same login as the dashboard (Secret `hermes-dashboard-auth`). A wildcard bind turns the sign-in gate
+  on; without a session the listener answers a 302 to `/login`.
+- **How it is on:** `webapp:` in `config.yaml` (`enabled: true`, `host: 0.0.0.0`, `port: 9120`, `public_url` as above).
+  The gateway gives the Webapp its own listener, which replaces the private loopback listener it opened before. The API
+  server (8642, the `/health` probe) and the dashboard (9119, the liveness probe) are separate and did not change in the
+  scratch run. `config.defaults.yaml` seeds it on a new volume; a running instance gets it from `desktop/apply.sh`, which
+  edits only the `webapp` block, backs `config.yaml` up first and prints `unchanged` on a second run:
+
+  ```sh
+  platform/hermes/onemind-hermes/desktop/apply.sh --dry-run
+  platform/hermes/onemind-hermes/desktop/apply.sh --restart    # gateway process only, not the pod
+  platform/hermes/onemind-hermes/desktop/apply.sh --check      # reports the config and what the listener answers
+  ```
+- **Turn it off:** `desktop/apply.sh --webapp-off --restart` (sets `webapp.enabled: false`). To remove the route as well,
+  delete the `onemind-hermes-web` Ingress, the `webapp` Service port and container port, and the 9120 NetworkPolicy rule.
+- The NetworkPolicy lets only the `tailscale` namespace reach 9120 (beside 9119). Memory in the scratch run was about
+  620 MiB for the container with the Webapp on, so requests and limits are unchanged.
+
 ## Upgrading Hermes
 
-How the image is bumped, what to check, and how to go back. Last done: v0.22.5 to v0.22.7 (2026-11-04).
+How the image is bumped, what to check, and how to go back. Last done: v0.22.7 to v0.23.0 (2026-11-07).
 
 **Where the version is pinned.** `deployment.yaml` (init containers `initial-config` and `install-gateway-deps`, and the
 `hermes` container: all three must match) by the multi-architecture **index** digest, never a bare tag. The inert
@@ -571,8 +603,25 @@ depends on:
 - `hermes_cli.config.atomic_config_write/atomic_config_replace/read_user_config_raw` (the apply scripts), `cron.jobs`
   (`apply_jobs.py`), `hermes mcp ...` (the three MCP reconcilers in the init container);
 - the venv's Python (3.14.9 in both; the wheels in `nats/gateway-deps.txt` must still install), `/opt/hermes/tools/uv-*/uv`
-  (the `install-gateway-deps` path) and the s6 service names (`gateway-default`, used by `nats/apply.sh --restart`);
+  (the `install-gateway-deps` path) and the s6 slot of the gateway (`gateway-default`, used by `nats/apply.sh --restart`
+  and `desktop/apply.sh --restart`; its directory is `/run/hermes-service` since v0.23.0);
 - one-way migrations on `/opt/data` (below).
+
+**v0.22.7 to v0.23.0: breaking changes found.** One that touches the repo: the gateway's s6 slot moved. Everything else
+the repo calls is unchanged. Read from the two images and run in scratch containers on 2026-11-07:
+
+| Area | Change | Effect here |
+|---|---|---|
+| s6 gateway slot | Per-profile gateway slots moved from `/run/service/` to `/run/hermes-service/`, supervised by a new s6-rc service `profile-gateways` (a nested `s6-svscan` that runs as `hermes`; `hermes_cli/service_manager.py` `S6_DYNAMIC_SCANDIR`). `/run/service/gateway-default` no longer exists. | `nats/apply.sh --restart` used the old path and would have failed. Changed to `/run/hermes-service/gateway-default`, the same for `desktop/apply.sh --restart`. In the scratch run `s6-svc -r` on the new path restarted the gateway as root; the old path printed "unable to control". No other `/run/service` use in the repo. |
+| Role profile slots | At boot Hermes registers an s6 slot for every profile on the volume (`container_boot`), but starts only the default one. | The five role profiles show "down (not started yet)"; only `gateway-default` runs, so no extra memory. |
+| Config schema | `_config_version` stays 52 (the same number in both images). No migration ran. | None. `state.db` is schema 32 in both. |
+| Delegation | The `default` backend is now a bundled plugin; background delegation is the default for NATS chats. | `legacy-roles` still loads and `worker: checker` still routes to the checker profile. The result of a background `delegate_task` still cannot be delivered to a NATS chat: `Watch notification not admitted for nats chat=legacy: not_found` appeared again, so the known problem is **not** fixed in v0.23.0. |
+| Security | The approval gate is stricter (per release notes). | `approvals.mode` unchanged. Not exercised beyond the code diff. |
+| Webapp | New listener `webapp:` (`gateway/webapp_listener.py`). Off by default. | Turned on by this change, see [The Webapp](#the-webapp). |
+| Plugin and config API | Unchanged: `gateway.run._profile_runtime_scope/_resolve_runtime_agent_kwargs/_resolve_gateway_model/_load_gateway_config`, `tools.approval_context`, `agent.delegation_provider`, `register_platform/register_hook/register_tool/register_delegation_provider`, `hermes_cli.config.atomic_config_write/atomic_config_replace/read_user_config_raw`. | The AST pass over 53 imported symbols found one missing in both versions: `tools.approval._get_approval_config` (the known case below). |
+| Python, uv | Python 3.14.9, uv 0.13.5 at `tools/uv-0.13.5-linux-<arch>/uv` in both. The six hash-pinned wheels install and import. | None. |
+| 1Password draft | The four upstream files `onepassword/runtime-fix` depends on hash the same in both versions. | The patch still applies; the draft's pins moved to v0.23.0. |
+| Multiplex, MCP, cron | Source files unchanged for `gateway_multiplex_mode.py`, `secret_scope.py`, `account_usage.py`; `hermes mcp|cron|profile|config` answer. | None. |
 
 **v0.22.5 to v0.22.7: breaking changes found.** None that touches Legacy's code, config keys or the apply scripts.
 Specifics, all read from the two images on 2026-11-04:
@@ -603,7 +652,7 @@ returned cannot be delivered back (`Watch notification not admitted for nats cha
 
 **One-way state on `/opt/data`.** Two things change on the first start of the new image and neither blocks going back:
 
-- `config.yaml` is stamped `_config_version: 52` after the backup above. v0.22.5 started and ran normally on a volume
+- `config.yaml` is stamped `_config_version: 52` after the backup above (v0.22.7 to v0.23.0: no change, already 52). v0.22.5 started and ran normally on a volume
   stamped 52 (checked in a scratch rollback run).
 - The cron executions table is rebuilt wider; v0.22.5 read it and ran its scheduler fine in the same run.
 - `state.db` keeps schema 32 in both versions (`hermes_state_common.SCHEMA_VERSION`), so session history is not migrated.
@@ -618,17 +667,17 @@ returned cannot be delivered back (`Watch notification not admitted for nats cha
    kubectl --context do-nyc3-omos-cloud -n hermes apply -f - <<'EOF'
    apiVersion: snapshot.storage.k8s.io/v1
    kind: VolumeSnapshot
-   metadata: {name: onemind-hermes-data-pre-v0-22-7}
+   metadata: {name: onemind-hermes-data-pre-v0-23-0}
    spec:
      volumeSnapshotClassName: onemind-backup-retain
      source: {persistentVolumeClaimName: onemind-hermes-data}
    EOF
-   kubectl -n hermes get volumesnapshot onemind-hermes-data-pre-v0-22-7 -o jsonpath='{.status.readyToUse}'   # wait for true
+   kubectl -n hermes get volumesnapshot onemind-hermes-data-pre-v0-23-0 -o jsonpath='{.status.readyToUse}'   # wait for true
    ```
 
    (`onemind-backup-retain` keeps the underlying snapshot if the object is deleted.) Delete it after the bump has run clean
    for a few days.
-2. Revert: `git revert` the merge commit (it restores the v0.22.5 digest in all three containers); Argo rolls the pod.
+2. Revert: `git revert` the merge commit (it restores the v0.22.7 digest in all three containers and removes the Webapp; the leftover `webapp:` block in `config.yaml` still works on v0.22.7, which serves the sign-in page on 9120 inside the pod, but nothing routes to it; set it off with `desktop/apply.sh --webapp-off` first if you want it closed); Argo rolls the pod.
    The PV is `Retain`, the data is reused as is. No volume restore is needed for an image-only revert.
 3. Only if the volume itself is damaged: scale `onemind-hermes` to 0 and restore `onemind-hermes-data` from the snapshot
    taken in step 1 (or the latest VolSync restic snapshot, `docs/portability/REBUILD-FROM-ZERO.md` step 9), then scale back
@@ -641,9 +690,13 @@ returned cannot be delivered back (`Watch notification not admitted for nats cha
 data volume, a local NATS server and a mock OpenAI-compatible model: the shipped init containers, every `*/apply.sh`
 Python applier (dry run, apply, second run), real plugin discovery, the s6 start, `/health`, the dashboard status
 route, `hermes mcp|cron|profile|config`, a NATS prompt and heartbeat, a model reply, a `delegate_task` with
-`worker: checker` that ran a tool call in the child, and then v0.22.5 started again on the migrated volume. Not
+`worker: checker` that ran a tool call in the child, and then the previous image started again on the migrated volume
+(v0.23.0 run on a v0.22.7 volume, then v0.22.7 again: `/health` 200, dashboard 200, NATS connected, `_config_version` 52
+both times). The v0.23.0 run also covered the Webapp (sign-in redirect, login, page after login), `desktop/apply.sh` steps
+(dry run, apply, second run `unchanged`), the AST import pass and `s6-svc -r` on the new slot path. Each gateway start took
+2 to 3 minutes there because the tool-gateway and OAuth MCP servers are unreachable in scratch. Not
 covered there: real model providers, the tool gateway (`ops`, `data`, `tak`, `hermes mcp test`), Telegram and Matrix, the
-Zoho, Whop and Todoist services, TLS to the cluster NATS, and Desktop's UI. Those are the post-merge checks.
+Zoho, Whop and Todoist services, the cluster's own NATS TLS (a scratch CA was used), the Tailscale Ingress and operator proxy, the approval gate, and Desktop's UI. Those are the post-merge checks.
 
 ## Notes
 

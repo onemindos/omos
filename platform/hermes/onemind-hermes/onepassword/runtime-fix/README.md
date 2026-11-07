@@ -54,6 +54,13 @@ execution or verification of all later layer contents. Only amd64 is assessed,
 matching the workload's node selector. Do not infer compatibility from the version
 string alone.
 
+### Re-pinned to v0.23.0 (2026-11-07)
+
+Base image is now `nousresearch/hermes-agent:v0.23.0@sha256:adb7890916de63245523492be8f68f9d2095fecbec4e2a6dab7960381f0fc002`. All four files this directory depends on hash identically in v0.22.7 and v0.23.0
+(`local_env_policy.py` `d8b3a894...`, `code_execution_env.py` `1c6e0c42...`, `local.py` `ac64fb63...`,
+`onepassword.py` `aa682d5b...`), so the patcher applies unchanged. `local.py` and `onepassword.py` are still the
+v0.22.7 hashes noted below and are still not re-reviewed. The v0.22.7 section below is kept as history.
+
 ### Re-pinned to v0.22.7 (2026-11-04)
 
 The base image and the patcher's `local_env_policy.py` hash now follow the `onemind-hermes` bump to

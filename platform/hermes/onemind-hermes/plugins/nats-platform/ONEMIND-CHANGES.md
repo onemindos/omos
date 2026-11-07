@@ -16,4 +16,4 @@ for the exact diff.
 
 When upstream changes, re-vendor and re-apply these six, and keep the diff small.
 
-Checked against Hermes v0.22.7 on 2026-11-04 (scratch container, real image): the adapter loads through plugin discovery, connects, answers `/help` and a model prompt, runs a `delegate_task` turn and heartbeats. No vendored change was needed for v0.22.7.
+Checked against Hermes v0.23.0 on 2026-11-07 (and v0.22.7 on 2026-11-04) (scratch container, real image): the adapter loads through plugin discovery, connects, answers `/help` and a model prompt, runs a `delegate_task` turn and heartbeats. No vendored change was needed for v0.22.7.
