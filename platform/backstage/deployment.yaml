@@ -105,6 +105,20 @@ spec:
               name: backstage-digitalocean
               key: DIGITALOCEAN_TOKEN
               optional: true
+        # Ops Center live bridge (plugins/plugin-onemind-livebridge-backend): read-only NATS subscriber.
+        # Optional: without the secret the bridge reports NATS as disabled and the portal starts normally.
+        - name: NATS_USER
+          valueFrom:
+            secretKeyRef:
+              name: portal-nats-creds
+              key: NATS_USER
+              optional: true
+        - name: NATS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: portal-nats-creds
+              key: NATS_PASSWORD
+              optional: true
         - name: PORTAL_URL
           value: https://portal.tail717ba0.ts.net
         - name: POSTGRES_PASSWORD

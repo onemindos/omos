@@ -136,6 +136,13 @@ spec:
           podSelector:
             matchLabels:
               app.kubernetes.io/name: execute-gate
+        # Backstage portal live bridge: read-only subscriber (core subscriptions only, never publishes).
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: backstage
+          podSelector:
+            matchLabels:
+              app: backstage
       ports:
         - protocol: TCP
           port: 4222

@@ -6560,6 +6560,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@internal/plugin-onemind-livebridge-backend@workspace:^, @internal/plugin-onemind-livebridge-backend@workspace:plugins/plugin-onemind-livebridge-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-livebridge-backend@workspace:plugins/plugin-onemind-livebridge-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+    "@backstage/plugin-signals-node": "npm:^0.2.5"
+    "@kubernetes/client-node": "npm:1.4.0"
+    "@types/express": "npm:4.17.21"
+    express: "npm:4.22.1"
+    nats: "npm:^2.29.3"
+  languageName: unknown
+  linkType: soft
+
 "@internal/plugin-onemind-machine-backend@workspace:^, @internal/plugin-onemind-machine-backend@workspace:plugins/plugin-onemind-machine-backend":
   version: 0.0.0-use.local
   resolution: "@internal/plugin-onemind-machine-backend@workspace:plugins/plugin-onemind-machine-backend"
@@ -15957,6 +15971,7 @@ __metadata:
     "@internal/plugin-onemind-digitalocean-backend": "workspace:^"
     "@internal/plugin-onemind-events-backend": "workspace:^"
     "@internal/plugin-onemind-inventory-backend": "workspace:^"
+    "@internal/plugin-onemind-livebridge-backend": "workspace:^"
     "@internal/plugin-onemind-machine-backend": "workspace:^"
     "@internal/plugin-onemind-missions-backend": "workspace:^"
     "@internal/plugin-onemind-offline-backend": "workspace:^"
@@ -27813,6 +27828,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nats@npm:^2.29.3":
+  version: 2.29.3
+  resolution: "nats@npm:2.29.3"
+  dependencies:
+    nkeys.js: "npm:1.1.0"
+  checksum: 10c0/9a4c09c4b562e415f28926cc7d3b609ee4a727570c398e90d5d71f1a4c08f84ebf8c6d881eb1d202d39fa071c4779bcd8764b982767135b09826f28386cc55fb
+  languageName: node
+  linkType: hard
+
 "natural-compare@npm:^1.4.0":
   version: 1.4.0
   resolution: "natural-compare@npm:1.4.0"
@@ -27912,6 +27936,15 @@ __metadata:
     lodash.topath:
       optional: true
   checksum: 10c0/7e31b03e84b1c9ce0aeacce5a026629e3bc8ed7be1989ec098de416d071227506b290069e88bb54e2005642c6a6012696f5c427b52a0a9bbe1a9d193f4a9efb5
+  languageName: node
+  linkType: hard
+
+"nkeys.js@npm:1.1.0":
+  version: 1.1.0
+  resolution: "nkeys.js@npm:1.1.0"
+  dependencies:
+    tweetnacl: "npm:1.0.3"
+  checksum: 10c0/44ff8d61e46d2b345351ed7844d66036a815aeca23927def6ca258e27a18a1678fe5ab161c5cf0b6e3a3993a945d422b71036986d09669b214540c8491478bef
   languageName: node
   linkType: hard
 
@@ -34917,6 +34950,13 @@ __metadata:
   dependencies:
     safe-buffer: "npm:^5.0.1"
   checksum: 10c0/4c7a1b813e7beae66fdbf567a65ec6d46313643753d0beefb3c7973d66fcec3a1e7f39759f0a0b4465883499c6dc8b0750ab8b287399af2e583823e40410a17a
+  languageName: node
+  linkType: hard
+
+"tweetnacl@npm:1.0.3":
+  version: 1.0.3
+  resolution: "tweetnacl@npm:1.0.3"
+  checksum: 10c0/069d9df51e8ad4a89fbe6f9806c68e06c65be3c7d42f0701cc43dba5f0d6064686b238bbff206c5addef8854e3ce00c643bff59432ea2f2c639feab0ee1a93f9
   languageName: node
   linkType: hard
 
