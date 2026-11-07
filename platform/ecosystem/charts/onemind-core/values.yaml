@@ -1,5 +1,5 @@
 replicas: 2
-image: ghcr.io/onemindos/onemind-core@sha256:85269aad930bb65403e873bf0d4b58ad4a283eaa05c2fa0e36705b4eef33bed7
+image: ghcr.io/onemindos/onemind-core@sha256:b498e746f886bbda55a4b505534058574b4769a14ea7cc7e374b2f53484c65fa
 nodeSelector:
   onemind.io/compute-role: ecosystem
 resources:
