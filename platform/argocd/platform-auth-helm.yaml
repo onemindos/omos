@@ -63,16 +63,16 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 512Mi
+              memory: 860Mi  # observed ~745Mi each, +15%
             limits:
-              memory: 1Gi
+              memory: 1280Mi
 
         worker:
           replicas: 1
           resources:
             requests:
               cpu: 50m
-              memory: 512Mi
+              memory: 470Mi  # observed ~405Mi, +15%
             limits:
               memory: 1Gi
 

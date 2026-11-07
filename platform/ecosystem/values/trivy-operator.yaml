@@ -97,14 +97,15 @@ trivy:
       cpu: '1'
       memory: 2Gi
       ephemeralStorage: 4Gi
+# Operator pod itself was OOMKilled at 512Mi (2026-11-07); steady use ~200Mi.
 resources:
   requests:
     cpu: 50m
-    memory: 128Mi
+    memory: 256Mi
     ephemeral-storage: 64Mi
   limits:
     cpu: 500m
-    memory: 512Mi
+    memory: 1Gi
     ephemeral-storage: 256Mi
 podSecurityContext:
   runAsNonRoot: true
