@@ -1,4 +1,4 @@
-"""Build-time, hash-locked correction for the pinned Hermes v0.22.7 source.
+"""Build-time, hash-locked correction for the pinned Hermes v0.23.0 source.
 
 Never run against a live installation. Apply to a scratch source copy or during
 an image build; unknown source fails closed before any write.

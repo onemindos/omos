@@ -1,7 +1,7 @@
 # onemind-hermes initial configuration (agent persona: Legacy, single soul).
 # Copied once into the empty PVC by the init container; later edits made through
 # Hermes win. No Legacy state, custom plugins, jobs or connectors.
-# Every key below was checked against Hermes v0.22.7 (/opt/hermes); see README.md.
+# Every key below was checked against Hermes v0.23.0 (/opt/hermes); see README.md.
 # Select/authenticate the model from the instance before using chat.
 # The agent's name is Legacy. Hermes has no agent-name key: the persona is SOUL.md
 # (seed/onemind-hermes/), and the id advertised on the API server's /v1/models comes
@@ -88,6 +88,18 @@ skills:
 plugins:
   enabled: []
 
+# The Webapp: Hermes Desktop in a browser tab (Hermes v0.23.0). It gets its own listener on 9120, apart from the
+# API server (8642) and the dashboard (9119). A wildcard host turns on dashboard sign-in (the same
+# hermes-dashboard-auth login as 9119) and public_url is the address the tailnet-only Tailscale Ingress
+# `onemind-hermes-web` (service.yaml) serves it at. This block only seeds an empty volume; a running instance
+# gets it from desktop/apply.sh (desktop/apply_desktop.py WEBAPP: keep the two equal, a test checks it).
+# Off switch: `desktop/apply.sh --webapp-off --restart`.
+webapp:
+  enabled: true
+  host: 0.0.0.0
+  port: 9120
+  public_url: https://onemind-hermes-web.tail717ba0.ts.net
+
 # Chat channels, moved from Legacy (same bot identities). The Telegram bot token and
 # the Matrix access token are NOT here: they come from the onemind-hermes-runtime
 # SealedSecret (TELEGRAM_BOT_TOKEN, MATRIX_ACCESS_TOKEN), and their presence enables
@@ -114,10 +126,10 @@ MATRIX_USER_ID: '@legacy:onemindos.dev'
 # and physical tools are on /execute, which is not deployed, so it is not listed here.
 # ONEMIND_GATEWAY_KEY comes from the onemind-gateway-client SealedSecret (deployment.yaml).
 # Every route runs apiKey.mode strict: without the Authorization header it answers 401.
-# gateway.multiplex_profiles cannot be switched off in Hermes v0.22.7 (an explicit false is rewritten to
+# gateway.multiplex_profiles cannot be switched off in Hermes v0.23.0 (an explicit false is rewritten to
 # true at start), and under it a ROLE profile resolves ${VAR} in headers only from its own .env, never from
 # the container env. roles/apply.sh therefore writes ONEMIND_GATEWAY_KEY into each role's .env. Keys checked
-# against v0.22.7 tools/mcp_tool_*.py: url,
+# against v0.23.0 tools/mcp_tool_*.py: url,
 # headers (${VAR} rendered from env), lazy, trust, timeout, connect_timeout. Unset: lazy
 # (connect at start, so tool counts are known) and trust (default full).
 mcp_servers:

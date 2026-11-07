@@ -61,7 +61,8 @@ if [ "$RESTART" = 1 ]; then
     *--dry-run*|*--status*) echo "--restart ignored with --dry-run or --status" ;;
     *)
       echo "Restarting the gateway process (s6 gateway-default); the pod stays up."
-      kx deploy/onemind-hermes -c hermes -- /command/s6-svc -r /run/service/gateway-default
+      # Hermes v0.23.0 keeps the gateway slots in /run/hermes-service (v0.22.x: /run/service).
+      kx deploy/onemind-hermes -c hermes -- /command/s6-svc -r /run/hermes-service/gateway-default
       ;;
   esac
 fi

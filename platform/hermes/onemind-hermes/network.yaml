@@ -15,6 +15,7 @@ spec:
               kubernetes.io/metadata.name: tailscale
       ports:
         - {protocol: TCP, port: 9119}
+        - {protocol: TCP, port: 9120}   # Webapp
   egress:
     - to:
         - namespaceSelector:

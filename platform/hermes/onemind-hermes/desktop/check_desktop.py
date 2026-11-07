@@ -9,7 +9,9 @@ network path in front of them. Only status codes and the key names of the JSON b
 values. Routes that return credentials, stream, download or start OAuth flows are skipped.
 
 It also reports the voice and media providers Desktop depends on (STT, TTS, image generation), because those
-fail quietly: a route answers 200 while no provider is behind it.
+fail quietly: a route answers 200 while no provider is behind it, and the Webapp (the browser Desktop, Hermes
+v0.23.0): the `webapp:` block in config.yaml and what the gateway's listener answers on 127.0.0.1 (a sign-in
+redirect is the expected answer on the wildcard bind).
 """
 import asyncio
 import importlib
@@ -118,9 +120,43 @@ def providers_check():
     return problems
 
 
+def webapp_check():
+    """Report webapp.* from config.yaml and probe the listener on loopback. Status codes only, no bodies."""
+    import urllib.error
+    import urllib.request
+    try:
+        from hermes_cli.config import read_user_config_raw
+        block = read_user_config_raw(os.path.join(os.environ["HERMES_HOME"], "config.yaml")).get("webapp") or {}
+    except Exception as exc:
+        print("webapp: config unreadable (%s)" % type(exc).__name__)
+        return 1
+    if block.get("enabled") is not True:
+        print("webapp: off in config.yaml (webapp.enabled=%r)" % block.get("enabled"))
+        return 0
+    port = block.get("port", 9120)
+    print("webapp: on in config.yaml (host=%s port=%s public_url=%s)" % (block.get("host"), port, block.get("public_url")))
+
+    class NoRedirect(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, *args, **kwargs):
+            return None
+
+    opener = urllib.request.build_opener(NoRedirect)
+    try:
+        resp = opener.open("http://127.0.0.1:%s/" % port, timeout=5)
+        status, where = resp.status, ""
+    except urllib.error.HTTPError as exc:  # 3xx/4xx: the listener is up and answered
+        status, where = exc.code, exc.headers.get("Location", "")
+    except Exception as exc:
+        print("webapp listener 127.0.0.1:%s: NOT answering (%s). Restart the gateway after changing config." % (port, type(exc).__name__))
+        return 1
+    print("webapp listener 127.0.0.1:%s: GET / -> %s%s" % (port, status, (" Location=" + where) if where else ""))
+    return 0
+
+
 def main():
     bad = asyncio.run(routes_check())
     problems = providers_check()
+    problems += webapp_check()
     print("result: %s" % ("OK" if not bad and not problems else "%d route error(s), %d provider problem(s)" % (bad, problems)))
     return 0
 
