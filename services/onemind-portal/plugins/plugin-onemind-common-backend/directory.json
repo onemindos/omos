@@ -40,6 +40,22 @@
     "groupTitle": "Infrastructure"
   },
   {
+    "name": "forgejo",
+    "title": "Forgejo",
+    "url": "https://forgejo.tail717ba0.ts.net",
+    "description": "Self-hosted Git forge",
+    "group": "infrastructure",
+    "groupTitle": "Infrastructure"
+  },
+  {
+    "name": "authentik",
+    "title": "Authentik",
+    "url": "https://auth.onemindos.dev",
+    "description": "Identity provider and SSO",
+    "group": "infrastructure",
+    "groupTitle": "Infrastructure"
+  },
+  {
     "name": "onemind-hermes",
     "title": "Legacy (onemind-hermes)",
     "url": "https://onemind-hermes.tail717ba0.ts.net/",
@@ -50,16 +66,8 @@
   {
     "name": "agent-web-ui",
     "title": "Agent Web UI",
-    "url": "https://agent-web-ui-1.tail717ba0.ts.net/",
+    "url": "https://agent-console.tail717ba0.ts.net/",
     "description": "NATS agent browser",
-    "group": "ai-agents",
-    "groupTitle": "AI & Agents"
-  },
-  {
-    "name": "openclaw",
-    "title": "OpenClaw",
-    "url": "https://openclaw.tail717ba0.ts.net",
-    "description": "Agent orchestration",
     "group": "ai-agents",
     "groupTitle": "AI & Agents"
   },
@@ -72,9 +80,25 @@
     "groupTitle": "AI & Agents"
   },
   {
+    "name": "onemind-hermes-web",
+    "title": "Legacy Webapp (onemind-hermes)",
+    "url": "https://onemind-hermes-web.tail717ba0.ts.net",
+    "description": "Hermes Desktop in a browser tab",
+    "group": "ai-agents",
+    "groupTitle": "AI & Agents"
+  },
+  {
+    "name": "langfuse",
+    "title": "Langfuse",
+    "url": "https://onemind-langfuse.tail717ba0.ts.net",
+    "description": "LLM tracing and evaluation",
+    "group": "ai-agents",
+    "groupTitle": "AI & Agents"
+  },
+  {
     "name": "element-chat",
     "title": "Element Chat",
-    "url": "https://element.onemindos.com",
+    "url": "https://element.tail717ba0.ts.net",
     "description": "Matrix E2EE chat",
     "group": "communication",
     "groupTitle": "Communication"
@@ -82,7 +106,7 @@
   {
     "name": "matrix-synapse",
     "title": "Matrix Synapse",
-    "url": "https://matrix.onemindos.com",
+    "url": "https://matrix.tail717ba0.ts.net",
     "description": "Homeserver",
     "group": "communication",
     "groupTitle": "Communication"
@@ -106,7 +130,7 @@
   {
     "name": "cloudtak",
     "title": "CloudTAK",
-    "url": "https://atoc.onemindos.dev",
+    "url": "https://cloudtak.tail717ba0.ts.net",
     "description": "Cloud TAK — COP",
     "group": "tak-ecosystem",
     "groupTitle": "TAK Ecosystem"
@@ -121,16 +145,16 @@
   },
   {
     "name": "onetak",
-    "title": "OneTAK",
-    "url": "https://onetak.onemindos.dev",
-    "description": "OneMind TAK platform",
+    "title": "OneTAK (TAK Portal)",
+    "url": "https://enroll.tail717ba0.ts.net",
+    "description": "OneMind TAK platform: EUD enrollment and onboarding",
     "group": "tak-ecosystem",
     "groupTitle": "TAK Ecosystem"
   },
   {
     "name": "fedhub",
     "title": "FedHub",
-    "url": "https://fedhub.tail717ba0.ts.net",
+    "url": "https://fedhub.tail717ba0.ts.net:9443",
     "description": "TAK federation hub",
     "group": "tak-ecosystem",
     "groupTitle": "TAK Ecosystem"
@@ -186,7 +210,7 @@
   {
     "name": "agent-monitor",
     "title": "Agent Monitor",
-    "url": "https://agenttap-1.tail717ba0.ts.net",
+    "url": "https://agent-tap.tail717ba0.ts.net",
     "description": "Real-time agent TUI",
     "group": "intelligence",
     "groupTitle": "Intelligence"
@@ -194,32 +218,32 @@
   {
     "name": "clickhouse",
     "title": "ClickHouse",
-    "url": "https://clickhouse.tail717ba0.ts.net",
-    "description": "10-year event DB",
+    "url": "https://portal.tail717ba0.ts.net/catalog/default/component/clickhouse",
+    "description": "10-year event DB. Running, no web UI exposed; this links to its catalog page",
     "group": "intelligence",
     "groupTitle": "Intelligence"
   },
   {
-    "name": "minio",
-    "title": "MinIO",
-    "url": "https://minio.tail717ba0.ts.net",
-    "description": "Object storage",
-    "group": "data-storage",
-    "groupTitle": "Data & Storage"
+    "name": "openremote",
+    "title": "OpenRemote",
+    "url": "https://openremote.tail717ba0.ts.net",
+    "description": "IoT asset and rules platform",
+    "group": "intelligence",
+    "groupTitle": "Intelligence"
+  },
+  {
+    "name": "thingsboard",
+    "title": "ThingsBoard",
+    "url": "https://thingsboard.tail717ba0.ts.net",
+    "description": "IoT device dashboards",
+    "group": "intelligence",
+    "groupTitle": "Intelligence"
   },
   {
     "name": "postgis",
     "title": "PostGIS",
-    "url": "https://pgadmin.tail717ba0.ts.net",
-    "description": "Spatial database",
-    "group": "data-storage",
-    "groupTitle": "Data & Storage"
-  },
-  {
-    "name": "longhorn",
-    "title": "Longhorn",
-    "url": "https://longhorn.tail717ba0.ts.net",
-    "description": "Distributed block storage",
+    "url": "https://portal.tail717ba0.ts.net/catalog/default/component/postgis",
+    "description": "Spatial database (PostGIS in CNPG and TAK Server Postgres). No admin UI deployed; this links to its catalog page",
     "group": "data-storage",
     "groupTitle": "Data & Storage"
   },
@@ -234,16 +258,40 @@
   {
     "name": "prometheus",
     "title": "Prometheus",
-    "url": "https://prometheus.tail717ba0.ts.net",
-    "description": "Metrics scraper",
+    "url": "https://portal.tail717ba0.ts.net/catalog/default/component/prometheus",
+    "description": "Metrics scraper. Running, no web UI exposed (use Grafana); this links to its catalog page",
     "group": "observability",
     "groupTitle": "Observability"
   },
   {
     "name": "nats-surveyor",
     "title": "NATS Surveyor",
-    "url": "https://nats-surveyor-1.tail717ba0.ts.net",
-    "description": "NATS metrics",
+    "url": "https://portal.tail717ba0.ts.net/catalog/default/component/nats-surveyor",
+    "description": "NATS metrics. Running, no web UI exposed (feeds Grafana); this links to its catalog page",
+    "group": "observability",
+    "groupTitle": "Observability"
+  },
+  {
+    "name": "nats-monitor",
+    "title": "NATS Monitor",
+    "url": "https://nats-monitor.tail717ba0.ts.net",
+    "description": "NATS server monitoring endpoint (port 8222)",
+    "group": "observability",
+    "groupTitle": "Observability"
+  },
+  {
+    "name": "gatus",
+    "title": "Status (Gatus)",
+    "url": "https://status.tail717ba0.ts.net",
+    "description": "Service health and uptime status page",
+    "group": "observability",
+    "groupTitle": "Observability"
+  },
+  {
+    "name": "opencost",
+    "title": "OpenCost",
+    "url": "https://opencost.tail717ba0.ts.net",
+    "description": "Kubernetes cost allocation",
     "group": "observability",
     "groupTitle": "Observability"
   },
@@ -258,8 +306,24 @@
   {
     "name": "webodm",
     "title": "WebODM",
-    "url": "https://webodm.onemindos.dev",
-    "description": "Drone imagery",
+    "url": "https://portal.tail717ba0.ts.net/catalog/default/component/webodm",
+    "description": "Drone imagery. Running in the onetak namespace, no web UI exposed; this links to its catalog page",
+    "group": "geospatial",
+    "groupTitle": "Geospatial"
+  },
+  {
+    "name": "stac",
+    "title": "STAC API",
+    "url": "https://stac.tail717ba0.ts.net",
+    "description": "Geospatial asset catalog API (read only)",
+    "group": "geospatial",
+    "groupTitle": "Geospatial"
+  },
+  {
+    "name": "stac-browser",
+    "title": "STAC Browser",
+    "url": "https://stac-browser.tail717ba0.ts.net",
+    "description": "Browse the STAC geospatial catalog",
     "group": "geospatial",
     "groupTitle": "Geospatial"
   },
@@ -392,6 +456,22 @@
     "groupTitle": "Personal Tools"
   },
   {
+    "name": "karakeep",
+    "title": "Karakeep",
+    "url": "https://karakeep.tail717ba0.ts.net",
+    "description": "Self-hosted bookmarks and read-later",
+    "group": "personal-tools",
+    "groupTitle": "Personal Tools"
+  },
+  {
+    "name": "vaultwarden",
+    "title": "Vaultwarden",
+    "url": "https://vaultwarden.tail717ba0.ts.net",
+    "description": "Self-hosted password manager",
+    "group": "personal-tools",
+    "groupTitle": "Personal Tools"
+  },
+  {
     "name": "github",
     "title": "GitHub",
     "url": "https://github.com/onemindos",
@@ -420,6 +500,14 @@
     "title": "Circle",
     "url": "https://login.circle.so/sign_in",
     "description": "Community workspace",
+    "group": "workspaces",
+    "groupTitle": "Workspaces"
+  },
+  {
+    "name": "n8n",
+    "title": "n8n",
+    "url": "https://n8n.tail717ba0.ts.net",
+    "description": "Workflow automation",
     "group": "workspaces",
     "groupTitle": "Workspaces"
   },
@@ -478,30 +566,6 @@
     "description": "Main platform",
     "group": "external",
     "groupTitle": "External"
-  },
-  {
-    "name": "external-argocd",
-    "title": "ArgoCD",
-    "url": "https://argocd.tail717ba0.ts.net",
-    "description": "GitOps CD",
-    "group": "external",
-    "groupTitle": "External"
-  },
-  {
-    "name": "external-tailscale",
-    "title": "Tailscale",
-    "url": "https://login.tailscale.com/admin/machines",
-    "description": "Mesh VPN",
-    "group": "external",
-    "groupTitle": "External"
-  },
-  {
-    "name": "tailscale-admin",
-    "title": "Tailscale Admin",
-    "url": "https://login.tailscale.com/admin",
-    "description": "Mesh VPN administration",
-    "group": "infrastructure",
-    "groupTitle": "Infrastructure"
   },
   {
     "name": "facebook-zeus",
