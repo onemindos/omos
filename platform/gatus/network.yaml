@@ -18,9 +18,9 @@ spec:
           kubernetes.io/metadata.name: tailscale
       podSelector:
         matchExpressions:
-          # Its own proxy (ingress/gatus) or the shared ProxyGroup (proxygroup/ingress).
-          - {key: tailscale.com/parent-resource, operator: In, values: [gatus, ingress]}
-          - {key: tailscale.com/parent-resource-type, operator: In, values: [ingress, proxygroup]}
+        # Its own proxy (ingress/gatus) or the shared ProxyGroup (proxygroup/ingress).
+        - {key: tailscale.com/parent-resource, operator: In, values: [gatus, ingress]}
+        - {key: tailscale.com/parent-resource-type, operator: In, values: [ingress, proxygroup]}
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: monitoring
