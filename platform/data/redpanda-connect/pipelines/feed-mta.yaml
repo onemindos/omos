@@ -1,3 +1,17 @@
+# feed-mta.yaml — MTA Metro-North + LIRR GTFS-realtime vehicle positions → CoT → tak.cot.inject
+#
+# Noise control: a train is published only when its position (rounded to 4 decimals,
+# ~11 m) changes. An unchanged train is re-sent as a heartbeat once the cache entry
+# expires (ttl 300s, so every 5 to 5.5 minutes with the 30s poll). CoT stale is 600s,
+# longer than the heartbeat, so a parked train does not drop off TAK.
+# The MTA feeds carry no speed or bearing, so the CoT <track> element is omitted.
+
+cache_resources:
+  - label: mta_last_position
+    memory:
+      default_ttl: 300s
+      compaction_interval: 30s
+
 input:
   generate:
     interval: "30s"
@@ -19,16 +33,25 @@ pipeline:
               message: "transit_realtime.FeedMessage"
               import_paths: ["/proto/"]
           - mapping: |
-              root = this.entity.filter(e -> e.exists("vehicle") && e.vehicle.exists("position")).map_each(e -> {
-                "uid": "MTA-MNR-%s".format(e.vehicle.trip.trip_id.or(e.id)),
-                "callsign": "MNR-%s".format(e.vehicle.trip.route_id.or(e.vehicle.trip.trip_id.or("?"))),
-                "lat": e.vehicle.position.latitude,
-                "lon": e.vehicle.position.longitude,
-                "speed": e.vehicle.position.speed.or(0),
-                "course": e.vehicle.position.bearing.or(0),
-                "remarks": "MTA Metro-North route:%s trip:%s".format(e.vehicle.trip.route_id.or("?"), e.vehicle.trip.trip_id.or("?")),
-                "feed": "MNR"
-              })
+              # GTFS-rt JSON from the protobuf processor is lowerCamelCase (tripId,
+              # routeId, ...). The MTA vehicle entity carries only trip_id; route_id
+              # lives on the matching trip_update, so build a tripId -> routeId lookup.
+              map train {
+                let trip = this.vehicle.trip.tripId.or("?")
+                let route = this.vehicle.trip.routeId.or(this.tripUpdate.trip.routeId.or(this.routes.get($trip).or("?")))
+                let label = this.vehicle.vehicle.label.or(this.vehicle.vehicle.id.or($trip))
+                root = {
+                  "uid": "MTA-MNR-" + this.id.or($trip),
+                  "callsign": "MNR-" + $label,
+                  "lat": this.vehicle.position.latitude,
+                  "lon": this.vehicle.position.longitude,
+                  "remarks": "MTA Metro-North route:" + $route + " trip:" + $trip + " status:" + this.vehicle.currentStatus.or("?") + " stop:" + this.vehicle.stopId.or("?"),
+                  "feed": "MNR"
+                }
+              }
+              let updates = this.entity.filter(e -> e.exists("tripUpdate") && e.tripUpdate.exists("trip")).map_each(e -> e.tripUpdate.trip)
+              let routes = $updates.fold({}, item -> item.tally.merge({ item.value.tripId.or("?"): item.value.routeId.or("?") }))
+              root = this.entity.filter(e -> e.exists("vehicle") && e.vehicle.exists("position")).map_each(e -> e.merge({"routes": $routes}).apply("train"))
         result_map: 'root.mnr = this'
 
     - branch:
@@ -45,16 +68,25 @@ pipeline:
               message: "transit_realtime.FeedMessage"
               import_paths: ["/proto/"]
           - mapping: |
-              root = this.entity.filter(e -> e.exists("vehicle") && e.vehicle.exists("position")).map_each(e -> {
-                "uid": "MTA-LIRR-%s".format(e.vehicle.trip.trip_id.or(e.id)),
-                "callsign": "LIRR-%s".format(e.vehicle.trip.route_id.or(e.vehicle.trip.trip_id.or("?"))),
-                "lat": e.vehicle.position.latitude,
-                "lon": e.vehicle.position.longitude,
-                "speed": e.vehicle.position.speed.or(0),
-                "course": e.vehicle.position.bearing.or(0),
-                "remarks": "MTA LIRR route:%s trip:%s".format(e.vehicle.trip.route_id.or("?"), e.vehicle.trip.trip_id.or("?")),
-                "feed": "LIRR"
-              })
+              # GTFS-rt JSON from the protobuf processor is lowerCamelCase (tripId,
+              # routeId, ...). The MTA vehicle entity carries only trip_id; route_id
+              # lives on the matching trip_update, so build a tripId -> routeId lookup.
+              map train {
+                let trip = this.vehicle.trip.tripId.or("?")
+                let route = this.vehicle.trip.routeId.or(this.tripUpdate.trip.routeId.or(this.routes.get($trip).or("?")))
+                let label = this.vehicle.vehicle.label.or(this.vehicle.vehicle.id.or($trip))
+                root = {
+                  "uid": "MTA-LIRR-" + this.id.or($trip),
+                  "callsign": "LIRR-" + $label,
+                  "lat": this.vehicle.position.latitude,
+                  "lon": this.vehicle.position.longitude,
+                  "remarks": "MTA LIRR route:" + $route + " trip:" + $trip + " status:" + this.vehicle.currentStatus.or("?") + " stop:" + this.vehicle.stopId.or("?"),
+                  "feed": "LIRR"
+                }
+              }
+              let updates = this.entity.filter(e -> e.exists("tripUpdate") && e.tripUpdate.exists("trip")).map_each(e -> e.tripUpdate.trip)
+              let routes = $updates.fold({}, item -> item.tally.merge({ item.value.tripId.or("?"): item.value.routeId.or("?") }))
+              root = this.entity.filter(e -> e.exists("vehicle") && e.vehicle.exists("position")).map_each(e -> e.merge({"routes": $routes}).apply("train"))
         result_map: 'root.lirr = this'
 
     - mapping: |
@@ -66,11 +98,19 @@ pipeline:
     - mapping: |
         root = if this.lat == 0 || this.lon == 0 { deleted() } else { this }
 
+    - dedupe:
+        cache: mta_last_position
+        key: '${! this.uid }|${! (this.lat * 10000).round() }|${! (this.lon * 10000).round() }'
+        drop_on_err: false
+
     - mapping: |
         let ts = now().format_timestamp("2006-01-02T15:04:05.000Z")
-        let stale = (now().ts_unix() + 120).ts_format("2006-01-02T15:04:05.000Z")
+        let stale = (now().ts_unix() + 600).ts_format("2006-01-02T15:04:05.000Z")
         let cs = this.callsign.replace_all("&", "&amp;").replace_all("<", "&lt;").replace_all("\"", "&quot;")
-        root = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n<event version=\"2.0\" type=\"a-n-G-E-V-C-R\" uid=\"" + this.uid + "\" how=\"m-g\" time=\"" + $ts + "\" start=\"" + $ts + "\" stale=\"" + $stale + "\"><point lat=\"" + this.lat.string() + "\" lon=\"" + this.lon.string() + "\" hae=\"0\" ce=\"50\" le=\"50\"/><detail><contact callsign=\"" + $cs + "\"/><track speed=\"" + this.speed.string() + "\" course=\"" + this.course.string() + "\"/><remarks>" + this.remarks + "</remarks><marti><dest mission=\"Land\"/></marti></detail></event>"
+        root = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n" +
+          "<event version=\"2.0\" type=\"a-n-G-E-V-C-R\" uid=\"" + this.uid + "\" how=\"m-g\" time=\"" + $ts + "\" start=\"" + $ts + "\" stale=\"" + $stale + "\">" +
+          "<point lat=\"" + this.lat.string() + "\" lon=\"" + this.lon.string() + "\" hae=\"0\" ce=\"50\" le=\"50\"/>" +
+          "<detail><contact callsign=\"" + $cs + "\"/><remarks>" + this.remarks + "</remarks><marti><dest mission=\"Land\"/></marti></detail></event>"
 
 output:
   nats:
