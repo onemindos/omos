@@ -12,7 +12,7 @@ spec:
   imagePullSecrets:
   - name: ghcr
   storage:
-    size: 40Gi
+    size: 5Gi
     storageClass: do-block-storage-retain
   resources:
     requests:
@@ -87,6 +87,11 @@ spec:
       createdb: false
       # pgstac creates its own pgstac_admin, pgstac_ingest and pgstac_read roles on first install.
       createrole: true
+      # Declare the memberships pgstac granted, so the operator stops trying to revoke them (UPDATE_MEMBERSHIPS error).
+      inRoles:
+      - pgstac_admin
+      - pgstac_ingest
+      - pgstac_read
       passwordSecret:
         name: db-stac
     - name: cloudtak
