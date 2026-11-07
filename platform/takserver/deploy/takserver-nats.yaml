@@ -93,7 +93,7 @@ spec:
             memory: 512Mi
           requests:
             cpu: 50m
-            memory: 192Mi
+            memory: 64Mi
         startupProbe:
           failureThreshold: 90
           httpGet:

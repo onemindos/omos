@@ -43,7 +43,7 @@ singleBinary:
     # Request matches real use (7-day peak 1.19 GiB; it was 512Mi).
     requests:
       cpu: 100m
-      memory: 1536Mi
+      memory: 896Mi
     limits:
       memory: 2Gi
 
