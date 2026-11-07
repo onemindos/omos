@@ -1,3 +1,5 @@
+# yamllint disable rule:line-length
+# Embedded Bloblang pipelines below contain long single-line CoT strings.
 # =============================================================================
 # Redpanda Connect (Wombat) — declarative data feed engine → NATS → TAK
 #
@@ -75,7 +77,8 @@ data:
                       "feed": "MNR"
                     }
                   }
-                  let routes = this.entity.filter(e -> e.exists("tripUpdate") && e.tripUpdate.exists("trip")).fold({}, item -> item.tally.merge({ item.value.tripUpdate.trip.tripId.or("?"): item.value.tripUpdate.trip.routeId.or("?") }))
+                  let updates = this.entity.filter(e -> e.exists("tripUpdate") && e.tripUpdate.exists("trip")).map_each(e -> e.tripUpdate.trip)
+                  let routes = $updates.fold({}, item -> item.tally.merge({ item.value.tripId.or("?"): item.value.routeId.or("?") }))
                   root = this.entity.filter(e -> e.exists("vehicle") && e.vehicle.exists("position")).map_each(e -> e.merge({"routes": $routes}).apply("train"))
             result_map: 'root.mnr = this'
 
@@ -109,7 +112,8 @@ data:
                       "feed": "LIRR"
                     }
                   }
-                  let routes = this.entity.filter(e -> e.exists("tripUpdate") && e.tripUpdate.exists("trip")).fold({}, item -> item.tally.merge({ item.value.tripUpdate.trip.tripId.or("?"): item.value.tripUpdate.trip.routeId.or("?") }))
+                  let updates = this.entity.filter(e -> e.exists("tripUpdate") && e.tripUpdate.exists("trip")).map_each(e -> e.tripUpdate.trip)
+                  let routes = $updates.fold({}, item -> item.tally.merge({ item.value.tripId.or("?"): item.value.routeId.or("?") }))
                   root = this.entity.filter(e -> e.exists("vehicle") && e.vehicle.exists("position")).map_each(e -> e.merge({"routes": $routes}).apply("train"))
             result_map: 'root.lirr = this'
 
@@ -131,7 +135,10 @@ data:
             let ts = now().format_timestamp("2006-01-02T15:04:05.000Z")
             let stale = (now().ts_unix() + 600).ts_format("2006-01-02T15:04:05.000Z")
             let cs = this.callsign.replace_all("&", "&amp;").replace_all("<", "&lt;").replace_all("\"", "&quot;")
-            root = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n<event version=\"2.0\" type=\"a-n-G-E-V-C-R\" uid=\"" + this.uid + "\" how=\"m-g\" time=\"" + $ts + "\" start=\"" + $ts + "\" stale=\"" + $stale + "\"><point lat=\"" + this.lat.string() + "\" lon=\"" + this.lon.string() + "\" hae=\"0\" ce=\"50\" le=\"50\"/><detail><contact callsign=\"" + $cs + "\"/><remarks>" + this.remarks + "</remarks><marti><dest mission=\"Land\"/></marti></detail></event>"
+            root = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n" +
+              "<event version=\"2.0\" type=\"a-n-G-E-V-C-R\" uid=\"" + this.uid + "\" how=\"m-g\" time=\"" + $ts + "\" start=\"" + $ts + "\" stale=\"" + $stale + "\">" +
+              "<point lat=\"" + this.lat.string() + "\" lon=\"" + this.lon.string() + "\" hae=\"0\" ce=\"50\" le=\"50\"/>" +
+              "<detail><contact callsign=\"" + $cs + "\"/><remarks>" + this.remarks + "</remarks><marti><dest mission=\"Land\"/></marti></detail></event>"
 
     output:
       nats:
@@ -557,7 +564,7 @@ spec:
         # Redpanda Connect does not hot-reload pipelines. A ConfigMap volume change
         # alone does not restart the pod, so bump this to the sha256 of
         # pipelines/feed-mta.yaml whenever that file changes to force a rollout.
-        onemind.io/feed-mta-config-sha256: "e090a1e64ce39dcb1d7ec1f195312b4f505a5f227587c553e46d01d05aa8feb2"
+        onemind.io/feed-mta-config-sha256: "2d269e617fce4d557fc929e630efb5214e18bbed28ebef26d877ea15d51428c3"
       labels:
         app.kubernetes.io/name: redpanda-connect
         app.kubernetes.io/part-of: omos-feeds
