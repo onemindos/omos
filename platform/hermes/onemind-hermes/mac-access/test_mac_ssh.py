@@ -80,7 +80,11 @@ class AccessTests(unittest.TestCase):
                 if 'mac-ssh-input' in mounts:
                     self.assertEqual(mounts['mac-ssh-input']['mountPath'], '/var/run/legacy-mac-ssh-input')
                     self.assertIs(mounts['mac-ssh-input']['readOnly'], True)
-            self.assertEqual(len(spec[group]), len(old_spec[group]))
+            # Init containers may be appended (install-langfuse-plugin); the originals keep their order and resources.
+            if group == 'containers':
+                self.assertEqual(len(spec[group]), len(old_spec[group]))
+            else:
+                self.assertGreaterEqual(len(spec[group]), len(old_spec[group]))
         init = spec['initContainers'][0]
         self.assertEqual(init['command'][0], '/opt/hermes/.venv/bin/python3')
         self.assertIn("sys.executable, '/etc/legacy-mac-ssh/prepare_mac_ssh.py'", init['command'][2])
