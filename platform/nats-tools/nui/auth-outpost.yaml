@@ -1,0 +1,147 @@
+# Authentik proxy outpost in front of NUI: https://nui.tail717ba0.ts.net -> Authentik login (admins only) -> NUI.
+#
+# - The provider "NUI", application "nui" (bound to authentik Admins) and outpost "nui-outpost" are created by
+#   the Sync hook platform/ecosystem/resources/nui-authentik-proxy.yaml.
+# - AUTHENTIK_TOKEN is the outpost's API token, sealed once into nui-auth-outpost (read from the Authentik API
+#   `core/tokens/<outpost token_identifier>/view_key/`). Re-seal it if the outpost is ever re-created.
+# - The outpost talks to Authentik in-cluster; browsers are sent to the public https://auth.onemindos.dev.
+# - The image tag must match the Authentik server version (platform-auth-helm, 2026.8.2).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nui-auth
+  namespace: nats
+  labels:
+    app.kubernetes.io/name: nui-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nui-auth
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nui-auth
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: outpost
+          image: ghcr.io/goauthentik/proxy:2026.8.2@sha256:b76e672ad76cbdb30705f242422bec47df903fe9568fac207ba23e9d8713c59e
+          env:
+            - name: AUTHENTIK_HOST
+              value: http://platform-auth-helm-authentik-server.auth.svc.cluster.local
+            - name: AUTHENTIK_HOST_BROWSER
+              value: https://auth.onemindos.dev
+            - name: AUTHENTIK_INSECURE
+              value: "false"
+            - name: AUTHENTIK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: nui-auth-outpost
+                  key: AUTHENTIK_TOKEN
+          ports:
+            - name: http
+              containerPort: 9000
+            - name: metrics
+              containerPort: 9300
+          readinessProbe:
+            httpGet:
+              path: /outpost.goauthentik.io/ping
+              port: metrics
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /outpost.goauthentik.io/ping
+              port: metrics
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nui-auth
+  namespace: nats
+  labels:
+    app.kubernetes.io/name: nui-auth
+spec:
+  selector:
+    app.kubernetes.io/name: nui-auth
+  ports:
+    - name: http
+      port: 9000
+      targetPort: http
+---
+# The outpost: reachable only from the Tailscale ingress proxy; may reach Authentik, NUI and DNS.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nui-auth
+  namespace: nats
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: nui-auth
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+      ports:
+        - protocol: TCP
+          port: 9000
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: auth
+      ports:
+        - protocol: TCP
+          port: 9000
+        - protocol: TCP
+          port: 80
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: nui
+      ports:
+        - protocol: TCP
+          port: 31311
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
