@@ -1,0 +1,221 @@
+# Langfuse v3 (LLM observability) for the Hermes agent. Argo Application: platform/ecosystem/applications/ecosystem-langfuse.yaml
+# (chart langfuse/langfuse 2.2.3, app 4.75.0). Namespace onemind-ai, tailnet-only UI at https://onemind-langfuse.tail717ba0.ts.net.
+#
+# Everything stateful is external and already exists:
+#   Postgres   database + role `langfuse` in CNPG cluster onemind-data (platform/ecosystem/resources/databases.yaml)
+#   ClickHouse database `langfuse` + user `langfuse` in CHI clickhouse/onemind (platform/data/clickhouse/clickhouse.yaml);
+#              the database itself is created by the PreSync Job below. Single node, so cluster mode is off.
+#   Blob store DigitalOcean Spaces bucket onemind-backups, prefix langfuse/ (bucket-scoped credentials, secret langfuse-s3)
+#   Redis      the chart's bundled Valkey: queue and cache only, so no persistence (a restart drops queued, unprocessed events)
+#
+# Secrets (all SealedSecrets in platform/ecosystem/resources/secrets/, namespace onemind-ai):
+#   langfuse-auth        salt, encryption-key, nextauth-secret, clickhouse-password (redis-password there is unused)
+#   langfuse-db          username, password, uri (this chart reads password; the role name is set below)
+#   langfuse-oidc        client-id, client-secret (Authentik provider onemind-langfuse)
+#   langfuse-s3          access-key, secret-key
+#   langfuse-init        public-key, secret-key of the headless Hermes project (same pair sealed for hermes/hermes-langfuse)
+#   langfuse-redis-auth  default (Valkey password)
+fullnameOverride: langfuse
+
+langfuse:
+  salt:
+    secretKeyRef: {name: langfuse-auth, key: salt}
+  encryptionKey:
+    secretKeyRef: {name: langfuse-auth, key: encryption-key}
+  features:
+    telemetryEnabled: false
+    # SSO accounts are created on first sign-in; password sign-in is disabled below, so sign-up is not an open door.
+    signUpDisabled: false
+  nextauth:
+    url: https://onemind-langfuse.tail717ba0.ts.net
+    secret:
+      secretKeyRef: {name: langfuse-auth, key: nextauth-secret}
+  # Authentik is the only way in, through Langfuse's generic OIDC provider (AUTH_CUSTOM_*, callback /api/auth/callback/custom).
+  # The Authentik provider (platform/ecosystem/resources/auth-provider-bootstrap.yaml) registers that callback and binds the
+  # application to the owner account only. Break-glass: set disableUsernamePassword to false.
+  auth:
+    disableUsernamePassword: true
+    providers:
+      custom:
+        name: OneMind SSO
+        scope: openid email profile
+        clientId:
+          secretKeyRef: {name: langfuse-oidc, key: client-id}
+        clientSecret:
+          secretKeyRef: {name: langfuse-oidc, key: client-secret}
+        issuer: https://auth.onemindos.dev/application/o/onemind-langfuse/
+  serviceAccount:
+    create: true
+    automountServiceAccountToken: false
+  nodeSelector:
+    onemind.io/compute-role: ecosystem
+  image:
+    pullPolicy: IfNotPresent
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: [ALL]
+  replicas: 1
+  web:
+    image:
+      tag: 4.75.0@sha256:23378ae8cdf1d92b647d68b81c0d0cea3632b43e9fbcbe9b765420af9c9c8662
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+    pdb:
+      create: false
+    pod:
+      additionalEnv:
+        # Headless bootstrap: the org, the `hermes` project and its API keys exist on first start with no UI clicks.
+        # Init only creates what is missing, so these are safe to leave in place. Keys are in langfuse-init.
+        - {name: LANGFUSE_INIT_ORG_ID, value: onemind}
+        - {name: LANGFUSE_INIT_ORG_NAME, value: OneMind}
+        - {name: LANGFUSE_INIT_PROJECT_ID, value: hermes}
+        - {name: LANGFUSE_INIT_PROJECT_NAME, value: Hermes}
+        - name: LANGFUSE_INIT_PROJECT_PUBLIC_KEY
+          valueFrom: {secretKeyRef: {name: langfuse-init, key: public-key}}
+        - name: LANGFUSE_INIT_PROJECT_SECRET_KEY
+          valueFrom: {secretKeyRef: {name: langfuse-init, key: secret-key}}
+        # The owner's first SSO sign-in joins the OneMind org as owner (only the Authentik owner account may sign in).
+        - {name: LANGFUSE_DEFAULT_ORG_ID, value: onemind}
+        - {name: LANGFUSE_DEFAULT_ORG_ROLE, value: OWNER}
+  worker:
+    image:
+      tag: 4.75.0@sha256:5fd09700a8af5328f3ef004ca8ce5602f6e799aba13da5054d9b18ba1724533e
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+    pdb:
+      create: false
+
+postgresql:
+  deploy: false
+  host: onemind-data-rw.onemind-data.svc.cluster.local
+  port: 5432
+  args: sslmode=require
+  auth:
+    username: langfuse
+    database: langfuse
+    existingSecret: langfuse-db
+    secretKeys:
+      userPasswordKey: password
+  migration:
+    autoMigrate: true
+
+clickhouse:
+  deploy: false
+  host: clickhouse-onemind.clickhouse.svc.cluster.local
+  httpPort: 8123
+  nativePort: 9000
+  database: langfuse
+  auth:
+    username: langfuse
+    existingSecret: langfuse-auth
+    existingSecretKey: clickhouse-password
+  migration:
+    ssl: false
+    autoMigrate: true
+  cluster:
+    # Single-node ClickHouse: no ON CLUSTER DDL, no Keeper.
+    enabled: false
+
+redis:
+  deploy: true
+  auth:
+    enabled: true
+    username: default
+    existingSecret: langfuse-redis-auth
+    existingSecretPasswordKey: default
+    usersExistingSecret: langfuse-redis-auth
+  image:
+    tag: 8.0@sha256:04b9002ae24bbe66687fb025052ed9bcebb54f8da3937338eb718d98d362887f
+  # Queue and cache only: no PVC, nothing to back up or retain.
+  dataStorage:
+    enabled: false
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  nodeSelector:
+    onemind.io/compute-role: ecosystem
+
+s3:
+  deploy: false
+  bucket: onemind-backups
+  region: nyc3
+  endpoint: https://nyc3.digitaloceanspaces.com
+  forcePathStyle: true
+  accessKeyId:
+    secretKeyRef: {name: langfuse-s3, key: access-key}
+  secretAccessKey:
+    secretKeyRef: {name: langfuse-s3, key: secret-key}
+  eventUpload:
+    prefix: langfuse/events/
+  batchExport:
+    prefix: langfuse/exports/
+  mediaUpload:
+    prefix: langfuse/media/
+
+extraManifests:
+  # Creates the (empty) ClickHouse database before the web and worker pods run their migrations. The CHI grants the langfuse user
+  # ALL on langfuse.*, which includes CREATE DATABASE. Runs on every sync and is a no-op once the database exists.
+  - apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: langfuse-clickhouse-database
+      namespace: onemind-ai
+      annotations:
+        argocd.argoproj.io/hook: PreSync
+        argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+    spec:
+      backoffLimit: 6
+      activeDeadlineSeconds: 900
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: langfuse-clickhouse-database
+        spec:
+          restartPolicy: OnFailure
+          automountServiceAccountToken: false
+          nodeSelector:
+            onemind.io/compute-role: ecosystem
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: clickhouse-client
+              image: clickhouse/clickhouse-server:24.8@sha256:1ffa82edee000a42c09313bd9f1293d94c570aee74babc1b3ca9983a35fa597b
+              command:
+                - clickhouse-client
+                - --host=clickhouse-onemind.clickhouse.svc.cluster.local
+                - --port=9000
+                - --user=langfuse
+                - --query=CREATE DATABASE IF NOT EXISTS langfuse
+              env:
+                - name: CLICKHOUSE_PASSWORD
+                  valueFrom: {secretKeyRef: {name: langfuse-auth, key: clickhouse-password}}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: [ALL]
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
+                limits:
+                  cpu: 500m
+                  memory: 256Mi
