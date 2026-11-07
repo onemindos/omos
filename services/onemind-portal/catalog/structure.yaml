@@ -311,15 +311,21 @@ apps:
   - name: karakeep
     title: Karakeep
     system: personal-tools
-    description: Native bookmark and read-later workspace (web, headless Chrome and Meilisearch) deployed by Argo application platform-karakeep and served over the tailnet; observed 3/3 pods running on 2026-11-07. Owner enrollment and recovery acceptance are not recorded here.
+    description: >-
+      Native bookmark and read-later workspace (web, headless Chrome and Meilisearch) deployed by Argo application platform-karakeep and served over the
+      tailnet; observed 3/3 pods running on 2026-11-07. Owner enrollment and recovery acceptance are not recorded here.
   - name: openremote
     title: OpenRemote
     system: home-homestead
-    description: Private OpenRemote IoT evaluation (manager, Keycloak, PostgreSQL and proxy) deployed by Argo application platform-openremote and served over the tailnet; observed 4/4 pods running on 2026-11-07. Owner login, telemetry and restore acceptance are not recorded here.
+    description: >-
+      Private OpenRemote IoT evaluation (manager, Keycloak, PostgreSQL and proxy) deployed by Argo application platform-openremote and served over the tailnet;
+      observed 4/4 pods running on 2026-11-07. Owner login, telemetry and restore acceptance are not recorded here.
   - name: thingsboard
     title: ThingsBoard
     system: home-homestead
-    description: Private ThingsBoard Community 4.3 IoT evaluation (ThingsBoard and PostgreSQL) deployed by Argo application platform-thingsboard and served over the tailnet; observed 2/2 pods running on 2026-11-07. Owner login, telemetry and restore acceptance are not recorded here.
+    description: >-
+      Private ThingsBoard Community 4.3 IoT evaluation (ThingsBoard and PostgreSQL) deployed by Argo application platform-thingsboard and served over the
+      tailnet; observed 2/2 pods running on 2026-11-07. Owner login, telemetry and restore acceptance are not recorded here.
 placement:
   opencage: geospatial
   graphhopper: geospatial
