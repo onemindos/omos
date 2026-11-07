@@ -18,6 +18,8 @@ ROOT = Path(__file__).resolve().parents[2]
 MONITORING = ROOT / "platform/monitoring"
 PENDING = MONITORING / "pending"
 PENDING_FILE = PENDING / "alertmanagerconfig-onemind-backstage.yaml.disabled"
+# Enabled on 2026-11-07: the file moved out of pending/ once both SealedSecrets existed.
+LIVE_FILE = MONITORING / "alertmanagerconfig-onemind-backstage.yaml"
 # What Argo CD's directory source treats as manifests.
 MANIFEST_SUFFIXES = {".yaml", ".yml", ".json", ".jsonnet"}
 SECRET_NAME = "onemind-alert-webhook"
@@ -94,15 +96,21 @@ def enable_problems(root):
     return problems
 
 
+def receiver_file():
+    """The receiver manifest: live once enabled, otherwise the parked copy."""
+    return LIVE_FILE if LIVE_FILE.is_file() else PENDING_FILE
+
+
 def load():
-    return yaml.safe_load(PENDING_FILE.read_text())
+    return yaml.safe_load(receiver_file().read_text())
 
 
 class PendingAlertmanagerConfig(unittest.TestCase):
     def test_pending_folder_contains_nothing_argo_would_sync(self):
         offenders = [p for p in PENDING.rglob("*") if p.is_file() and p.suffix in MANIFEST_SUFFIXES]
         self.assertEqual([], offenders)
-        self.assertTrue(PENDING_FILE.is_file())
+        # Exactly one copy of the receiver exists: parked or live, never both.
+        self.assertNotEqual(PENDING_FILE.is_file(), LIVE_FILE.is_file())
         self.assertTrue((PENDING / "README.md").is_file())
 
     def test_platform_monitoring_application_still_reads_this_tree_recursively(self):
@@ -147,7 +155,7 @@ class PendingAlertmanagerConfig(unittest.TestCase):
         self.assertEqual({"name": SECRET_NAME, "key": "token"}, creds)
         # The token is only ever a Secret reference, never inline.
         self.assertNotIn("urlSecret", hook)
-        text = PENDING_FILE.read_text()
+        text = receiver_file().read_text()
         for forbidden in ("Bearer ey", "token:", "password"):
             self.assertNotIn(forbidden, text.replace("key: token", ""))
 

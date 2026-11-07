@@ -54,6 +54,10 @@ spec:
         - name: http
           containerPort: 7007
         envFrom:
+        # ONEMIND_ALERT_WEBHOOK_TOKEN for the Alertmanager receiver (platform/monitoring/alertmanagerconfig-onemind-backstage.yaml).
+        - secretRef:
+            name: onemind-alert-webhook
+            optional: true
         - secretRef:
             name: backstage-zoho
             optional: true

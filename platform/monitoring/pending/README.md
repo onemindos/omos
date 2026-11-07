@@ -1,5 +1,9 @@
 # Pending Alertmanager receiver: OneMind portal
 
+> **Enabled 2026-11-07.** The receiver now lives at `platform/monitoring/alertmanagerconfig-onemind-backstage.yaml`,
+> with both SealedSecrets created by `scripts/ops/seal-alert-webhook.sh`. The text below records how it was
+> parked and enabled; to disable it, move the file back here with the `.disabled` suffix.
+
 `alertmanagerconfig-onemind-backstage.yaml.disabled` sends critical and warning alerts to
 the portal (`POST /api/events/http/alertmanager`). It is **not deployed**:
 
