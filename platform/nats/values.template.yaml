@@ -13,6 +13,9 @@ config:
   jetstream:
     enabled: true
     fileStore:
+      # JetStream may use 18Gi of each 20Gi volume (live nats-config set 2026-11-07;
+      # it was 45Gi from the old 50Gi volumes). Keep it below the claim size.
+      maxSize: 18Gi
       pvc:
         enabled: true
         size: 20Gi
