@@ -7,9 +7,9 @@ controller:
   resources:
     requests:
       cpu: 100m
-      memory: 512Mi
+      memory: 1900Mi  # observed ~1570Mi, +20% (2026-11-07)
     limits:
-      memory: 2Gi
+      memory: 2560Mi
 
 server:
   resources:
@@ -23,7 +23,7 @@ repoServer:
   resources:
     requests:
       cpu: 50m
-      memory: 128Mi
+      memory: 200Mi  # observed ~165Mi, +20%
     limits:
       memory: 512Mi
 
@@ -43,7 +43,7 @@ notifications:
   resources:
     requests:
       cpu: 10m
-      memory: 50Mi
+      memory: 70Mi  # observed ~56Mi, +20%
     limits:
       memory: 128Mi
 
@@ -51,7 +51,7 @@ redis:
   resources:
     requests:
       cpu: 10m
-      memory: 32Mi
+      memory: 90Mi  # observed ~73Mi, +20%
     limits:
       memory: 256Mi
 
