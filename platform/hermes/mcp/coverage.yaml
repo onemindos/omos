@@ -16,6 +16,10 @@ applications:
     apps:
     - onemind_core
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  ecosystem-langfuse:
+    apps:
+    - kubernetes
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   ecosystem-onemind-core:
     apps:
     - onemind_core

@@ -65,6 +65,8 @@ backend.add(import('@backstage/plugin-mcp-actions-backend'));
 backend.add(import('@internal/plugin-onemind-operations-backend'));
 backend.add(import('@internal/plugin-onemind-missions-backend'));
 backend.add(import('@internal/plugin-onemind-events-backend'));
+// Live bridge: read-only NATS and Kubernetes watchers pushed to browsers over Signals; see plugins/plugin-onemind-livebridge-backend/README.md.
+backend.add(import('@internal/plugin-onemind-livebridge-backend'));
 backend.add(import('@internal/plugin-onemind-activity-backend'));
 backend.add(import('@internal/plugin-onemind-services-backend'));
 // F8 app lifecycle: read-only scaffolder actions (Add/Retire app) and the weekly stack hygiene report.

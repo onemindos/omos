@@ -22,8 +22,8 @@ regexes = [
 ]
 
 [[allowlists]]
-description = "SHA-256 hash (not a credential) of the legacy_ro ClickHouse password, one specific key"
+description = "SHA-256 hash (not a credential) of the legacy_ro and langfuse ClickHouse passwords, two specific keys"
 regexTarget = "line"
 regexes = [
-  '''^\s*legacy_ro/password_sha256_hex: "[0-9a-f]{64}"$''',
+  '''^\s*(legacy_ro|langfuse)/password_sha256_hex: "[0-9a-f]{64}"$''',
 ]

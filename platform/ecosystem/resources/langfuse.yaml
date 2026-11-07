@@ -1,0 +1,44 @@
+# Langfuse (ecosystem-langfuse, values in platform/ecosystem/values/langfuse.yaml): tailnet UI and web ingress policy.
+# Tailnet only, like Headlamp, Grafana and OpenCost: https://onemind-langfuse.tail717ba0.ts.net (the host name registered with Authentik).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: langfuse
+  namespace: onemind-ai
+  annotations:
+    tailscale.com/hostname: onemind-langfuse
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: langfuse-web
+      port:
+        number: 3000
+  tls:
+    - hosts:
+        - onemind-langfuse
+---
+# Who may reach Langfuse web: the Tailscale proxy (UI), the Hermes agent (trace ingestion at /api/public/ingestion and the OTEL endpoint)
+# and the other onemind-ai pods. Hermes's own egress allowlist (platform/hermes/onemind-hermes/network.yaml) must also allow
+# langfuse-web.onemind-ai:3000 before the agent is wired to it.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: langfuse-web-clients
+  namespace: onemind-ai
+spec:
+  podSelector:
+    matchLabels:
+      app: web
+      app.kubernetes.io/name: langfuse
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values: [onemind-ai, tailscale, hermes]
+      ports:
+        - protocol: TCP
+          port: 3000

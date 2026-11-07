@@ -4625,6 +4625,46 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: backstage-plugin-onemind-livebridge-backend
+  title: onemind-livebridge-backend
+  description: Backstage backend-plugin @internal/plugin-onemind-livebridge-backend in the OneMind portal workspace.
+  tags:
+  - plugin
+  - backstage-plugin
+  - live
+  - cluster
+  - backstage
+  labels:
+    onemind.io/plugin-type: backstage-plugin
+    onemind.io/plugin-status: live
+    onemind.io/plugin-origin: onemind
+    onemind.io/runs-on-kind: cluster
+    onemind.io/pillar: so
+  annotations:
+    onemind.io/plugin-type: backstage-plugin
+    onemind.io/plugin-status: live
+    onemind.io/plugin-origin: onemind
+    onemind.io/runs-on-kind: cluster
+    onemind.io/runs-on: ns backstage / deploy backstage (compiled into the portal image)
+    onemind.io/plugin-subtype: backend-plugin
+    onemind.io/connects-to: backstage,postgres-backstage
+    onemind.io/plugin-version: 0.1.0
+    onemind.io/plugin-source: services/onemind-portal/plugins/plugin-onemind-livebridge-backend
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/services/onemind-portal/plugins/plugin-onemind-livebridge-backend
+    onemind.io/plugin-build: services/onemind-portal image (build-portal.yml); digest pinned in platform/backstage/deployment.yaml
+    onemind.io/plugin-verified: 2026-10-29 workspace package; deployed image digest not matched to this commit
+spec:
+  type: backstage-plugin
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: onemind-plugin-ecosystem
+  subcomponentOf: component:default/backstage
+  dependsOn:
+  - component:default/k8s-backstage-backstage-21b99354
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: backstage-plugin-onemind-machine-backend
   title: onemind-machine-backend
   description: Backstage backend-plugin-module @internal/plugin-onemind-machine-backend in the OneMind portal workspace.
