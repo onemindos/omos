@@ -16,6 +16,7 @@ config:
       pvc:
         enabled: true
         size: 20Gi
+        storageClassName: do-block-storage-retain   # new claims keep the volume when deleted
   nats:
     tls:
       enabled: true

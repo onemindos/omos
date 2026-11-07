@@ -230,6 +230,7 @@ spec:
       resources:
         requests:
           storage: 20Gi
+      storageClassName: do-block-storage-retain
       volumeMode: Filesystem
     status:
       phase: Pending

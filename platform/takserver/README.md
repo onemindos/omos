@@ -34,7 +34,7 @@ and device enrollment are in `infra/edge/takserver/`. Deploy and upgrade steps:
 | `takserver-config` | Deployment | `ghcr.io/onemindos/takserver-base:config-5.8-onemind` | internal |
 | `takserver-plugins` | Deployment | `ghcr.io/onemindos/takserver-base@sha256:…` (5.8; **the NatsBridgePlugin is not loaded** in the running image, see `services/takserver/plugin-src/README.md`) | none inbound |
 | `takserver-ignite` | StatefulSet | `ghcr.io/onemindos/takserver-base:ignite-5.8-onemind` | 47100/47500/10800/… (cache and discovery) |
-| `takserver-postgresql` | StatefulSet | `postgis/postgis:15-3.4` | 5432 (database `cot`, PVC 20Gi) |
+| `takserver-postgresql` | StatefulSet | `postgis/postgis:15-3.4` | 5432 (database `cot`, PVC 10Gi, do-block-storage-retain) |
 | `takserver-nats` (+ `takserver-nats-box`) | StatefulSet | `nats:2.9.21-alpine` | 4222, TAK-internal only |
 | `tak-ldap` | StatefulSet | `ghcr.io/onemindos/tak-ldap:5.8` | 389/636 (CoreConfig LDAP auth) |
 | `tak-lb-proxy` | Deployment | `nginx:1.27-alpine` (L4 stream) | 8089, 8443, 8446, 64738 |
