@@ -79,7 +79,7 @@ backend:
     client: better-sqlite3
     connection: ':memory:'
   actions:
-    pluginSources: [catalog, onemind]
+    pluginSources: [catalog, onemind, livebridge]
     filter:
       include:
         - attributes: {readOnly: true}
@@ -255,6 +255,14 @@ onemind:
     # the env var is absent the key is dropped, the route rejects every request (503) and the
     # portal starts normally. See docs/operations/notifications.md.
     webhookToken: ${ONEMIND_ALERT_WEBHOOK_TOKEN}
+  livebridge:
+    # Read-only NATS subscriber and Kubernetes watcher behind the Ops Center live view
+    # (plugins/plugin-onemind-livebridge-backend/README.md). NATS stays disabled, and the key is
+    # dropped, until the portal-nats-creds secret provides NATS_USER and NATS_PASSWORD.
+    nats:
+      url: nats://nats.nats.svc.cluster.local:4222
+      user: ${NATS_USER}
+      password: ${NATS_PASSWORD}
   inventory:
     # Live Kubernetes inventory (docs/catalog/live-inventory.md). OFF by default: catalog/cluster.yaml
     # stays the authoritative workload source until Zeus enables it. Enabling needs a backend restart.

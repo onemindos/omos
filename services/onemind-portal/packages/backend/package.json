@@ -67,6 +67,7 @@
     "@internal/plugin-onemind-digitalocean-backend": "workspace:^",
     "@internal/plugin-onemind-events-backend": "workspace:^",
     "@internal/plugin-onemind-inventory-backend": "workspace:^",
+    "@internal/plugin-onemind-livebridge-backend": "workspace:^",
     "@internal/plugin-onemind-machine-backend": "workspace:^",
     "@internal/plugin-onemind-missions-backend": "workspace:^",
     "@internal/plugin-onemind-offline-backend": "workspace:^",
