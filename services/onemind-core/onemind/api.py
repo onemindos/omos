@@ -10,8 +10,8 @@ from datetime import datetime, timezone
 import httpx
 from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from pydantic import BaseModel, Field, field_validator
-from dapr.ext.workflow import DaprWorkflowClient
 from . import store
+from .workflows import run_mission
 from .capabilities import CAPABILITIES, ALLOWED_RESTARTS, agents_and_call
 
 
@@ -66,30 +66,33 @@ class MissionInput(BaseModel):
 
 
 async def dispatch_pending():
-    client = DaprWorkflowClient()
+    """Bridge dispatcher: claim queued missions and run each in a worker thread."""
+    running = set()
     while True:
         try:
             for row in await asyncio.to_thread(store.queued):
+                # Atomic claim, so replicas never run the same mission twice.
+                if not await asyncio.to_thread(store.claim, row["id"]):
+                    continue
                 inp = {"id": row["id"], "actor": row["actor"], "spec": row["specification"]}
-                try:
-                    await asyncio.to_thread(client.schedule_new_workflow, workflow="onemind_mission_v1",
-                                            input=inp, instance_id=row["id"])
-                except Exception:
-                    status = await asyncio.to_thread(client.get_workflow_state, row["id"])
-                    if status is None:
-                        continue
-                await asyncio.to_thread(store.mark_scheduled, row["id"])
+                job = asyncio.create_task(_run(inp))
+                running.add(job)
+                job.add_done_callback(running.discard)
         except Exception:
             # Dependency outages retain queued work; credentials/results are never logged.
             pass
         await asyncio.sleep(5)
 
 
+async def _run(inp):
+    # Failures are already recorded on the mission by run_mission.
+    with contextlib.suppress(Exception):
+        await asyncio.to_thread(run_mission, inp)
+
+
 @asynccontextmanager
 async def lifespan(app):
     await asyncio.to_thread(store.initialize)
-    from .workflows import runtime
-    await asyncio.to_thread(runtime.start)
     task = asyncio.create_task(dispatch_pending())
     from .events import publish_outbox
     events = asyncio.create_task(publish_outbox())
@@ -104,7 +107,6 @@ async def lifespan(app):
             await task
         with contextlib.suppress(asyncio.CancelledError):
             await events
-        await asyncio.to_thread(runtime.shutdown)
         store.pool.close()
 
 
@@ -202,9 +204,6 @@ async def cancel_mission(mid: str, p=Depends(operator)):
         raise HTTPException(404, "Mission not found")
     if row["state"] in {"completed", "failed", "cancelled"}:
         raise HTTPException(409, "Mission is already terminal")
-    if row["scheduled"]:
-        client = DaprWorkflowClient()
-        await asyncio.to_thread(client.terminate_workflow, mid, output="Operator cancelled")
     await asyncio.to_thread(store.set_state, mid, "cancelled")
     await asyncio.to_thread(store.audit, p["actor"], "mission-cancelled", None, mid)
     return {"state": "cancelled", "note": "Already-dispatched external work may require its own cancellation"}

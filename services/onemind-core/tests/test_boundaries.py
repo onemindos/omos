@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 from onemind.api import app
 from onemind import store
-from onemind.workflows import execute_capability
+from onemind.workflows import run_mission
 
 
 @pytest.fixture
@@ -71,20 +71,46 @@ def test_identical_request_returns_existing_mission(client, monkeypatch):
 
 def test_completed_external_work_is_not_reexecuted(monkeypatch):
     monkeypatch.setattr(store, "mission", lambda mid: {"state": "completed", "result": {"answer": "done"}})
-    assert execute_capability.__wrapped__(None, {"id": "mission"}) == {"answer": "done"}
+    assert run_mission({"id": "mission"}) == {"answer": "done"}
 
 
 def test_ambiguous_agent_dispatch_is_not_repeated(monkeypatch):
     monkeypatch.setattr(store, "mission", lambda mid: {"state": "running"})
     monkeypatch.setattr(store, "dispatched", lambda mid: True)
     with pytest.raises(RuntimeError, match="ambiguous"):
-        execute_capability.__wrapped__(None, {"id": "mission", "spec": {"capability": "delegate-agent"}})
+        run_mission({"id": "mission", "spec": {"capability": "delegate-agent"}})
 
 
 def test_cancelled_mission_cannot_start_an_activity(monkeypatch):
     monkeypatch.setattr(store, "mission", lambda mid: {"state": "cancelled"})
     with pytest.raises(RuntimeError, match="cancelled"):
-        execute_capability.__wrapped__(None, {"id": "mission"})
+        run_mission({"id": "mission"})
+
+
+def test_mission_runs_through_running_to_completed(monkeypatch):
+    from onemind import workflows
+    states = []
+    monkeypatch.setattr(store, "mission", lambda mid: {"state": "queued"})
+    monkeypatch.setattr(store, "set_state", lambda mid, state, **kw: states.append((state, kw)))
+    monkeypatch.setattr(workflows, "execute", lambda spec, mid, actor: {"answer": "ok"})
+    spec = {"capability": "inspect-system"}
+    assert run_mission({"id": "m", "actor": "user:a", "spec": spec}) == {"answer": "ok"}
+    assert states == [("running", {}), ("completed", {"result": {"answer": "ok"}})]
+
+
+def test_failed_mission_records_error_class_only(monkeypatch):
+    from onemind import workflows
+    states = []
+
+    def boom(spec, mid, actor):
+        raise ValueError("secret detail")
+
+    monkeypatch.setattr(store, "mission", lambda mid: {"state": "queued"})
+    monkeypatch.setattr(store, "set_state", lambda mid, state, **kw: states.append((state, kw)))
+    monkeypatch.setattr(workflows, "execute", boom)
+    with pytest.raises(ValueError):
+        run_mission({"id": "m", "actor": "user:a", "spec": {"capability": "inspect-system"}})
+    assert states[-1] == ("failed", {"error": "ValueError"})
 
 
 def test_model_summary_disabled_without_gateway(monkeypatch):

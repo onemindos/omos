@@ -1,14 +1,17 @@
-"""Versioned workflow; activities record evidence outside deterministic orchestration."""
-from dapr.ext.workflow import WorkflowRuntime, DaprWorkflowContext, WorkflowActivityContext
+"""In-process mission execution.
+
+Bridge: this replaced the Dapr workflow `onemind_mission_v1` (removed 2026-11-07).
+Missions run once, in a thread of the API process, with state recorded in the
+missions table. There is no durable replay: a mission whose worker dies stays
+`running` and is never re-run automatically. Mission orchestration is expected
+to move to Hermes, at which point this module goes away.
+"""
 from . import store
 from .capabilities import execute
 import json
 
-runtime = WorkflowRuntime()
 
-
-@runtime.activity(name="execute_capability_v1")
-def execute_capability(ctx: WorkflowActivityContext, inp):
+def run_mission(inp):
     current = store.mission(inp["id"])
     if current["state"] == "completed":
         return current["result"]
@@ -25,8 +28,3 @@ def execute_capability(ctx: WorkflowActivityContext, inp):
     except Exception as exc:
         store.set_state(inp["id"], "failed", error=type(exc).__name__)
         raise
-
-
-@runtime.workflow(name="onemind_mission_v1")
-def mission_workflow(ctx: DaprWorkflowContext, inp):
-    return (yield ctx.call_activity(execute_capability, input=inp))

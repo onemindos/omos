@@ -97,9 +97,10 @@ def queued():
                             "ORDER BY created_at LIMIT 20").fetchall()
 
 
-def mark_scheduled(mid):
+def claim(mid):
     with pool.connection() as conn:
-        conn.execute("UPDATE missions SET scheduled=true,updated_at=now() WHERE id=%s", (mid,))
+        return conn.execute("UPDATE missions SET scheduled=true,updated_at=now() WHERE id=%s "
+                            "AND NOT scheduled AND state='queued' RETURNING id", (mid,)).fetchone() is not None
 
 
 def set_state(mid, state, result=None, error=None):
