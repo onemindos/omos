@@ -219,6 +219,46 @@ spec:
               readOnly: true
             - name: tmp
               mountPath: /tmp
+        # Langfuse tracing plugin: not bundled in Hermes v0.23.0, so install the official catalog
+        # plugin at a pinned commit (checked against .hermes-catalog.json, so a normal restart does
+        # nothing) and enable it in config.yaml. Fetches from github.com and PyPI over the public 443
+        # egress rule. Fail-open like the gateway deps: without it the pod still starts, untraced.
+        # Credentials come from the hermes-langfuse Secret in the main container, not here.
+        - name: install-langfuse-plugin
+          image: nousresearch/hermes-agent:v0.23.0@sha256:adb7890916de63245523492be8f68f9d2095fecbec4e2a6dab7960381f0fc002
+          command:
+            - sh
+            - -c
+            - |
+              set -u
+              SHA=e7a218f26db88426ab3e7376f0e000b6e356f5e7
+              META=/opt/data/plugins/langfuse/.hermes-catalog.json
+              if [ -f "$META" ] && grep -q "$SHA" "$META"; then
+                echo "langfuse plugin $SHA already installed"
+                /opt/hermes/bin/hermes plugins enable langfuse || true
+                exit 0
+              fi
+              if /opt/hermes/bin/hermes plugins install langfuse --ref "$SHA" --enable --yes-deps --force; then
+                echo "langfuse plugin installed"
+              else
+                echo "WARNING: langfuse plugin install failed; Hermes runs without tracing"
+              fi
+              exit 0
+          env:
+            - name: HERMES_HOME
+              value: /opt/data
+            - name: HOME
+              value: /opt/data/home
+          securityContext:
+            allowPrivilegeEscalation: false
+          resources:
+            requests: {cpu: 50m, memory: 128Mi}
+            limits: {cpu: 1, memory: 512Mi}
+          volumeMounts:
+            - name: data
+              mountPath: /opt/data
+            - name: tmp
+              mountPath: /tmp
       containers:
         - name: hermes
           image: nousresearch/hermes-agent:v0.23.0@sha256:adb7890916de63245523492be8f68f9d2095fecbec4e2a6dab7960381f0fc002
