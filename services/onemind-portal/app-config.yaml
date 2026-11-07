@@ -75,6 +75,10 @@ backend:
     origin: http://localhost:3000
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
+  # Ops Center globe (CesiumJS): OpenStreetMap tiles and blob workers. The cluster config sets its own list.
+  csp:
+    img-src: ["'self'", 'data:', 'blob:', 'https://tile.openstreetmap.org']
+    worker-src: ["'self'", 'blob:']
   database:
     client: better-sqlite3
     connection: ':memory:'

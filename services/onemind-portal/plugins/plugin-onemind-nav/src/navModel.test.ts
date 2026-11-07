@@ -29,6 +29,7 @@ const pages = [
   item('page:notifications', 'Notifications', '/notifications'),
   item('page:onemind-today', 'Today', '/today'),
   item('page:onemind-live', 'Live Ops', '/live'),
+  item('page:onemind-ops', 'Ops Center', '/ops'),
   item('page:user-settings', 'Settings', '/settings'),
   item('page:onemind-systems', 'Systems', '/systems'),
   item('page:onemind-assistant', 'Assistant', '/assistant'),
@@ -67,11 +68,12 @@ describe('buildNavModel', () => {
     ]);
   });
 
-  it('puts Live Ops on /live and keeps Today reachable', () => {
+  it('puts Live Ops on /live, Ops Center on /ops and keeps Today reachable', () => {
     const groups = buildNavModel({ items: pages, flags: off, isAdmin: false });
     expect(groups[0].entries.map(e => [e.title, e.href])).toEqual([
       ['Home', '/'],
       ['Live Ops', '/live'],
+      ['Ops Center', '/ops'],
       ['Today', '/today'],
     ]);
   });

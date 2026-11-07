@@ -33,6 +33,7 @@ import { createApp } from '@backstage/frontend-defaults';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import { homeModule, todayPlugin } from '@internal/plugin-onemind-home';
 import { livePlugin } from '@internal/plugin-onemind-live';
+import { opsPlugin } from '@internal/plugin-onemind-ops';
 import { prometheusPlugin, prometheusApiModule } from './prometheusPlugin';
 import { catalogCompositionModule } from './catalogCompositionModules';
 import { kyvernoPolicyModule } from './kyvernoPolicy';
@@ -60,6 +61,7 @@ export default createApp({
     homeModule,
     todayPlugin,
     livePlugin,
+    opsPlugin,
     costPlugin,
     digitalOceanPlugin,
     shortcutsFeature,
