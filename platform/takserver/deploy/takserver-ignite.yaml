@@ -72,7 +72,7 @@ spec:
             memory: 1536Mi
           requests:
             cpu: 250m
-            memory: 768Mi
+            memory: 640Mi
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
