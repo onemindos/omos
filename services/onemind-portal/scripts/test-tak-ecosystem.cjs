@@ -132,7 +132,7 @@ test('MediaMTX upstream reference does not replace the canonical OneTAK service'
   assert.equal(reference.spec.subcomponentOf, undefined);
   assert.equal(reference.spec.dependsOn, undefined);
   const onetak = docs.find(e => e.metadata.name === 'onetak');
-  assert.equal(onetak.metadata.links.find(l => l.title === 'Open application').url, 'https://onetak.onemindos.dev');
+  assert.equal(onetak.metadata.links.find(l => l.title === 'Open application').url, 'https://enroll.tail717ba0.ts.net');
   assert.ok(onetak.metadata.annotations['onemind.io/kubernetes-workloads'].split(',').includes('onetak/onetak-media'));
   const clusterText = fs.readFileSync(path.join(root, 'catalog/cluster.yaml'), 'utf8');
   const cluster = YAML.parseAllDocuments(clusterText).map(d => d.toJS());

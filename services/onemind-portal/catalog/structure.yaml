@@ -204,7 +204,11 @@ apps:
   - name: falco
     title: Falco
     system: identity-access
-    description: Runtime security detection (DaemonSet).
+    description: Runtime security detection (Falco DaemonSet on every node, plus the falcosidekick forwarder; Argo application ecosystem-falco in namespace falco).
+  - name: trivy-operator
+    title: Trivy operator
+    system: identity-access
+    description: Trivy operator in trivy-system (Argo application ecosystem-trivy-operator); scans workload images and writes vulnerability reports to the cluster.
   - name: vaultwarden
     title: Vaultwarden
     system: identity-access
@@ -229,6 +233,12 @@ apps:
     title: CloudNativePG
     system: data-storage
     description: PostgreSQL operator and the Barman Cloud backup plugin.
+  - name: onemind-data
+    title: onemind-data (CNPG PostgreSQL cluster)
+    system: data-storage
+    description: >-
+      Shared three-instance CloudNativePG PostgreSQL 16 cluster in namespace onemind-data (pods onemind-data-1 to -3, selector cnpg.io/cluster=onemind-data);
+      the Cluster resource is applied by Argo application platform-ecosystem-resources and managed by the cloudnative-pg operator.
   - name: velero
     title: Velero
     system: data-storage
@@ -287,6 +297,13 @@ apps:
     description: >-
       containers/kubernetes-mcp-server v0.1.1 behind the tool gateway (target kubernetes, group ops) with 10 read tools, 1 write, 3 destructive tools held
       back for the execute route; no Secrets in its RBAC.
+  - name: execute-gate
+    title: Tool gateway execute gate (execute-gate)
+    system: ai-agents
+    description: >-
+      AuthZEN decision point behind the gateway's execute route; approves one exact destructive call after the owner types an approval in the private Matrix
+      room. Replicas 0 is its intended state until the owner creates its three SealedSecrets (platform/tool-gateway/manifests/execute-gate/deployment.yaml);
+      while it is off the execute route fails closed. Observed 0/0 on 2026-11-07.
   - name: mcp-clickhouse
     title: Tool gateway ClickHouse backend (mcp-clickhouse)
     system: ai-agents
@@ -294,15 +311,15 @@ apps:
   - name: karakeep
     title: Karakeep
     system: personal-tools
-    description: Native bookmark and read-later workspace prepared with manual Argo and zero replicas; first start, owner enrollment and recovery acceptance are pending.
+    description: Native bookmark and read-later workspace (web, headless Chrome and Meilisearch) deployed by Argo application platform-karakeep and served over the tailnet; observed 3/3 pods running on 2026-11-07. Owner enrollment and recovery acceptance are not recorded here.
   - name: openremote
     title: OpenRemote
     system: home-homestead
-    description: Private OpenRemote IoT evaluation with a manual Argo Application; first sync, owner login, telemetry and restore acceptance are pending.
+    description: Private OpenRemote IoT evaluation (manager, Keycloak, PostgreSQL and proxy) deployed by Argo application platform-openremote and served over the tailnet; observed 4/4 pods running on 2026-11-07. Owner login, telemetry and restore acceptance are not recorded here.
   - name: thingsboard
     title: ThingsBoard
     system: home-homestead
-    description: Private ThingsBoard Community 4.3 IoT evaluation with a manual Argo Application; first sync, owner login, telemetry and restore acceptance are pending.
+    description: Private ThingsBoard Community 4.3 IoT evaluation (ThingsBoard and PostgreSQL) deployed by Argo application platform-thingsboard and served over the tailnet; observed 2/2 pods running on 2026-11-07. Owner login, telemetry and restore acceptance are not recorded here.
 placement:
   opencage: geospatial
   graphhopper: geospatial
@@ -376,8 +393,6 @@ placement:
   eolianvr: tak-ecosystem
   equifax: personal-finance
   experian: personal-finance
-  external-argocd: gitops-delivery
-  external-tailscale: infrastructure
   facebook-legacy: social-media
   facebook-zeus: social-media
   fedhub: tak-ecosystem
@@ -397,6 +412,11 @@ placement:
   instagram-zeus: social-media
   jan: ai-agents
   langfuse: observability
+  forgejo: developer-platform
+  onemind-hermes-web: ai-agents
+  nats-monitor: messaging-nats
+  stac-browser: geospatial
+  gatus: observability
   lf-edge: reference-links
   lingbot-map: geospatial
   linkedin-company-admin: social-media
@@ -404,11 +424,9 @@ placement:
   linux-foundation: reference-links
   lm-studio: ai-agents
   loki: observability
-  longhorn: data-storage
   madmapper: personal-tools
   matrix-synapse: communication
   mercury: business-operations
-  minio: data-storage
   ministral-models: ai-agents
   miro: productivity-saas
   mta: communication
@@ -562,5 +580,3 @@ fallbackSystems:
   fabric-iotautomation: home-homestead
 pillarOverrides: {}
 titles:
-  component:default/external-argocd: ArgoCD (external launcher)
-  component:default/external-tailscale: Tailscale (external launcher)

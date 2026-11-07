@@ -103,7 +103,7 @@ test('every workload is a subcomponent of its mapped app or sits in Unassigned w
     } else assert.equal(w.spec.system, UNASSIGNED, `${w.metadata.name} is neither mapped nor unassigned`);
   }
   const argocd = workloads.filter(w => w.spec.subcomponentOf === 'component:default/argocd').map(w => ann(w, 'onemind.io/kubernetes-workload'));
-  for (const name of ['argocd-server', 'argocd-repo-server', 'argocd-dex-server', 'argocd-redis']) assert.ok(argocd.includes(name), `argocd needs ${name}`);
+  for (const name of ['argocd-server', 'argocd-repo-server', 'argocd-redis']) assert.ok(argocd.includes(name), `argocd needs ${name}`);
 });
 
 test('a workload no mapping covers lands in Unassigned workloads and nothing is dropped', () => {
@@ -145,7 +145,7 @@ test('colliding titles are disambiguated instead of dropped', () => {
 test('every Argo application in Git maps to exactly one app Component, and a new one fails', repoOnly, () => {
   const map = sources.map.argoApplications;
   const inGit = argoApplicationsInGit();
-  assert.equal(inGit.size, 64, 'platform/ should define the 64 source Argo applications');
+  assert.equal(inGit.size, 65, 'platform/ should define the 65 source Argo applications');
   const unmapped = [...inGit].filter(a => !map[a]);
   assert.deepEqual(unmapped, [], `Argo applications without a mapping in catalog/workload-map.yaml: ${unmapped}`);
   assert.deepEqual(Object.keys(map).filter(a => !inGit.has(a)), [], 'mapping names an Argo application that Git does not define');

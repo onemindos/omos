@@ -47,7 +47,7 @@ describe('freshness of the reviewed entities', () => {
   });
 
   it('flags a workload that is gone: missing-review-required and lifecycle removed, last-seen kept', async () => {
-    const before = find('nats', 'agenttap');
+    const before = find('nats', 'heynats');
     const seenBefore = before.metadata.annotations![A.observedAt];
     const after = await processor(['backstage/backstage']).postProcessEntity(
       structuredClone(before),
@@ -61,7 +61,7 @@ describe('freshness of the reviewed entities', () => {
   });
 
   it('says nothing when there is no recent observation', async () => {
-    const before = find('nats', 'agenttap');
+    const before = find('nats', 'heynats');
     const stale = await processor(
       [],
       '2026-10-22T09:00:00.000Z',

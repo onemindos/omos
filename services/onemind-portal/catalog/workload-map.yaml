@@ -10,7 +10,6 @@ workloads:
   agent-fabric/agent-tap: component:default/agent-monitor
   argocd/argocd-application-controller: component:default/argocd
   argocd/argocd-applicationset-controller: component:default/argocd
-  argocd/argocd-dex-server: component:default/argocd
   argocd/argocd-notifications-controller: component:default/argocd
   argocd/argocd-redis: component:default/argocd
   argocd/argocd-repo-server: component:default/argocd
@@ -39,7 +38,6 @@ workloads:
   hermes/onemind-hermes: component:default/onemind-hermes
   hermes/onemind-mcp: component:default/onemind-mcp
   ingress-nginx/ingress-nginx-controller: component:default/ingress-nginx
-  kube-system/clickhouse-operator: component:default/clickhouse
   kube-system/coredns: component:default/kubernetes-system
   kube-system/hubble-relay: component:default/hubble-ui
   kube-system/hubble-ui: component:default/hubble-ui
@@ -65,18 +63,14 @@ workloads:
   monitoring/prometheus-monitoring-kube-prometheus-prometheus: component:default/prometheus
   n8n/n8n: component:default/n8n
   n8n/postgres: component:default/n8n
-  nats/agent-web-ui: component:default/agent-web-ui
-  nats/agenttap: component:default/agent-monitor
   nats/heynats: component:default/heynats
   nats/nack: component:default/nats
   nats/nats: component:default/nats
   nats/nats-dashboard: component:default/nats-dashboard
-  nats/nats-metrics-scrape: component:default/nats
   nats/nats-surveyor: component:default/nats-surveyor
   nats/nats-ui: component:default/nats-ui
   omos/feed-intel: component:default/omos-data-pipeline
   omos/feed-satellites: component:default/omos-data-pipeline
-  omos/omos-mission-engine: component:default/omos-data-pipeline
   omos/omos-tak-projector: component:default/omos-data-pipeline
   omos/redpanda-connect: component:default/redpanda-connect
   omos/sink-clickhouse: component:default/omos-data-pipeline
@@ -97,11 +91,7 @@ workloads:
   tailscale/operator: component:default/tailscale-operator
   tailscale/ts-agent-console-8khxt: component:default/tailscale-operator
   tailscale/ts-agent-tap-v7ktr: component:default/tailscale-operator
-  tailscale/ts-agent-web-ui-l74d4: component:default/tailscale-operator
-  tailscale/ts-agenttap-8ddc6: component:default/tailscale-operator
   tailscale/ts-argocd-slkzh: component:default/tailscale-operator
-  tailscale/ts-cilium-gateway-gateway-default-bl4tw: component:default/tailscale-operator
-  tailscale/ts-cilium-gateway-gateway-default-hl5fh: component:default/tailscale-operator
   tailscale/ts-grafana-ksprn: component:default/tailscale-operator
   tailscale/ts-headlamp-4qwkc: component:default/tailscale-operator
   tailscale/ts-heynats-p5dmf: component:default/tailscale-operator
@@ -111,11 +101,7 @@ workloads:
   tailscale/ts-nats-monitor-zh589: component:default/tailscale-operator
   tailscale/ts-nats-ui-d6rrg: component:default/tailscale-operator
   tailscale/ts-nats-ws-4q6bc: component:default/tailscale-operator
-  tailscale/ts-observer-pftsp: component:default/tailscale-operator
-  tailscale/ts-omos-dell-edge-qfrh9: component:default/tailscale-operator
-  tailscale/ts-omos-dell-zeus-wsv6m: component:default/tailscale-operator
   tailscale/ts-omos-ha-edge-rlv6k: component:default/tailscale-operator
-  tailscale/ts-omos-intel-zzn2k: component:default/tailscale-operator
   tailscale/ts-omos-mbp-hgq9w: component:default/tailscale-operator
   tailscale/ts-omos-nats-fs6r4: component:default/tailscale-operator
   tailscale/ts-omos-s24-44l4v: component:default/tailscale-operator
@@ -155,6 +141,40 @@ workloads:
   openremote/proxy: component:default/openremote
   thingsboard/thingsboard: component:default/thingsboard
   thingsboard/postgres: component:default/thingsboard
+  backstage/portal-redirect: component:default/backstage
+  cloudtak/cloudtak-api: component:default/cloudtak
+  cloudtak/cloudtak-events: component:default/cloudtak
+  cloudtak/cloudtak-retention: component:default/cloudtak
+  cloudtak/cloudtak-tiles: component:default/cloudtak
+  falco/falco-falcosidekick: component:default/falco
+  nats/nats-leafz-exporter: component:default/nats
+  onemind-ai/langfuse-redis: component:default/langfuse
+  onemind-ai/langfuse-web: component:default/langfuse
+  onemind-ai/langfuse-worker: component:default/langfuse
+  stac/stac-api: component:default/stac
+  stac/stac-api-writer: component:default/stac
+  stac/stac-browser: component:default/stac
+  tool-gateway/execute-gate: component:default/execute-gate
+  trivy-system/trivy-operator: component:default/trivy-operator
+  tailscale/ts-cloudtak-htdck: component:default/tailscale-operator
+  tailscale/ts-cloudtak-tiles-p26wj: component:default/tailscale-operator
+  tailscale/ts-element-tailnet-xzvtx: component:default/tailscale-operator
+  tailscale/ts-fedhub-tailnet-gzz6j: component:default/tailscale-operator
+  tailscale/ts-forgejo-qgj96: component:default/tailscale-operator
+  tailscale/ts-gatus-gl2gp: component:default/tailscale-operator
+  tailscale/ts-karakeep-g8xzs: component:default/tailscale-operator
+  tailscale/ts-langfuse-rj8v9: component:default/tailscale-operator
+  tailscale/ts-omos-dell-zeus-f7vnz: component:default/tailscale-operator
+  tailscale/ts-onemind-hermes-tgjq9: component:default/tailscale-operator
+  tailscale/ts-onemind-hermes-web-5m4zq: component:default/tailscale-operator
+  tailscale/ts-openremote-xpvxj: component:default/tailscale-operator
+  tailscale/ts-portal-p86hp: component:default/tailscale-operator
+  tailscale/ts-stac-browser-gjsms: component:default/tailscale-operator
+  tailscale/ts-stac-tp9ln: component:default/tailscale-operator
+  tailscale/ts-synapse-tailnet-qtrg2: component:default/tailscale-operator
+  tailscale/ts-tak-portal-ingress-xpxhs: component:default/tailscale-operator
+  tailscale/ts-thingsboard-cgsbq: component:default/tailscale-operator
+  tailscale/ts-vaultwarden-rdctp: component:default/tailscale-operator
 argoApplications:
   app-of-apps: component:default/argocd
   ecosystem-barman: component:default/cloudnative-pg
@@ -162,10 +182,11 @@ argoApplications:
   ecosystem-dapr: component:default/dapr
   ecosystem-falco: component:default/falco
   ecosystem-kyverno: component:default/kyverno
+  ecosystem-langfuse: component:default/langfuse
   ecosystem-onemind-core: component:default/onemind-core
   ecosystem-opencost: component:default/opencost
   ecosystem-openfga: component:default/openfga
-  ecosystem-trivy-operator: component:default/kyverno
+  ecosystem-trivy-operator: component:default/trivy-operator
   ecosystem-velero: component:default/velero
   edge-cert-manager: component:default/cert-manager
   edge-ingress-nginx: component:default/ingress-nginx

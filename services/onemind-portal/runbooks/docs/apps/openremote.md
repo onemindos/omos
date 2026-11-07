@@ -2,13 +2,22 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Private OpenRemote IoT evaluation with a manual Argo Application; first sync, owner login, telemetry and restore acceptance are pending.
+Private OpenRemote IoT evaluation (manager, Keycloak, PostgreSQL and proxy) deployed by Argo application platform-openremote and served over the tailnet; observed 4/4 pods running on 2026-11-07. Owner login, telemetry and restore acceptance are not recorded here.
 
 ## Where it runs
 
 - Catalog entity: `component:default/openremote` in System `home-homestead`
 - Argo CD application: `platform-openremote`
-- Namespaces: not recorded (no Deployment or StatefulSet observed)
+- Namespace: `openremote`
+
+## Workloads
+
+| Workload | Kind | Namespace |
+| --- | --- | --- |
+| `keycloak` | Deployment | `openremote` |
+| `manager` | Deployment | `openremote` |
+| `postgresql` | Deployment | `openremote` |
+| `proxy` | Deployment | `openremote` |
 
 ## When it looks wrong
 
@@ -24,6 +33,8 @@ Private OpenRemote IoT evaluation with a manual Argo Application; first sync, ow
 
 ## Generated links
 
+- Loki query: `{k8s_namespace_name="openremote"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=openremote`
 - Source: `onemindos/omos`
 
 ## Escalate

@@ -16,6 +16,7 @@ The OneMind developer portal and its PostgreSQL database.
 | --- | --- | --- |
 | `backstage` | Deployment | `backstage` |
 | `backstage-postgres` | StatefulSet | `backstage` |
+| `portal-redirect` | Deployment | `backstage` |
 
 ## When it looks wrong
 

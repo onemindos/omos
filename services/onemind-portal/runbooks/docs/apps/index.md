@@ -18,6 +18,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [CloudTAK](cloudtak.md) | tak-ecosystem |
 | [Dapr](dapr.md) | infrastructure |
 | [Element Chat](element-chat.md) | communication |
+| [Tool gateway execute gate (execute-gate)](execute-gate.md) | ai-agents |
 | [Falco](falco.md) | identity-access |
 | [FedHub](fedhub.md) | tak-ecosystem |
 | [Forgejo — independent code mirror](forgejo.md) | developer-platform |
@@ -32,8 +33,11 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Karakeep](karakeep.md) | personal-tools |
 | [Kubernetes system services](kubernetes-system.md) | infrastructure |
 | [Kyverno](kyverno.md) | identity-access |
+| [Langfuse](langfuse.md) | observability |
 | [Loki](loki.md) | observability |
 | [Matrix Synapse](matrix-synapse.md) | communication |
+| [Tool gateway ClickHouse backend (mcp-clickhouse)](mcp-clickhouse.md) | ai-agents |
+| [Tool gateway Kubernetes backend (mcp-kubernetes)](mcp-kubernetes.md) | ai-agents |
 | [n8n](n8n.md) | ai-agents |
 | [NATS JetStream](nats.md) | messaging-nats |
 | [NATS Dashboard](nats-dashboard.md) | messaging-nats |
@@ -58,6 +62,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [TAK-ML](takml.md) | tak-ecosystem |
 | [ThingsBoard](thingsboard.md) | home-homestead |
 | [TileServer GL](tileserver-gl.md) | geospatial |
+| [Trivy operator](trivy-operator.md) | identity-access |
 | [Vaultwarden](vaultwarden.md) | identity-access |
 | [Velero](velero.md) | data-storage |
 | [VolSync](volsync.md) | data-storage |

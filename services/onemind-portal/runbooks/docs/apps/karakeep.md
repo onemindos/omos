@@ -2,13 +2,21 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Native bookmark and read-later workspace prepared with manual Argo and zero replicas; first start, owner enrollment and recovery acceptance are pending.
+Native bookmark and read-later workspace (web, headless Chrome and Meilisearch) deployed by Argo application platform-karakeep and served over the tailnet; observed 3/3 pods running on 2026-11-07. Owner enrollment and recovery acceptance are not recorded here.
 
 ## Where it runs
 
 - Catalog entity: `component:default/karakeep` in System `personal-tools`
 - Argo CD application: `platform-karakeep`
-- Namespaces: not recorded (no Deployment or StatefulSet observed)
+- Namespace: `karakeep`
+
+## Workloads
+
+| Workload | Kind | Namespace |
+| --- | --- | --- |
+| `chrome` | Deployment | `karakeep` |
+| `meilisearch` | Deployment | `karakeep` |
+| `web` | Deployment | `karakeep` |
 
 ## When it looks wrong
 
@@ -24,6 +32,8 @@ Native bookmark and read-later workspace prepared with manual Argo and zero repl
 
 ## Generated links
 
+- Loki query: `{k8s_namespace_name="karakeep"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=karakeep`
 - Source: `onemindos/omos`
 
 ## Escalate

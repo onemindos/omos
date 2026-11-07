@@ -113,7 +113,7 @@ describe('live inventory enabled, against a real catalog', () => {
         e => e.metadata.annotations?.[A.checkedAt],
       );
       const flagged = items.find(
-        e => e.metadata.name === entityName('nats', 'agenttap'),
+        e => e.metadata.name === entityName('nats', 'heynats'),
       )?.spec?.lifecycle;
       // Processing is a loop: wait until the new entity exists and every reviewed one was re-stamped.
       if (
@@ -148,7 +148,7 @@ describe('live inventory enabled, against a real catalog', () => {
     const portal = byName.get('k8s-backstage-backstage-21b99354')!;
     expect(portal.metadata.annotations![A.state]).toBe('observed');
     expect(portal.spec!.subcomponentOf).toBe('component:default/backstage'); // reviewed placement untouched
-    const gone = byName.get(entityName('nats', 'agenttap'))!;
+    const gone = byName.get(entityName('nats', 'heynats'))!;
     expect(gone.metadata.annotations![A.state]).toBe('missing-review-required');
     expect(gone.spec!.lifecycle).toBe('removed');
   });
