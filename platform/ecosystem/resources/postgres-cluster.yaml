@@ -56,13 +56,9 @@ spec:
       createdb: false
       passwordSecret:
         name: db-dapr-workflows
+    # LiteLLM retired 2026-11-06: drop the role after its database (follow-up PR removes this entry).
     - name: litellm
-      ensure: present
-      login: true
-      superuser: false
-      createdb: false
-      passwordSecret:
-        name: db-litellm
+      ensure: absent
     - name: openfga
       ensure: present
       login: true

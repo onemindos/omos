@@ -14,9 +14,9 @@ Owner decision: agentgateway replaces LiteLLM as the hub, and Hermes uses Ollama
 
 Left in place on purpose (owner decides later):
 
-- Database `onemind-litellm`, the `litellm` managed role and `onemind-data/db-litellm` stay in the shared Postgres. Drop them only after a verified `pg_dump`.
+- The `litellm` database and role are being dropped: both are set to `ensure: absent` in `platform/ecosystem/resources/` (deleting the CR would not drop them: `databaseReclaimPolicy: retain` and the Application has `prune: false`). A follow-up PR removes the absent entries once the drop is verified. The live Secret `onemind-data/db-litellm` is not pruned by Argo; delete it by hand with owner approval.
 - The DigitalOcean volume behind PVC `onemind-cpu-model` (20 GiB, `do-block-storage-retain`) stays; its restic repository secret `volume-aeb2c9c4e472-restic` is still in `platform/backups/volsync/sealed/` so existing backups stay restorable.
-- `onemind-core` still reads `MODEL_GATEWAY_URL` (`http://litellm.onemind-ai.svc.cluster.local:4000/v1`) from its sealed `core-runtime` secret for `model_summary`. That path will fail until `onemind-core` is pointed at another model endpoint.
+- `onemind-core` `model_summary` (capability `summarize-site`) is disabled: `MODEL_GATEWAY_URL` and `MODEL_GATEWAY_KEY` were removed from the sealed `core-runtime` secret, and without `MODEL_GATEWAY_URL` the summary returns a fixed "disabled" message plus the evidence. Set both keys to re-enable it against any OpenAI-compatible endpoint.
 - Live cleanup (the parent does not prune; `ecosystem-litellm` carries a finalizer so deleting it cascades to its resources, `ecosystem-ollama` has none and would leave the PVC): delete Applications, the Deployments/Services, leftover Secrets and the PVC object by hand with owner approval; the PV is Retain.
 
 ## What runs

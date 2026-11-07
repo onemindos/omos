@@ -46,6 +46,10 @@ spec:
   cluster:
     name: onemind-data
   databaseReclaimPolicy: retain
+  # LiteLLM retired 2026-11-06: drop the database. `ensure: absent` makes CNPG run DROP DATABASE;
+  # deleting this CR instead would keep the database (retain policy, and the Application has prune: false).
+  # A follow-up PR removes this entry once the database is confirmed gone.
+  ensure: absent
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Database

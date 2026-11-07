@@ -80,9 +80,13 @@ async def agents_and_call(agent_ref=None, prompt=None):
 
 def model_summary(prompt, evidence):
     import json
+    url = os.environ.get("MODEL_GATEWAY_URL")
+    if not url:
+        # No model endpoint is configured (LiteLLM was retired 2026-11-06): the summary is a no-op, the evidence is still returned.
+        return "Model summaries are disabled: no model gateway is configured. See the evidence below."
     with httpx.Client(timeout=120) as client:
-        response = client.post(os.environ["MODEL_GATEWAY_URL"] + "/chat/completions",
-                               headers={"Authorization": "Bearer " + os.environ["MODEL_GATEWAY_KEY"]},
+        response = client.post(url.rstrip("/") + "/chat/completions",
+                               headers={"Authorization": "Bearer " + os.environ.get("MODEL_GATEWAY_KEY", "")},
                                json={"model": os.environ.get("MODEL_ALIAS", "onemind-chat"),
                                      "messages": [{"role": "system", "content":
                                                    "Explain OneMind observations. Separate observed facts, missing data and recommendations. "

@@ -6,7 +6,7 @@ and Synadia Agent Protocol discovery provide fresh observations; the agent
 harness remains the owner of agent configuration.
 
 Named initial capabilities inspect infrastructure, summarize source evidence
-through LiteLLM, delegate to a currently discovered operator-selected agent, and
+through an OpenAI-compatible endpoint (disabled unless `MODEL_GATEWAY_URL` is set), delegate to a currently discovered operator-selected agent, and
 request a restart of specifically designated processing workers. External agent
 work with an ambiguous outcome is not automatically dispatched again.
 
