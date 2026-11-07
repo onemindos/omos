@@ -1,0 +1,11 @@
+# Retain-policy class for one-off safety snapshots taken before risky changes.
+# Deleting a VolumeSnapshot made with this class keeps the DigitalOcean snapshot;
+# remove the provider copy separately (doctl compute snapshot delete) once it is no longer needed.
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: onemind-backup-retain
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+driver: dobs.csi.digitalocean.com
+deletionPolicy: Retain
