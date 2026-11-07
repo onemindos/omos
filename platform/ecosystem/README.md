@@ -1,7 +1,7 @@
 # OneMind CPU ecosystem rollout
 
 The foundation parent activates six pinned Helm releases through Argo CD:
-CloudNativePG, Dapr, OpenCost, Kyverno and Falco.
+CloudNativePG, OpenCost, Kyverno and Falco (Dapr was removed 2026-11-07).
 Their values are in `values/`; `foundation-lock.json` records release provenance.
 Existing Cilium, monitoring, NATS, Authentik and application data remain owned by
 existing applications. New workloads use the separate ecosystem worker pool;
@@ -9,7 +9,7 @@ Falco agents inspect the participating cluster nodes.
 
 Kyverno initially has no enforcing policies. Falco reports JSON detection events
 into the existing container log pipeline. OpenCost uses the existing Prometheus.
-Dapr sidecars are opt-in. No GPU is requested.
+No GPU is requested.
 
 Argo auto-sync uses self-heal with pruning disabled for the initial additions.
 Resources and persistent volumes require an explicit reviewed retirement change.

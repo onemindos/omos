@@ -79,7 +79,6 @@ Names are kept where an existing System survives (so its URL and favorites still
 | `cluster-cert-manager` (Namespace / cert-manager) | 3 | Platform core | SO | Namespace grouping dissolved; cert-manager workloads attach to their app, whose System is Platform core. |
 | `cluster-cloudflare` (Namespace / cloudflare) | 2 | Platform core | SO | Namespace grouping dissolved; cloudflare workloads attach to their app, whose System is Platform core. |
 | `cluster-cnpg-system` (Namespace / cnpg-system) | 2 | Data & storage | SO | Namespace grouping dissolved; cnpg-system workloads attach to their app, whose System is Data & storage. |
-| `cluster-dapr-system` (Namespace / dapr-system) | 5 | Platform core | SO | Namespace grouping dissolved; dapr-system workloads attach to their app, whose System is Platform core. |
 | `cluster-dp-default-onetak-development-b188bf98` (Namespace / dp-default-onetak-development-b188bf98) | 1 | Geospatial, drones & robotics | SO | Namespace grouping dissolved; dp-default-onetak-development-b188bf98 workloads attach to their app, whose System is Geospatial, drones & robotics. |
 | `cluster-external-dns` (Namespace / external-dns) | 1 | Platform core | SO | Namespace grouping dissolved; external-dns workloads attach to their app, whose System is Platform core. |
 | `cluster-external-secrets` (Namespace / external-secrets) | 3 | Identity & access | SO | Namespace grouping dissolved; external-secrets workloads attach to their app, whose System is Identity & access. |
@@ -145,7 +144,6 @@ Each application resolves to exactly one app Component. The app carries `argocd/
 | `argo-rollouts` | argocd | Argo Rollouts (`argo-rollouts`) | GitOps & delivery |
 | `ecosystem-barman` | cnpg-system | CloudNativePG (`cloudnative-pg`) | Data & storage |
 | `ecosystem-cnpg` | cnpg-system | CloudNativePG (`cloudnative-pg`) | Data & storage |
-| `ecosystem-dapr` | dapr-system | Dapr (`dapr`) | Platform core |
 | `ecosystem-external-secrets` | external-secrets | External Secrets Operator (`external-secrets`) | Identity & access |
 | `ecosystem-falco` | falco | Falco (`falco`) | Identity & access |
 | `ecosystem-harbor` | onemind-registry | Harbor (`harbor`) | GitOps & delivery |
@@ -226,7 +224,6 @@ Workloads become `spec.subcomponentOf` their app and join the app's System. Full
 | clickhouse | 1 | ClickHouse (1) |
 | cloudflare | 2 | Cloudflare Tunnel (standby) (2) |
 | cnpg-system | 2 | CloudNativePG (2) |
-| dapr-system | 5 | Dapr (5) |
 | dp-default-onetak-development-b188bf98 | 2 | OneTAK geospatial services (2) |
 | external-dns | 1 | ExternalDNS (1) |
 | external-secrets | 3 | External Secrets Operator (3) |
@@ -272,7 +269,6 @@ These Argo-managed products have no curated app today, so the workloads would st
 | Cloudflare Tunnel (standby) | `cloudflared` | Platform core | platform-cloudflared |
 | Tailscale operator and proxies | `tailscale-operator` | Platform core | edge-tailscale-operator |
 | KEDA | `keda` | Platform core | ecosystem-keda |
-| Dapr | `dapr` | Platform core | ecosystem-dapr |
 | Kubernetes system services | `kubernetes-system` | Platform core | none |
 | OneMind core services | `onemind-core` | Platform core | ecosystem-onemind-core |
 | Authentik | `authentik` | Identity & access | platform-auth-helm, platform-auth-infra |

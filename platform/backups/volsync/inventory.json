@@ -148,23 +148,5 @@
     "pvc": "takserver-nats-js-takserver-nats-0",
     "source": "volume-2b88c0eca294",
     "size": "10Gi"
-  },
-  {
-    "namespace": "dapr-system",
-    "pvc": "dapr-scheduler-data-dir-dapr-scheduler-server-0",
-    "source": "volume-e18340617b8d",
-    "size": "5Gi"
-  },
-  {
-    "namespace": "dapr-system",
-    "pvc": "dapr-scheduler-data-dir-dapr-scheduler-server-1",
-    "source": "volume-cc7912733ca4",
-    "size": "5Gi"
-  },
-  {
-    "namespace": "dapr-system",
-    "pvc": "dapr-scheduler-data-dir-dapr-scheduler-server-2",
-    "source": "volume-5b6b57939ee3",
-    "size": "5Gi"
   }
 ]

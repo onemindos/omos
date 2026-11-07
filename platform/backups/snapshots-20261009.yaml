@@ -1,36 +1,6 @@
 apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshot
 metadata:
-  name: readiness-20261009-e18340617b8d
-  namespace: dapr-system
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: dapr-scheduler-data-dir-dapr-scheduler-server-0
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
-  name: readiness-20261009-cc7912733ca4
-  namespace: dapr-system
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: dapr-scheduler-data-dir-dapr-scheduler-server-1
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
-  name: readiness-20261009-5b6b57939ee3
-  namespace: dapr-system
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: dapr-scheduler-data-dir-dapr-scheduler-server-2
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
   name: readiness-20261009-aeb2c9c4e472
   namespace: onemind-ai
 spec:

@@ -41,11 +41,6 @@ export const mapping: InventoryMapping = {
     'cnpg-system/barman-plugin-barman-cloud':
       'component:default/cloudnative-pg',
     'cnpg-system/cnpg-cloudnative-pg': 'component:default/cloudnative-pg',
-    'dapr-system/dapr-operator': 'component:default/dapr',
-    'dapr-system/dapr-placement-server': 'component:default/dapr',
-    'dapr-system/dapr-scheduler-server': 'component:default/dapr',
-    'dapr-system/dapr-sentry': 'component:default/dapr',
-    'dapr-system/dapr-sidecar-injector': 'component:default/dapr',
     'falco/falco-falcosidekick': 'component:default/falco',
     'forgejo/forgejo': 'component:default/forgejo',
     'gatus/gatus': 'component:default/gatus',
@@ -252,12 +247,6 @@ export const mapping: InventoryMapping = {
     cloudtak: {
       title: 'CloudTAK',
       system: 'tak-ecosystem',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    dapr: {
-      title: 'Dapr',
-      system: 'infrastructure',
       pillar: 'so',
       review: 'proposed',
     },
