@@ -13,6 +13,6 @@ spec:
   replicas: 3
   retention: limits
   discard: old
-  maxAge: 720h
+  maxAge: 168h
   duplicateWindow: 2m
   preventDelete: true
