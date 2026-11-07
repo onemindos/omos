@@ -49,13 +49,9 @@ spec:
       createdb: false
       passwordSecret:
         name: db-onemind
+    # Dapr retired 2026-11-07: drop the role after its database (follow-up PR removes this entry).
     - name: dapr_workflows
-      ensure: present
-      login: true
-      superuser: false
-      createdb: false
-      passwordSecret:
-        name: db-dapr-workflows
+      ensure: absent
     # LiteLLM retired 2026-11-06: drop the role after its database (follow-up PR removes this entry).
     - name: litellm
       ensure: absent

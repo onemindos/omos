@@ -173,6 +173,7 @@ patches; Telegram remains selected. See the updated approval record below.
 | `clickhouse` | ClickHouse | 2 | Argo CD; ResourceType later |
 | `onemind-search` | OpenSearch | 2 | Argo CD; also the observability plane's log store |
 | `onemind-ai` | (LiteLLM and CPU model retired 2026-11-06) | 2 | Argo CD. agentgateway is the hub; Hermes uses Ollama Cloud |
+| (`dapr-system` removed 2026-11-07) | Dapr control plane and the onemind-core Dapr workflow retired; missions run in-process until orchestration moves to Hermes | n/a | Gone from Git and cluster |
 | `keda` | KEDA | 2 | Argo CD; OpenChoreo autoscaling module |
 | `monitoring` | Prometheus, Alertmanager, Grafana, Loki, Tempo, OTel collector | 2 | Argo CD; becomes the observability plane's metrics and events modules |
 | `opencost` | OpenCost | 2 | Argo CD; OpenChoreo FinOps module |
@@ -1365,7 +1366,7 @@ keeps Phase 6 In progress and Phases 7/8 Not started.
 | Independent backup copy | Destination/credential discovery in progress; do not unsuspend without working recovery credentials | `platform/backups/OFFSITE-COPY.md` |
 | Remaining TAK workload ownership and broad drift ignores | Verified live: API/config/Ignite adopted without pod/spec/restart changes; core/TAK broad ignores narrowed; supporting legacy resources remain separate | `docs/gitops/HELM-ADOPTION.md` |
 
-Namespace acceptance follow-through: Dapr's managed-namespace label remained absent
+Namespace acceptance follow-through (Dapr was removed entirely on 2026-11-07, so this is historical): Dapr's managed-namespace label remained absent
 following sync; use a protected explicit Namespace under security, preserving its
 VolSync annotation and existing SSA option, rather than claiming source metadata
 was applied. Existing namespace UIDs remain unchanged.

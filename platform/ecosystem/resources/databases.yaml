@@ -32,6 +32,10 @@ spec:
   cluster:
     name: onemind-data
   databaseReclaimPolicy: retain
+  # Dapr retired 2026-11-07: drop the database (same approach as litellm). `ensure: absent` makes CNPG
+  # run DROP DATABASE; deleting this CR instead would keep it (retain policy, Application prune: false).
+  # A follow-up PR removes this entry once the database is confirmed gone.
+  ensure: absent
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
