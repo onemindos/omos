@@ -1,0 +1,40 @@
+# Langfuse v3 (LLM observability) for the Hermes agent. Values and design notes: platform/ecosystem/values/langfuse.yaml.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ecosystem-langfuse
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '3'
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+  - repoURL: https://langfuse.github.io/langfuse-k8s
+    chart: langfuse
+    targetRevision: 2.2.3
+    helm:
+      releaseName: langfuse
+      valueFiles:
+      - $values/platform/ecosystem/values/langfuse.yaml
+  - repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: onemind-ai
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+    - SkipDryRunOnMissingResource=true

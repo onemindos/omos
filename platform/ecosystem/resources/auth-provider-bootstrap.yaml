@@ -39,13 +39,16 @@ spec:
                   users = request("GET", "core/users/?username=akadmin")["results"]
                   owner = next(u["pk"] for u in users if u["username"] == "akadmin")
                   callbacks = {
-                      "langfuse": ["https://onemind-langfuse.tail717ba0.ts.net/api/auth/callback/authentik"],
+                      # Langfuse has no Authentik provider; it signs in through its generic OIDC provider, whose callback id is `custom`.
+                      "langfuse": ["https://onemind-langfuse.tail717ba0.ts.net/api/auth/callback/custom"],
                   }
                   for name, redirects in callbacks.items():
                       client_id = "onemind-" + name
                       body = {k: original[k] for k in ["authorization_flow", "invalidation_flow", "signing_key", "property_mappings", "sub_mode", "issuer_mode", "access_token_validity"]}
                       body.update(name="OneMind " + name, client_type="confidential", client_id=client_id,
                           client_secret=os.environ[name.upper() + "_CLIENT_SECRET"], include_claims_in_id_token=True,
+                          # Authentik 2026.8 rejects authorize requests ("invalid_request") for a provider with no grant types.
+                          grant_types=["authorization_code", "refresh_token"],
                           redirect_uris=[{"matching_mode": "strict", "url": u, "redirect_uri_type": "authorization"} for u in redirects])
                       matches = [p for p in providers if p["client_id"] == client_id]
                       provider = request("PATCH", "providers/oauth2/" + str(matches[0]["pk"]) + "/", body) if matches else request("POST", "providers/oauth2/", body)

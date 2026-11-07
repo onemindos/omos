@@ -74,6 +74,18 @@ two SealedSecrets, pinned image digest).
 | --- | --- | --- | --- | --- | --- |
 | 2 | `platform-policy` | `onemind-core` | No PVC; action records in memory (pending actions are forgotten on restart and cannot be confirmed); audit in `EVT` (`evt.so.>`), commands in `CMD` | None (NATS client only; no Service or ingress); ecosystem pool | Manual Argo, not synced; [owner steps](../platform/policy/README.md) pending |
 
+## Langfuse preparation — 2026-11-07
+
+Self-hosted Langfuse v3 for Hermes traces, **prepared source only** (PR `feat/langfuse`): chart `langfuse` 2.2.3 (app 4.75.0),
+Application `ecosystem-langfuse`, namespace `onemind-ai`, web and worker one replica each on the ecosystem pool. It reuses the
+database `langfuse` in CNPG `onemind-data`, a `langfuse` user and database in ClickHouse `clickhouse/onemind`, Spaces bucket
+`onemind-backups` (prefix `langfuse/`), the bundled Valkey (no PVC) and the Authentik provider `onemind-langfuse`. Hermes is not
+wired to it yet (the `hermes-langfuse` Secret exists, no Deployment references it). Not live until merged and synced.
+
+| Tier | Application | Namespace | State / recovery | Exposure | Status |
+| --- | --- | --- | --- | --- | --- |
+| 2 | `ecosystem-langfuse` | `onemind-ai` | PostgreSQL (CNPG `onemind-data`, `Velero`, `Barman`), ClickHouse database `langfuse` (VolSync of the ClickHouse PVC), event blobs in Spaces; Valkey queue is disposable | Tailnet only: `https://onemind-langfuse.tail717ba0.ts.net`, Authentik sign-in only | Auto-sync on merge, not yet synced |
+
 ## Summary
 
 Trivy pilot, prepared 2026-10-24 and retargeted 2026-11-04: a bounded Argo-managed
@@ -179,6 +191,7 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 | `ecosystem-openfga` | onemind-core | openfga 0.3.16 | Fine-grained authorization | PostgreSQL (CNPG) | `Velero`, `Barman` | internal |
 | ~~`ecosystem-litellm`~~ | onemind-ai | litellm-helm 1.104.2 (OCI) | **Retired 2026-11-06** (removed from Git). Database `litellm` being dropped (`ensure: absent`) | PostgreSQL (CNPG) | `Velero`, `Barman` | none after cleanup |
 | ~~`ecosystem-ollama`~~ | onemind-ai | ollama 1.86.0 | **Retired 2026-11-06** (removed from Git). Volume `onemind-cpu-model` (20 GiB, Retain) kept | 20 GiB models | `Velero` (`onemind-ai`); VolSync source removed | none after cleanup |
+| `ecosystem-langfuse` | onemind-ai | langfuse 2.2.3 (app 4.75.0) | LLM observability for Hermes traces (web, worker, bundled Valkey). **Prepared 2026-11-07, not yet synced** | PostgreSQL (CNPG `onemind-data`), ClickHouse `langfuse` database, Spaces prefix `onemind-backups/langfuse/` | `Velero`, `Barman`, `VolSync` (ClickHouse) | tailnet `onemind-langfuse` |
 | `ecosystem-dapr` | dapr-system | dapr 1.18.5 | Dapr runtime | 15 GiB | `VolSync` | internal |
 | `ecosystem-kyverno` | kyverno | kyverno 3.9.1 | Policy engine | none | Git | internal |
 | `ecosystem-falco` | falco | falco 9.2.0 | Runtime security | none | Git | internal |
