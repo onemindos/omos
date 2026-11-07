@@ -7,7 +7,7 @@ Admission and background policy engine; also carries the platform-security Argo 
 ## Where it runs
 
 - Catalog entity: `component:default/kyverno` in System `identity-access`
-- Argo CD applications: `ecosystem-kyverno`, `ecosystem-trivy-operator`, `platform-security`
+- Argo CD applications: `ecosystem-kyverno`, `platform-security`
 - Namespace: `kyverno`
 
 ## Workloads

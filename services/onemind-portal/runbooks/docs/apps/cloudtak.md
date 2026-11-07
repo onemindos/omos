@@ -8,7 +8,16 @@ Upstream CloudTAK browser client for TAK; fresh deployment pending setup and ver
 
 - Catalog entity: `component:default/cloudtak` in System `tak-ecosystem`
 - Argo CD application: `platform-cloudtak`
-- Namespaces: not recorded (no Deployment or StatefulSet observed)
+- Namespace: `cloudtak`
+
+## Workloads
+
+| Workload | Kind | Namespace |
+| --- | --- | --- |
+| `cloudtak-api` | Deployment | `cloudtak` |
+| `cloudtak-events` | Deployment | `cloudtak` |
+| `cloudtak-retention` | Deployment | `cloudtak` |
+| `cloudtak-tiles` | Deployment | `cloudtak` |
 
 ## When it looks wrong
 
@@ -24,6 +33,8 @@ Upstream CloudTAK browser client for TAK; fresh deployment pending setup and ver
 
 ## Generated links
 
+- Loki query: `{k8s_namespace_name="cloudtak"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=cloudtak`
 - Source: `onemindos/omos`
 
 ## Escalate

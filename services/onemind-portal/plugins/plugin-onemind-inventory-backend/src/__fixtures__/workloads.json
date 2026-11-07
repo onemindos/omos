@@ -1,7 +1,7 @@
 {
  "apiVersion": "v1",
  "kind": "List",
- "note": "Recorded 2026-10-22 from context do-nyc3-omos-cloud: kubectl get deployments,statefulsets -A -o json, reduced to identity and selector (no env, images, annotations, UIDs or status).",
+ "note": "Recorded 2026-11-07 from context do-nyc3-omos-cloud: kubectl get deployments,statefulsets -A -o json, reduced to identity and selector (no env, images, annotations, UIDs or status).",
  "items": [
   {
    "apiVersion": "apps/v1",
@@ -35,6 +35,22 @@
   },
   {
    "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "argocd-application-controller",
+    "namespace": "argocd"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "argocd",
+      "app.kubernetes.io/name": "argocd-application-controller"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
     "name": "argocd-applicationset-controller",
@@ -45,22 +61,6 @@
      "matchLabels": {
       "app.kubernetes.io/instance": "argocd",
       "app.kubernetes.io/name": "argocd-applicationset-controller"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "argocd-dex-server",
-    "namespace": "argocd"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "argocd",
-      "app.kubernetes.io/name": "argocd-dex-server"
      }
     }
    }
@@ -124,6 +124,21 @@
      "matchLabels": {
       "app.kubernetes.io/instance": "argocd",
       "app.kubernetes.io/name": "argocd-server"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "authentik-postgres",
+    "namespace": "auth"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "authentik-postgres"
      }
     }
    }
@@ -194,6 +209,36 @@
   },
   {
    "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "backstage-postgres",
+    "namespace": "backstage"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "backstage-postgres"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "portal-redirect",
+    "namespace": "backstage"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "portal-redirect"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
     "name": "cert-manager",
@@ -239,6 +284,90 @@
       "app.kubernetes.io/component": "webhook",
       "app.kubernetes.io/instance": "cert-manager",
       "app.kubernetes.io/name": "webhook"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "chi-onemind-onemind-0-0",
+    "namespace": "clickhouse"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "clickhouse.altinity.com/app": "chop",
+      "clickhouse.altinity.com/chi": "onemind",
+      "clickhouse.altinity.com/cluster": "onemind",
+      "clickhouse.altinity.com/namespace": "clickhouse",
+      "clickhouse.altinity.com/replica": "0",
+      "clickhouse.altinity.com/shard": "0"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "cloudtak-api",
+    "namespace": "cloudtak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "api",
+      "app.kubernetes.io/name": "cloudtak"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "cloudtak-events",
+    "namespace": "cloudtak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "events",
+      "app.kubernetes.io/name": "cloudtak"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "cloudtak-retention",
+    "namespace": "cloudtak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "retention",
+      "app.kubernetes.io/name": "cloudtak"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "cloudtak-tiles",
+    "namespace": "cloudtak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "tiles",
+      "app.kubernetes.io/name": "cloudtak"
      }
     }
    }
@@ -292,6 +421,36 @@
   },
   {
    "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "dapr-placement-server",
+    "namespace": "dapr-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "dapr-placement-server"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "dapr-scheduler-server",
+    "namespace": "dapr-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "dapr-scheduler-server"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
     "name": "dapr-sentry",
@@ -316,6 +475,53 @@
     "selector": {
      "matchLabels": {
       "app": "dapr-sidecar-injector"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "falco-falcosidekick",
+    "namespace": "falco"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "core",
+      "app.kubernetes.io/instance": "falco",
+      "app.kubernetes.io/name": "falcosidekick"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "forgejo",
+    "namespace": "forgejo"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "forgejo"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "gatus",
+    "namespace": "gatus"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "gatus"
      }
     }
    }
@@ -354,14 +560,28 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "hermes-legacy",
+    "name": "onemind-hermes",
     "namespace": "hermes"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app.kubernetes.io/name": "hermes",
-      "onemind.io/agent": "legacy"
+      "app.kubernetes.io/name": "onemind-hermes"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "onemind-mcp",
+    "namespace": "hermes"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "onemind-mcp"
      }
     }
    }
@@ -387,13 +607,13 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "keda-admission-webhooks",
-    "namespace": "keda"
+    "name": "chrome",
+    "namespace": "karakeep"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app": "keda-admission-webhooks"
+      "app": "chrome"
      }
     }
    }
@@ -402,13 +622,13 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "keda-operator",
-    "namespace": "keda"
+    "name": "meilisearch",
+    "namespace": "karakeep"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app": "keda-operator"
+      "app": "meilisearch"
      }
     }
    }
@@ -417,13 +637,28 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "keda-operator-metrics-apiserver",
-    "namespace": "keda"
+    "name": "web",
+    "namespace": "karakeep"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app": "keda-operator-metrics-apiserver"
+      "app": "karakeep-web"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "headlamp",
+    "namespace": "kube"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "headlamp"
      }
     }
    }
@@ -538,21 +773,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "headlamp",
-    "namespace": "kube"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "headlamp"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "kyverno-admission-controller",
     "namespace": "kyverno"
    },
@@ -634,6 +854,36 @@
   },
   {
    "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "postgres",
+    "namespace": "matrix"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "postgres"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "redis",
+    "namespace": "matrix"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "redis"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
     "name": "synapse",
@@ -643,6 +893,41 @@
     "selector": {
      "matchLabels": {
       "app": "synapse"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "alertmanager-monitoring-kube-prometheus-alertmanager",
+    "namespace": "monitoring"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "alertmanager": "monitoring-kube-prometheus-alertmanager",
+      "app.kubernetes.io/instance": "monitoring-kube-prometheus-alertmanager",
+      "app.kubernetes.io/managed-by": "prometheus-operator",
+      "app.kubernetes.io/name": "alertmanager"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "loki",
+    "namespace": "monitoring"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "single-binary",
+      "app.kubernetes.io/instance": "loki",
+      "app.kubernetes.io/name": "loki"
      }
     }
    }
@@ -714,6 +999,26 @@
   },
   {
    "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "prometheus-monitoring-kube-prometheus-prometheus",
+    "namespace": "monitoring"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "monitoring-kube-prometheus-prometheus",
+      "app.kubernetes.io/managed-by": "prometheus-operator",
+      "app.kubernetes.io/name": "prometheus",
+      "operator.prometheus.io/name": "monitoring-kube-prometheus-prometheus",
+      "operator.prometheus.io/shard": "0",
+      "prometheus": "monitoring-kube-prometheus-prometheus"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
     "name": "n8n",
@@ -723,6 +1028,21 @@
     "selector": {
      "matchLabels": {
       "app": "n8n"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "postgres",
+    "namespace": "n8n"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "n8n-postgres"
      }
     }
    }
@@ -759,6 +1079,23 @@
   },
   {
    "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "nats",
+    "namespace": "nats"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "nats",
+      "app.kubernetes.io/instance": "nats",
+      "app.kubernetes.io/name": "nats"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
     "name": "nats-dashboard",
@@ -776,13 +1113,14 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "nats-metrics-scrape",
+    "name": "nats-leafz-exporter",
     "namespace": "nats"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app": "nats-metrics-scrape"
+      "app.kubernetes.io/component": "metrics",
+      "app.kubernetes.io/name": "nats-leafz-exporter"
      }
     }
    }
@@ -814,38 +1152,6 @@
     "selector": {
      "matchLabels": {
       "app.kubernetes.io/name": "nats-ui"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "nextcloud",
-    "namespace": "nextcloud"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/component": "app",
-      "app.kubernetes.io/instance": "nextcloud",
-      "app.kubernetes.io/name": "nextcloud"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "nextcloud-redis",
-    "namespace": "nextcloud"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "nextcloud-redis"
      }
     }
    }
@@ -929,14 +1235,14 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "litellm",
+    "name": "langfuse-redis",
     "namespace": "onemind-ai"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app.kubernetes.io/instance": "litellm",
-      "app.kubernetes.io/name": "litellm"
+      "app.kubernetes.io/instance": "langfuse",
+      "app.kubernetes.io/name": "redis"
      }
     }
    }
@@ -945,14 +1251,32 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "onemind-cpu-model",
+    "name": "langfuse-web",
     "namespace": "onemind-ai"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app.kubernetes.io/instance": "ollama",
-      "app.kubernetes.io/name": "ollama"
+      "app": "web",
+      "app.kubernetes.io/instance": "langfuse",
+      "app.kubernetes.io/name": "langfuse"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "langfuse-worker",
+    "namespace": "onemind-ai"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "worker",
+      "app.kubernetes.io/instance": "langfuse",
+      "app.kubernetes.io/name": "langfuse"
      }
     }
    }
@@ -1143,6 +1467,66 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
+    "name": "keycloak",
+    "namespace": "openremote"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "keycloak"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "manager",
+    "namespace": "openremote"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "manager"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "postgresql",
+    "namespace": "openremote"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "postgresql"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "proxy",
+    "namespace": "openremote"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "proxy"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
     "name": "platform-volsync",
     "namespace": "ops"
    },
@@ -1160,13 +1544,14 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "operator",
-    "namespace": "tailscale"
+    "name": "stac-api",
+    "namespace": "stac"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app": "operator"
+      "app.kubernetes.io/component": "api",
+      "app.kubernetes.io/name": "stac"
      }
     }
    }
@@ -1175,13 +1560,14 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "takml-db",
-    "namespace": "takml"
+    "name": "stac-api-writer",
+    "namespace": "stac"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app": "takml-db"
+      "app.kubernetes.io/component": "api-writer",
+      "app.kubernetes.io/name": "stac"
      }
     }
    }
@@ -1190,425 +1576,14 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "takml-server",
-    "namespace": "takml"
+    "name": "stac-browser",
+    "namespace": "stac"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app": "takml-server"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "takml-vision-worker",
-    "namespace": "takml"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "takml-vision-worker"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "fedhub",
-    "namespace": "takserver"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "fedhub"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "mumble-bridge",
-    "namespace": "takserver"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "mumble-bridge"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "murmur",
-    "namespace": "takserver"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "murmur"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "tak-lb-proxy",
-    "namespace": "takserver"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "tak-lb-proxy"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "tak-nats-leaf",
-    "namespace": "takserver"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "tak-nats-leaf"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "takserver-api",
-    "namespace": "takserver"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "takserver-api"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "takserver-config",
-    "namespace": "takserver"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "takserver-config"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "takserver-messaging",
-    "namespace": "takserver"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "takserver-messaging"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "takserver-nats-box",
-    "namespace": "takserver"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/component": "nats-box",
-      "app.kubernetes.io/instance": "takserver",
-      "app.kubernetes.io/name": "nats"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "takserver-plugins",
-    "namespace": "takserver"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "takserver-plugins"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "velero",
-    "namespace": "velero"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "velero",
-      "app.kubernetes.io/name": "velero"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "argocd-application-controller",
-    "namespace": "argocd"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "argocd",
-      "app.kubernetes.io/name": "argocd-application-controller"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "authentik-postgres",
-    "namespace": "auth"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "authentik-postgres"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "backstage-postgres",
-    "namespace": "backstage"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "backstage-postgres"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "chi-onemind-onemind-0-0",
-    "namespace": "clickhouse"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "clickhouse.altinity.com/app": "chop",
-      "clickhouse.altinity.com/chi": "onemind",
-      "clickhouse.altinity.com/cluster": "onemind",
-      "clickhouse.altinity.com/namespace": "clickhouse",
-      "clickhouse.altinity.com/replica": "0",
-      "clickhouse.altinity.com/shard": "0"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "dapr-placement-server",
-    "namespace": "dapr-system"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "dapr-placement-server"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "dapr-scheduler-server",
-    "namespace": "dapr-system"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "dapr-scheduler-server"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "postgres",
-    "namespace": "matrix"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "postgres"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "redis",
-    "namespace": "matrix"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "redis"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "alertmanager-monitoring-kube-prometheus-alertmanager",
-    "namespace": "monitoring"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "alertmanager": "monitoring-kube-prometheus-alertmanager",
-      "app.kubernetes.io/instance": "monitoring-kube-prometheus-alertmanager",
-      "app.kubernetes.io/managed-by": "prometheus-operator",
-      "app.kubernetes.io/name": "alertmanager"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "loki",
-    "namespace": "monitoring"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/component": "single-binary",
-      "app.kubernetes.io/instance": "loki",
-      "app.kubernetes.io/name": "loki"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "prometheus-monitoring-kube-prometheus-prometheus",
-    "namespace": "monitoring"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "monitoring-kube-prometheus-prometheus",
-      "app.kubernetes.io/managed-by": "prometheus-operator",
-      "app.kubernetes.io/name": "prometheus",
-      "operator.prometheus.io/name": "monitoring-kube-prometheus-prometheus",
-      "operator.prometheus.io/shard": "0",
-      "prometheus": "monitoring-kube-prometheus-prometheus"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "tempo",
-    "namespace": "monitoring"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "tempo",
-      "app.kubernetes.io/name": "tempo"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "postgres",
-    "namespace": "n8n"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "n8n-postgres"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "nats",
-    "namespace": "nats"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/component": "nats",
-      "app.kubernetes.io/instance": "nats",
-      "app.kubernetes.io/name": "nats"
+      "app.kubernetes.io/component": "browser",
+      "app.kubernetes.io/name": "stac"
      }
     }
    }
@@ -1626,6 +1601,21 @@
       "tailscale.com/managed": "true",
       "tailscale.com/parent-resource": "egress",
       "tailscale.com/parent-resource-type": "proxygroup"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "operator",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "operator"
      }
     }
    }
@@ -1679,13 +1669,13 @@
    "apiVersion": "apps/v1",
    "kind": "StatefulSet",
    "metadata": {
-    "name": "ts-cilium-gateway-gateway-default-bl4tw",
+    "name": "ts-cloudtak-htdck",
     "namespace": "tailscale"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app": "fe90e2db-68da-48ec-93a8-7e261afa25e6"
+      "app": "c09a97eb-a125-491c-86f6-51aa630af2a0"
      }
     }
    }
@@ -1694,13 +1684,73 @@
    "apiVersion": "apps/v1",
    "kind": "StatefulSet",
    "metadata": {
-    "name": "ts-cilium-gateway-gateway-default-hl5fh",
+    "name": "ts-cloudtak-tiles-p26wj",
     "namespace": "tailscale"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app": "fff3da69-c619-43e2-95eb-b6867b73e809"
+      "app": "befc5f61-02e6-47ca-94a0-dcb6338b852d"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-element-tailnet-xzvtx",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "76de56d6-4e0e-4054-9287-450ec35b4d28"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-fedhub-tailnet-gzz6j",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "6423df8d-67dd-4d19-b8aa-25a024a55873"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-forgejo-qgj96",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "3c67ea26-358d-489b-8790-ff49b4376fb2"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-gatus-gl2gp",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "474aa219-19b4-4bee-aba1-38514de90e7a"
      }
     }
    }
@@ -1739,21 +1789,6 @@
    "apiVersion": "apps/v1",
    "kind": "StatefulSet",
    "metadata": {
-    "name": "ts-hermes-dashboard-6thbx",
-    "namespace": "tailscale"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "7cb75f21-e0cc-4c50-ae63-cdb9dbf16c04"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
     "name": "ts-heynats-p5dmf",
     "namespace": "tailscale"
    },
@@ -1776,6 +1811,36 @@
     "selector": {
      "matchLabels": {
       "app": "75bd5f05-7ab1-4c02-9720-08a46d10a76a"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-karakeep-g8xzs",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "50b09ca1-b6db-40e0-abaf-d9d4b8e13124"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-langfuse-rj8v9",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "f92c5771-7040-4601-a1d5-da1751f260ef"
      }
     }
    }
@@ -1859,13 +1924,13 @@
    "apiVersion": "apps/v1",
    "kind": "StatefulSet",
    "metadata": {
-    "name": "ts-observer-pftsp",
+    "name": "ts-omos-dell-zeus-f7vnz",
     "namespace": "tailscale"
    },
    "spec": {
     "selector": {
      "matchLabels": {
-      "app": "567a3f7d-253e-4739-a079-48b1c85a337a"
+      "app": "12904508-26f3-43d3-8911-1c05fafa23d2"
      }
     }
    }
@@ -1949,6 +2014,36 @@
    "apiVersion": "apps/v1",
    "kind": "StatefulSet",
    "metadata": {
+    "name": "ts-onemind-hermes-tgjq9",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "48529e64-fd14-461d-842d-576b578cf5b3"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-onemind-hermes-web-5m4zq",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "ad381ec0-b466-42f2-96ba-d9e91822e4ba"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
     "name": "ts-onemind-preview-shtd7",
     "namespace": "tailscale"
    },
@@ -1979,6 +2074,96 @@
    "apiVersion": "apps/v1",
    "kind": "StatefulSet",
    "metadata": {
+    "name": "ts-openremote-xpvxj",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "98dff062-d8a7-4b05-9971-637bd09cc4d4"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-portal-p86hp",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "301999da-9fa3-4e1d-9e9e-31520f35ae02"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-stac-browser-gjsms",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "a7ebdd16-1db5-49c5-92aa-8d9b05ba4d40"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-stac-tp9ln",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "d282a33a-5909-43d7-8b19-1a6b4850e888"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-synapse-tailnet-qtrg2",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "3549142f-d876-4180-a2f7-6b6877ecc1fc"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-tak-portal-ingress-xpxhs",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "44e183bc-df10-42df-b762-4227efa15bc8"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
     "name": "ts-tak-tailnet-jtgn4",
     "namespace": "tailscale"
    },
@@ -1986,6 +2171,96 @@
     "selector": {
      "matchLabels": {
       "app": "a7117eec-b79f-4a86-8a54-0e631f2479dd"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-thingsboard-cgsbq",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "7a971a4d-ebd9-40eb-911e-27f9c1143e3f"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-vaultwarden-rdctp",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "beeca8e7-a9cd-4908-bc8f-41b723fea47c"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takml-db",
+    "namespace": "takml"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takml-db"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takml-server",
+    "namespace": "takml"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takml-server"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takml-vision-worker",
+    "namespace": "takml"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takml-vision-worker"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "fedhub",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "fedhub"
      }
     }
    }
@@ -2007,6 +2282,51 @@
   },
   {
    "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "mumble-bridge",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "mumble-bridge"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "murmur",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "murmur"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "tak-lb-proxy",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "tak-lb-proxy"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
    "kind": "StatefulSet",
    "metadata": {
     "name": "tak-ldap",
@@ -2022,6 +2342,51 @@
   },
   {
    "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "tak-nats-leaf",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "tak-nats-leaf"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takserver-api",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takserver-api"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takserver-config",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takserver-config"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
    "kind": "StatefulSet",
    "metadata": {
     "name": "takserver-ignite",
@@ -2031,6 +2396,21 @@
     "selector": {
      "matchLabels": {
       "app": "takserver-ignite"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takserver-messaging",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takserver-messaging"
      }
     }
    }
@@ -2054,6 +2434,38 @@
   },
   {
    "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takserver-nats-box",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "nats-box",
+      "app.kubernetes.io/instance": "takserver",
+      "app.kubernetes.io/name": "nats"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takserver-plugins",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takserver-plugins"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
    "kind": "StatefulSet",
    "metadata": {
     "name": "takserver-postgresql",
@@ -2065,6 +2477,146 @@
       "app.kubernetes.io/component": "primary",
       "app.kubernetes.io/instance": "takserver",
       "app.kubernetes.io/name": "postgresql"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "postgres",
+    "namespace": "thingsboard"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "postgres"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "thingsboard",
+    "namespace": "thingsboard"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "thingsboard"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "agentgateway",
+    "namespace": "tool-gateway"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "standalone",
+      "app.kubernetes.io/instance": "agentgateway",
+      "app.kubernetes.io/name": "agentgateway-standalone"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "execute-gate",
+    "namespace": "tool-gateway"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "execute-gate"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "mcp-clickhouse",
+    "namespace": "tool-gateway"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "mcp-clickhouse"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "mcp-kubernetes",
+    "namespace": "tool-gateway"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "mcp-kubernetes"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "trivy-operator",
+    "namespace": "trivy-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "trivy-operator",
+      "app.kubernetes.io/name": "trivy-operator"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "vaultwarden",
+    "namespace": "vaultwarden"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "web",
+      "app.kubernetes.io/name": "vaultwarden"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "velero",
+    "namespace": "velero"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "velero",
+      "app.kubernetes.io/name": "velero"
      }
     }
    }

@@ -2,13 +2,19 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Prepared private GitHub pull-mirror/standby forge with coordinated encrypted backups; not deployed or enrolled. GitHub remains primary.
+Private GitHub pull-mirror/standby forge with coordinated encrypted backups, served over the tailnet; Deployment forgejo/forgejo observed 1/1 running on 2026-11-07. Mirror enrollment and restore acceptance are not recorded here. GitHub remains primary.
 
 ## Where it runs
 
 - Catalog entity: `component:default/forgejo` in System `developer-platform`
 - Argo CD application: `platform-forgejo`
-- Namespaces: not recorded (no Deployment or StatefulSet observed)
+- Namespace: `forgejo`
+
+## Workloads
+
+| Workload | Kind | Namespace |
+| --- | --- | --- |
+| `forgejo` | Deployment | `forgejo` |
 
 ## When it looks wrong
 
@@ -24,6 +30,8 @@ Prepared private GitHub pull-mirror/standby forge with coordinated encrypted bac
 
 ## Generated links
 
+- Loki query: `{k8s_namespace_name="forgejo"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=forgejo`
 - Source: `onemindos/omos`
 
 ## Escalate

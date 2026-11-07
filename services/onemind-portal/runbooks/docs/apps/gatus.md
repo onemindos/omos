@@ -2,13 +2,19 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Live HTTP(S) checks and certificate expiry for apps that run outside Kubernetes or have no probe of their own. Prepared with manual Argo; not synced.
+Live HTTP(S) checks and certificate expiry for apps that run outside Kubernetes or have no probe of their own. Deployed by Argo application platform-gatus; Deployment gatus/gatus observed 1/1 running on 2026-11-07.
 
 ## Where it runs
 
 - Catalog entity: `component:default/gatus` in System `observability`
 - Argo CD application: `platform-gatus`
-- Namespaces: not recorded (no Deployment or StatefulSet observed)
+- Namespace: `gatus`
+
+## Workloads
+
+| Workload | Kind | Namespace |
+| --- | --- | --- |
+| `gatus` | Deployment | `gatus` |
 
 ## When it looks wrong
 
@@ -24,6 +30,8 @@ Live HTTP(S) checks and certificate expiry for apps that run outside Kubernetes 
 
 ## Generated links
 
+- Loki query: `{k8s_namespace_name="gatus"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=gatus`
 - Source: `onemindos/omos`
 
 ## Escalate
