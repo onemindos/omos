@@ -1,0 +1,93 @@
+# feed-controller: starts and stops source streams from the feed-control KV bucket.
+# Design: docs/architecture/feed-platform.md section 3.3.
+#
+# Watches every key in the NATS KV bucket `feed-control` (key = source id, value =
+# {"enabled": bool, "interval": "30s", ...}). The watch replays the current value of every key
+# on start, so a restart restores the live state. For each change it calls this engine's own
+# streams API on 127.0.0.1:4195:
+#   enabled   POST /streams/<id>, and if that stream already exists (400) PUT it (update)
+#   disabled  DELETE /streams/<id> (404 = already stopped, fine); a deleted key counts as off
+# Source stream configs come from the ConfigMap `feed-sources`, mounted at /config/sources.
+#
+# Rules that keep it safe:
+# - threads: 1. With more threads, changes to the same key can be applied out of order.
+# - A key that is not in /config/sources/_index.json is logged and dropped. Nothing is ever
+#   started, updated or deleted for an unknown id, so static streams (feed-controller itself)
+#   cannot be stopped from the bucket.
+# - Only sources with runner redpanda-connect are handled here; omos-ingest reads the bucket itself.
+# - The interval from the KV is used only if it looks like 30s, 5m, 250ms or 1h; otherwise the
+#   default from the index (the manifest) is used.
+input:
+  nats_kv:
+    urls: ["${NATS_URL:nats://nats.nats.svc.cluster.local:4222}"]
+    bucket: feed-control
+    key: ">"
+    auth:
+      user: "${NATS_USER}"
+      password: "${NATS_PASSWORD}"
+    tls:
+      enabled: ${NATS_TLS_ENABLED:true}
+      skip_cert_verify: true
+
+pipeline:
+  threads: 1
+  processors:
+    - mapping: |
+        let id = @nats_kv_key
+        let put = @nats_kv_operation == "KeyValuePutOp"
+        let v = if $put { content().string().parse_json().catch({}) } else { {} }
+        let index = file("/config/sources/_index.json").string().parse_json().catch([])
+        let known = $index.filter(s -> s.id == $id && s.runner.or("redpanda-connect") == "redpanda-connect").index(0).catch(null)
+        let want = $put && $v.enabled.or(false) == true
+        let kv_interval = $v.interval.or("").string()
+        let interval = if $kv_interval.re_match("^[0-9]+(ms|s|m|h)$") { $kv_interval } else { $known.interval.or("60s").string() }
+        let text = if $known != null && $want { file("/config/sources/" + $id + ".yaml").string().catch(null) } else { null }
+        meta feed_id = $id
+        meta interval = $interval
+        meta action = if $known == null { "ignore" } else if !$want { "stop" } else if $text == null { "missing" } else { "start" }
+        root = if $text != null {
+          $text.parse_yaml().stream.format_yaml().replace_all("__INTERVAL__", $interval)
+        } else { "" }
+
+    - switch:
+        - check: '@action == "start"'
+          processors:
+            - http:
+                url: 'http://127.0.0.1:4195/streams/${! @feed_id }'
+                verb: POST
+                headers:
+                  Content-Type: application/yaml
+                retries: 5
+                retry_period: 1s
+                drop_on: [400, 404]
+                timeout: 10s
+            - catch:
+                - http:
+                    url: 'http://127.0.0.1:4195/streams/${! @feed_id }'
+                    verb: PUT
+                    headers:
+                      Content-Type: application/yaml
+                    retries: 5
+                    retry_period: 1s
+                    drop_on: [400, 404]
+                    timeout: 10s
+        - check: '@action == "stop"'
+          processors:
+            - http:
+                url: 'http://127.0.0.1:4195/streams/${! @feed_id }'
+                verb: DELETE
+                headers:
+                  Content-Type: application/yaml
+                retries: 5
+                retry_period: 1s
+                successful_on: [404]  # already stopped is fine
+                timeout: 10s
+            - catch:
+                - mapping: 'root = "not running"'
+
+    - log:
+        level: INFO
+        message: 'feed-control id=${! @feed_id } action=${! @action } interval=${! @interval } rev=${! @nats_kv_revision } op=${! @nats_kv_operation } err=${! error().or("none") }'
+
+output:
+  drop: {}

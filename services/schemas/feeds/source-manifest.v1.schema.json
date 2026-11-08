@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onemindos.dev/schemas/feeds/source-manifest.v1.schema.json",
+  "title": "Feed source manifest v1",
+  "description": "One file per data source in platform/data/sources/<id>.yaml. See docs/architecture/feed-platform.md section 3.1. The file name (without .yaml) must equal id. Credentials are names only, never values.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "class", "title", "subject", "runner", "mode", "licence", "default_enabled", "mapper"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+      "description": "Lowercase letters, digits and dashes. Also the feed-control KV key and the stream id. Must equal the file name."
+    },
+    "class": {
+      "type": "string",
+      "enum": ["rail", "air", "sea", "hazard", "space", "intel", "weather", "other"]
+    },
+    "title": { "type": "string", "minLength": 3, "maxLength": 120 },
+    "subject": {
+      "type": "string",
+      "pattern": "^(evt\\.world\\.|intel\\.|tel\\.|det\\.)[A-Za-z0-9_{}*>.-]+$",
+      "description": "NATS subject pattern the source publishes to. Must start with a locked grammar prefix (evt.world., intel., tel., det.). ent.* and tak.* are not allowed: only the entity service writes ent.*, only the TAK projector builds CoT."
+    },
+    "runner": { "type": "string", "enum": ["redpanda-connect", "omos-ingest"] },
+    "mode": { "type": "string", "enum": ["poll", "stream"] },
+    "schedule": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "interval": {
+          "type": "string",
+          "pattern": "^[0-9]+(ms|s|m|h)$",
+          "description": "Default poll interval. The feed-control KV can override it live."
+        }
+      }
+    },
+    "rate_limit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requests", "per"],
+      "description": "What the upstream allows. The runner must stay under it.",
+      "properties": {
+        "requests": { "type": "integer", "minimum": 1 },
+        "per": { "type": "string", "pattern": "^[0-9]+(ms|s|m|h)$" }
+      }
+    },
+    "credentials": {
+      "type": "array",
+      "description": "Names of Secret keys the source needs. Never values.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["secret", "key"],
+        "properties": {
+          "secret": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$" },
+          "key": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "description": "Environment variable name the stream reads as ${KEY}." }
+        }
+      }
+    },
+    "licence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "url"],
+      "properties": {
+        "name": { "type": "string", "minLength": 2 },
+        "url": { "type": "string", "pattern": "^https?://" },
+        "attribution": { "type": "string" }
+      }
+    },
+    "fallback": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+      "description": "Id of another source to switch on if this one fails."
+    },
+    "default_enabled": {
+      "type": "boolean",
+      "description": "Used only when the feed-control KV has no entry for this id yet."
+    },
+    "mapper": { "type": "string", "minLength": 3, "description": "One or two plain sentences on how a record becomes an observation." },
+    "stream": {
+      "type": "object",
+      "description": "Full Redpanda Connect stream config (input, pipeline, output). Use the literal __INTERVAL__ where the poll interval goes; the controller replaces it.",
+      "required": ["input", "output"],
+      "properties": {
+        "input": { "type": "object" },
+        "pipeline": { "type": "object" },
+        "output": { "type": "object" }
+      }
+    },
+    "ingest_ref": { "type": "string", "minLength": 1, "description": "Entry name in the omos-ingest sources file." }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "runner": { "const": "redpanda-connect" } }, "required": ["runner"] },
+      "then": { "required": ["stream"], "not": { "required": ["ingest_ref"] } }
+    },
+    {
+      "if": { "properties": { "runner": { "const": "omos-ingest" } }, "required": ["runner"] },
+      "then": { "required": ["ingest_ref"], "not": { "required": ["stream"] } }
+    },
+    {
+      "if": { "properties": { "mode": { "const": "poll" } }, "required": ["mode"] },
+      "then": { "required": ["schedule"], "properties": { "schedule": { "required": ["interval"] } } }
+    }
+  ]
+}
