@@ -17,7 +17,7 @@ spec:
   resources:
     requests:
       cpu: 50m
-      memory: 384Mi
+      memory: 512Mi
     limits:
       cpu: '2'
       memory: 4Gi
@@ -106,7 +106,7 @@ spec:
     # TimescaleDB 2.26.4 ships in the PG17 image; the extension is created per database where it is used.
     - timescaledb
     parameters:
-      max_connections: '150'
+      max_connections: '300'
       shared_buffers: 256MB
       # No phone-home telemetry from the TimescaleDB extension.
       timescaledb.telemetry_level: 'off'
