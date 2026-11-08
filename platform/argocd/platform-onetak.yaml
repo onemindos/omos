@@ -24,6 +24,8 @@ kind: Application
 metadata:
   name: platform-onetak
   namespace: argocd
+  labels:
+    onemind.io/family: tak
   annotations:
     argocd.argoproj.io/sync-wave: "2"
   finalizers:

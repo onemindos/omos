@@ -308,6 +308,9 @@ spec:
       containers:
         - name: nodeodm
           image: opendronemap/nodeodm:3.6.2@sha256:fcd99eb23d8db194a7d1dc95f029f518283b3d6be32dd64422395f4e7af56720
+          # One processing task at a time (owner-approved 2026-11-07). The 3.6.2 default is already 1;
+          # explicit so it cannot drift. --max_concurrency is not set: it caps cores per task, not tasks.
+          args: ["--parallel_queue_processing", "1"]
           ports:
             - containerPort: 3000
           volumeMounts:
@@ -319,7 +322,7 @@ spec:
               memory: 512Mi
             limits:
               cpu: "4"
-              memory: 8Gi
+              memory: 4Gi
           livenessProbe:
             httpGet:
               path: /info

@@ -17,6 +17,8 @@ kind: Application
 metadata:
   name: platform-takserver-tak-client
   namespace: argocd
+  labels:
+    onemind.io/family: tak
   annotations:
     argocd.argoproj.io/sync-wave: "3"
   finalizers:
