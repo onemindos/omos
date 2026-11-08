@@ -205,6 +205,23 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
+  name: tak
+  title: TAK
+  description: "The TAK family. TAK Server (core, plugins, FedHub, LDAP, voice)
+    and OneTAK (enrollment portal, WebODM, tiles, media), kept together."
+  labels:
+    onemind.io/catalog-axis: deployment
+    onemind.io/pillar: so
+    onemind.io/family: tak
+  annotations:
+    onemind.io/pillar-review: proposed
+spec:
+  owner: group:default/onemind-admins
+  domain: domain:default/onemind-so
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
   name: geospatial
   title: Geospatial, drones & robotics
   description: Map, routing, geocoding and imagery services, drone software and
@@ -1645,7 +1662,7 @@ spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
-  system: tak-ecosystem
+  system: tak
   providesApis:
     - api:default/tak-cot-bridge
 ---
@@ -1709,7 +1726,7 @@ spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
-  system: tak-ecosystem
+  system: tak
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
