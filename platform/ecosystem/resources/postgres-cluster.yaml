@@ -100,6 +100,15 @@ spec:
       createrole: false
       passwordSecret:
         name: db-takml
+    # Backstage portal: pluginDivisionMode is database, so it creates its own backstage_plugin_* databases.
+    - name: backstage
+      ensure: present
+      login: true
+      superuser: false
+      createdb: true
+      createrole: false
+      passwordSecret:
+        name: db-backstage
   postgresql:
     shared_preload_libraries:
     - age
