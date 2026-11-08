@@ -44,19 +44,45 @@ spec:
           # Seeded by the home-assistant init container; edit freely.
           default_config:
 
-          http:
-            use_x_forwarded_for: true
-            trusted_proxies:
-              # Cluster pod network (Cilium cluster-pool 10.109.0.0/16),
-              # which contains the Tailscale ingress proxy pods.
-              - 10.109.0.0/16
-
           automation: !include automations.yaml
           script: !include scripts.yaml
           scene: !include scenes.yaml
           CFG
             touch /config/automations.yaml /config/scripts.yaml /config/scenes.yaml
             echo "seeded configuration.yaml"
+          fi
+          # Since 2026.11 HA keeps HTTP settings in .storage/http, not YAML.
+          # A YAML http: block is migrated as an unconfirmed "pending" trial
+          # that reverts after 5 minutes unless promoted in the UI, which is
+          # unreachable through the proxy until trusted_proxies is active.
+          # Seed it as the stable config instead (fresh volumes only).
+          if [ ! -e /config/.storage/http ]; then
+            mkdir -p /config/.storage
+            cat > /config/.storage/http <<'HTTP'
+          {
+            "version": 3,
+            "minor_version": 1,
+            "key": "http",
+            "data": {
+              "stable": {
+                "server_port": 8123,
+                "use_x_forwarded_for": true,
+                "trusted_proxies": ["10.109.0.0/16"],
+                "cors_allowed_origins": ["https://cast.home-assistant.io"],
+                "login_attempts_threshold": -1,
+                "ip_ban_enabled": true,
+                "ssl_profile": "intermediate_v6",
+                "use_x_frame_options": true,
+                "created_at": "2026-11-08T00:00:00+00:00",
+                "error": null,
+                "error_message": null
+              },
+              "pending": null,
+              "yaml_migration_done": true
+            }
+          }
+          HTTP
+            echo "seeded .storage/http (trusted_proxies 10.109.0.0/16)"
           fi
           if [ ! -d /config/custom_components/hacs ]; then
             wget -q -O /tmp/hacs.zip "https://github.com/hacs/integration/releases/download/${HACS_VERSION}/hacs.zip"
