@@ -42,6 +42,12 @@ falcosidekick:
       # Warning/Error. Warning keeps the Notice flood out of Alertmanager.
       minimumpriority: warning
       extralabels: source:falco
+    # Every event (all priorities) goes to Loki so Grafana can search them; only
+    # warning and above reach Alertmanager. loki-gateway has no auth and no tenant.
+    loki:
+      hostport: http://loki-gateway.monitoring.svc.cluster.local
+      endpoint: /loki/api/v1/push
+      extralabels: source:falco
 # Narrow exceptions for benign, observed sources. Loaded from /etc/falco/rules.d
 # after the upstream ruleset.
 customRules:
