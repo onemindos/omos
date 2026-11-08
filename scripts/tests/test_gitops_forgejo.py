@@ -118,7 +118,7 @@ class ForgejoBackup(unittest.TestCase):
         pod = deploy["spec"]["template"]["spec"]
         self.assertFalse(pod["automountServiceAccountToken"])
         self.assertEqual(deploy["spec"]["strategy"]["type"], "Recreate")
-        env = {e["name"]: e["value"] for e in pod["containers"][0]["env"]}
+        env = {e["name"]: e["value"] for e in pod["containers"][0]["env"] if "value" in e}
         self.assertEqual(env["FORGEJO__actions__ENABLED"], "false")
         self.assertEqual(env["FORGEJO__service__DISABLE_REGISTRATION"], "true")
         self.assertEqual(env["FORGEJO__server__DISABLE_SSH"], "true")

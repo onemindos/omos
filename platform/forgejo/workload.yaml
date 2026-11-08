@@ -106,6 +106,17 @@ spec:
           value: console
         - name: FORGEJO__log__LEVEL
           value: Info
+        # Authentik sign-in: the auth source itself lives in Forgejo's database (see README, "Authentik sign-in").
+        # The client secret is only here so the one-time `forgejo admin auth add-oauth` can read it from the pod.
+        - name: FORGEJO_OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: forgejo-oidc
+              key: OAUTH_CLIENT_SECRET
+        - name: FORGEJO__oauth2_client__ENABLE_AUTO_REGISTRATION
+          value: 'false'
+        - name: FORGEJO__oauth2_client__ACCOUNT_LINKING
+          value: login
         - name: GITEA_APP_INI
           value: /var/lib/gitea/custom/conf/app.ini
         - name: GITEA_CUSTOM

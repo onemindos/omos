@@ -7,6 +7,9 @@ resources:
 - backup.yaml
 - network.yaml
 - sealed/
+- oidc.sealedsecret.yaml
+- auth-oidc.sealedsecret.yaml
+- auth-provider.yaml
 configMapGenerator:
 - name: forgejo-backup-runtime
   files:
