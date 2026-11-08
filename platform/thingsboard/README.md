@@ -116,3 +116,11 @@ The original Mac data and cluster PVCs must not be pruned as part of this pilot.
 - [Pinned schema](https://github.com/thingsboard/thingsboard/blob/v4.3.1.8/dao/src/main/resources/sql/schema-entities.sql)
 - [Licensing/support change](https://thingsboard.io/blog/one-thingsboard-source-available/)
 - [CE4.3.1.8 license](https://github.com/thingsboard/thingsboard/blob/v4.3.1.8/LICENSE)
+
+## Authentik sign-in (added 2026-11-08)
+
+The Community 4.3 edition has OAuth 2.0 login. `auth-provider.yaml` (Sync hook, namespace `auth`) creates the Authentik provider/application `onemind-thingsboard`, owner-only. `oauth-config.yaml` (Sync hook, wave 3) writes the OAuth client, the domain entry for `thingsboard.tail717ba0.ts.net` and their link into the ThingsBoard database (idempotent). The client secret is sealed in `auth/thingsboard-oidc-bootstrap` and `thingsboard/thingsboard-oidc`. The pod got egress to public HTTPS so it can reach Authentik. The local system administrator login is unchanged (break-glass).
+
+First sign-in: click "Sign in with Authentik" on the login page. ThingsBoard creates the tenant `OneMind` and a tenant-administrator user from the Authentik email (the sysadmin email differs, so this does not touch the system administrator). Devices, MQTT and access tokens are untouched.
+
+Rollback: `DELETE FROM domain_oauth2_client; DELETE FROM oauth2_client WHERE client_id='onemind-thingsboard';` (as the `thingsboard` database user), and remove `oauth-config.yaml`.

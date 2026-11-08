@@ -1,0 +1,110 @@
+# Authentik sign-in for ThingsBoard (Community 4.3 has OAuth 2.0 login; clients live in the database, set in the UI or by SQL).
+# This Sync hook (wave 3, after the app) upserts one OAuth2 client "OneMind (Authentik)", a domain entry for the private
+# hostname and the link between them. It is idempotent and touches nothing else. Local logins (the system administrator)
+# are unchanged. Authentik admits only the owner (see auth-provider.yaml); the first sign-in creates the tenant "OneMind"
+# and a tenant-administrator user from the Authentik email (mapper: BASIC, tenant name CUSTOM, user creation on).
+# Rollback: delete the rows (see README) or remove this file; the login button disappears with the row.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: thingsboard-oauth-config-v1
+  namespace: thingsboard
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+    argocd.argoproj.io/sync-wave: '3'
+spec:
+  backoffLimit: 2
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels:
+        app: bootstrap
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        doks.digitalocean.com/node-pool: onemind-ecosystem-cpu
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 70
+        runAsGroup: 70
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: oauth-config
+          image: postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          env:
+            - name: PGHOST
+              value: onemind-data-rw.onemind-data.svc.cluster.local
+            - name: PGUSER
+              value: thingsboard
+            - name: PGDATABASE
+              value: thingsboard
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: thingsboard-pg-creds
+                  key: password
+            - name: PGCONNECT_TIMEOUT
+              value: '15'
+            - name: OAUTH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: thingsboard-oidc
+                  key: OAUTH_CLIENT_SECRET
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              cat > /tmp/oauth.sql <<'SQL'
+              \getenv secret OAUTH_CLIENT_SECRET
+              BEGIN;
+              INSERT INTO oauth2_client (id, created_time, tenant_id, title, additional_info, client_id, client_secret,
+                  authorization_uri, token_uri, scope, user_info_uri, user_name_attribute_name, jwk_set_uri,
+                  client_authentication_method, login_button_label, allow_user_creation, activate_user, type,
+                  basic_email_attribute_key, basic_first_name_attribute_key, basic_last_name_attribute_key,
+                  basic_tenant_name_strategy, basic_tenant_name_pattern, basic_always_full_screen)
+              VALUES ('7d3c1e5a-2b64-4f0e-9a1d-5e0b7c3a9f10', (extract(epoch from now()) * 1000)::bigint,
+                  '13814000-1dd2-11b2-8080-808080808080', 'OneMind (Authentik)', '{}', 'onemind-thingsboard',
+                  :'secret',
+                  'https://auth.onemindos.dev/application/o/authorize/',
+                  'https://auth.onemindos.dev/application/o/token/', 'openid,email,profile',
+                  'https://auth.onemindos.dev/application/o/userinfo/', 'email',
+                  'https://auth.onemindos.dev/application/o/onemind-thingsboard/jwks/',
+                  'POST', 'Sign in with Authentik', true, true, 'BASIC',
+                  'email', 'given_name', 'family_name', 'CUSTOM', 'OneMind', false)
+              ON CONFLICT (id) DO UPDATE SET client_secret = EXCLUDED.client_secret, client_id = EXCLUDED.client_id,
+                  authorization_uri = EXCLUDED.authorization_uri, token_uri = EXCLUDED.token_uri,
+                  user_info_uri = EXCLUDED.user_info_uri, jwk_set_uri = EXCLUDED.jwk_set_uri;
+              INSERT INTO domain (id, created_time, tenant_id, name, oauth2_enabled, edge_enabled)
+              VALUES ('2c9e4b7d-61a3-4d58-8f02-b3a1d6e75c40', (extract(epoch from now()) * 1000)::bigint,
+                  '13814000-1dd2-11b2-8080-808080808080', 'thingsboard.tail717ba0.ts.net', true, false)
+              ON CONFLICT (id) DO UPDATE SET oauth2_enabled = true;
+              DELETE FROM domain_oauth2_client WHERE domain_id = '2c9e4b7d-61a3-4d58-8f02-b3a1d6e75c40';
+              INSERT INTO domain_oauth2_client (domain_id, oauth2_client_id)
+              VALUES ('2c9e4b7d-61a3-4d58-8f02-b3a1d6e75c40', '7d3c1e5a-2b64-4f0e-9a1d-5e0b7c3a9f10');
+              COMMIT;
+              SQL
+              psql -X --set=ON_ERROR_STOP=1 --file=/tmp/oauth.sql
+              echo "ThingsBoard OAuth client reconciled"
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
