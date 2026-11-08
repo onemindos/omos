@@ -1,0 +1,20 @@
+# Tailnet-only. The Tailscale ingress proxy forwards the long-lived streaming
+# connections (WebSocket, JSON stream) the Android app keeps open.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ntfy
+  namespace: ntfy
+  annotations:
+    tailscale.com/proxy-group: ingress
+    tailscale.com/hostname: ntfy
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: ntfy
+      port:
+        number: 8080
+  tls:
+  - hosts:
+    - ntfy
