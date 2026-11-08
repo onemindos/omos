@@ -11,7 +11,7 @@ Sources: `platform/backups/README.md`, `platform/backups/volsync/README.md`, `pl
 | Logical archives: `backup-takserver-postgres`, `backup-nats-streams`, `backup-postgres-auth`, `-n8n`, `-matrix`, `-takml`, `-backstage` | `platform-backups` | 02:00 to 06:40 | Encrypted, uploaded, downloaded, checked and restored into an isolated sidecar or server before `.verified.json` is written |
 | Cluster recovery export `backup-cluster-recovery` (namespace `ops`) | `platform-backups` | 04:00 | Every Secret and ConfigMap, including the sealing keys, and no other objects; verified by decryption and equality only |
 | VolSync `ReplicationSource` objects (Restic) | `platform-volume-backups`, operator `platform-volsync` | Daily, staggered | Crash-consistent file copies; a completed copy is not an application restore |
-| Velero schedule `velero-onemind-platform` | `ecosystem-velero` | 06:00, 30-day retention | Namespace backups of `onemind-core`, `onemind-data` and `langfuse` |
+| Velero schedule `velero-onemind-platform` | `ecosystem-velero` | 06:00, 30-day retention | Kubernetes-object backup of every app namespace (no volume data; excludes kube-system, kube-public, kube-node-lease, default, velero) |
 | `health-keeper` (namespace `ops`) | `platform-ops` | Every 5 minutes | Read-only observer that logs findings; it never repairs and is not an alert channel |
 | Off-site copy `backup-offsite-copy` (namespace `ops`) | `platform-backups` | 17:00 | Suspended until the owner selects a destination and its sealed credentials, seed copy and recovery are verified |
 
