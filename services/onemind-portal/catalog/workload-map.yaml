@@ -45,10 +45,6 @@ workloads:
   kyverno/kyverno-background-controller: component:default/kyverno
   kyverno/kyverno-cleanup-controller: component:default/kyverno
   kyverno/kyverno-reports-controller: component:default/kyverno
-  matrix/element-web: component:default/element-chat
-  matrix/postgres: component:default/matrix-synapse
-  matrix/redis: component:default/matrix-synapse
-  matrix/synapse: component:default/matrix-synapse
   monitoring/alertmanager-monitoring-kube-prometheus-alertmanager: component:default/prometheus
   monitoring/loki: component:default/loki
   monitoring/loki-gateway: component:default/loki
@@ -201,7 +197,6 @@ argoApplications:
   platform-onemind-hermes: component:default/onemind-hermes
   platform-onemind-mcp: component:default/onemind-mcp
   platform-kube: component:default/headlamp
-  platform-matrix: component:default/matrix-synapse
   platform-metrics-server: component:default/kubernetes-system
   platform-monitoring: component:default/grafana
   platform-n8n: component:default/n8n

@@ -1442,95 +1442,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: element-chat
-  title: Element Chat
-  description: Matrix E2EE chat
-  tags:
-    - communication
-  links:
-    - url: https://element.tail717ba0.ts.net
-      title: Open application
-      icon: dashboard
-  annotations:
-    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
-    onemind.io/launcher-review: reachable-from-operator-mac
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/health-check: element-chat
-    onemind.io/health-url: http://element-web.matrix.svc.cluster.local/
-    onemind.io/relationship-source: ingress-service-selector
-    onemind.io/inventory-review: imported-link
-    backstage.io/kubernetes-namespace: matrix
-    backstage.io/kubernetes-label-selector: app=element-web
-    onemind.io/pillar-review: approved
-    onemind.io/kubernetes-namespaces: matrix
-    grafana/alert-label-selector: namespace=matrix
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=matrix&var-workload=element-web
-    onemind.io/logs-query: '{k8s_namespace_name="matrix", k8s_pod_name=~"(element-web)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/element-chat/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: matrix/element-web
-  labels:
-    onemind.io/catalog-role: app
-    onemind.io/pillar: so
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: communication
-  dependsOn:
-    - component:default/k8s-matrix-synapse-c02538fc
-    - component:default/k8s-matrix-element-web-2e9639d4
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: matrix-synapse
-  title: Matrix Synapse
-  description: Homeserver
-  tags:
-    - communication
-  links:
-    - url: https://matrix.tail717ba0.ts.net
-      title: Open application
-      icon: dashboard
-  annotations:
-    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
-    onemind.io/launcher-review: reachable-from-operator-mac
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/health-check: matrix-synapse
-    onemind.io/health-url: http://synapse.matrix.svc.cluster.local:8008/health
-    onemind.io/relationship-source: ingress-service-selector
-    onemind.io/inventory-review: imported-link
-    argocd/app-name: platform-matrix
-    argocd/instance-name: onemind-cloud
-    onemind.io/pillar-review: approved
-    onemind.io/kubernetes-namespaces: matrix
-    backstage.io/kubernetes-namespace: matrix
-    backstage.io/kubernetes-label-selector: app in (postgres,redis,synapse)
-    grafana/alert-label-selector: namespace=matrix
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=matrix&var-workload=postgres&var-workload=redis&var-workload=synapse
-    onemind.io/logs-query: '{k8s_namespace_name="matrix",
-      k8s_pod_name=~"(postgres|redis|synapse)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/matrix-synapse/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: matrix/postgres,matrix/redis,matrix/synapse
-  labels:
-    onemind.io/catalog-role: app
-    onemind.io/pillar: so
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: communication
-  dependsOn:
-    - component:default/k8s-matrix-synapse-c02538fc
-    - component:default/k8s-matrix-element-web-2e9639d4
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: google-messages
   title: Google Messages
   description: Phone messages in your browser
@@ -3466,7 +3377,6 @@ spec:
   system: developer-platform
   dependsOn:
     - component:default/k8s-onetak-tak-portal-034c1ce9
-    - component:default/k8s-matrix-synapse-c02538fc
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component

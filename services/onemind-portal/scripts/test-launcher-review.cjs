@@ -92,7 +92,7 @@ test('CLI accepts complete-array stdin; unresolved findings exit 0 and bad input
   assert.equal(missing.status, 2); assert.ok(!missing.stderr.includes('/Users/private'));
 });
 
-test('current paired source catalogs retain 11 present historical findings, record minio and longhorn as removed, and keep four other observations', () => {
+test('current paired source catalogs retain 11 present historical findings, record minio and longhorn as removed, and keep two other observations', () => {
   const fs = require('node:fs');
   const root = path.resolve(__dirname, '../../..');
   const source = fs.readFileSync(path.join(root, 'services/onemind-portal/catalog/apps.yaml'), 'utf8');
@@ -101,7 +101,7 @@ test('current paired source catalogs retain 11 present historical findings, reco
   // Fixture extraction only, intentionally limited to the current source layout.
   // The reporting CLI accepts JSON and never attempts to parse YAML.
   const reviewed = source.split(/^---\s*$/m).filter(doc => doc.includes('onemind.io/launcher-review:'));
-  assert.equal(reviewed.length, 15); // minio and longhorn were removed 2026-11-07: no manifest, workload or ingress exists
+  assert.equal(reviewed.length, 13); // minio and longhorn were removed 2026-11-07: no manifest, workload or ingress exists; element-chat and matrix-synapse were retired with Matrix 2026-11-07
   const entries = reviewed.map(doc => {
     const name = doc.match(/^  name: (\S+)$/m)?.[1];
     const review = doc.match(/^    onemind.io\/launcher-review: (\S+)$/m)?.[1];
@@ -119,7 +119,7 @@ test('current paired source catalogs retain 11 present historical findings, reco
   assert.equal(result.findings.filter(row => row.classification === 'dns-unresolved').length, 9);
   assert.equal(result.findings.filter(row => row.classification === 'certificate-untrusted').length, 1);
   assert.equal(result.findings.filter(row => row.classification === 'timeout').length, 1);
-  assert.equal(result.otherReviewedLaunchers.length, 4);
+  assert.equal(result.otherReviewedLaunchers.length, 2);
   assert.ok(result.otherReviewedLaunchers.every(row => row.classification === 'reachable-observation'));
 });
 

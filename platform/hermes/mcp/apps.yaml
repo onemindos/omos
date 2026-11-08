@@ -55,11 +55,6 @@ apps:
   enabled: false
   blocked_reason: Dedicated user app password, WebDAV/CalDAV adapter, scoped network ingress and authenticated acceptance required. Never reuse
     admin credentials.
-- id: matrix
-  description: Rooms, messages and communication
-  enabled: false
-  blocked_reason: Dedicated Matrix bot identity, room membership, reviewed API adapter and authenticated acceptance required. E2EE needs explicit
-    key management.
 - id: backstage
   description: OneMind service catalog and developer workspace
   adapter: backstage

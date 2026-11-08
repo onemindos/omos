@@ -932,8 +932,8 @@ metadata:
   name: bridge-nats-matrix
   title: NATS to Matrix bridge
   description: Relays selected NATS subjects (alerts, health, TAK mission and emergency CoT, Legacy voice and decisions)
-    to Matrix rooms. Manifests exist in platform/matrix/base but the platform-matrix overlay (platform/matrix/argo)
-    does not include them and no pod runs.
+    to Matrix rooms. Manifests exist in platform/parked/matrix/base; Matrix was retired from the cluster on 2026-11-07
+    and no pod runs.
   tags:
   - plugin
   - bridge
@@ -951,21 +951,20 @@ metadata:
     onemind.io/plugin-status: parked
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns matrix (not deployed)
-    onemind.io/connects-to: nats,matrix-synapse
+    onemind.io/runs-on: none (Matrix retired)
+    onemind.io/connects-to: nats
     onemind.io/nats-subscribes: tak.cot.>,alerts.critical, alerts.warning, infra.health.degraded, infra.health.down,
       legacy.voice.transcript, legacy.decision
-    onemind.io/plugin-source: platform/matrix/base/nats-matrix-bridge
-    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/matrix/base/nats-matrix-bridge
-    onemind.io/plugin-build: python:3.11-slim, script platform/matrix/nats-matrix-bridge.py
-    onemind.io/plugin-verified: 2026-10-29 no pod, base not in Argo overlay
+    onemind.io/plugin-source: platform/parked/matrix/base/nats-matrix-bridge
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/parked/matrix/base/nats-matrix-bridge
+    onemind.io/plugin-build: python:3.11-slim, script platform/parked/matrix/nats-matrix-bridge.py
+    onemind.io/plugin-verified: 2026-11-07 Matrix retired, no pod
 spec:
   type: bridge
   lifecycle: parked
   owner: group:default/onemind-admins
   system: onemind-plugin-ecosystem
   dependsOn:
-  - component:default/k8s-matrix-synapse-c02538fc
   - resource:default/nats-subject-tak-cot-all
   - resource:default/nats-subject-legacy-alert-subjects
 ---
@@ -3062,50 +3061,6 @@ spec:
   subcomponentOf: component:default/onemind-mcp
   dependsOn:
   - component:default/k8s-hermes-onemind-mcp-07887746
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: mcp-adapter-matrix
-  title: 'MCP adapter: matrix'
-  description: Rooms, messages and communication. No adapter implemented yet; the entry reserves the application
-    in apps.yaml.
-  tags:
-  - plugin
-  - mcp-adapter
-  - planned
-  - cluster
-  - mcp
-  labels:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: planned
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/pillar: so
-  annotations:
-    onemind.io/plugin-type: mcp-adapter
-    onemind.io/plugin-status: planned
-    onemind.io/plugin-origin: onemind
-    onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
-    onemind.io/connects-to: matrix,onemind-mcp
-    onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
-    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
-    onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
-    onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
-      not probed
-    onemind.io/mcp-app-id: matrix
-    onemind.io/blocked-reason: Dedicated Matrix bot identity, room membership, reviewed API adapter and authenticated
-      acceptance required. E2EE needs explicit key management.
-spec:
-  type: mcp-adapter
-  lifecycle: planned
-  owner: group:default/onemind-admins
-  system: onemind-plugin-ecosystem
-  subcomponentOf: component:default/onemind-mcp
-  dependsOn:
-  - component:default/k8s-hermes-onemind-mcp-07887746
-  - component:default/k8s-matrix-synapse-c02538fc
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
