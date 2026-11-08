@@ -2,12 +2,14 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: platform-volume-backup
+  namespace: openremote
 automountServiceAccountToken: false
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
   name: openremote-database
+  namespace: openremote
 spec:
   sourcePVC: database
   paused: false
@@ -47,6 +49,7 @@ apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
   name: openremote-storage
+  namespace: openremote
 spec:
   sourcePVC: storage
   paused: false
@@ -86,6 +89,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: backup-egress
+  namespace: openremote
 spec:
   podSelector:
     matchLabels:

@@ -2,6 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: database
+  namespace: openremote
   annotations:
     argocd.argoproj.io/sync-wave: '-3'
     argocd.argoproj.io/sync-options: Prune=false
@@ -17,6 +18,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: storage
+  namespace: openremote
   annotations:
     argocd.argoproj.io/sync-wave: '-3'
     argocd.argoproj.io/sync-options: Prune=false
