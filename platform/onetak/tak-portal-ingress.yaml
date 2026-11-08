@@ -11,6 +11,7 @@ metadata:
   name: tak-portal-ingress
   namespace: onetak
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: enroll
 spec:
   ingressClassName: tailscale
