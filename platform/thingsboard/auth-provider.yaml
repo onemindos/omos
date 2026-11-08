@@ -73,7 +73,7 @@ spec:
               body.update(name="OneMind ThingsBoard", client_type="confidential", client_id=slug,
                           client_secret=os.environ["OAUTH_CLIENT_SECRET"], include_claims_in_id_token=True,
                           grant_types=["authorization_code", "refresh_token"],
-                          redirect_uris=[{"matching_mode": "strict", "url": launch + "/login/oauth2/code/7d3c1e5a-2b64-4f0e-9a1d-5e0b7c3a9f10",
+                          redirect_uris=[{"matching_mode": "strict", "url": launch + "/login/oauth2/code/",
                                           "redirect_uri_type": "authorization"}])
               provider = (request("PATCH", "providers/oauth2/" + str(matches[0]["pk"]) + "/", body)
                           if matches else request("POST", "providers/oauth2/", body))
