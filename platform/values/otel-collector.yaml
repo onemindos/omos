@@ -1,4 +1,5 @@
-# OTel pipeline: logs go to Loki. Traces have no backend (Tempo removed 2026-11-03).
+# OTel pipeline: logs go to Loki. Traces have no backend (Tempo removed 2026-11-03); metrics
+# are scraped by Prometheus, not pushed through this collector.
 mode: daemonset
 image:
   repository: otel/opentelemetry-collector-contrib
@@ -16,12 +17,16 @@ config:
           endpoint: 0.0.0.0:4317
         http:
           endpoint: 0.0.0.0:4318
+    # The chart's default prometheus receiver only fed the metrics pipeline, which only
+    # exported to the debug exporter (removed 2026-11-08).
+    prometheus: null
   exporters:
     otlphttp/loki:
       endpoint: http://loki-gateway.monitoring.svc.cluster.local/otlp
   service:
     pipelines:
       traces: null # drop the chart's default traces pipeline (debug exporter): no trace backend
+      metrics: null # drop the chart's default metrics pipeline (debug exporter): no metrics backend here
       logs:
         exporters:
         - otlphttp/loki
