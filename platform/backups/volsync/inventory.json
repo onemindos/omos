@@ -25,12 +25,6 @@
   },
   {
     "namespace": "n8n",
-    "pvc": "data-postgres-0",
-    "source": "volume-e0d2f2fea651",
-    "size": "10Gi"
-  },
-  {
-    "namespace": "n8n",
     "pvc": "n8n-data",
     "source": "volume-b98c04b6228d",
     "size": "5Gi"

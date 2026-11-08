@@ -86,6 +86,17 @@ spec:
       ports:
         - protocol: TCP
           port: 5432
+    # Shared CNPG cluster (database thingsboard), the postgres Deployment replacement.
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: onemind-data
+          podSelector:
+            matchLabels:
+              cnpg.io/cluster: onemind-data
+      ports:
+        - protocol: TCP
+          port: 5432
   ingress:
     - from:
         - namespaceSelector:
@@ -123,6 +134,17 @@ spec:
         - podSelector:
             matchLabels:
               app: postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    # Shared CNPG cluster (database thingsboard), the postgres Deployment replacement.
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: onemind-data
+          podSelector:
+            matchLabels:
+              cnpg.io/cluster: onemind-data
       ports:
         - protocol: TCP
           port: 5432

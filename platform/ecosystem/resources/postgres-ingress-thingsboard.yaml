@@ -1,0 +1,26 @@
+# thingsboard (namespace thingsboard) reaches the shared onemind-data cluster. NetworkPolicies are additive, so this adds
+# the one workload without editing the postgres-ingress policy in postgres-network.yaml.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-ingress-thingsboard
+  namespace: onemind-data
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: onemind-data
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: thingsboard
+      podSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values: [thingsboard, bootstrap]
+    ports:
+    - protocol: TCP
+      port: 5432

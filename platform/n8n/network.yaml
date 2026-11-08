@@ -28,9 +28,12 @@ spec:
             matchLabels: {app.kubernetes.io/name: onemind-mcp}
       ports: [{protocol: TCP, port: 5678}]
   egress:
+    # Shared CNPG cluster (database n8n), the n8n-postgres replacement.
     - to:
-        - podSelector:
-            matchLabels: {app: n8n-postgres}
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: onemind-data}
+          podSelector:
+            matchLabels: {cnpg.io/cluster: onemind-data}
       ports: [{protocol: TCP, port: 5432}]
     - to:
         - namespaceSelector:
@@ -44,17 +47,3 @@ spec:
             cidr: 0.0.0.0/0
             except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10, 169.254.0.0/16, 127.0.0.0/8]
       ports: [{protocol: TCP, port: 443}, {protocol: TCP, port: 80}]
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: postgres-from-n8n
-spec:
-  podSelector:
-    matchLabels: {app: n8n-postgres}
-  policyTypes: [Ingress, Egress]
-  ingress:
-    - from:
-        - podSelector:
-            matchLabels: {app: n8n}
-      ports: [{protocol: TCP, port: 5432}]
