@@ -98,6 +98,17 @@ spec:
     ports:
     - protocol: TCP
       port: 5432
+  # Shared CNPG cluster (database takml_server), the takml-db replacement.
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: onemind-data
+      podSelector:
+        matchLabels:
+          cnpg.io/cluster: onemind-data
+    ports:
+    - protocol: TCP
+      port: 5432
   # tak.addr / tak.port (TAKFS model sync with TAK Server).
   - to:
     - namespaceSelector:
