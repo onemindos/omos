@@ -103,7 +103,8 @@ class PrivateIotPilots(unittest.TestCase):
             rendered = list(yaml.safe_load_all(out))
             self.assertFalse(any(r['kind'] == 'Secret' for r in rendered))
             # The Authentik bootstrap hook and its sealed secret live in the auth namespace by design.
-            in_auth = ('thingsboard-authentik-oidc-v1', 'thingsboard-oidc-bootstrap')
+            in_auth = ('thingsboard-authentik-oidc-v1', 'thingsboard-oidc-bootstrap',
+                       'openremote-authentik-oidc-v1', 'openremote-oidc-bootstrap')
             self.assertTrue(all(r['metadata'].get('namespace') == app or (
                 r['metadata'].get('namespace') == 'auth' and r['metadata']['name'] in in_auth)
                 for r in rendered if r['kind'] != 'Namespace'))

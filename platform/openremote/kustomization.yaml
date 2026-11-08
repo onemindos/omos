@@ -1,6 +1,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: openremote
 resources:
   - namespace.yaml
   - sealed/
@@ -11,3 +10,7 @@ resources:
   - network.yaml
   - backup.yaml
   - proxy-config.yaml
+  - oidc.sealedsecret.yaml
+  - auth-oidc.sealedsecret.yaml
+  - auth-provider.yaml
+  - idp-config.yaml

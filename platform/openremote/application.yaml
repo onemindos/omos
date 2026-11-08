@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: keycloak
+  namespace: openremote
 spec:
   selector:
     app: keycloak
@@ -14,6 +15,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: keycloak
+  namespace: openremote
   annotations:
     argocd.argoproj.io/sync-wave: '1'
 spec:
@@ -115,6 +117,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: manager
+  namespace: openremote
 spec:
   selector:
     app: manager
@@ -130,6 +133,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: manager
+  namespace: openremote
   annotations:
     argocd.argoproj.io/sync-wave: '2'
 spec:
@@ -247,6 +251,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: proxy
+  namespace: openremote
 spec:
   selector:
     app: proxy
@@ -259,6 +264,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: proxy
+  namespace: openremote
   annotations:
     argocd.argoproj.io/sync-wave: '3'
 spec:
