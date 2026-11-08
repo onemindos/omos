@@ -1,0 +1,23 @@
+# The Backstage portal (namespace backstage) reaches the shared onemind-data cluster. NetworkPolicies are additive.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-ingress-backstage
+  namespace: onemind-data
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: onemind-data
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: backstage
+      podSelector:
+        matchLabels:
+          app: backstage
+    ports:
+    - protocol: TCP
+      port: 5432
