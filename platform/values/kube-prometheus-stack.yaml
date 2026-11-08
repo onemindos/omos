@@ -88,6 +88,11 @@ grafana:
     existingClaim: grafana-data
   initChownData:
     enabled: false
+  # Official ClickHouse datasource (the provisioned datasource is the sealed
+  # Secret grafana-clickhouse-datasource). Pinned; downloaded from grafana.com
+  # by Grafana (GF_PLUGINS_PREINSTALL_SYNC) at startup into the persistent volume.
+  plugins:
+    - grafana-clickhouse-datasource@4.23.4
   podLabels:
     onemind.io/grafana-persistent: "true"
   extraInitContainers:
