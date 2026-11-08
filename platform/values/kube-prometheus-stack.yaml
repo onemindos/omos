@@ -93,6 +93,31 @@ grafana:
   # by Grafana (GF_PLUGINS_PREINSTALL_SYNC) at startup into the persistent volume.
   plugins:
     - grafana-clickhouse-datasource@4.23.4
+  # Single sign-on with Authentik (provider created by platform/monitoring/grafana-authentik-provider.yaml,
+  # restricted there to the `authentik Admins` group). The local admin login stays enabled as break-glass.
+  grafana.ini:
+    server:
+      root_url: https://grafana.tail717ba0.ts.net
+    auth.generic_oauth:
+      enabled: true
+      name: Authentik
+      allow_sign_up: true
+      client_id: grafana
+      scopes: openid profile email groups
+      auth_url: https://auth.onemindos.dev/application/o/authorize/
+      token_url: https://auth.onemindos.dev/application/o/token/
+      api_url: https://auth.onemindos.dev/application/o/userinfo/
+      use_pkce: true
+      login_attribute_path: preferred_username
+      email_attribute_name: email
+      name_attribute_path: name
+      role_attribute_path: "contains(groups[*], 'authentik Admins') && 'Admin' || 'Viewer'"
+  # client_secret comes from the sealed Secret monitoring/grafana-oidc, never from this file.
+  envValueFrom:
+    GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET:
+      secretKeyRef:
+        name: grafana-oidc
+        key: client-secret
   podLabels:
     onemind.io/grafana-persistent: "true"
   extraInitContainers:
