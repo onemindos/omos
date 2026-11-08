@@ -53,7 +53,7 @@ spec:
       containers:
         - name: tak-client
           # Pin digest after first CI build (.github/workflows/build-tak-client.yml).
-          image: ghcr.io/onemindos/omos-tak-client:0.1.0
+          image: ghcr.io/onemindos/omos-tak-client:0.1.0@sha256:e23b69d2920c1034b01da6b4ca2567af34d9d81316e73cafb151301e0f83c57d
           ports:
             - name: http
               containerPort: 8080
