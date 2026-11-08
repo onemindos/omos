@@ -22,7 +22,9 @@ initContainers:
   - mountPath: /target
     name: plugins
 snapshotsEnabled: false
-deployNodeAgent: true
+# Off: nothing uses file-system backup (defaultVolumesToFsBackup false, snapshotVolumes false), so the node-agent DaemonSet
+# only costs memory on every node. Turn it back on (true) for a migration or volume-restore test.
+deployNodeAgent: false
 nodeAgent:
   resources:
     requests: {cpu: 25m, memory: 128Mi}
@@ -46,8 +48,12 @@ schedules:
     schedule: 0 6 * * *
     template:
       ttl: 720h
-      includedNamespaces:
-      - onemind-core
-      - onemind-data
-      - langfuse
+      # Kubernetes objects of every app namespace (no volume data). New namespaces are included automatically.
+      excludedNamespaces:
+      - kube-system
+      - kube-public
+      - kube-node-lease
+      - default
+      - velero
       snapshotVolumes: false
+      defaultVolumesToFsBackup: false
