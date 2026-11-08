@@ -8,7 +8,9 @@ The platform plan (four layers, AI trust model and phase tracker) is in `PLATFOR
 
 ## What This Repo Is
 
-If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 64 Argo Applications exist (2026-11-07; 59 Synced and Healthy, `app-of-apps` and `platform-argocd` OutOfSync, and the manual-sync `platform-omos-entity`, `platform-policy` and `platform-takserver-tak-client` OutOfSync and Missing). Of the 11 Helm releases first installed by hand, 7 are adopted into Argo: `edge-cert-manager`, `edge-ingress-nginx`, `edge-nack`, `edge-tailscale-operator` (PR #176) and `monitoring-kube-prometheus-stack`, `monitoring-loki`, `monitoring-otel-collector` (2026-10-17). Tempo was removed on 2026-11-03 (`helm list -A` and the cluster no longer show it, verified 2026-11-07). **3 are still Helm CLI only**: nats, takserver and argocd (`helm list -A` on 2026-11-07 shows `nats` as `failed` at revision 11 while its three pods run). Never `helm upgrade` an adopted release, and do not run `platform/install.sh`, which still upgrades all of them; see `docs/gitops/HELM-ADOPTION.md`. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
+If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 63 Argo Applications exist (verified 2026-11-08; 60 Synced and Healthy, and the three manual-sync `platform-omos-entity`, `platform-policy` and `platform-takserver-tak-client` OutOfSync and Missing). Of the 11 Helm releases first installed by hand, 7 are adopted into Argo: `edge-cert-manager`, `edge-ingress-nginx`, `edge-nack`, `edge-tailscale-operator` (PR #176) and `monitoring-kube-prometheus-stack`, `monitoring-loki`, `monitoring-otel-collector` (2026-10-17). Tempo was removed on 2026-11-03 (`helm list -A` and the cluster no longer show it). **3 are still Helm CLI only**: nats, takserver and argocd (`helm list -A` on 2026-11-08 shows `nats` as `failed` at revision 11 while its three pods run). Never `helm upgrade` an adopted release, and do not run `platform/install.sh`, which still upgrades all of them; see `docs/gitops/HELM-ADOPTION.md`. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
+
+Removed 2026-11-03 to 2026-11-08 (do not redeploy without an owner decision): Dapr (`dapr-system`), LiteLLM and in-cluster Ollama, Matrix (parked in `platform/parked/matrix/`), HeyNATS, `nats-ui`, `nats-dashboard` and `nats-monitor`, Tempo, the `takml-db` PostgreSQL (TAK.ML uses `onemind-data`), the Velero node agent, and the Hermes Matrix gateway. The Argo CD ApplicationSet controller runs at 0 replicas, and so does `takserver-nats-box`. Namespaces were renamed `omos` to `feeds` and `onemind-ai` to `langfuse`; `kube` was not renamed (it still holds Headlamp and the `ai-operator` ServiceAccount, the owner's read-only MCP identity).
 
 The platform is a NATS-native C2/ISR system. NATS is the nervous system, TAK (ATAK/iTAK/WebTAK) is the tactical display, and Hermes ("Legacy") is the AI agent.
 
@@ -17,7 +19,7 @@ The platform is a NATS-native C2/ISR system. NATS is the nervous system, TAK (AT
 **The in-cluster NATS (3-node JetStream, namespace `nats`) is the authority bus. Everything publishes to it.**
 
 - Cloud workloads connect directly to `nats://nats.nats.svc.cluster.local:4222` (a few use `tls://` on the same host:port) with credentials from a Secret (`NATS_USER` / `NATS_PASSWORD`). No sidecar.
-- **Hermes is no longer an exception.** `onemind-hermes` (the Legacy persona) is a direct client like every other cloud workload, with `NATS_USER` / `NATS_PASSWORD` from `omos-nats-creds` and its own agent identity on the fabric (`agents.*.hermes.zeus.legacy`). The old `hermes-legacy` pod, with its `nats-leaf` sidecar on `localhost:4222`, was removed from Git on 2026-11-03. Do not bring a sidecar or leaf back.
+- **Hermes is no longer an exception.** `onemind-hermes` (the Legacy persona) is a direct client like every other cloud workload. Its pod has a single `hermes` container (verified 2026-11-08) that connects to `tls://nats.nats.svc.cluster.local:4222` as `onemind-hermes-nats-platform`, with `NATS_USER` / `NATS_PASSWORD` from `omos-nats-creds` and its own agent identity on the fabric (`agents.*.hermes.zeus.legacy`). The old `hermes-legacy` pod, with its `nats-leaf` sidecar on `localhost:4222`, was removed from Git on 2026-11-03. Do not bring a sidecar or leaf back. Hermes traces go to Langfuse at `langfuse-web.langfuse`.
 - **Edge and Mac bridges** (MAVLink, Home Assistant, cameras) run a local leaf node that forwards to the cluster through the `omos-nats` Tailscale load balancer (leaf port 7422). The leaf is a forwarding pipe, not a peer bus. If the Mac is offline the cloud bus keeps running.
 - When the home server arrives, it becomes another leaf (and eventually the authority). Do not design anything that treats a single laptop's NATS as the source of truth.
 
@@ -38,7 +40,7 @@ platform/      Everything Argo CD syncs. argocd/ holds the Application CRs; the 
   hermes/      Hermes agent (onemind-hermes/), shared objects (base/), app tools (mcp/); doctrine/ is history
   security/    Zero-trust layer (platform-security): Kyverno, Falco, OpenFGA apps + labelled namespaces
   takserver/   TAK Server: Helm chart (chart/) + values-onemind.yaml (Helm CLI), Argo overlays deploy/ and fedhub/, runbook
-  onetak/ omos/ data/ takml/ n8n/ backstage/ monitoring/ kube/ ops/ ...
+  onetak/ omos/ data/ takml/ n8n/ backstage/ monitoring/ kube/ ops/ parked/ ...   (omos/ deploys to namespace feeds; parked/ is not deployed)
   ecosystem/   Argo-managed "ecosystem" stack: applications/, foundation-applications/, values/, charts/
   values/      Helm values for the add-ons (Argo-adopted: cert-manager, ingress-nginx, tailscale-operator, kube-prometheus-stack, loki, otel-collector; Helm CLI: argocd)
 infra/         Terraform: DO VPC + DOKS cluster, NOT matching live, do not apply (infra/README.md); ecosystem-workers/ is a separate root; edge/ holds Mac leaf config (not deployed)
@@ -59,7 +61,7 @@ Not active or not deployed: `docs/references/` (external project research, moved
 
 ### Public ingress
 
-Public hostnames go through `ingress-nginx` (class `nginx`, LB `143.244.220.155`). DNS is Cloudflare-proxied A records pointing at that LB; ingresses carry the `whitelist-source-range` annotation with Cloudflare ranges. No public hostname lacks a source restriction (Matrix went tailnet-only 2026-10-29; `zeusdelacruz.com` retired 2026-10-10). TAK has no public listener: `tak.onemindos.dev` and the DigitalOcean LB `152.42.155.95` are retired, and EUDs use `tak.tail717ba0.ts.net` over Tailscale. Admin UIs and Matrix (Argo CD, TAK Portal at `enroll.tail717ba0.ts.net`, FedHub at `fedhub.tail717ba0.ts.net`, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, NATS UIs, Backstage preview; Matrix is `matrix.tail717ba0.ts.net` and `element.tail717ba0.ts.net`, federation off) use the `tailscale` ingress class and are tailnet-only (OpenCost too, at `opencost.tail717ba0.ts.net`).
+Public hostnames go through `ingress-nginx` (class `nginx`, LB `143.244.220.155`). DNS is Cloudflare-proxied A records pointing at that LB; ingresses carry the `whitelist-source-range` annotation with Cloudflare ranges. No public hostname lacks a source restriction (Matrix is gone: `matrix.` and `element.` were retired 2026-11-07; `zeusdelacruz.com` retired 2026-10-10). Four ingresses use class `nginx` (Authentik, the NATS WebSocket, the OneTAK host and the geo hosts). TAK has no public listener: `tak.onemindos.dev` and the DigitalOcean LB `152.42.155.95` are retired, and EUDs use `tak.tail717ba0.ts.net` over Tailscale. Admin UIs (Argo CD, TAK Portal at `enroll.tail717ba0.ts.net`, FedHub at `fedhub.tail717ba0.ts.net`, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, Backstage portal and preview, Langfuse, Forgejo, Gatus and others) use the `tailscale` ingress class and are tailnet-only (OpenCost too, at `opencost.tail717ba0.ts.net`). The only NATS UI is NUI at `nui.tail717ba0.ts.net`, behind the Authentik proxy outpost `nui-auth`. Of the 26 tailscale-class ingresses, 24 share one Tailscale `ProxyGroup` named `ingress` (2 pods; `platform/core/tailscale-proxygroup-ingress.yaml`) through the annotation `tailscale.com/proxy-group: ingress`; `argocd` and `onemind-auth` keep their own proxy pods. Put new admin UIs in the group.
 
 ## NATS Subject Grammar (LOCKED — do not invent new patterns)
 
@@ -72,7 +74,7 @@ intel.{domain}.{source}.{type}       intelligence       intel.conflict.acled.eve
 ent.{entity_type}.{entity_id}.state  fused entity state ent.ship.mmsi123.state
 svc.{service}.{endpoint}             NATS RPC           svc.hermes.query
 agents.{verb}.{agent}.{owner}.*      agent fabric       agents.prompt.hermes.zeus.legacy
-tak.cot.inject                       CoT → TAK inject   (NatsBridgePlugin input)
+tak.cot.inject                       CoT → TAK inject   (planned; no bridge is live)
 tak.cot.>                            CoT from TAK       (cot-tap output)
 ```
 
@@ -108,7 +110,9 @@ kubectl --context do-nyc3-omos-cloud get nodes
 ```
 
 - The Kubernetes API endpoint is **public** (no control-plane firewall; `docs/operations/cluster-review-2026-10-09.md`, H3). Tailscale gives access to admin UIs, not a private API.
-- Cluster `omos-cloud` (nyc3, DOKS 1.36): pools `onemind-hub-core-v2` (3 x 8 vCPU / 16 GiB) and `onemind-ecosystem-cpu` (8 vCPU / 32 GiB, 1 node, autoscale 1 to 2; 4 nodes in total, verified with `doctl` 2026-11-07). `infra/main.tf` does not match and has no state; do not `terraform apply` it (see `infra/README.md`).
+- Cluster `omos-cloud` (nyc3, DOKS 1.36): pools `onemind-hub-core-v2` (3 x 8 vCPU / 16 GiB) and `onemind-ecosystem-cpu` (8 vCPU / 32 GiB, 1 node live; 4 nodes in total, verified with `kubectl` and `doctl` 2026-11-08). `infra/main.tf` does not match and has no state; do not `terraform apply` it (see `infra/README.md`).
+- Volumes on 2026-11-08 (verified with `kubectl get pvc -A`): NATS 3 x 20 GiB; `onemind-data` (CNPG) 3 x 5 GiB on PostgreSQL 16 (a PostgreSQL 17 upgrade was tried and rolled back on 2026-11-08 because Apache AGE blocks `pg_upgrade`); Hermes 10 GiB; TAK PostgreSQL 10 GiB; ClickHouse 20 GiB on 26.8.36.3 with a 7-day TTL on its system logs and a CronJob that prunes native backups after 14 days; Loki 30 GiB; Prometheus 20 GiB. OneTAK (nodeodm 10, tiles 20, tile38 2), Karakeep (5 + 2), n8n (2 + 3) and Forgejo (5) disks were shrunk on 2026-11-08.
+- Monitoring: Grafana signs in through Authentik (the local form stays on) and has the ClickHouse datasource plugin. Falco sends to Alertmanager and Loki. Alerts reach the owner through the Hermes `infra-health` cron (every 15 minutes, delivered on Telegram) and the portal inbox (Alertmanager receiver `onemind-backstage`). The OTel collector ships logs only. Velero backs up the Kubernetes objects of every app namespace daily; its node agent is off, so volume data relies on VolSync and the database backups.
 - Older local contexts such as `do-nyc3-onemind-hub` may exist. Check the context before running anything.
 
 ## TAK Server
@@ -117,11 +121,11 @@ TAK Server 5.8 on OneMind hardened images (`ghcr.io/onemindos/takserver-base:*-5
 
 Since 2026-10-29 the CA-key, server-keystore and LDAP bind passwords are Secrets (`tak-ca-credentials`, `tak-server-stores`, `tak-ldap-creds`); `CoreConfig.xml` is the password-free template `platform/takserver/deploy/configmap-core-config-v2.yaml` and the config/messaging init containers fill it in (Helm stayed at revision 34; see `platform/takserver/DEPLOY-RUNBOOK.md`, "Password supply").
 
-The NatsBridgePlugin (`services/takserver/plugin-src/`, JAR in `services/takserver/plugin/`) is the CoT-to-NATS wire (`tak.cot.inject` in, `tak.cot.>` out). Images are built by `.github/workflows/build-takserver.yml` on the self-hosted runner. Deploy runbook: `platform/takserver/DEPLOY-RUNBOOK.md`.
+The NatsBridgePlugin (`services/takserver/plugin-src/`, JAR in `services/takserver/plugin/`) was meant to be the CoT-to-NATS wire (`tak.cot.inject` in, `tak.cot.>` out), but it is **not installed**: the live `takserver-plugins` pod holds no NATS plugin, and `tak-nats-leaf` has 0 client connections (`/varz`, 2026-11-08). So the plugin wire carries nothing today. PR #739 (feed-platform design, still open) is the plan, and the TAK-client bridge `platform-takserver-tak-client` (manual sync, not synced) is the candidate. Storage: TAK PostgreSQL is 10 GiB. Images are built by `.github/workflows/build-takserver.yml` on the self-hosted runner. Deploy runbook: `platform/takserver/DEPLOY-RUNBOOK.md`.
 
 ## CI (`.github/workflows/quality.yml`)
 
-On every PR to `main`: changed-YAML lint, ShellCheck, Terraform fmt/validate, kubeconform on changed plain manifests (strict, CRD schemas from datreeio), `helm template` of changed Argo Helm Applications and local charts, and gitleaks (working tree against the baseline, and the commits in the PR). A weekly run re-checks the whole tree. Actions are pinned by commit SHA; Renovate (`renovate.json`) proposes weekly updates. Run the same checks locally with `make validate` plus `python scripts/validate_manifests.py --all` and `python scripts/validate_helm_renders.py --all`.
+`quality.yml` and `ecosystem-charts.yml` run on GitHub-hosted runners (`ubuntu-latest`); the self-hosted runner in `github-runner` keeps the cluster-facing and image-build jobs (`build-*.yml`, inventory refresh, MCP). On every PR to `main`: changed-YAML lint, ShellCheck, Terraform fmt/validate, kubeconform on changed plain manifests (strict, CRD schemas from datreeio), `helm template` of changed Argo Helm Applications and local charts, and gitleaks (working tree against the baseline, and the commits in the PR). A weekly run re-checks the whole tree. Actions are pinned by commit SHA; Renovate (`renovate.json`) proposes weekly updates. Run the same checks locally with `make validate` plus `python scripts/validate_manifests.py --all` and `python scripts/validate_helm_renders.py --all`.
 
 ## Adding a New Service (checklist)
 
