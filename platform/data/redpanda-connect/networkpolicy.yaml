@@ -1,0 +1,37 @@
+# Lock down the Redpanda Connect streams API (feed-platform.md section 3.3 and decision 4).
+#
+# Both engine pods serve the streams API on 4195, and `GET /streams/{id}` returns each stream's
+# config with ${SECRET} values filled in, so any pod that can reach 4195 can read the NATS password
+# and any feed API key. Before this policy the port was open on the pod IP to every pod in the
+# cluster. This policy denies ALL ingress to both pods. No Service exposes 4195, and none must be added.
+#
+# What keeps working:
+# - The controller calls the API on 127.0.0.1:4195 inside its own pod. Loopback traffic is never
+#   subject to NetworkPolicy.
+# - Kubelet readiness and liveness probes (GET /ready on 4195) come from the node. Cilium (DOKS)
+#   allows traffic from the local host to local pods by default, whatever the NetworkPolicy says.
+# - Egress is untouched (policyTypes lists Ingress only): NATS in the nats namespace, the upstream
+#   feed APIs and DNS.
+#
+# Scrapers: nothing scrapes these pods. Checked read-only on 2026-11-08: no ServiceMonitor or
+# PodMonitor names redpanda-connect (the Prometheus selectors need the label release=monitoring),
+# and no additionalScrapeConfigs or repo file targets port 4195. If a scraper is added later, add an
+# ingress rule for that namespace and pod on TCP 4195 only, and review what /metrics exposes first.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redpanda-connect-no-ingress
+  namespace: feeds
+  labels:
+    app.kubernetes.io/part-of: omos-feeds
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/name
+        operator: In
+        values:
+          - redpanda-connect
+          - redpanda-connect-grammar
+  policyTypes:
+    - Ingress
+  ingress: []

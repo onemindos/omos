@@ -1,0 +1,17 @@
+# The live on/off switch for data feeds (docs/architecture/feed-platform.md section 3.2).
+# Key = source id (platform/data/sources/<id>.yaml). Value =
+#   {"enabled": true, "interval": "30s", "updated_by": "...", "reason": "..."}
+# The feed-controller stream in the feeds engine pod watches it; history 10 keeps an audit trail.
+# `spec.servers` is set out of band on the live CRs and is never put in Git.
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-feed-control
+  namespace: nats
+spec:
+  bucket: feed-control
+  storage: file
+  replicas: 3
+  history: 10
+  maxBytes: 8388608
+  preventDelete: true

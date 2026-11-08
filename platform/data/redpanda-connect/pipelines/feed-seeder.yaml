@@ -1,0 +1,47 @@
+# feed-seeder: writes the Git default for every source that has no feed-control key yet.
+# Design: docs/architecture/feed-platform.md section 3.2.
+#
+# Runs once per start of the engine pod. Reads /config/sources/_index.json (ConfigMap
+# `feed-sources`) and does a KV create for each source id. Create fails when the key exists, so a
+# live choice made with `nats kv put` is never overwritten; that failure is expected and logged.
+input:
+  generate:
+    count: 1
+    interval: ""
+    mapping: 'root = ""'
+
+pipeline:
+  processors:
+    - mapping: 'root = file("/config/sources/_index.json").string().parse_json()'
+    - unarchive:
+        format: json_array
+    - mapping: |
+        meta feed_id = this.id
+        root = {
+          "enabled": this.default_enabled,
+          "interval": this.interval.or(""),
+          "updated_by": "seeder",
+          "reason": "git default"
+        }
+    - nats_kv:
+        urls: ["${NATS_URL:nats://nats.nats.svc.cluster.local:4222}"]
+        bucket: feed-control
+        operation: create
+        key: '${! @feed_id }'
+        auth:
+          user: "${NATS_USER}"
+          password: "${NATS_PASSWORD}"
+        tls:
+          enabled: ${NATS_TLS_ENABLED:true}
+          skip_cert_verify: true
+    - catch:
+        - log:
+            level: INFO
+            message: 'feed-seeder id=${! @feed_id } kept existing value (create refused): ${! error() }'
+        - mapping: 'root = ""'
+    - log:
+        level: INFO
+        message: 'feed-seeder id=${! @feed_id } processed err=${! error().or("none") }'
+
+output:
+  drop: {}

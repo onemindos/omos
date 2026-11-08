@@ -1,0 +1,190 @@
+# feed-satellites-grammar — CelesTrak two-line element sets as raw observations.
+#
+# Replaces the CoT output of the feed-satellites Deployment (platform/omos/feeds.yaml), which
+# propagates SGP4 in Python and core-publishes CoT XML to tak.cot.inject. This pipeline
+# publishes the source data itself: one record per satellite on intel.space.celestrak.tle
+# (stream INTEL, acked JetStream publish, Nats-Msg-Id tle:{norad}:{epoch}), as BUS-DESIGN §3.1
+# and the ingestion migration plan step 7 specify. Propagating positions is the entity
+# service's job (FEATURES A12), not the collector's. Until A12 exists the legacy
+# feed-satellites keeps running (CUTOVER.md); see owner proposal A1-P2.
+#
+# Also publishes:
+#   tel.feed.celestrak.status    one freshness record per fetch (core NATS)
+#   evt.sys.celestrak.rejected   a TLE with a bad checksum, length or mismatched NORAD id (BUS-P9)
+#
+# Politeness: CelesTrak asks clients not to download the same GP data more than once every
+# two hours; the default interval is 4 h, the same as the legacy script's TLE refresh.
+# Runs only in the redpanda-connect-grammar Deployment (deployment-grammar.yaml).
+input:
+  generate:
+    interval: "${CELESTRAK_POLL_INTERVAL:4h}"
+    mapping: 'root = ""'
+
+pipeline:
+  processors:
+    - mapping: 'root = {"errors": []}'
+
+    - branch:
+        request_map: 'root = ""'
+        processors:
+          - http:
+              url: "${CELESTRAK_BASE_URL:https://celestrak.org}/NORAD/elements/gp.php?GROUP=${CELESTRAK_GROUP:stations}&FORMAT=tle"
+              verb: GET
+              timeout: "30s"
+              headers:
+                User-Agent: "omos-feed-sats/1.0"
+        result_map: 'root.text = content().string()'
+    - catch:
+        - mapping: 'root.errors = this.errors.or([]).append(error())'
+
+    - mapping: |
+        map tle_ok {
+          let digits = this.slice(0, 68).split("").map_each(c -> if c == "-" { 1 } else if c.re_match("^[0-9]$") { c.number() } else { 0 })
+          root = this.length() == 69 && $digits.sum() % 10 == this.slice(68, 69).number().catch(-1)
+        }
+        map tle {
+          let l0 = this.l0
+          let l1 = this.l1
+          let l2 = this.l2
+          let norad = $l1.slice(2, 7).trim()
+          let epoch = $l1.slice(18, 32).trim()
+          let yy = $l1.slice(18, 20).number().catch(0)
+          let year = if $yy < 57 { 2000 + $yy } else { 1900 + $yy }
+          let jan1 = "%d-01-01T00:00:00Z".format($year.int64()).ts_parse("2006-01-02T15:04:05Z").ts_unix()
+          let epoch_ms = (($jan1 + ($l1.slice(20, 32).number().catch(1) - 1) * 86400) * 1000).round().int64()
+          let reason = if !$l1.apply("tle_ok") {
+            "line 1 length or checksum invalid"
+          } else if !$l2.apply("tle_ok") {
+            "line 2 length or checksum invalid"
+          } else if $l2.slice(2, 7).trim() != $norad {
+            "NORAD id differs between line 1 and line 2"
+          } else { "" }
+          root = if $reason == "" {
+            {
+              "kind": "obs",
+              "msg_id": "tle:%s:%s".format($norad, $epoch),
+              "body": {
+                "id": "celestrak-" + $norad,
+                "type": "tle",
+                "source": "celestrak",
+                "lat": null,
+                "lon": null,
+                "timestamp": ($epoch_ms / 1000).ts_format("2006-01-02T15:04:05.000Z", "UTC"),
+                "properties": {
+                  "norad_id": $norad,
+                  "name": if $l0 != "" { $l0 } else { "NORAD " + $norad },
+                  "group": "${CELESTRAK_GROUP:stations}",
+                  "classification": $l1.slice(7, 8),
+                  "intl_designator": $l1.slice(9, 17).trim(),
+                  "epoch": $epoch,
+                  "epoch_ms": $epoch_ms,
+                  "line1": $l1,
+                  "line2": $l2
+                }
+              }
+            }
+          } else {
+            {
+              "kind": "rejected",
+              "msg_id": "tle-rejected:%s:%d".format($norad, now().ts_unix_nano()),
+              "body": {
+                "source": "celestrak",
+                "reason": $reason,
+                "raw": [$l0, $l1, $l2].join("\n").slice(0, 4096),
+                "rawBytes": [$l0, $l1, $l2].join("\n").length()
+              }
+            }
+          }
+        }
+        let errs = this.errors.or([])
+        let lines = this.text.or("").split("\n").map_each(l -> l.trim()).filter(l -> l != "")
+        let n = $lines.length()
+        let starts = if $n > 1 { range(0, $n - 1).filter(i -> $lines.index(i).has_prefix("1 ") && $lines.index(i + 1).has_prefix("2 ")) } else { [] }
+        let recs = $starts.map_each(i -> {
+          "l0": if i > 0 && !$lines.index(i - 1).has_prefix("1 ") && !$lines.index(i - 1).has_prefix("2 ") { $lines.index(i - 1) } else { "" },
+          "l1": $lines.index(i),
+          "l2": $lines.index(i + 1)
+        }.apply("tle"))
+        let now = now().ts_format("2006-01-02T15:04:05.000Z", "UTC")
+        let failed = $errs.length() > 0
+        root = $recs.append({
+          "kind": "status",
+          "msg_id": "",
+          "body": {
+            "source": "celestrak",
+            "kind": "file",
+            "collector": "redpanda-connect",
+            "instance": hostname(),
+            "leader": true,
+            "fetchedAt": if $failed { null } else { $now },
+            "count": $recs.length(),
+            "published": $recs.filter(r -> r.kind == "obs").length(),
+            "rejected": $recs.filter(r -> r.kind == "rejected").length(),
+            "lastError": if $failed { $errs.join("; ").slice(0, 300) } else { null },
+            "errorAt": if $failed { $now } else { null },
+            "staleAfterSec": 43200,
+            "stale": $failed,
+            "at": $now
+          }
+        })
+
+    # A mapping failure must not vanish: publish it as a stale status instead.
+    - catch:
+        - mapping: |
+            let now = now().ts_format("2006-01-02T15:04:05.000Z", "UTC")
+            root = [{"kind": "status", "msg_id": "", "body": {
+              "source": "celestrak", "kind": "file", "collector": "redpanda-connect",
+              "instance": hostname(), "leader": true, "fetchedAt": null,
+              "count": 0, "published": 0, "rejected": 0,
+              "lastError": ("mapping: " + error()).slice(0, 300), "errorAt": $now,
+              "staleAfterSec": 43200, "stale": true, "at": $now
+            }}]
+
+    - unarchive:
+        format: json_array
+
+    - mapping: |
+        meta feed_kind = this.kind
+        meta msg_id = this.msg_id
+        root = this.body
+
+output:
+  switch:
+    cases:
+      - check: '@feed_kind == "status"'
+        output:
+          nats:
+            urls: ["${NATS_URL:nats://nats.nats.svc.cluster.local:4222}"]
+            subject: "tel.feed.celestrak.status"
+            auth:
+              user: "${NATS_USER}"
+              password: "${NATS_PASSWORD}"
+            tls:
+              enabled: ${NATS_TLS_ENABLED:true}
+              skip_cert_verify: true
+      - check: '@feed_kind == "rejected"'
+        output:
+          nats_jetstream:
+            urls: ["${NATS_URL:nats://nats.nats.svc.cluster.local:4222}"]
+            subject: "evt.sys.celestrak.rejected"
+            headers:
+              Nats-Msg-Id: '${! @msg_id }'
+            auth:
+              user: "${NATS_USER}"
+              password: "${NATS_PASSWORD}"
+            tls:
+              enabled: ${NATS_TLS_ENABLED:true}
+              skip_cert_verify: true
+      - check: '@feed_kind == "obs"'
+        output:
+          nats_jetstream:
+            urls: ["${NATS_URL:nats://nats.nats.svc.cluster.local:4222}"]
+            subject: "intel.space.celestrak.tle"
+            headers:
+              Nats-Msg-Id: '${! @msg_id }'
+            auth:
+              user: "${NATS_USER}"
+              password: "${NATS_PASSWORD}"
+            tls:
+              enabled: ${NATS_TLS_ENABLED:true}
+              skip_cert_verify: true
