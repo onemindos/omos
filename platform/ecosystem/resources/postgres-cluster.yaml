@@ -111,8 +111,11 @@ spec:
     isWALArchiver: true
     parameters:
       barmanObjectName: onemind-backups
+      # pg_upgrade resets the system ID and timeline: a new server name keeps the PG17 archive apart from the PG16 one
+      # (the PG16 archive stays under cnpg/onemind-data/onemind-data for rollback and old restores).
+      serverName: onemind-data-pg17
   imageCatalogRef:
     apiGroup: postgresql.cnpg.io
     kind: ImageCatalog
     name: onemind-postgres
-    major: 16
+    major: 17

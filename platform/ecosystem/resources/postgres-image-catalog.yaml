@@ -9,3 +9,6 @@ spec:
   images:
   - major: 16
     image: ghcr.io/onemindos/onemind-postgres:sha-0065f1991b58f009e49176630f1b45837d0451ae@sha256:35302d70df121bc86b370ebad800d85401edcdb890f8146cd3db690826a9925d
+  # 17: PostgreSQL 17.11 + PostGIS, pgvector, TimescaleDB 2.26.4, AGE 1.6.0 (build-onemind-core run 42451893820, commit 3c3ea34d).
+  - major: 17
+    image: ghcr.io/onemindos/onemind-postgres:sha-3c3ea34d481f81274361a5711ef2ffdfb3bdfb4c@sha256:47a743d044a6480c00e4b06412d40e4b3e2ace69c2035862f7b88ef7ca073da6
