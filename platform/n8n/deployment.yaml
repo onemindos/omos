@@ -54,12 +54,12 @@ spec:
           ports: [{name: http, containerPort: 5678}]
           env:
             - {name: DB_TYPE, value: postgresdb}
-            - {name: DB_POSTGRESDB_HOST, value: postgres}
+            - {name: DB_POSTGRESDB_HOST, value: onemind-data-rw.onemind-data.svc.cluster.local}
             - {name: DB_POSTGRESDB_DATABASE, value: n8n}
             - {name: DB_POSTGRESDB_USER, value: n8n}
             - name: DB_POSTGRESDB_PASSWORD
               valueFrom:
-                secretKeyRef: {name: n8n-secrets, key: DB_POSTGRESDB_PASSWORD}
+                secretKeyRef: {name: n8n-pg-creds, key: password}
             - name: N8N_ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef: {name: n8n-secrets, key: N8N_ENCRYPTION_KEY}

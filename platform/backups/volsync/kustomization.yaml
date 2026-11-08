@@ -8,7 +8,6 @@ resources:
 - sealed/clickhouse-volume-ab4fbd87295d.yaml
 - sealed/hermes-volume-c96e219d2314.yaml
 - sealed/monitoring-volume-0a77d3a320c8.yaml
-- sealed/n8n-volume-e0d2f2fea651.yaml
 - sealed/n8n-volume-b98c04b6228d.yaml
 - sealed/nats-volume-cedf723508b6.yaml
 - sealed/nats-volume-f49adedad17d.yaml
