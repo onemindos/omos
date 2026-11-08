@@ -1,0 +1,174 @@
+# Shared Authentik gate: ONE proxy outpost that fronts several tailnet apps (Headlamp first).
+#
+# - Providers, applications (bound to authentik Admins) and the outpost "gate-outpost" come from the Sync hook
+#   platform/auth/gate-providers.yaml. The outpost routes to each app by Host header.
+# - AUTHENTIK_TOKEN is the outpost's API token, sealed once into gate-outpost (read from the Authentik database,
+#   token identifier ak-outpost-<outpost uuid>-api). Re-seal it if the outpost is ever re-created.
+# - Tailscale ProxyGroup Ingresses cannot use an ExternalName backend and a backend must be in the Ingress's own
+#   namespace, so the gate Ingresses live here, next to the outpost Service, instead of in each app's namespace.
+#   Rollback for one app: restore its Ingress in the app's own manifests and delete the gate Ingress below.
+# - The image tag must match the Authentik server version (platform-auth-helm, 2026.8.2).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gate-outpost
+  namespace: auth
+  labels:
+    app.kubernetes.io/name: gate-outpost
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gate-outpost
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: gate-outpost
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: outpost
+          image: ghcr.io/goauthentik/proxy:2026.8.2@sha256:b76e672ad76cbdb30705f242422bec47df903fe9568fac207ba23e9d8713c59e
+          env:
+            - name: AUTHENTIK_HOST
+              value: http://platform-auth-helm-authentik-server.auth.svc.cluster.local
+            - name: AUTHENTIK_HOST_BROWSER
+              value: https://auth.onemindos.dev
+            - name: AUTHENTIK_INSECURE
+              value: "false"
+            - name: AUTHENTIK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gate-outpost
+                  key: AUTHENTIK_TOKEN
+          ports:
+            - name: http
+              containerPort: 9000
+            - name: metrics
+              containerPort: 9300
+          readinessProbe:
+            httpGet:
+              path: /outpost.goauthentik.io/ping
+              port: metrics
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /outpost.goauthentik.io/ping
+              port: metrics
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gate-outpost
+  namespace: auth
+  labels:
+    app.kubernetes.io/name: gate-outpost
+spec:
+  selector:
+    app.kubernetes.io/name: gate-outpost
+  ports:
+    - name: http
+      port: 9000
+      targetPort: http
+---
+# The outpost: reachable only from the Tailscale ingress proxies; may reach Authentik, the gated apps and DNS.
+# Add one egress rule per gated app.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: gate-outpost
+  namespace: auth
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: gate-outpost
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+      ports:
+        - protocol: TCP
+          port: 9000
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: server
+              app.kubernetes.io/instance: platform-auth-helm
+      ports:
+        - protocol: TCP
+          port: 9000
+        - protocol: TCP
+          port: 80
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: headlamp
+          podSelector:
+            matchLabels:
+              app: headlamp
+      ports:
+        - protocol: TCP
+          port: 4466
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+---
+# Headlamp -- headlamp.tail717ba0.ts.net, behind the gate (Authentik sign-in, admins only).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gate-headlamp
+  namespace: auth
+  annotations:
+    tailscale.com/proxy-group: ingress
+    tailscale.com/hostname: headlamp
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: gate-outpost
+      port:
+        number: 9000
+  tls:
+    - hosts:
+        - headlamp
