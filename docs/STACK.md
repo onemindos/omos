@@ -185,9 +185,9 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-observability` | clickhouse | ClickHouse "Time Machine" (Altinity CHI), server 26.8.36.3 LTS (upgraded from 24.8 on 2026-11-07 via 25.8 and 26.3; Langfuse v4 needs >= 25.12) | 20 GiB time-series | `VolSync`; native backup Job daily 03:00 UTC (`onemind` + `langfuse`) | internal | Argo |
 | `platform-clickhouse-operator` | kube-system | Altinity ClickHouse operator (chart 0.27.3). A second, legacy `clickhouse-operator` Deployment sits at 0 replicas | none | Git | internal | Argo |
 | `platform-takserver-tak-client` | takserver | `omos-tak-client` (A21, **proposed, not synced**): TAK Server streaming client bridge; TAK CoT to `tak.cot.out`, `tak.cot.inject` into TAK (queue group shared with NatsBridgePlugin). Replaces the never-deployed cot-tap | none | Git | internal (client of `takserver-messaging:8089` and `nats:4222`) | Argo, **manual sync**; needs two owner-sealed Secrets and a digest pin (`platform/takserver/tak-client/README.md`) |
-| `platform-omos` | omos | `feed-intel`, `feed-satellites`, `omos-tak-projector`, `sink-clickhouse`, `omos-mission-engine` (0 replicas) | none (streams in NATS, data in ClickHouse) | Git | internal | Argo |
-| `platform-omos-entity` | omos | **Proposed, not synced (manual sync).** `omos-entity-service` (FEATURES A4): fuses `COT`/`TEL`/`WORLD`/`INTEL` into `ent.{entity_type}.{entity_id}.state` in the proposed `ENT` stream; one replica on the ecosystem pool, KV lease in the proposed `entity-correlation` bucket | none on disk (state in `ENT`, rebuilt from it on start) | Git; state rebuildable by replay | internal (`svc.entity.get`/`query` on NATS) | Argo, manual sync |
-| `platform-redpanda-connect` | omos | Redpanda Connect (digest-pinned) | none | Git | internal | Argo |
+| `platform-omos` | feeds | `feed-intel`, `feed-satellites`, `omos-tak-projector`, `sink-clickhouse`, `omos-mission-engine` (0 replicas) | none (streams in NATS, data in ClickHouse) | Git | internal | Argo |
+| `platform-omos-entity` | feeds | **Proposed, not synced (manual sync).** `omos-entity-service` (FEATURES A4): fuses `COT`/`TEL`/`WORLD`/`INTEL` into `ent.{entity_type}.{entity_id}.state` in the proposed `ENT` stream; one replica on the ecosystem pool, KV lease in the proposed `entity-correlation` bucket | none on disk (state in `ENT`, rebuilt from it on start) | Git; state rebuildable by replay | internal (`svc.entity.get`/`query` on NATS) | Argo, manual sync |
+| `platform-redpanda-connect` | feeds | Redpanda Connect (digest-pinned) | none | Git | internal | Argo |
 | `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (Tile38), WebODM | about 150 GiB of PVCs | `VolSync` x5 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.tail717ba0.ts.net` **tailnet** | Argo |
 | `platform-takml` | takml | TAK-ML vision pipeline | PostgreSQL, 8 GiB | `PG dump` (06:00 UTC), `VolSync` | internal | Argo |
 | `platform-n8n` | n8n | n8n workflow automation | PostgreSQL, 15 GiB | `PG dump` (05:20 UTC), `VolSync` | tailnet | Argo |
@@ -299,7 +299,7 @@ At capture (2026-10-09), 31 container references used `:latest`, a bare image na
 |-----------|-----------|
 | nats | `heynats`, `nats-dashboard`, `nats-metrics-scrape`, `nats-ui` (all `ghcr.io/...:latest`), `nats-surveyor:latest` |
 | onetak | `nodeodm`, `stac-api`, `tak-portal`, `tile38`, `tileserver-gl`, `webodm`, `webodm-db` (and a bare `busybox` init container) |
-| omos | `omos-mission-engine:latest` |
+| feeds | `omos-mission-engine:latest` |
 | kube | `headlamp:latest` |
 | takserver | `murmur:latest` |
 | matrix | init containers using bare `busybox` / `busybox:latest` |

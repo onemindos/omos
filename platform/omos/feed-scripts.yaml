@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: omos-feed-scripts
-  namespace: omos
+  namespace: feeds
 data:
   # ---------------------------------------------------------------------------
   # feed_satellites.py — CelesTrak TLE + SGP4 → tak.cot.inject (every PROPAGATE_INTERVAL, 60s in feeds.yaml)

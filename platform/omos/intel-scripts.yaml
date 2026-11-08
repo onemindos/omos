@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: omos-intel-scripts
-  namespace: omos
+  namespace: feeds
 data:
   sink_clickhouse.py: |
     #!/usr/bin/env python3

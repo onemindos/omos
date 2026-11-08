@@ -130,7 +130,7 @@ kubectl --context "$CTX" apply -f "$PLATFORM/nats-surveyor/deployment.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/nats-surveyor/servicemonitor.yaml"
 
 # -----------------------------------------------------------------------------
-# 8. OMOS SERVICES — shared omos namespace (tak-projector, feed-world, etc.)
+# 8. OMOS SERVICES — shared feeds namespace (tak-projector, feed-world, etc.)
 # Secrets (omos-nats-creds) are SealedSecrets in platform/omos/
 # -----------------------------------------------------------------------------
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/namespace.yaml"
@@ -141,14 +141,14 @@ kubectl --context "$CTX" apply -f "$PLATFORM/omos-mission-engine/deployment.yaml
 # 8b. OMOS WORLD FEEDS — live global data → NATS → TAK → OMOS ATOC map
 # Sources: AIS ships, ADS-B aircraft, APRS trackers, satellites, hazards
 # Requires:
-#   omos-nats-creds secret in omos namespace (already created above)
+#   omos-nats-creds secret in feeds namespace (already created above)
 #   omos-feed-secrets (AISSTREAM_API_KEY, OPENSKY_USERNAME, OPENSKY_PASSWORD):
-#     kubectl create secret generic omos-feed-secrets -n omos \
+#     kubectl create secret generic omos-feed-secrets -n feeds \
 #       --from-literal=AISSTREAM_API_KEY='<key from aisstream.io — free signup>' \
 #       --from-literal=OPENSKY_USERNAME='<opensky.org free account>' \
 #       --from-literal=OPENSKY_PASSWORD='<opensky password>'
 # Toggle feeds: kubectl scale deployment feed-ships feed-aircraft feed-aprs \
-#   feed-satellites feed-hazards -n omos --replicas=0|1
+#   feed-satellites feed-hazards -n feeds --replicas=0|1
 # -----------------------------------------------------------------------------
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/feed-scripts.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/feeds.yaml"

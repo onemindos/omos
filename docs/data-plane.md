@@ -19,7 +19,7 @@ subject that reflects what it is.  Consumers subscribe to exactly what they need
 └───────────────────────┬─────────────────────────────────────┘
                         │  HTTP / WebSocket / TCP
 ┌───────────────────────▼─────────────────────────────────────┐
-│  Layer 2 — Feed Workers (K8s Deployments, namespace: omos)  │
+│  Layer 2 — Feed Workers (K8s Deployments, namespace: feeds)  │
 │  feed-aircraft · feed-ships · feed-aprs · feed-satellites   │
 │  feed-hazards · feed-intel-noaa · feed-intel-usgs           │
 │  feed-intel-acled · feed-intel-firms                        │
@@ -82,7 +82,7 @@ subject that reflects what it is.  Consumers subscribe to exactly what they need
 
 ## 3. Feed Workers
 
-All feed workers are Deployments in namespace `omos`. Scripts live in ConfigMaps
+All feed workers are Deployments in namespace `feeds`. Scripts live in ConfigMaps
 (`omos-feed-scripts` for world feeds, `omos-intel-scripts` for intel feeds).
 
 | Name | Subject Prefix | Source | Poll / Mode | Default Replicas | Toggle Command |
@@ -133,13 +133,13 @@ Every feed and sink can be stopped instantly without touching code.
 **Hard stop (K8s scale):**
 ```bash
 # Stop a feed
-kubectl scale deploy/feed-intel-noaa -n omos --replicas=0
+kubectl scale deploy/feed-intel-noaa -n feeds --replicas=0
 
 # Stop the TAK sink
-kubectl scale deploy/sink-tak -n omos --replicas=0
+kubectl scale deploy/sink-tak -n feeds --replicas=0
 
 # Resume
-kubectl scale deploy/sink-tak -n omos --replicas=1
+kubectl scale deploy/sink-tak -n feeds --replicas=1
 ```
 
 **Soft pause via NATS command (sink-tak only):**
@@ -217,7 +217,7 @@ ORDER BY timestamp;
 ```
 intel.> (INTEL JetStream, 90d)
     │
-    └── sink-tak Deployment (omos namespace)
+    └── sink-tak Deployment (feeds namespace)
             │   durable consumer "sink-tak"
             │   CoT XML built per envelope
             ▼
@@ -296,9 +296,9 @@ Source of truth: vault `00-24 SO (Sovereign Operations)`.
 
 | 1Password Item (= K8s secret name) | Namespace | Keys | Used By |
 |------------------------------------|-----------|------|---------|
-| `omos-nats-creds` | omos | `user`, `password` | All omos feed workers and sinks |
-| `omos-feed-secrets` | omos | `AISSTREAM_API_KEY`, `OPENSKY_USERNAME`, `OPENSKY_PASSWORD`, `ACLED_API_KEY`, `ACLED_EMAIL`, `FIRMS_API_KEY` | World and intel feed workers |
-| `omos-clickhouse-creds` | omos | `CH_PASSWORD` | sink-clickhouse |
+| `omos-nats-creds` | feeds | `user`, `password` | All omos feed workers and sinks |
+| `omos-feed-secrets` | feeds | `AISSTREAM_API_KEY`, `OPENSKY_USERNAME`, `OPENSKY_PASSWORD`, `ACLED_API_KEY`, `ACLED_EMAIL`, `FIRMS_API_KEY` | World and intel feed workers |
+| `omos-clickhouse-creds` | feeds | `CH_PASSWORD` | sink-clickhouse |
 | `orp-nats-creds` | orp | `user`, `password` | ORP fusion engine |
 | `hermes-env` | hermes | AWS Bedrock keys, NATS creds, 20+ fields | Legacy/Hermes AI |
 | `tak-nats-leaf` | takserver | `leaf.conf`, `ca.crt` | TAK NatsBridgePlugin NATS leaf |
@@ -307,6 +307,6 @@ Source of truth: vault `00-24 SO (Sovereign Operations)`.
 To add or rotate a secret: update the 1Password item → ESO syncs within 1 hour, or
 force-sync immediately:
 ```bash
-kubectl annotate externalsecret omos-nats-creds -n omos \
+kubectl annotate externalsecret omos-nats-creds -n feeds \
   force-sync="$(date +%s)" --overwrite
 ```

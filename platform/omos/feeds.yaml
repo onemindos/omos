@@ -16,7 +16,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: feed-satellites
-  namespace: omos
+  namespace: feeds
   labels:
     app.kubernetes.io/name: feed-satellites
     app.kubernetes.io/part-of: omos-feeds

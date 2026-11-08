@@ -12,7 +12,7 @@ manifest or set `syncPolicy.managedNamespaceMetadata.labels`.
 | Layer | Meaning | Namespaces (Git and cluster agree, checked 2026-10-27, except the two retired namespaces below) |
 |---|---|---|
 | `data` | Event bus and the network the data moves on | `nats`, `cnpg-system` |
-| `sense` | Collection and edge sensors | `omos`, `takml`, `takserver` |
+| `sense` | Collection and edge sensors | `feeds`, `takml`, `takserver` |
 | `make-sense` | Fusion, storage and analytics | `onetak`, `clickhouse`, `onemind-core`, `onemind-data`, `stac`, `stac-validation`, `karakeep`, `nextcloud`, `vaultwarden`, `opencost` |
 | `decide` | AI models and agents | `onemind-ai`, `hermes`, `agent-fabric`, `n8n` |
 | `act` | Human-facing surfaces and delivery | `backstage`, `matrix`, `cloudtak` |
@@ -40,7 +40,7 @@ If an Application creates the namespace with `CreateNamespace=true` and does not
 labelled Namespace, label it in `platform/security/shared-namespaces.yaml`, not in another
 Application. `platform-security` applies those Namespaces in the same sync as, and before, the
 Enforce ClusterPolicies (wave 5), so on a rebuild from zero no namespace is ever created
-unlabelled after Kyverno starts enforcing. The one exception is `omos`: it is labelled by
+unlabelled after Kyverno starts enforcing. The one exception is `feeds`: it is labelled by
 `platform-omos`, which prunes, so `platform-redpanda-connect` (same namespace) sets
 `managedNamespaceMetadata` with the same labels instead. `NamespaceBootstrap` in
 `scripts/tests/test_gitops_kyverno_history.py` fails CI if a new Application breaks this.
