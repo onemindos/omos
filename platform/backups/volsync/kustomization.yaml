@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
 - sources.yaml
 - network.yaml
-- sealed/auth-volume-86c342dd8d39.yaml
 - sealed/clickhouse-volume-ab4fbd87295d.yaml
 - sealed/hermes-volume-c96e219d2314.yaml
 - sealed/monitoring-volume-0a77d3a320c8.yaml
