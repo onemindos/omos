@@ -18,24 +18,6 @@
     "size": "20Gi"
   },
   {
-    "namespace": "matrix",
-    "pvc": "data-postgres-0",
-    "source": "volume-0af77b22c7a2",
-    "size": "20Gi"
-  },
-  {
-    "namespace": "matrix",
-    "pvc": "data-redis-0",
-    "source": "volume-d946eeb02a16",
-    "size": "10Gi"
-  },
-  {
-    "namespace": "matrix",
-    "pvc": "synapse-data",
-    "source": "volume-197d8a9e297d",
-    "size": "50Gi"
-  },
-  {
     "namespace": "monitoring",
     "pvc": "storage-loki-0",
     "source": "volume-0a77d3a320c8",

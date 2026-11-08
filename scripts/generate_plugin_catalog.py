@@ -45,7 +45,6 @@ REF_RE = re.compile(r"^(component|resource|api|system):default/([a-z0-9][a-z0-9_
 
 # MCP application ids whose catalog Component has another name.
 MCP_ALIASES = {
-    "matrix": "k8s-matrix-synapse-c02538fc",
     "tak": "tak-server",
     "home_assistant": "home-assistant",
     "onemind_core": "k8s-omos-omos-tak-projector-ac850041",

@@ -391,7 +391,6 @@ placement:
   dropbox: productivity-saas
   eclipse-ditto: geospatial
   eclipse-zenoh: geospatial
-  element-chat: communication
   eolianvr: tak-ecosystem
   equifax: personal-finance
   experian: personal-finance
@@ -425,7 +424,6 @@ placement:
   lm-studio: ai-agents
   loki: observability
   madmapper: personal-tools
-  matrix-synapse: communication
   mercury: business-operations
   ministral-models: ai-agents
   miro: productivity-saas

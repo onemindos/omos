@@ -159,17 +159,16 @@ plugins:
   - name: bridge-nats-matrix
     title: NATS to Matrix bridge
     description: Relays selected NATS subjects (alerts, health, TAK mission and emergency CoT, Legacy voice and decisions) to Matrix rooms. Manifests exist in
-        platform/matrix/base but the platform-matrix overlay (platform/matrix/argo) does not include them and no pod runs.
+        platform/parked/matrix/base; Matrix was retired from the cluster on 2026-11-07 and no pod runs.
     type: bridge
     status: parked
     origin: onemind
-    source: platform/matrix/base/nats-matrix-bridge
-    build: "python:3.11-slim, script platform/matrix/nats-matrix-bridge.py"
-    runsOn: {kind: cluster, location: "ns matrix (not deployed)"}
-    connectsTo: [nats, matrix-synapse]
+    source: platform/parked/matrix/base/nats-matrix-bridge
+    build: "python:3.11-slim, script platform/parked/matrix/nats-matrix-bridge.py"
+    runsOn: {kind: cluster, location: "none (Matrix retired)"}
+    connectsTo: [nats]
     subscribes: [tak-cot-all, legacy-alert-subjects]
-    dependsOn: [component:default/k8s-matrix-synapse-c02538fc]
-    verified: "2026-10-29 no pod, base not in Argo overlay"
+    verified: "2026-11-07 Matrix retired, no pod"
 
   # ---- omos-bridge protocol adapters (services/bridge) -----------------------------------------
   - name: bridge-homeassistant

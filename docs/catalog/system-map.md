@@ -183,7 +183,6 @@ Each application resolves to exactly one app Component. The app carries `argocd/
 | `platform-kube` | kube | Headlamp (`headlamp`) | Developer platform |
 | `platform-hermes-base` | hermes | Hermes namespace, egress Services and shared Secrets (`onemind-hermes`) | AI & agents |
 | `platform-onemind-mcp` | hermes | OneMind internal app MCP (`onemind-mcp`) | AI & agents |
-| `platform-matrix` | matrix | Matrix Synapse (`matrix-synapse`) | Communication |
 | `platform-monitoring` | monitoring | Grafana (`grafana`) | Observability |
 | `platform-n8n` | n8n | n8n (`n8n`) | AI & agents |
 | `platform-nats` | nats | NATS JetStream (`nats`) | Messaging (NATS) |

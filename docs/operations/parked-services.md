@@ -26,6 +26,7 @@ The record of every service removed from the cluster during the 2026 cost and cl
 |---------|----------|------|---------------|-----------------------------------------------|-----------------|-------|
 | omos-mission-engine | Parked | 2026-10-17 | `platform/parked/omos-mission-engine/` (was `platform/omos/`) | None: it ran at 0 replicas with no volume | n/a | Image `ghcr.io/onemindos/omos-mission-engine:latest`; its source code exists nowhere, so it cannot be rebuilt. Bringing it back needs the code first |
 | kagent + agent-sandbox | Removed (parked) | 2026-10-17 | `platform/parked/kagent/` (was `platform/ecosystem/`) | No volumes. `kagent` database dropped 2026-10-17 after a verified `pg_dump` at `~/Backups/omos/kagent/kagent-2026-10-17.dump` (SHA-256 `d1ed3ba3…4221964`) | Database dropped 2026-10-17 | 0 use in 7 days. Hermes is the agent harness. Vault profile: `Software/Self-Hosted/AI and Agents/Agent Platforms/kagent - Kubernetes AI Agent Runtime.md`. LiteLLM key and Authentik provider to revoke by hand |
+| matrix (Synapse, Element, Postgres, Redis) | Retired (parked) | 2026-11-07 | `platform/parked/matrix/` (was `platform/matrix/`; Application CR at `platform/parked/matrix/platform-matrix.application.yaml`) | Final encrypted `pg_dump` (restore-verified, 151 tables) and Synapse signing key under `backups/matrix/final-2026-11-07/` in the `onemind-backups` bucket. VolSync restic repos stay at `backups/restic/matrix/{data-postgres-0,data-redis-0,synapse-data}` (last syncs 2026-11-08) | Namespace and PVCs deleted 2026-11-07 after the dump was verified | 2 users, 0 rooms, no events. Cloudflare records for the retired public hosts `matrix.onemindos.com` and `element.onemindos.com` are for the owner to delete. The tool gateway execute-gate (replicas 0) still points at Synapse |
 
 ## Restoring a parked service
 
@@ -35,4 +36,4 @@ The record of every service removed from the cluster during the 2026 cost and cl
 
 ## Known drift not handled here
 
-- `platform-matrix` stays on manual sync. Git does not match the running Matrix server: Git still points Element at `onemindos.com` while the live server is on `onemindos.dev` (open PR 192), and Git expects a `synapse-homeserver` Secret that does not exist (the live config is in the `synapse-config` ConfigMap). Syncing it as it is would break Matrix. It needs its own careful step: finish PR 192, turn the live homeserver config into a SealedSecret, diff to zero, then enable sync.
+- `platform-matrix` was retired on 2026-11-07 (see the register). Its old drift notes are in `docs/operations/matrix-drift-2026-10-23.md`.

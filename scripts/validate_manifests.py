@@ -33,7 +33,7 @@ EXCLUDE = (
     re.compile(r"(^|/)(kustomization|Chart|chart-lock|foundation-lock)\.(ya?ml|json)$"),
     re.compile(r"^platform/values/"),
     re.compile(r"^platform/ecosystem/(values|charts)/"),
-    re.compile(r"^platform/matrix/"),  # Synapse/ESS config and scripts, not cluster manifests
+    re.compile(r"^platform/(parked/)?matrix/"),  # Synapse/ESS config and scripts, not cluster manifests
 )
 CRD_SCHEMA = (
     "https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/"

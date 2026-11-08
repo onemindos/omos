@@ -52,16 +52,6 @@ spec:
               app.kubernetes.io/name: nats
       ports:
         - {protocol: TCP, port: 4222}
-    # Matrix: in-cluster Synapse client API (the homeserver URL in config.yaml).
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: matrix
-          podSelector:
-            matchLabels:
-              app: synapse
-      ports:
-        - {protocol: TCP, port: 8008}
     # Langfuse web (tracing, observability/langfuse plugin). Matching ingress rule is the
     # `langfuse-web-clients` policy in platform/ecosystem/resources/langfuse.yaml.
     - to:

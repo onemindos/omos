@@ -128,10 +128,6 @@ applications:
     apps:
     - kubernetes
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
-  platform-matrix:
-    apps:
-    - matrix
-    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-metrics-server:
     apps:
     - prometheus
