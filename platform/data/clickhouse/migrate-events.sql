@@ -2,11 +2,11 @@
 --
 -- Run:
 --   kubectl exec -n clickhouse chi-onemind-onemind-0-0-0 -- \
---     clickhouse-client --user onemind --password onemind2026 \
+--     clickhouse-client --user onemind --password "$CH_PASSWORD" \
 --     --queries-file /dev/stdin < platform/clickhouse/migrate-events.sql
 --
 -- Or from within the pod:
---   clickhouse-client --user onemind --password onemind2026
+--   clickhouse-client --user onemind --password "$CH_PASSWORD"
 --   :) SOURCE platform/clickhouse/migrate-events.sql
 
 CREATE TABLE IF NOT EXISTS onemind.events

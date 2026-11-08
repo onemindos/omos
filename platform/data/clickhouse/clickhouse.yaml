@@ -29,7 +29,10 @@ spec:
           shardsCount: 1
           replicasCount: 1
     users:
-      onemind/password: "onemind2026"
+      # SHA-256 of a random password (rotated 2026-11-07, the old one was in Git history). The password is sealed in
+      # omos/omos-clickhouse-creds, clickhouse/clickhouse-backup-creds and monitoring/grafana-clickhouse-datasource. A hash for the
+      # same no-restart reason as legacy_ro below.
+      onemind/password_sha256_hex: "e6c79e5b8465e20eb5c130acc6086fe5378c9adc14f04bbfa41acefe5d298a29"
       onemind/networks/ip: "::/0"
       onemind/profile: default
       onemind/quota: default
