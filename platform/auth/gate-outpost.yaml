@@ -1,17 +1,18 @@
-# Authentik gate outpost for Headlamp: https://headlamp.tail717ba0.ts.net -> Authentik login (admins only) -> Headlamp.
+# Shared Authentik gate: ONE proxy outpost that fronts several tailnet apps (Headlamp first).
 #
-# - This is a replica of the ONE Authentik outpost "gate-outpost" (all gated apps share its token and provider list); each
-#   gated app runs a small replica in its own namespace because a Tailscale Ingress backend must be in the Ingress's namespace.
-#   (A shared replica in `auth` with the Ingress there did not get advertised by the operator; see docs/roadmap/authentik-unified-login.md.)
-# - Providers, applications (bound to authentik Admins) and the outpost come from the Sync hook platform/auth/gate-providers.yaml.
-# - AUTHENTIK_TOKEN is the outpost's API token, sealed into gate-outpost (namespace-wide) from the Authentik database
-#   (token identifier ak-outpost-<outpost uuid>-api). Re-seal it if the outpost is ever re-created.
+# - Providers, applications (bound to authentik Admins) and the outpost "gate-outpost" come from the Sync hook
+#   platform/auth/gate-providers.yaml. The outpost routes to each app by Host header.
+# - AUTHENTIK_TOKEN is the outpost's API token, sealed once into gate-outpost (read from the Authentik database,
+#   token identifier ak-outpost-<outpost uuid>-api). Re-seal it if the outpost is ever re-created.
+# - Tailscale ProxyGroup Ingresses cannot use an ExternalName backend and a backend must be in the Ingress's own
+#   namespace, so the gate Ingresses live here, next to the outpost Service, instead of in each app's namespace.
+#   Rollback for one app: restore its Ingress in the app's own manifests and delete the gate Ingress below.
 # - The image tag must match the Authentik server version (platform-auth-helm, 2026.8.2).
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gate-outpost
-  namespace: headlamp
+  namespace: auth
   labels:
     app.kubernetes.io/name: gate-outpost
 spec:
@@ -85,7 +86,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gate-outpost
-  namespace: headlamp
+  namespace: auth
   labels:
     app.kubernetes.io/name: gate-outpost
 spec:
@@ -96,11 +97,13 @@ spec:
       port: 9000
       targetPort: http
 ---
+# The outpost: reachable only from the Tailscale ingress proxies; may reach Authentik, the gated apps and DNS.
+# Add one egress rule per gated app.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: gate-outpost
-  namespace: headlamp
+  namespace: auth
 spec:
   podSelector:
     matchLabels:
@@ -118,10 +121,7 @@ spec:
           port: 9000
   egress:
     - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: auth
-          podSelector:
+        - podSelector:
             matchLabels:
               app.kubernetes.io/component: server
               app.kubernetes.io/instance: platform-auth-helm
@@ -131,7 +131,10 @@ spec:
         - protocol: TCP
           port: 80
     - to:
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: headlamp
+          podSelector:
             matchLabels:
               app: headlamp
       ports:
@@ -149,3 +152,23 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
+---
+# Headlamp -- headlamp.tail717ba0.ts.net, behind the gate (Authentik sign-in, admins only).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gate-headlamp
+  namespace: auth
+  annotations:
+    tailscale.com/proxy-group: ingress
+    tailscale.com/hostname: headlamp
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: gate-outpost
+      port:
+        number: 9000
+  tls:
+    - hosts:
+        - headlamp
