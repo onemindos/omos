@@ -13,22 +13,17 @@ data:
     web-root: app
 
     cache-file: /var/lib/ntfy/cache.db
-    cache-duration: 12h
+    cache-duration: 24h
 
     attachment-cache-dir: /var/lib/ntfy/attachments
     attachment-total-size-limit: 1G
     attachment-file-size-limit: 15M
     attachment-expiry-duration: 24h
 
-    # Private by default. Users and publisher tokens are provisioned from the
-    # ntfy-auth Secret through NTFY_AUTH_USERS / NTFY_AUTH_TOKENS (ntfy 2.14+).
-    # The ACL below holds no secrets: publishers get write-only access.
-    # The admin role reads and writes every topic.
+    # Private by default. Users, tokens and their topic permissions are all
+    # provisioned from the ntfy-auth Secret (NTFY_AUTH_USERS, NTFY_AUTH_TOKENS,
+    # NTFY_AUTH_ACCESS). ntfy refuses to start if an ACL names a user that does
+    # not exist, so the ACL lives with the users, not here.
     auth-file: /var/lib/ntfy/user.db
     auth-default-access: deny-all
     enable-login: true
-    auth-access:
-    - home-assistant:home-alerts:wo
-    - home-assistant:cameras:wo
-    - alertmanager:cluster:wo
-    - hermes:hermes:wo

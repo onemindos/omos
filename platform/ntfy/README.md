@@ -21,8 +21,7 @@ declaratively (ntfy 2.14+):
 
 | What | Where |
 |------|-------|
-| ACL (no secrets): `home-assistant` writes `home-alerts`, `cameras`; `alertmanager` writes `cluster`; `hermes` writes `hermes` | `configmap.yaml` (`auth-access`) |
-| Users (bcrypt hashes) and tokens | Secret `ntfy-auth`, env `NTFY_AUTH_USERS`, `NTFY_AUTH_TOKENS` |
+| Users (bcrypt hashes), tokens and the ACL (`home-assistant` writes `home-alerts`, `cameras`; `alertmanager` writes `cluster`; `hermes` writes `hermes`) | Secret `ntfy-auth`, env `NTFY_AUTH_USERS`, `NTFY_AUTH_TOKENS`, `NTFY_AUTH_ACCESS` |
 
 ### TODO(owner): seal `ntfy-auth`
 
@@ -37,6 +36,10 @@ plaintext.
   `alertmanager:<hash>:user`, `hermes:<hash>:user`
 - `NTFY_AUTH_TOKENS`: comma-separated `user:tk_<29 chars>:label`, one per
   publisher: `home-assistant`, `alertmanager`, `hermes`
+- `NTFY_AUTH_ACCESS`: comma-separated `user:topic:permission`:
+  `home-assistant:home-alerts:wo,home-assistant:cameras:wo,alertmanager:cluster:wo,hermes:hermes:wo`.
+  It must ship with the users: ntfy refuses to start when an ACL names a
+  user that is not provisioned (seen on first sync, 2026-11-08).
 
 Until the Secret exists the pod still starts (the reference is optional), but
 nobody can log in or publish.

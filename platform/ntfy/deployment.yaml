@@ -39,7 +39,7 @@ spec:
         - name: TZ
           value: Etc/UTC
         # TODO(owner): sealed Secret `ntfy-auth` (keys NTFY_AUTH_USERS,
-        # NTFY_AUTH_TOKENS; see README). Optional so the pod starts without it;
+        # NTFY_AUTH_TOKENS, NTFY_AUTH_ACCESS; see README). Optional so the pod starts without it;
         # until it exists nobody can log in (deny-all).
         envFrom:
         - secretRef:
