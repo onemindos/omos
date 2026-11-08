@@ -1,6 +1,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: forgejo
 resources:
 - storage.yaml
 - workload.yaml
@@ -12,5 +11,6 @@ resources:
 - auth-provider.yaml
 configMapGenerator:
 - name: forgejo-backup-runtime
+  namespace: forgejo
   files:
   - scripts/coordinated_backup.py
