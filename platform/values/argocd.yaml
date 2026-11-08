@@ -27,7 +27,11 @@ repoServer:
     limits:
       memory: 512Mi
 
+# ApplicationSet controller off (no ApplicationSets exist; owner-approved 2026-11-07). The live Deployment is
+# scaled to 0 by hand (Argo does not prune it), the same way #725 kept live matching Git. Turn it back on here
+# and `kubectl scale` it to 1 before creating any ApplicationSet.
 applicationSet:
+  enabled: false
   resources:
     requests:
       cpu: 50m
@@ -39,6 +43,7 @@ applicationSet:
 dex:
   enabled: false
 
+# Notifications controller stays on: the alerts work (separate change) points it at the alert channel.
 notifications:
   resources:
     requests:

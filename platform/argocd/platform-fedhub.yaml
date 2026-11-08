@@ -19,6 +19,8 @@ kind: Application
 metadata:
   name: platform-fedhub
   namespace: argocd
+  labels:
+    onemind.io/family: tak
   annotations:
     argocd.argoproj.io/sync-wave: "3"
   finalizers:

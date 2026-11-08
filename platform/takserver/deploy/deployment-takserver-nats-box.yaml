@@ -17,7 +17,7 @@ metadata:
     argocd.argoproj.io/sync-wave: '0'
 spec:
   progressDeadlineSeconds: 600
-  replicas: 1
+  replicas: 0  # idle debug pod, parked 2026-11-07 (owner-approved); scale to 1 when needed
   revisionHistoryLimit: 10
   selector:
     matchLabels:
