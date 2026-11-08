@@ -109,6 +109,22 @@ spec:
       createrole: false
       passwordSecret:
         name: db-backstage
+    - name: n8n
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      createrole: false
+      passwordSecret:
+        name: db-n8n
+    - name: thingsboard
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      createrole: false
+      passwordSecret:
+        name: db-thingsboard
   postgresql:
     shared_preload_libraries:
     - age
