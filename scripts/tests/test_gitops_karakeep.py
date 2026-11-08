@@ -68,8 +68,8 @@ class KarakeepDeployment(unittest.TestCase):
         configuration = dict(item.split("=", 1) for item in generator["literals"])
         self.assertEqual(configuration["NEXTAUTH_URL"], "https://karakeep.tail717ba0.ts.net")
         self.assertEqual(configuration["DISABLE_PASSWORD_AUTH"], "true")
-        # First OIDC enrollment is possible only for the one bound Authentik owner.
-        self.assertEqual(configuration["DISABLE_SIGNUPS"], "false")
+        # The owner's Authentik-linked account exists (2026-11-08), so new sign-ups are closed.
+        self.assertEqual(configuration["DISABLE_SIGNUPS"], "true")
         self.assertEqual(configuration["OAUTH_CLIENT_ID"], "onemind-karakeep")
         self.assertEqual(configuration["OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING"], "false")
         self.assertEqual(configuration["INFERENCE_ENABLE_AUTO_TAGGING"], "false")
