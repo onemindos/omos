@@ -73,7 +73,105 @@ Backstage stays the main workspace; Authentik's application dashboard is an
 alternate launcher and recovery convenience. Neither substitutes for app APIs,
 data synchronization, fine-grained authorization or agent tool integration.
 
+## Refreshed inventory and sort — 2026-11-08 (read-only, supersedes the matrix below where they differ)
+
+**Status of this plan against the cluster today.** The plan written on 2026-10-23 is
+out of date in three ways. (1) Several apps it lists as "to do" are done: Argo CD OIDC
+(#392), portal/Backstage OIDC (#402), Grafana OIDC (#757), the FedHub provider (#427),
+NUI behind a proxy outpost (#720, #721), and two apps it did not know about,
+Karakeep and Langfuse, now sign in through Authentik. (2) Apps it lists no longer
+exist or are parked: Nextcloud, Matrix/Synapse/Element, LiteLLM, Paperclip, the
+OpenChoreo and OpenSearch pieces, and the HeyNATS/NATS Dashboard/NATS monitor tools
+(only NUI remains). Skip S02, S04 and S05-LiteLLM. (3) Apps it does not mention are now
+live: Forgejo, Vaultwarden, Karakeep, ThingsBoard, OpenRemote, Gatus, CloudTAK,
+STAC browser, Hermes web app. The "Argo/platform OIDC Jobs Failed" blocker in
+[Evidence](#evidence-and-the-first-blocker) is from 2026-10-23 and was not re-checked
+here. Open #565 (NATS role modes) is a different topic.
+
+Snapshot: `kubectl get ingress -A` plus Deployments, ConfigMaps and env names (no values),
+2026-11-08. All 26 tailnet ingresses and 3 public nginx ingresses were reviewed. The
+Authentik server/worker run; an Authentik database move is in progress elsewhere, so
+nothing below was tested by logging in.
+
+Upstream facts were checked against vendor docs on 2026-11-08 unless marked "verify".
+
+### A) Already on Authentik
+
+| App | URL | How it works today | Gap to close |
+|---|---|---|---|
+| Argo CD | `argocd.tail717ba0.ts.net` | OIDC (`argocd-cm` oidc.config, PKCE, `argocd-admins` -> admin) | Local `admin` account setting should be re-checked; keep one break-glass login |
+| Backstage portal | `portal.tail717ba0.ts.net` | Authentik sign-in (#402); preview at `onemind-preview` | None for sign-in |
+| Grafana | `grafana.tail717ba0.ts.net` | Generic OAuth, `authentik Admins` -> Admin, else Viewer | Local admin login still exists (keep as break-glass) |
+| Langfuse | `onemind-langfuse.tail717ba0.ts.net` | Generic OIDC; live env has `AUTH_DISABLE_USERNAME_PASSWORD=true` | `AUTH_DISABLE_SIGNUP=false`: confirm only the owner can enroll |
+| Karakeep | `karakeep.tail717ba0.ts.net` | Native OIDC, password login disabled, auto-redirect | `DISABLE_SIGNUPS` still `false`: set `true` after the owner's first sign-in |
+| NUI (NATS UI) | `nui.tail717ba0.ts.net` | Authentik proxy outpost (`nui-auth`, goauthentik proxy 2026.8.2) in front of the app | Broker credentials inside NUI are still shared, not per person |
+| FedHub | `fedhub.tail717ba0.ts.net` | Authentik OAuth provider (#427) on the web UI | Verify end to end after the DB move; certificate path stays |
+| Authentik itself | `auth.onemindos.dev` (public) and `onemind-auth` (tailnet) | Own accounts | Owner MFA required before wider rollout |
+
+### B) Native OIDC/SAML is available and free (easy)
+
+| App | URL | Native support | Effort | Risk / note |
+|---|---|---|---|---|
+| Forgejo 15.0.11 | `forgejo.tail717ba0.ts.net` | OAuth2/OIDC auth source, free; Authentik has an official guide | Small: add provider + auth source in Forgejo admin (or `FORGEJO__oauth2_client__*` env), link existing owner account | Account linking by hand; keep local admin for recovery. Git over HTTPS tokens stay separate |
+| ThingsBoard 4.3.1.8 | `thingsboard.tail717ba0.ts.net` | OAuth 2.0 login is in the Community docs (supports generic providers). Verify on the installed CE build: some edition comparisons list "SSO" under PE | Medium: client in the tenant admin UI, mapper from email to tenant user | Devices keep access tokens, MQTT and API keys untouched. Tenant admin stays local |
+| OpenRemote (manager + own Keycloak) | `openremote.tail717ba0.ts.net` | Keycloak identity brokering: add Authentik as an OIDC identity provider in the `master` or app realm | Medium | OpenRemote needs its Keycloak; this only changes who can log in. Keep the `admin` bootstrap account. Do not replace Keycloak |
+| Vaultwarden 1.37.4 | `vaultwarden.tail717ba0.ts.net` | Native SSO (OIDC) since 1.35 | Small config, high care | The master password is still required (SSO does not unlock the vault). Do not set SSO-only until SSO is proven; a broken Authentik must not lock the vault out. Do this last |
+| Gatus | `status.tail717ba0.ts.net` | Native OIDC in the config (`security.oidc`) | Small | Low value (read-only status page); can also use C |
+
+### C) Through the Authentik proxy outpost (works, app keeps its own user)
+
+An outpost fronts the app and Authentik decides who gets in. The app behind it
+either has no login or keeps its own. Tailscale ingress cannot use nginx forward auth,
+so each app gets its own `nui-auth` style outpost Deployment and the ingress points
+at it (the pattern already live for NUI). Memory on the hub-core pool is tight, so
+budget requests per outpost and share one outpost for several hosts only after
+testing.
+
+| App | URL | Today | Effort / risk |
+|---|---|---|---|
+| Hubble UI | `hubble.tail717ba0.ts.net` | No login (tailnet only) | Pilot app: read-only, no state. DOKS-managed Cilium, so only the ingress route changes |
+| OpenCost | `opencost.tail717ba0.ts.net` | No login | Easy. Backstage and Prometheus use the in-cluster service, not the tailnet ingress |
+| STAC browser | `stac-browser.tail717ba0.ts.net` (and `stac`) | No login; STAC API on the other ingress | Easy for the browser; the API ingress (`stac`) needs a machine path. Check the retirement status first |
+| Agent Console | `agent-console.tail717ba0.ts.net` | Tailnet only; server-side action checks | Medium: has actions, test streaming |
+| Agent Tap | `agent-tap.tail717ba0.ts.net` | Tailnet only | Medium: long-lived streams, reconnect behavior |
+| Hermes dashboard | `onemind-hermes.tail717ba0.ts.net` | Own dashboard username/password (`hermes-dashboard-auth`) | Medium. Outpost adds a gate; the dashboard login stays unless header auth is added upstream |
+| Hermes web app | `onemind-hermes-web.tail717ba0.ts.net` | Own app login | Same. Native clients and API calls must bypass |
+| WebODM | none (ClusterIP `webodm`, no ingress today) | Own Django users | No SSO upstream (no header auth). Gate only when an ingress is added |
+| Headlamp | `headlamp.tail717ba0.ts.net` | In-cluster service account (everyone with tailnet access has its rights) | Gate entrance now. Native Headlamp OIDC is not useful on DOKS because the API server will not accept Authentik tokens (DOKS has no custom OIDC setting) |
+| n8n 2.42.4 | `n8n.tail717ba0.ts.net` | Own owner account | Community edition has no SSO (docs list SSO as Business/Enterprise, verify on the pricing page). Gate the UI with an outpost; webhook paths must be exempt or kept internal |
+| TAK Portal | `enroll.tail717ba0.ts.net` | Own login (and public landing at `onemindos.dev`) | Gate `enroll` only if it is private to staff. Do not touch the public root or enrollment downloads |
+
+### D) Cannot or not worth it
+
+| App | Why |
+|---|---|
+| TAK Server web 8443/8446, ATAK/iTAK/WebTAK | Client certificate authentication; a browser SSO cannot replace it. Authentik may gate the portal only |
+| CloudTAK (`cloudtak`, `cloudtak-tiles`) | Signs in against TAK Server credentials/certificates; wrapping it in Authentik would not create a CloudTAK user. Revisit if CloudTAK adds OIDC |
+| Mumble/Murmur | Client certificates and bridge credentials; no browser SSO |
+| NATS (4222, leaf 7422, WebSocket `ws.onemindos.dev`) | Broker credentials per client; not a browser login |
+| OpenRemote Keycloak master admin, Vaultwarden master password, Argo/Grafana/Forgejo local admins | Keep one local break-glass login per app so a bad Authentik does not lock everyone out |
+| ClickHouse, Velero, Kyverno, Falco/Falcosidekick, OpenFGA, CNPG databases | No human web UI deployed (APIs and databases only); use Grafana or Argo for visibility |
+| Tile services (`tileserver.onemindos.dev`), MediaMTX | Public data plane for tiles/streams, machine access; not a login surface |
+| Element/Matrix, Nextcloud, LiteLLM, Paperclip | Not deployed (parked or retired); no work |
+
+### Proposed order
+
+1. Prerequisite: Authentik database move finished and Authentik verified (login, MFA on owner, existing OIDC clients re-tested). Nothing starts before that.
+2. Finish A: Karakeep `DISABLE_SIGNUPS=true`, confirm Langfuse signup limit, test Argo/Grafana/FedHub/portal after the move.
+3. B in this order: Forgejo, ThingsBoard, OpenRemote (Keycloak broker), Gatus, Vaultwarden last.
+4. C in this order: Hubble (pilot), OpenCost, STAC browser, Agent Console, Agent Tap, Hermes dashboard and web app, Headlamp, n8n, TAK Portal. One app per PR, each with a rollback of "point the ingress back at the app service".
+
+### Owner actions by hand
+
+- Sign in to each B app once through Authentik to link or create the account, and approve linking Forgejo/ThingsBoard to the existing owner users.
+- Karakeep: first OIDC sign-in, then approve `DISABLE_SIGNUPS=true`.
+- Turn on MFA for the Authentik owner account.
+- Vaultwarden: keep the master password; no change to it.
+- Decide whether n8n is worth a paid license (otherwise outpost only).
+
 ## Application integration matrix
+
+> Note: the matrix below is the original 2026-10-23 draft. Where it conflicts with the refreshed sort above (apps already done, apps no longer deployed), the refreshed sort wins.
 
 Every proposed route below still needs exact installed-version compatibility,
 owner/source verification and the acceptance receipt. **Configured** means source
