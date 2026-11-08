@@ -103,9 +103,13 @@ spec:
   postgresql:
     shared_preload_libraries:
     - age
+    # TimescaleDB 2.26.4 ships in the PG17 image; the extension is created per database where it is used.
+    - timescaledb
     parameters:
       max_connections: '150'
       shared_buffers: 256MB
+      # No phone-home telemetry from the TimescaleDB extension.
+      timescaledb.telemetry_level: 'off'
   plugins:
   - name: barman-cloud.cloudnative-pg.io
     isWALArchiver: true
