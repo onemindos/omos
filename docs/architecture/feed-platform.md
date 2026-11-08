@@ -1,8 +1,9 @@
 # Feed platform: 100+ sources, each switchable live
 
-Status: **design, waiting for owner approval**. Date: 2026-11-08. Nothing in this document is built
-or deployed yet. Facts marked "verified" were checked read-only on `do-nyc3-omos-cloud` or by
-running the pinned image locally on 2026-11-08.
+Status: **decisions 1 to 5 approved by the owner on 2026-11-08. Phase 1 is built and in a pull
+request (feed schema and controller, engine wiring, NetworkPolicy); nothing is deployed yet.** Date:
+2026-11-08. Phases 2 to 5 are design only. Facts marked "verified" were checked read-only on
+`do-nyc3-omos-cloud` or by running the pinned image locally on 2026-11-08.
 
 Background reading: the research report (OSIRIS, God's Eye View, Argos Atlas, WorldWideView) in the
 cleanup tracker, `docs/NATS-DOCTRINE.md` sections 2, 3 and 9, and the open PRs #553 (omos-ingest)
@@ -198,7 +199,7 @@ WebSocket pod), each still driven by the same bucket.
 Phase 1 is done when: the schema validates in CI, `feed-control` exists as a CR, MTA runs from its
 manifest, and `nats kv put` turns it off and on again on the cluster within seconds with no restart.
 
-## 5. Decisions for the owner
+## 5. Decisions (approved by the owner on 2026-11-08)
 
 1. **Two runners** (Redpanda Connect for simple sources, omos-ingest #553 for hard ones) with one
    manifest format, one bucket and one status subject. *Recommended.* The alternative, Redpanda
@@ -230,6 +231,12 @@ manifest, and `nats kv put` turns it off and on again on the cluster within seco
    Not both at once: each injects `tak.cot.inject` into TAK, so running both would show every
    marker twice. CLAUDE.md still calls the plugin the live wire and needs updating with whichever
    is chosen.
+
+   **Verified read-only on 2026-11-08 (the phase 1 check): feed CoT does not reach TAK today.**
+   `tak-nats-leaf` shows 0 in-msgs and 0 out-msgs and has no `tak.*` subscriptions. The only cluster
+   interest on `tak.cot.inject` is a single `tak.cot.>` subscriber (a reader, not a TAK-side
+   injector). So the legacy `feed-mta` CoT, and any CoT the new path will produce through the
+   projector, has no path into TAK until option a or b is done.
 
 Namespace: `feeds`. The cleanup session renamed `omos` to `feeds` on 2026-11-08 (PR #760); paths
 and Argo Application names are unchanged, and every manifest in this design targets `feeds`.

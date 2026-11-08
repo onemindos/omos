@@ -1,19 +1,30 @@
 # =============================================================================
-# redpanda-connect-grammar: the grammar feed pipelines (FEATURES A1), separate from the
-# legacy redpanda-connect pod so the old CoT pipeline keeps running, untouched, until the new
-# one is proven (decision 0004 #18).
+# redpanda-connect-grammar: the feed engine (docs/architecture/feed-platform.md, phase 1).
+# Redpanda Connect in streams mode, separate from the legacy redpanda-connect pod so the old
+# CoT pipeline keeps running, untouched, until the new one is proven (decision 0004 #18).
 #
-#   feed-mta-grammar.yaml        evt.world.rail.{id}          (WORLD; replaces feed-mta CoT)
-#   feed-satellites-grammar.yaml intel.space.celestrak.tle    (INTEL; replaces feed-satellites CoT)
-#   both                         tel.feed.{source}.status, evt.sys.{source}.rejected
+# Static streams (started from the args):
+#   feed-controller   watches the NATS KV bucket feed-control and starts or stops source streams
+#                     through this pod's own streams API on 127.0.0.1:4195
+#   feed-seeder       once per start: writes the Git default (default_enabled) for every source
+#                     that has no key yet
+# Source streams (started by the controller, one per enabled source, from ConfigMap feed-sources):
+#   mta-rail          evt.world.rail.{entity}, tel.feed.mta.status, evt.sys.mta.rejected
 #
-# FEED SWITCH: `replicas` below is the on/off switch. 0 = off (as merged). Activation order,
-# checks and rollback: CUTOVER.md in this directory. Nothing in this Deployment publishes to
-# tak.cot.inject (test/replay.sh proves it on recorded fixtures).
+# THE FEED SWITCH IS THE KV BUCKET, not `replicas`:
+#   nats kv put feed-control mta-rail '{"enabled":true,"interval":"30s","updated_by":"you","reason":"why"}'
+# mta-rail is seeded OFF (default_enabled: false), so with replicas 1 nothing new is published
+# until someone switches it on. Nothing here publishes to tak.cot.inject. Runbook: CUTOVER.md.
 #
-# Own pod, not more streams in the legacy pod: that pod runs at about 116Mi of its 128Mi limit
-# (kubectl top, 2026-10-29), so adding pipelines there could OOM the live feed. New workloads go
-# on the ecosystem pool (omos CLAUDE.md); same digest-pinned image as the legacy pod.
+# feed-satellites-grammar.yaml is NOT started here: phase 1 is MTA only. Satellites stays off
+# until a source manifest for it exists in platform/data/sources/. feed-mta-grammar.yaml is not
+# listed either; MTA now starts from platform/data/sources/mta-rail.yaml through the bucket.
+#
+# Own pod, not more streams in the legacy pod: that pod runs at about 90Mi of its 128Mi limit
+# (kubectl top, 2026-11-08), so adding streams there could OOM the live feed. New workloads go on
+# the ecosystem pool (omos CLAUDE.md); same digest-pinned image as the legacy pod.
+#
+# Never `kubectl exec` the Connect binary in this pod: a second process OOM-kills it.
 # =============================================================================
 apiVersion: apps/v1
 kind: Deployment
@@ -24,7 +35,7 @@ metadata:
     app.kubernetes.io/name: redpanda-connect-grammar
     app.kubernetes.io/part-of: omos-feeds
 spec:
-  replicas: 0
+  replicas: 1
   strategy:
     type: Recreate  # one poller per source: never two pods publishing during a rollout
   selector:
@@ -35,6 +46,11 @@ spec:
       labels:
         app.kubernetes.io/name: redpanda-connect-grammar
         app.kubernetes.io/part-of: omos-feeds
+      annotations:
+        # sha256 of the data of ConfigMaps feed-sources and feed-control-pipelines. The controller
+        # reads _index.json once, when its stream starts, so a changed manifest must restart the
+        # pod. Do not edit by hand: python scripts/gen_feed_sources.py rewrites it (CI --check).
+        onemind.io/feed-config-sha256: "df4780835fb49bbecb4f9a62ba9f67ebc7430c10e17d405ac48260a84e8a9771"
     spec:
       automountServiceAccountToken: false
       nodeSelector:
@@ -45,8 +61,8 @@ spec:
           args:
             - streams
             - --chilled
-            - /config/pipelines/feed-mta-grammar.yaml
-            - /config/pipelines/feed-satellites-grammar.yaml
+            - /config/control/feed-controller.yaml
+            - /config/control/feed-seeder.yaml
           env:
             - name: NATS_USER
               valueFrom:
@@ -80,22 +96,29 @@ spec:
             seccompProfile:
               type: RuntimeDefault
           volumeMounts:
-            - name: pipelines
-              mountPath: /config/pipelines
+            - name: control
+              mountPath: /config/control
+              readOnly: true
+            - name: sources
+              mountPath: /config/sources
+              readOnly: true
             - name: proto
               mountPath: /proto/gtfs-realtime.proto
               subPath: gtfs-realtime.proto
           resources:
             requests:
-              cpu: "50m"
-              memory: "96Mi"
+              cpu: "25m"
+              memory: "64Mi"
             limits:
-              cpu: "300m"
+              cpu: "250m"
               memory: "256Mi"
       volumes:
-        - name: pipelines
+        - name: control
           configMap:
-            name: redpanda-connect-pipelines
+            name: feed-control-pipelines
+        - name: sources
+          configMap:
+            name: feed-sources
         - name: proto
           configMap:
             name: redpanda-connect-proto

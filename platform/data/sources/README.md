@@ -35,10 +35,13 @@ Deleting the key also switches the feed off. Keys that are not a known source id
 ## What the engine pod needs for these sources
 
 - ConfigMap `feed-sources` (generated) mounted at `/config/sources`.
-- ConfigMap `feed-control-pipelines` (the controller and the seeder) mounted at `/config/pipelines`.
+- ConfigMap `feed-control-pipelines` (the controller and the seeder) mounted at `/config/control`.
 - `mta-rail` also needs the GTFS proto file: ConfigMap `redpanda-connect-proto`, key
   `gtfs-realtime.proto`, mounted at `/proto/gtfs-realtime.proto`. It needs no `-r` resource file
   (the dedupe cache of the old `feed-mta` pipeline is not used).
 - Env `NATS_USER` and `NATS_PASSWORD` from the Secret `omos-nats-creds` (keys `user`, `password`).
 
-None of this runs until the engine pod is wired to these ConfigMaps (a later change).
+The engine pod `redpanda-connect-grammar` (`platform/data/redpanda-connect/deployment-grammar.yaml`)
+has all of this wired: it starts only the controller and the seeder, and the pod annotation
+`onemind.io/feed-config-sha256` (kept current by `scripts/gen_feed_sources.py`) restarts it when a
+manifest changes.

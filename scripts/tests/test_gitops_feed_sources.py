@@ -241,3 +241,59 @@ class FeedControlConfigMapTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FeedEnginePodTest(unittest.TestCase):
+    """The grammar Deployment runs the controller and seeder and is locked down (phase 1)."""
+
+    @classmethod
+    def setUpClass(cls):
+        docs = [d for d in yaml.safe_load_all((RC_DIR / "deployment-grammar.yaml").read_text()) if d]
+        cls.deploy = next(d for d in docs if d["kind"] == "Deployment")
+        cls.pod = cls.deploy["spec"]["template"]
+        cls.c = cls.pod["spec"]["containers"][0]
+        cls.policy = yaml.safe_load((RC_DIR / "networkpolicy.yaml").read_text())
+
+    def test_runs_controller_and_seeder_from_the_control_configmap(self):
+        self.assertEqual(self.deploy["spec"]["replicas"], 1)
+        self.assertEqual(self.deploy["spec"]["strategy"]["type"], "Recreate")
+        self.assertEqual(
+            self.c["args"],
+            ["streams", "--chilled", "/config/control/feed-controller.yaml", "/config/control/feed-seeder.yaml"],
+        )
+        mounts = {m["name"]: m["mountPath"] for m in self.c["volumeMounts"]}
+        vols = {v["name"]: v["configMap"]["name"] for v in self.pod["spec"]["volumes"]}
+        self.assertEqual(mounts["control"], "/config/control")
+        self.assertEqual(vols["control"], "feed-control-pipelines")
+        self.assertEqual(mounts["sources"], "/config/sources")
+        self.assertEqual(vols["sources"], "feed-sources")
+        self.assertEqual(vols["proto"], "redpanda-connect-proto")
+        self.assertEqual(mounts["proto"], "/proto/gtfs-realtime.proto")
+
+    def test_resources_follow_the_design(self):
+        self.assertEqual(self.c["resources"]["requests"]["memory"], "64Mi")
+        self.assertEqual(self.c["resources"]["limits"]["memory"], "256Mi")
+
+    def test_pod_restarts_when_a_manifest_changes(self):
+        """The annotation is the sha256 of the data of both ConfigMaps; the generator keeps it."""
+        recorded = self.pod["metadata"]["annotations"]["onemind.io/feed-config-sha256"]
+        sys.path.insert(0, str(ROOT / "scripts"))
+        try:
+            import gen_feed_sources
+        finally:
+            sys.path.pop(0)
+        self.assertEqual(recorded, gen_feed_sources.config_hash(SOURCES_CM.read_text(), CONTROL_CM.read_text()))
+
+    def test_streams_api_is_not_reachable_from_other_pods(self):
+        self.assertEqual(self.policy["kind"], "NetworkPolicy")
+        self.assertEqual(self.policy["metadata"]["namespace"], "feeds")
+        self.assertEqual(self.policy["spec"]["policyTypes"], ["Ingress"])
+        self.assertFalse(self.policy["spec"].get("ingress"), "no ingress rule: deny all")
+        expr = self.policy["spec"]["podSelector"]["matchExpressions"][0]
+        self.assertEqual(expr["key"], "app.kubernetes.io/name")
+        self.assertEqual(sorted(expr["values"]), ["redpanda-connect", "redpanda-connect-grammar"])
+        # and no Service in the directory exposes 4195
+        for path in RC_DIR.glob("*.yaml"):
+            for doc in yaml.safe_load_all(path.read_text()):
+                if doc and doc.get("kind") == "Service":
+                    self.fail(f"{path.name}: a Service would expose the streams API")

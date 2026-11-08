@@ -10,6 +10,10 @@ services/schemas/feeds/source-manifest.v1.schema.json, and writes:
   platform/data/redpanda-connect/feed-control.configmap.yaml
       ConfigMap feed-control-pipelines (namespace feeds): the controller and seeder streams,
       copied from platform/data/redpanda-connect/pipelines/.
+  platform/data/redpanda-connect/deployment-grammar.yaml
+      Only the pod annotation onemind.io/feed-config-sha256: a sha256 of the data of both
+      ConfigMaps. The controller reads _index.json when its stream starts, so a manifest change
+      must restart the pod; the changed annotation does that.
 
 Usage:
   python scripts/gen_feed_sources.py           write both files
@@ -20,6 +24,7 @@ Needs PyYAML and jsonschema.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -34,6 +39,8 @@ SCHEMA_PATH = ROOT / "services" / "schemas" / "feeds" / "source-manifest.v1.sche
 RC_DIR = ROOT / "platform" / "data" / "redpanda-connect"
 SOURCES_CM = RC_DIR / "feed-sources.configmap.yaml"
 CONTROL_CM = RC_DIR / "feed-control.configmap.yaml"
+GRAMMAR_DEPLOY = RC_DIR / "deployment-grammar.yaml"
+HASH_LINE = re.compile(r'^(\s*onemind\.io/feed-config-sha256: )"[0-9a-f]{64}"$', re.M)
 CONTROL_FILES = ("feed-controller.yaml", "feed-seeder.yaml")
 
 SOURCES_HEADER = """\
@@ -119,8 +126,26 @@ def render_control() -> str:
     return configmap(CONTROL_HEADER, "feed-control-pipelines", items)
 
 
+def config_hash(sources_text: str, control_text: str) -> str:
+    """sha256 over the data of both ConfigMaps (not their comments), in a stable order."""
+    data = [yaml.safe_load(t)["data"] for t in (sources_text, control_text)]
+    return hashlib.sha256(json.dumps(data, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def render_grammar_deployment(digest: str) -> str:
+    text = GRAMMAR_DEPLOY.read_text()
+    if not HASH_LINE.search(text):
+        raise SystemExit(f"{GRAMMAR_DEPLOY.relative_to(ROOT)}: no onemind.io/feed-config-sha256 annotation line")
+    return HASH_LINE.sub(lambda m: f'{m.group(1)}"{digest}"', text)
+
+
 def outputs() -> list[tuple[Path, str]]:
-    return [(SOURCES_CM, render_sources()), (CONTROL_CM, render_control())]
+    sources, control = render_sources(), render_control()
+    return [
+        (SOURCES_CM, sources),
+        (CONTROL_CM, control),
+        (GRAMMAR_DEPLOY, render_grammar_deployment(config_hash(sources, control))),
+    ]
 
 
 def main() -> int:
@@ -141,7 +166,7 @@ def main() -> int:
             print(f"stale: {p.relative_to(ROOT)} (run python scripts/gen_feed_sources.py)", file=sys.stderr)
         return 1
     if args.check:
-        print("feed ConfigMaps are up to date")
+        print("feed ConfigMaps and the pod config hash are up to date")
     return 0
 
 

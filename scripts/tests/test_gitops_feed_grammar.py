@@ -83,12 +83,17 @@ class FeedGrammar(unittest.TestCase):
                 if a.endswith(".yaml"):
                     self.assertNotIn(a, seen, f"{a} in {seen.get(a)} and {name}")
                     seen[a] = name
-        self.assertEqual(self.args("redpanda-connect-grammar")[2:], [f"/config/pipelines/{k}" for k in GRAMMAR])
+        # The engine pod starts only the controller and the seeder. MTA starts from its manifest
+        # through the feed-control bucket; satellites stays off until it has a manifest.
+        self.assertEqual(
+            self.args("redpanda-connect-grammar"),
+            ["streams", "--chilled", "/config/control/feed-controller.yaml", "/config/control/feed-seeder.yaml"],
+        )
 
     def test_grammar_deployment_is_a_reviewed_switch(self):
         d = self.deploys["redpanda-connect-grammar"]
         spec = d["spec"]["template"]["spec"]
-        self.assertIn(d["spec"]["replicas"], (0, 1))
+        self.assertEqual(d["spec"]["replicas"], 1)
         self.assertEqual(d["spec"]["strategy"]["type"], "Recreate")
         self.assertEqual(spec["nodeSelector"], {"onemind.io/compute-role": "ecosystem"})
         c = spec["containers"][0]

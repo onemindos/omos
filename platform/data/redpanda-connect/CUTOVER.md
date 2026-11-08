@@ -18,59 +18,86 @@ Owner proposals this depends on: `docs/proposals/2026-10-29-feed-grammar-cutover
 
 ## The switch
 
-Three `replicas` fields in Git, each changed by its own reviewed PR. Argo applies them
-(`platform-redpanda-connect` and `platform-omos` both sync automatically).
+MTA no longer switches with a Deployment field. `redpanda-connect-grammar` is now the feed engine
+(`docs/architecture/feed-platform.md`, phase 1): it runs `feed-controller` and `feed-seeder`, and the
+controller starts or stops each source stream from the NATS KV bucket `feed-control`. The MTA stream
+comes from the manifest `platform/data/sources/mta-rail.yaml`, not from `feed-mta-grammar.yaml`.
 
-| Field | File | Merged value |
+| Switch | Where | Merged value |
 |---|---|---|
-| `redpanda-connect-grammar` replicas | `platform/data/redpanda-connect/deployment-grammar.yaml` | `0` (off) |
+| MTA grammar feed (`evt.world.rail.*`) | key `mta-rail` in KV bucket `feed-control` | `{"enabled":false}` (seeded from `default_enabled: false`) |
+| `redpanda-connect-grammar` replicas (the engine, not a feed) | `platform/data/redpanda-connect/deployment-grammar.yaml` | `1` |
 | `redpanda-connect` replicas (legacy `feed-mta` CoT) | `platform/data/redpanda-connect/deployment.yaml` | `1` (on) |
 | `feed-satellites` replicas (legacy satellite CoT) | `platform/omos/feeds.yaml` | `1` (on) |
+
+Switching MTA needs no Git change, no Argo sync and no restart (`nats` from the tailnet):
+
+```bash
+nats kv put feed-control mta-rail '{"enabled":true,"interval":"30s","updated_by":"you","reason":"stage 1"}'
+nats kv put feed-control mta-rail '{"enabled":false,"updated_by":"you","reason":"rollback"}'
+nats kv history feed-control mta-rail     # who switched it, and when
+```
+
+The satellites grammar pipeline (`feed-satellites-grammar.yaml`) is not started by the engine: phase 1
+is MTA only, and satellites stays off until it has a manifest in `platform/data/sources/`. The legacy
+`feed-satellites` Deployment keeps running.
+
+A change to a manifest in `platform/data/sources/` changes the pod annotation
+`onemind.io/feed-config-sha256` (written by `scripts/gen_feed_sources.py`), which restarts the engine
+pod. On start the controller replays the bucket, so live on/off choices survive the restart.
 
 `scripts/tests/test_gitops_feed_grammar.py` fails CI if a legacy output is set to 0 while the
 grammar Deployment is still 0, and if any pipeline is named by two Deployments.
 
-## Stage 0: merge this PR (no live change)
+## Stage 0: merge (new bucket, engine pod up, MTA still off)
 
-What changes live: the `redpanda-connect-pipelines` ConfigMap gains two keys and loses
-`feed-hazards.yaml`; a `redpanda-connect-grammar` Deployment exists with 0 pods. The legacy pod
-keeps its args and is not restarted (a ConfigMap change does not restart it).
+What changes live: the NACK controller creates the KV bucket `feed-control` (R3, from
+`platform/nats/streams/kv-feed-control.yaml`); ConfigMaps `feed-sources` and `feed-control-pipelines`
+are created; a NetworkPolicy denies all ingress to both Redpanda Connect pods (streams API lock-down,
+decision 4); `redpanda-connect-grammar` goes from 0 to 1 pod on the ecosystem pool, runs the controller
+and the seeder, and the seeder writes `mta-rail` as disabled. Nothing new is published. The legacy
+pod keeps its args and is not restarted.
 
 Check (read-only):
 
 ```bash
 kubectl --context do-nyc3-omos-cloud -n feeds get deploy redpanda-connect redpanda-connect-grammar feed-satellites
-# expected: redpanda-connect 1/1, redpanda-connect-grammar 0/0, feed-satellites 1/1
-kubectl --context do-nyc3-omos-cloud get --raw \
-  "/api/v1/namespaces/feeds/pods/$(kubectl --context do-nyc3-omos-cloud -n feeds get pod -l app.kubernetes.io/name=redpanda-connect -o name | cut -d/ -f2):4195/proxy/streams"
-# expected: only {"feed-mta":{"active":true,...}}
+# expected: all 1/1; redpanda-connect-grammar on the onemind-ecosystem-cpu node
+kubectl --context do-nyc3-omos-cloud -n feeds logs deploy/redpanda-connect-grammar | grep -E 'feed-seeder|feed-control' | head
+# expected: feed-seeder id=mta-rail processed err=none
+nats kv get feed-control mta-rail
+# expected: {"enabled":false,...,"updated_by":"seeder"}
+kubectl --context do-nyc3-omos-cloud -n feeds get networkpolicy redpanda-connect-no-ingress
 ```
+
+Do not `kubectl exec` into either pod (a second process OOM-kills it). The streams API is no longer
+reachable from other pods; read the engine state from its logs.
 
 ## Stage 1: run both side by side
 
 Prerequisites:
-1. The owner has ruled on A1-P1 (`rail` world class, BUS-P6). The grammar MTA pipeline publishes
+1. The owner has ruled on A1-P1 (`rail` world class, BUS-P6). The grammar MTA stream publishes
    `evt.world.rail.*`, so it does not start before the ruling.
 2. The `omos-nats-creds` user may publish `evt.world.>`, `intel.>`, `evt.sys.>`, `tel.feed.>` and
    use the JetStream API. `feed-intel` already publishes `intel.>` with JetStream acks using the
    same Secret; the rest is confirmed by the log check below.
 
-PR: set `redpanda-connect-grammar` `replicas: 1`. Nothing else.
-
-Checks after Argo syncs (the `nats` commands need a NATS user; run them from the tailnet against
-`omos-nats` or from a pod with the CLI):
+Switch it on (no PR):
 
 ```bash
-kubectl --context do-nyc3-omos-cloud -n feeds get pod -l app.kubernetes.io/name=redpanda-connect-grammar -o wide
-# expected: 1/1 Running on the onemind-ecosystem-cpu node
+nats kv put feed-control mta-rail '{"enabled":true,"interval":"30s","updated_by":"you","reason":"stage 1"}'
+```
+
+Checks (the `nats` commands need a NATS user; run them from the tailnet against `omos-nats` or from
+a pod with the CLI):
+
+```bash
 kubectl --context do-nyc3-omos-cloud -n feeds logs deploy/redpanda-connect-grammar | grep -iE "error|permission" | head
-# expected: no output (a "Permissions Violation" line means prerequisite 2 is not met: go back to replicas 0)
+# expected: no output (a "Permissions Violation" line means prerequisite 2 is not met: switch it off)
 nats sub 'tel.feed.>' --count 4
-# expected: tel.feed.mta.status every 30 s with stale:false, published > 0, lastError null;
-#           tel.feed.celestrak.status once per 4 h fetch (once right after the pod starts)
+# expected: tel.feed.mta.status every 30 s with stale:false, published > 0, lastError null
 nats stream subjects WORLD 'evt.world.rail.>' | head
-nats stream subjects INTEL 'intel.space.>'
-# expected: one subject per train running now; intel.space.celestrak.tle present
+# expected: one subject per train running now
 nats sub 'evt.sys.*.rejected' --count 1 --timeout 60s
 # expected: usually nothing; any record carries a reason
 ```
@@ -79,7 +106,9 @@ Compare with the legacy feed over the same window: trains in `evt.world.rail.>` 
 `MTA-MNR-*`/`MTA-LIRR-*` uids the legacy pipeline still puts on `tak.cot.inject`. Keep Stage 1
 running for 7 days with no errors and matching coverage (ingestion migration plan, decision 0004 #18).
 
-Rollback: revert the Stage 1 PR (replicas back to 0).
+Rollback: `nats kv put feed-control mta-rail '{"enabled":false,"updated_by":"you","reason":"rollback"}'`.
+The stream stops within a few seconds. Setting the Deployment to 0 replicas also stops it, but the
+bucket is the switch.
 
 ## Stage 2: turn the legacy CoT outputs off
 
@@ -108,14 +137,14 @@ nats sub 'tel.feed.mta.status' --count 1
 # expected: still stale:false; the grammar path is unaffected
 ```
 
-Rollback: revert the Stage 2 PR (both replicas back to 1). The grammar pipelines keep running.
+Rollback: revert the Stage 2 PR (both replicas back to 1). The grammar feed keeps running.
 
 ## Stage 3: delete the legacy pipeline (later PR)
 
 After Stage 2 has held for 7 days: delete `feed-mta.yaml` from the ConfigMap and `pipelines/`,
 the `redpanda-connect` Deployment, the `feed-satellites` Deployment and `feed_satellites.py`, and
 update `scripts/tests/test_gitops_feed_grammar.py`. When MTA and CelesTrak move to `omos-ingest`
-(ingestion migration plan steps 7 and 8), the grammar pipelines here are retired the same way.
+(ingestion migration plan steps 7 and 8), the grammar sources here are retired the same way.
 
 ## Test on a build machine
 
