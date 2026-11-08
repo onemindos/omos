@@ -8,7 +8,7 @@ What each top-level path in `onemindos/omos` is for, whether it is live, and wha
 
 | Path | Purpose | Status | Evidence / notes |
 |------|---------|--------|------------------|
-| `platform/` | Everything Argo CD syncs to the cluster: Application CRs (`argocd/`), per-layer manifests, Helm values (`values/`), ecosystem charts and values (`ecosystem/`), backup jobs (`backups/`), NATS config and 39 stream CRs (`nats/`) | **Active** | 552 files, 465 commits. 25 `platform-*` Applications point into it. Sub-directories with **no Application** are listed below |
+| `platform/` | Everything Argo CD syncs to the cluster (`platform/omos/` deploys to namespace `feeds`): Application CRs (`argocd/`), per-layer manifests, Helm values (`values/`), ecosystem charts and values (`ecosystem/`), backup jobs (`backups/`), NATS config and 39 stream CRs (`nats/`) | **Active** | 552 files, 465 commits. about 45 `platform-*` Applications point into it (63 Argo Applications live on 2026-11-08). Sub-directories with **no Application** are listed below |
 | `platform/nats-tools/` | NUI (the NATS web UI) manifests in `nui/`, plus the Dockerfiles for the agent-fabric images (`agent-web-ui/`, `agenttap/`) | **Active** | Application `platform-nats-tools` |
 | `platform/parked/matrix/` | Matrix/Synapse and Element manifests, deploy script, bridge scripts (retired 2026-11-07) | **Parked** | Not deployed; restore steps in its README |
 | `platform/geo/` | Namespace and sealed secrets for a `geo` namespace | **Legacy** | The `geo` namespace no longer exists live; the geo stack runs in `onetak` |
@@ -31,7 +31,7 @@ What each top-level path in `onemindos/omos` is for, whether it is live, and wha
 | `docs/architecture/` | Design documents: `OneMind-OS-Architecture.md` (unified architecture), `ONEMIND-MASTER-PICTURE.md` (system synthesis), `OMOS-DATA-PICTURE.md` (data pipeline), and `decisions/`. Moved from the repo root on 2026-10-17 | **Active (under review)** | Being reviewed and updated; until then `docs/STACK.md` and `CLAUDE.md` win on live facts |
 | `CLAUDE.md`, `AGENTS.md` | Instructions for AI coding agents | **Active** | `CLAUDE.md` is the operating context; `AGENTS.md` points agents at `docs/MISSION.md` |
 | `catalog-info.yaml` | Backstage `Location` `omos-service-descriptors`, the GitHub discovery entry point: `catalog.providers.github.onemindos` in `platform/backstage/app-config.cluster.yaml` registers it from `main`. It lists only service descriptors (`services/*/catalog-info.yaml`) whose entities the static catalog in `platform/backstage/catalog/` does not define; today that is `services/onemind-postgres` (added 2026-10-27) | **Future** until discovery is active | Read only once a portal image with the GitHub catalog module is pinned. Services the static catalog defines stay unlisted (`services/onemind-portal/catalog-info.yaml` included); `scripts/tests/test_gitops_portal_discovery.py` rejects overlaps. See "GitHub discovery" in `platform/backstage/README.md` |
-| `.github/` | `quality.yml` (gates), `ecosystem-charts.yml`, image builds, Tailscale ACL sync, inventory refresh | **Active** | See "CI" in `CONTRIBUTING.md` and `quality.yml` header |
+| `.github/` | `quality.yml` (gates) and `ecosystem-charts.yml` (both on GitHub-hosted runners), image builds (self-hosted runner), Tailscale ACL sync, inventory refresh | **Active** | See "CI" in `CONTRIBUTING.md` and `quality.yml` header |
 | `renovate.json`, `.gitleaks.toml`, `.gitleaks-baseline.json`, `.yamllint.yml`, `.pre-commit-config.yaml`, `Makefile`, `.editorconfig` | Repo-level tooling | **Active** | |
 
 There is no `platform/future/` directory in this tree. Planned work lives in `docs/research/` and `docs/MASTER-PLAN.md` (the HTML blueprints moved to the local vault as `blueprints-html`).
@@ -50,13 +50,13 @@ There is no `platform/future/` directory in this tree. Planned work lives in `do
 Each step is independent and reversible. Do them one PR at a time; none changes cluster behavior.
 
 1. ~~**Remove the dangling `omos-infra` gitlink.**~~ Done.
-2. **Give every live workload an owner in Git.** Add Applications (or fold into an existing one) for `platform/nats-tools` and `platform/matrix`, with `prune: false` at first. Then adopt the Helm-CLI releases in the order listed in `docs/STACK.md`.
+2. **Give every live workload an owner in Git.** Add Applications (or fold into an existing one) for `platform/nats-tools` (done: `platform-nats-tools`), with `prune: false` at first. Then adopt the Helm-CLI releases in the order listed in `docs/STACK.md`.
 3. ~~**Pick one home for the Legacy agent.**~~ Done at the time: `platform/hermes/agent/` was the home (since 2026-11-03 the workload is `platform/hermes/onemind-hermes/` and the old doctrine is `platform/hermes/doctrine/`), and `legacy/` was archived to the vault (see `docs/operations/hermes-recoverability-plan.md`).
 4. **Retire dead directories.** After confirming nothing reads them: `platform/geo/` (namespace gone), `scripts/check_secret_patterns.py` (superseded by gitleaks).
 6. ~~**Decide on `rads/`.**~~ Done: moved to the local vault.
 7. **Clean `services/`.** Keep `onemind-core` and `onemind-postgres` (CI-built). Move the Mac-era scripts (`ctl.py`, `om_*.py`, `subscriber*.py`, `launch*.sh`, `create_*.py`) into `services/legacy-scripts/` or the edge repo, and rotate the committed token in `om_presence.py`.
 8. **Archive stale workflows** (table above) once CloudTAK/OneTAK retirement is confirmed.
-9. **Split `platform/matrix/`**: manifests stay, scripts and chatops notes go to `docs/` or `scripts/`.
+9. ~~**Split `platform/matrix/`**~~ Moot: Matrix was retired and its manifests are parked in `platform/parked/matrix/` (2026-11-07).
 
 ## Rules for new files
 

@@ -4,7 +4,7 @@
 
 > **Kubernetes Dashboard retired 2026-10-27.** `kubernetes-dashboard` v2.7.0 in `kube` ran with `--enable-insecure-login --enable-skip-login` under a cluster-admin ServiceAccount on the tailnet (`k8s-dashboard`); Headlamp covers the use case. Its manifests and catalog entries were removed through a reviewed Git change (`platform-kube` prunes them); the hand-made `ClusterRoleBinding/kubernetes-dashboard-admin` needs a manual delete. Earlier snapshots in this file that mention it are historical.
 
-> **Dapr removed 2026-11-07.** The Dapr control plane (`ecosystem-dapr`, namespace `dapr-system`, 7 CRDs, the sidecar-injector webhook) and the onemind-core Dapr workflow are gone. onemind-core now runs missions in-process (a bridge until mission orchestration moves to Hermes), no sidecar, no durable replay. The `dapr_workflows` database and role in `onemind-data` are set to `ensure: absent` (entries removed in a follow-up PR). The three scheduler PersistentVolumes were Retain and are Released; the DigitalOcean volumes are kept for the owner to delete.
+> **Dapr removed 2026-11-07.** The Dapr control plane (`ecosystem-dapr`, namespace `dapr-system`, 7 CRDs, the sidecar-injector webhook) and the onemind-core Dapr workflow are gone. The mission workflow moved to Hermes, and onemind-core has no sidecar and no durable replay. The `dapr_workflows` database and role in `onemind-data` are set to `ensure: absent` (entries removed in a follow-up PR). The three scheduler PersistentVolumes were Retain and are Released; the DigitalOcean volumes are kept for the owner to delete.
 
 > **LiteLLM and in-cluster Ollama retired 2026-11-06.** Argo Applications `ecosystem-litellm` and `ecosystem-ollama`, their values, network policies, sealed secrets, the model-client bootstrap Job and the VolSync source for PVC `onemind-cpu-model` were removed from Git (agentgateway is the hub; Hermes uses Ollama Cloud). The `litellm` database and role in `onemind-data` are set to `ensure: absent` (CNPG drops them; entries removed in a follow-up PR), the `db-litellm` sealed secret was removed from the repo, and the `onemind-cpu-model` DigitalOcean volume is retained. See `docs/operations/tool-gateway.md`. Rows below that mention them are historical until the cluster is cleaned up.
 
@@ -18,91 +18,46 @@ Tiered inventory of everything running on the DOKS cluster `omos-cloud` (nyc3), 
 - **Development phase:** every app is deliberate (system integration). This file ranks apps; it does not recommend removing any.
 - **Owner:** there is one operator, `zeus`, for everything. The "Owner" column is therefore omitted from the tables; the first thing to change when a second person joins is to add it.
 
-## Refresh 2026-11-07 (read-only)
+## Refresh 2026-11-08 (read-only)
 
-Hand-edited; this file has no generator, so the sections below were updated one by one against the cluster.
-Live on 2026-11-07: 64 Argo Applications (59 Synced and Healthy; `app-of-apps` and `platform-argocd` OutOfSync
-and Healthy; manual-sync `platform-omos-entity`, `platform-policy` and `platform-takserver-tak-client`
-OutOfSync and Missing), 4 nodes (3 `onemind-hub-core-v2`, 1 `onemind-ecosystem-cpu`, autoscale 1 to 2). The
-Karakeep, OpenRemote, ThingsBoard, Forgejo, Gatus and Langfuse sections below describe workloads that are now
-running; the Trivy operator is running too. Tempo is gone (removed 2026-11-03), so older rows that mention it are historical.
-Helm release `nats` shows status `failed` at revision 11 (2026-11-07 00:05) while its three pods are Running; the
-cause is not investigated here.
+Hand-edited; this file has no generator, so the sections below were updated one by one against the cluster
+(`do-nyc3-omos-cloud`, 2026-11-08). Live: 63 Argo Applications (60 Synced and Healthy; the manual-sync,
+never-deployed `platform-omos-entity`, `platform-policy` and `platform-takserver-tak-client` are OutOfSync and
+Missing; an app can show Progressing for a few minutes after a rollout), 42 namespaces, 4 nodes (3 `onemind-hub-core-v2`,
+1 `onemind-ecosystem-cpu`). Still Helm CLI only: `nats`, `takserver`, `argocd`. Helm release `nats` shows status `failed`
+at revision 11 while its three pods are Running; the cause is not investigated here.
 
-## Phase 5 addendum — 2026-10-19, 08:07 UTC
+Changes since 2026-11-07, all verified live: Dapr, LiteLLM, Matrix, HeyNATS, `nats-ui`, `nats-dashboard`, `nats-monitor`
+and Tempo are gone (NUI behind the Authentik outpost `nui-auth` is the only NATS UI); the `takml-db` PostgreSQL is gone
+(TAK.ML uses database `takml_server` in `onemind-data`; its old volume and PV were deleted after a DigitalOcean snapshot);
+the Velero node agent is gone; the Argo CD ApplicationSet controller and `takserver-nats-box` run at 0 replicas.
+Namespace `omos` is now `feeds` and `onemind-ai` is now `langfuse`; `kube` was not renamed (Headlamp and the `ai-operator`
+ServiceAccount). 24 of the 26 tailnet ingresses share the Tailscale `ProxyGroup` `ingress` (2 pods,
+`platform/core/tailscale-proxygroup-ingress.yaml`); `argocd` and `onemind-auth` keep their own proxies. Hermes is one
+container (`hermes`), connected to NATS as `onemind-hermes-nats-platform`, with Langfuse tracing at `langfuse-web.langfuse`.
+Volumes: NATS 3 x 20 GiB, `onemind-data` 3 x 5 GiB on PostgreSQL 16 (a PostgreSQL 17 upgrade was rolled back on
+2026-11-08: Apache AGE blocks `pg_upgrade`), Hermes 10 GiB, TAK PostgreSQL 10 GiB, Loki 30 GiB, Prometheus 20 GiB;
+OneTAK, Karakeep, n8n and Forgejo disks were shrunk. ClickHouse runs 26.8.36.3 with a 7-day TTL on its system logs and
+a CronJob (`prune-clickhouse-backups`) that keeps 14 days of backups. Grafana signs in through Authentik and has the
+ClickHouse plugin; Falco sends to Alertmanager and Loki; alerts reach the owner through the Hermes `infra-health` cron
+(every 15 minutes) and the portal inbox; the OTel collector ships logs only. CI: `quality.yml` and `ecosystem-charts.yml`
+run on GitHub-hosted runners; the self-hosted runner keeps the cluster and image jobs.
 
-This narrow refresh does not recertify the older inventory below. Live cluster:
-4 nodes, 70 Argo Applications (68 Synced/Healthy); only pre-existing Matrix
-OutOfSync/Healthy and OpenClaw Synced/Progressing exceptions. No Pending pods.
-All nodes were below 78% requested CPU/memory at that refresh. On 2026-10-27 hub-core memory requests were 79%, 96% and 71% (read-only `kubectl describe node`). OpenCost duplicate KSM emission is off.
-OpenChoreo observability core/modules are deployed on existing backends, with
-an authenticated tailnet Observer, real console/MCP pilot logs and metrics, and
-verified encrypted SQLite backup/isolated restore. See the timestamped
-[Phase 5 evidence](../PLATFORM-ROADMAP.md#phase-5-capacity-then-observability).
-Older node counts, request percentages and M2 findings below are historical.
-
-## Phase 6 addendum — 2026-10-19, 18:32 UTC
-
-(Superseded: the OpenChoreo plugins were later removed from the portal; see
-`platform/backstage/README.md`.) Existing OneMind Backstage 1.55.3 then hosted pinned
-OpenChoreo 1.3.1 core and observability plugins, 2/2 ready and Argo Synced/Healthy. Real Authentik subject
-mapping, existing home/Today/catalog/runbooks/settings, pilot Deploy/Definition,
-logs/metrics and machine read-only boundaries passed. Shared permission-cache
-results use the existing PostgreSQL service; no raw IDP token is stored.
-Temporary console and candidate Deployments/routes are removed; their production
-replacement is `onemind-preview`, not a second portal. No storage, identity or
-backup was deleted. At acceptance: 69 Argo Applications, 68 Healthy; only existing
-Matrix OutOfSync/Healthy and OpenClaw Synced/Progressing exceptions. This narrow
-observation does not recertify historical inventory.
-See [Phase 6 evidence](../PLATFORM-ROADMAP.md#phase-6-one-portal).
-
-## Paperclip: retired — 2026-11-01
-
-Owner decision (2026-11-01): remove Paperclip entirely. `platform-paperclip` and its
-manifests are removed from the repository. Final backups taken 2026-11-01 before removal: a
-`pg_dump -Fc` of the `paperclip` database (242 tables, 1.3 MB; held locally by the
-operator, not committed or uploaded because it may contain user data) and DigitalOcean
-snapshots of both volumes (`paperclip-postgres-final-2026-11-01`,
-`paperclip-data-final-2026-11-01`, tag `paperclip-retirement`). The two retain-class
-volumes are kept until the owner approves their deletion. Live teardown steps:
-[retirement runbook](operations/paperclip-retirement-2026-11-01.md). The Hermes-side
-pieces (`hermes-paperclip-api`) are retired with the old Hermes, separately.
-
-## Karakeep — prepared 2026-10-24, running 2026-11-07
-
-User-requested bookmark/read-later workspace. Prepared as source on 2026-10-24; deployed on the owner's
-authorization of 2026-10-25 ([README](../platform/karakeep/README.md)). Verified live 2026-11-07: `platform-karakeep`
-Synced and Healthy with automated sync (prune, selfHeal); web, Chrome and Meilisearch pods Running for 36 hours;
-Tailscale ingress `karakeep.tail717ba0.ts.net`; both VolSync sources have synced today. The PVCs (`data-pvc` 20Gi,
-`meilisearch-pvc` 5Gi) are on `do-block-storage`, not the retain class. A recorded isolated restore and the
-mobile/extension compatibility checks are not recorded here, so treat the restore as unproven.
-
-| Tier | Application | Namespace | State / recovery | Exposure | Status |
-| --- | --- | --- | --- | --- | --- |
-| 2 | `platform-karakeep` | `karakeep` | Native SQLite/assets 20Gi + Meilisearch 5Gi on `do-block-storage`; two VolSync sources syncing; [isolated restore](../platform/karakeep/BACKUP.md) not recorded | Private `https://karakeep.tail717ba0.ts.net`, app authentication | Auto-sync, Synced/Healthy, 3 pods Running (2026-11-07) |
-
-## Policy service preparation — 2026-10-29
-
-FEATURES I4 (onemind-xr): `svc.policy.*`, the only publisher of `cmd.*` after a human confirm and the single
-writer of `evt.so.action.*`. Not deployed: the Application is manual and waits for the owner steps in
-[`platform/policy/README.md`](../platform/policy/README.md) (NATS per-service users, OpenFGA model adoption,
-two SealedSecrets, pinned image digest).
-
-| Tier | Application | Namespace | State / recovery | Exposure | Status |
-| --- | --- | --- | --- | --- | --- |
-| 2 | `platform-policy` | `onemind-core` | No PVC; action records in memory (pending actions are forgotten on restart and cannot be confirmed); audit in `EVT` (`evt.so.>`), commands in `CMD` | None (NATS client only; no Service or ingress); ecosystem pool | Manual Argo, not synced; [owner steps](../platform/policy/README.md) pending |
+**NatsBridgePlugin is not live.** The live `takserver-plugins` pod holds no NATS plugin and `tak-nats-leaf` has 0 client
+connections (`/varz`). PR #739 (feed-platform design, open) is the plan; older rows below that call the plugin the
+CoT-to-NATS wire describe intent.
 
 ## Langfuse — running 2026-11-07
 
-Self-hosted Langfuse v3 for Hermes traces. Live 2026-11-07: `ecosystem-langfuse` Synced and Healthy, web, worker and Valkey pods Running (10 to 12 hours), Tailscale ingress `onemind-langfuse.tail717ba0.ts.net`. Source: chart `langfuse` 2.2.3 (app 4.75.0),
+Self-hosted Langfuse v3 for Hermes traces. Live 2026-11-07: `ecosystem-langfuse` Synced and Healthy, web, worker and Redis (`langfuse-redis`) pods Running, Tailscale ingress `onemind-langfuse.tail717ba0.ts.net`. Source: chart `langfuse` 2.2.3 (app 4.75.0),
 Application `ecosystem-langfuse`, namespace `langfuse`, web and worker one replica each on the ecosystem pool. It reuses the
 database `langfuse` in CNPG `onemind-data`, a `langfuse` user and database in ClickHouse `clickhouse/onemind`, Spaces bucket
-`onemind-backups` (prefix `langfuse/`), the bundled Valkey (no PVC) and the Authentik provider `onemind-langfuse`. Hermes is wired to it: the
-`onemind-hermes` Deployment loads Secret `hermes-langfuse` and installs the pinned Langfuse plugin at start. Trace flow and the ClickHouse/CNPG recovery path are not verified here.
+`onemind-backups` (prefix `langfuse/`), the bundled Redis (no PVC) and the Authentik provider `onemind-langfuse`. Hermes is wired to it: the
+`onemind-hermes` Deployment loads Secret `hermes-langfuse` and installs the pinned Langfuse plugin at start. Traces arrive (Hermes counts grew after the 2026-11-08 rename of namespace `onemind-ai` to `langfuse`); the ClickHouse/CNPG recovery path is not verified here.
 
 | Tier | Application | Namespace | State / recovery | Exposure | Status |
 | --- | --- | --- | --- | --- | --- |
-| 2 | `ecosystem-langfuse` | `langfuse` | PostgreSQL (CNPG `onemind-data`, `Velero`, `Barman`), ClickHouse database `langfuse` (VolSync of the ClickHouse PVC), event blobs in Spaces; Valkey queue is disposable | Tailnet only: `https://onemind-langfuse.tail717ba0.ts.net`, Authentik sign-in only | Auto-sync, Synced/Healthy (2026-11-07) |
+| 2 | `ecosystem-langfuse` | `langfuse` | PostgreSQL (CNPG `onemind-data`, `Velero`, `Barman`), ClickHouse database `langfuse` (VolSync of the ClickHouse PVC), event blobs in Spaces; Redis queue is disposable | Tailnet only: `https://onemind-langfuse.tail717ba0.ts.net`, Authentik sign-in only | Auto-sync, Synced/Healthy (2026-11-07) |
 
 ## Summary
 
@@ -116,12 +71,12 @@ route is requested. See [capacity, scope and acceptance](operations/trivy-image-
 
 | Item | Count / value |
 |------|---------------|
-| Argo CD Applications | 47 (45 Synced and Healthy; `app-of-apps` and `platform-ecosystem-resources` OutOfSync) |
+| Argo CD Applications | 63 on 2026-11-08 (60 Synced and Healthy; 3 manual-sync apps never deployed). 47 at capture |
 | Helm-CLI releases (not in Git as Applications) | 3 on 2026-10-17: `nats`, `takserver`, `argocd` (11 at capture; `cert-manager`, `ingress-nginx`, `nack`, `tailscale-operator` adopted in PR #176, the four monitoring releases on 2026-10-17) |
 | Workloads that neither Argo nor Helm tracks | DOKS system and Tailscale operator proxies. The NATS web UI (NUI) is Argo-managed by `platform-nats-tools` |
-| Namespaces | 48 |
-| Nodes | 5 at capture: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB). 4 on 2026-10-27: the ecosystem pool (autoscale 1–4) was at 1 node |
-| Ingress classes | `nginx` (public, LB `143.244.220.155`), `tailscale` (tailnet only) |
+| Namespaces | 42 on 2026-11-08 (48 at capture) |
+| Nodes | 5 at capture: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB). 4 on 2026-11-08: 3 hub-core and 1 ecosystem node |
+| Ingress classes | `nginx` (public, LB `143.244.220.155`; 4 ingresses), `tailscale` (tailnet only; 26 ingresses, 24 on the shared `ProxyGroup` `ingress`) |
 | Other external listeners | `tak-tailnet` Tailscale LB (TAK, 8089/8443/8446/64738), `omos-nats` Tailscale LB |
 | Container references on mutable tags (`:latest`, bare `busybox`, `run-latest`) | 31 at capture; 0 running on 2026-10-27 (see [Mutable image tags](#mutable-image-tags)) |
 
@@ -148,15 +103,15 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 |-------------|-----------|---------|--------------|--------|----------|--------|
 | `app-of-apps` | argocd | Root app; creates every `platform-*` Application from `platform/argocd` | none | Git | tailnet (Argo UI) | Argo. **OutOfSync** (not yet diagnosed) |
 | `platform-core` | kube-system, github-runner, tailscale | Sealed Secrets controller, self-hosted GitHub runner, Tailscale ACL policy | Sealed Secrets private keys (irreplaceable) | `backup-cluster-recovery` (daily 04:00 UTC) exports identity/config and the active sealing keys, encrypted | internal | Argo |
-| `platform-takserver` | takserver | TAK Server overlay: LB proxy, NATS leaf, ConfigMaps, Mumble, Ignite, CoT retention. **TAK core is the Helm release `takserver`** | PostgreSQL/PostGIS, Ignite, 37 GiB of PVCs | `PG dump` (02:00 UTC, 86 min), `VolSync` x5 | **tailnet only**: `tak-tailnet` (`tak.tail717ba0.ts.net`) ports 8089, 8443, 8446, 64738/TCP. The public LB `tak-external` was removed 2026-10-23 | Argo for the overlay, **Helm CLI for the core** |
-| `platform-nats` | nats | NATS 3-node JetStream cluster manifests, TLS, 39 Stream/KeyValue CRs, WebSocket ingress, Tailscale LB `omos-nats` | JetStream streams, 150 GiB of PVCs | `backup-nats-streams` stream archive (03:30 UTC, restore-verified, 39 streams), `VolSync` x3 | `ws.onemindos.dev` public (CF); `omos-nats` tailnet; 4222 internal | Argo **and** Helm CLI (two owners; the StatefulSet is tracked by both) |
+| `platform-takserver` | takserver | TAK Server overlay: LB proxy, NATS leaf, ConfigMaps, Mumble, Ignite, CoT retention. **TAK core is the Helm release `takserver`** | PostgreSQL/PostGIS (10 GiB), Ignite, 27 GiB of PVCs | `PG dump` (02:00 UTC, 86 min), `VolSync` x5 | **tailnet only**: `tak-tailnet` (`tak.tail717ba0.ts.net`) ports 8089, 8443, 8446, 64738/TCP. The public LB `tak-external` was removed 2026-10-23 | Argo for the overlay, **Helm CLI for the core** |
+| `platform-nats` | nats | NATS 3-node JetStream cluster manifests, TLS, 39 Stream/KeyValue CRs, WebSocket ingress, Tailscale LB `omos-nats` | JetStream streams, 3 x 20 GiB of PVCs | `backup-nats-streams` stream archive (03:30 UTC, restore-verified, 39 streams), `VolSync` x3 | `ws.onemindos.dev` public (CF); `omos-nats` tailnet; 4222 internal | Argo **and** Helm CLI (two owners; the StatefulSet is tracked by both) |
 | `platform-auth-helm` | auth | Authentik IdP (chart 2026.8.2) | PostgreSQL 17, Redis, 5 GiB | `PG dump` (05:00 UTC), `VolSync` | `auth.onemindos.dev` public (CF); `onemind-auth` tailnet | Argo |
 | `platform-auth-infra` | auth | Authentik Postgres, Redis, secrets, ingress | see above | see above | see above | Argo |
-| `platform-backups` | ops, plus Jobs in auth, backstage, matrix, n8n, nats, takml, takserver | Logical PostgreSQL/NATS backup CronJobs and encrypted cluster recovery exports | backup credentials (SealedSecrets) | self (writes to Spaces); drills in `docs/operations/` | internal | Argo. Shares `SealedSecret auth/ghcr` with `platform-ecosystem-resources` |
+| `platform-backups` | ops, plus Jobs in auth, backstage, n8n, nats, takml, takserver | Logical PostgreSQL/NATS backup CronJobs and encrypted cluster recovery exports | backup credentials (SealedSecrets) | self (writes to Spaces); drills in `docs/operations/` | internal | Argo. Shares `SealedSecret auth/ghcr` with `platform-ecosystem-resources` |
 | `platform-volume-backups` | ops | 46 VolSync `ReplicationSource` objects, all `Successful` at last check | restic repositories in Spaces | n/a | internal | Argo |
 | `platform-volsync` | ops | VolSync operator (chart 0.16.0) | none | n/a | internal | Argo |
 | `platform-ops` | ops | `health-keeper` read-only cluster observer (every 5 minutes). Logs only, it does not alert | none | Git | internal | Argo |
-| `ecosystem-velero` | velero | Velero (chart 12.2.1) and the `velero-onemind-platform` schedule | backups in Spaces | n/a | internal | Argo |
+| `ecosystem-velero` | velero | Velero (chart 12.2.1), node agent off; the `velero-onemind-platform` schedule backs up the objects of every app namespace (daily 06:00 UTC) | backups in Spaces | n/a | internal | Argo |
 | `platform-hermes-base` | hermes | Namespace `hermes`, the Tailscale egress Services (`omos-ha-edge`, `omos-mbp`, `omos-s24`) and the Secrets `onemind-hermes` mounts (`hermes-dashboard-auth`, `omos-nats-creds`, `hermes-nats-ca`); `prune: false`, no finalizer, objects carry `Prune=false,Delete=false` (`platform/hermes/base/README.md`; added 2026-11-01) | none | n/a | none | Argo |
 | `platform-onemind-mcp` | hermes | `onemind-mcp` tool server (the tool gateway's `onemind` target); split out of the retired `platform-legacy` on 2026-11-01, no finalizer | none | n/a | `onemind-mcp.hermes.svc` in-cluster only | Argo |
 | `platform-onemind-hermes` | hermes | `onemind-hermes`: new Hermes v0.23.0 instance (persona Legacy, single soul), replaces the `hermes-fresh` launch; runtime acceptance in deployment PR. Holds the Legacy identity `agents.*.hermes.zeus.legacy` as a direct client of the bus (no sidecar; owner-reported 2026-11-03, it answered a real prompt). The old `hermes-legacy` instance and its Application `platform-legacy` were removed from Git on 2026-11-03 (`platform/hermes/onemind-hermes/RETIREMENT-AUDIT.md`); the old 25 GiB volume `hermes-data` is kept as a Retain PV until a separate delete. The `hermes-fresh` resources were removed on 2026-10-29 except the PVC `hermes-fresh-data`, kept pending owner approval (`platform/hermes/onemind-hermes/README.md`) | New 25 GiB `onemind-hermes-data` (`do-block-storage-retain`); no Legacy import | `VolSync` to its own Restic prefix; restore acceptance pending | `onemind-hermes` dashboard tailnet; Webapp (browser Desktop) `onemind-hermes-web` tailnet | Argo |
@@ -166,12 +121,12 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | Release | Namespace | Chart | Purpose | State | Backup | Exposure | GitOps |
 |---------|-----------|-------|---------|-------|--------|----------|--------|
 | `takserver` | takserver | takserver-4.6.0 (rev 34, 2026-09-29), local chart `platform/takserver/chart` | TAK Server API, messaging, config, plugins, Ignite, PostgreSQL | see `platform-takserver` | see `platform-takserver` | see `platform-takserver` | **Helm CLI** |
-| `nats` | nats | nats-2.14.2 (rev 10) | NATS StatefulSet | see `platform-nats` | see `platform-nats` | see `platform-nats` | **Helm CLI** (and Argo tracks the same StatefulSet) |
+| `nats` | nats | nats-2.14.2 (rev 11, status `failed`, pods Running) | NATS StatefulSet | see `platform-nats` | see `platform-nats` | see `platform-nats` | **Helm CLI** (and Argo tracks the same StatefulSet) |
 | `nack` | nats | nack-0.34.0 | JetStream controller that reconciles `platform/nats/streams/` | none | Git | internal | Argo (`edge-nack`, adopted in PR #176) |
-| `argocd` | argocd | argo-cd-10.1.2 (app v3.4.4) | GitOps controller | CRDs and Application objects | Git, `backup-cluster-recovery` | tailnet (`argocd.tail717ba0.ts.net`) | **Helm CLI** today; `platform-argocd` (manual sync only, not yet synced) will adopt it after the pending #392 `helm upgrade`, see `docs/gitops/ARGOCD-SELF-MANAGEMENT.md`. Signs in through Authentik (`oidc.config`, group `argocd-admins` = admin) once `platform/values/argocd.yaml` is applied; local `admin` stays as break-glass until SSO is proven; Dex disabled |
+| `argocd` | argocd | argo-cd-10.1.2 (app v3.4.4) | GitOps controller | CRDs and Application objects | Git, `backup-cluster-recovery` | tailnet (`argocd.tail717ba0.ts.net`) | **Helm CLI**: the release record is still revision 4 (2026-10-23); `platform-argocd` is Synced and Healthy (2026-11-08, legacy account live), and the ApplicationSet controller is scaled to 0. Adoption notes: the former pending #392 `helm upgrade`, see `docs/gitops/ARGOCD-SELF-MANAGEMENT.md`. Signs in through Authentik (`oidc.config`, group `argocd-admins` = admin) once `platform/values/argocd.yaml` is applied; local `admin` stays as break-glass until SSO is proven; Dex disabled |
 | `cert-manager` | cert-manager | cert-manager-v1.20.3 | Certificate issuance | Certificate/Secret objects | `backup-cluster-recovery` | internal | Argo (`edge-cert-manager`, adopted in PR #176). No `ClusterIssuer` exists (the unused `letsencrypt-dns` and its Cloudflare token were removed); the only issuers are namespaced self-signed ones for NATS, CloudNativePG and OpenChoreo, owned by those components |
 | `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 (app 1.15.1) | Public ingress controller, LB `143.244.220.155`, 1 replica | none | Git | **public** | Argo (`edge-ingress-nginx`, adopted in PR #176) |
-| `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | Tailnet ingress, egress and LB proxies (about 24 proxy StatefulSets, operator-created) | proxy node keys | none | tailnet | Argo (`edge-tailscale-operator`, adopted in PR #176) |
+| `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | Tailnet ingress, egress and LB proxies (ProxyGroups `ingress` (2 pods) and `egress`, plus 9 per-resource proxy StatefulSets, operator-created) | proxy node keys | none | tailnet | Argo (`edge-tailscale-operator`, adopted in PR #176) |
 
 ## Tier 2: everything else
 
@@ -181,16 +136,16 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 |-------------|-----------|---------|--------------|--------|----------|--------|
 | `platform-fedhub` | takserver | TAK federation hub (`fedhub:5.8`) plus MongoDB, `tak-ldap` | MongoDB | `VolSync` | `fedhub.tail717ba0.ts.net:9100` / `:9443` **tailnet (L4)** | Argo. Health flaps to Progressing |
 | `platform-backstage` | backstage | Backstage developer portal and service catalog, 2 replicas. Live since 2026-11-07: the live bridge (`livebridge` backend plugin: read-only NATS subscription plus Kubernetes watch, pushed to the UI as Signals; both replicas logged `livebridge NATS connected`), the Ops Center page `/ops` (CesiumJS globe of CoT tracks, bus stream, namespace health, Argo strip; [README](../services/onemind-portal/plugins/plugin-onemind-ops/README.md)), and the Alertmanager route `AlertmanagerConfig/onemind-backstage` (critical and warning into the `onemind-admins` inbox through `POST /api/events/http/alertmanager`, Falco events included because falcosidekick posts Warning and above to Alertmanager). MCP actions (`/api/mcp-actions/v1`, for operator clients, not Hermes): `catalog_*`, `onemind_health`, `onemind_runbook` and the read-only `livebridge.snapshot_summary` | PostgreSQL, 10 GiB | `PG dump` (06:40 UTC), `VolSync` | `portal` tailnet (`onemind-preview` redirects) | Argo |
-| `platform-monitoring` | monitoring, nats | Grafana dashboards, rules, ServiceMonitors, `nats-surveyor`, `nats-leafz-exporter` (per-leaf leafnode metrics, added 2026-10-27 after the capture), `nats-metrics-scrape` (0 replicas). **Alertmanager receiver `onemind-backstage` (portal) added 2026-11-07**; before that its only receiver was `null`, so alerts went nowhere | none (stack lives in Helm release `monitoring`) | Git | `grafana` tailnet | Argo |
-| `platform-observability` | clickhouse | ClickHouse "Time Machine" (Altinity CHI), server 26.8.36.3 LTS (upgraded from 24.8 on 2026-11-07 via 25.8 and 26.3; Langfuse v4 needs >= 25.12) | 20 GiB time-series | `VolSync`; native backup Job daily 03:00 UTC (`onemind` + `langfuse`) | internal | Argo |
+| `platform-monitoring` | monitoring, nats | Grafana dashboards, rules, ServiceMonitors, `nats-surveyor`, `nats-leafz-exporter` (per-leaf leafnode metrics, added 2026-10-27 after the capture), `nats-metrics-scrape` (0 replicas). Grafana signs in through Authentik (local form kept) and has the ClickHouse datasource plugin. **Alertmanager receiver `onemind-backstage` (portal) added 2026-11-07**; before that its only receiver was `null`, so alerts went nowhere | none (stack lives in Helm release `monitoring`) | Git | `grafana` tailnet | Argo |
+| `platform-observability` | clickhouse | ClickHouse "Time Machine" (Altinity CHI), server 26.8.36.3 LTS (upgraded from 24.8 on 2026-11-07 via 25.8 and 26.3; Langfuse v4 needs >= 25.12), 7-day TTL on system logs | 20 GiB time-series | `VolSync`; native backup Job daily 03:00 UTC (`onemind` + `langfuse`), pruned to 14 days by `prune-clickhouse-backups` (04:30 UTC) | internal | Argo |
 | `platform-clickhouse-operator` | kube-system | Altinity ClickHouse operator (chart 0.27.3). A second, legacy `clickhouse-operator` Deployment sits at 0 replicas | none | Git | internal | Argo |
 | `platform-takserver-tak-client` | takserver | `omos-tak-client` (A21, **proposed, not synced**): TAK Server streaming client bridge; TAK CoT to `tak.cot.out`, `tak.cot.inject` into TAK (queue group shared with NatsBridgePlugin). Replaces the never-deployed cot-tap | none | Git | internal (client of `takserver-messaging:8089` and `nats:4222`) | Argo, **manual sync**; needs two owner-sealed Secrets and a digest pin (`platform/takserver/tak-client/README.md`) |
 | `platform-omos` | feeds | `feed-intel`, `feed-satellites`, `omos-tak-projector`, `sink-clickhouse`, `omos-mission-engine` (0 replicas) | none (streams in NATS, data in ClickHouse) | Git | internal | Argo |
 | `platform-omos-entity` | feeds | **Proposed, not synced (manual sync).** `omos-entity-service` (FEATURES A4): fuses `COT`/`TEL`/`WORLD`/`INTEL` into `ent.{entity_type}.{entity_id}.state` in the proposed `ENT` stream; one replica on the ecosystem pool, KV lease in the proposed `entity-correlation` bucket | none on disk (state in `ENT`, rebuilt from it on start) | Git; state rebuildable by replay | internal (`svc.entity.get`/`query` on NATS) | Argo, manual sync |
 | `platform-redpanda-connect` | feeds | Redpanda Connect (digest-pinned) | none | Git | internal | Argo |
-| `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (Tile38), WebODM | about 150 GiB of PVCs | `VolSync` x5 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.tail717ba0.ts.net` **tailnet** | Argo |
+| `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (Tile38), WebODM | about 42 GiB of PVCs (shrunk 2026-11-08) | `VolSync` x5 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.tail717ba0.ts.net` **tailnet** | Argo |
 | `platform-takml` | takml | TAK-ML vision pipeline | PostgreSQL moved to `onemind-data` (database `takml_server`, 2026-11-08), 3 GiB of volumes | CNPG Barman (database), `VolSync` (models, JAR) | internal | Argo |
-| `platform-n8n` | n8n | n8n workflow automation | PostgreSQL, 15 GiB | `PG dump` (05:20 UTC), `VolSync` | tailnet | Argo |
+| `platform-n8n` | n8n | n8n workflow automation | PostgreSQL, 5 GiB (2 + 3, shrunk 2026-11-08) | `PG dump` (05:20 UTC), `VolSync` | tailnet | Argo |
 | `platform-kube` | kube | Headlamp | none | Git | tailnet | Argo |
 | `platform-ecosystem-applications` | argocd | Generates the `ecosystem-*` Applications (11) from `platform/ecosystem/applications` | none | Git | internal | Argo |
 | `platform-ecosystem-foundation` | argocd | Generates the foundation `ecosystem-*` Applications (10) | none | Git | internal | Argo |
@@ -205,11 +160,11 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 |-------------|-----------|-----------------|---------|-------|--------|----------|
 | `ecosystem-cnpg` | cnpg-system | cloudnative-pg 0.29.1 | CloudNativePG operator | none | Git | internal |
 | `ecosystem-barman` | cnpg-system | plugin-barman-cloud 0.8.1 | CNPG backup plugin | none | Git | internal |
-| `ecosystem-onemind-core` | onemind-core | local `platform/ecosystem/charts/onemind-core` | OneMind core runtime. CNPG cluster `onemind-data` (3 instances, 120 GiB) lives in `onemind-data` | PostgreSQL | `Velero`, `Barman` | internal |
+| `ecosystem-onemind-core` | onemind-core | local `platform/ecosystem/charts/onemind-core` | OneMind core runtime. CNPG cluster `onemind-data` (3 instances x 5 GiB, PostgreSQL 16) lives in `onemind-data` | PostgreSQL | `Velero`, `Barman` | internal |
 | `ecosystem-openfga` | onemind-core | openfga 0.3.16 | Fine-grained authorization | PostgreSQL (CNPG) | `Velero`, `Barman` | internal |
-| ~~`ecosystem-litellm`~~ | onemind-ai | litellm-helm 1.104.2 (OCI) | **Retired 2026-11-06** (removed from Git). Database and role `litellm` dropped (verified live 2026-11-07) | PostgreSQL (CNPG) | `Velero`, `Barman` | none after cleanup |
-| ~~`ecosystem-ollama`~~ | onemind-ai | ollama 1.86.0 | **Retired 2026-11-06** (removed from Git). Volume `onemind-cpu-model` (20 GiB, Retain) kept | 20 GiB models | `Velero` (`onemind-ai`); VolSync source removed | none after cleanup |
-| `ecosystem-langfuse` | langfuse | langfuse 2.2.3 (app 4.75.0) | LLM observability for Hermes traces (web, worker, bundled Valkey). **Prepared 2026-11-07, not yet synced** | PostgreSQL (CNPG `onemind-data`), ClickHouse `langfuse` database, Spaces prefix `onemind-backups/langfuse/` | `Velero`, `Barman`, `VolSync` (ClickHouse) | tailnet `onemind-langfuse` |
+| ~~`ecosystem-litellm`~~ | onemind-ai (now `langfuse`) | litellm-helm 1.104.2 (OCI) | **Retired 2026-11-06** (removed from Git). Database and role `litellm` dropped (verified live 2026-11-07) | PostgreSQL (CNPG) | `Velero`, `Barman` | none after cleanup |
+| ~~`ecosystem-ollama`~~ | onemind-ai (now `langfuse`) | ollama 1.86.0 | **Retired 2026-11-06** (removed from Git). Volume `onemind-cpu-model` (20 GiB, Retain) kept | 20 GiB models | VolSync source removed | none after cleanup |
+| `ecosystem-langfuse` | langfuse | langfuse 2.2.3 (app 4.75.0) | LLM observability for Hermes traces (web, worker, bundled Redis). Synced and Healthy 2026-11-08 (was `onemind-ai`) | PostgreSQL (CNPG `onemind-data`), ClickHouse `langfuse` database, Spaces prefix `onemind-backups/langfuse/` | `Velero`, `Barman`, `VolSync` (ClickHouse) | tailnet `onemind-langfuse` |
 | `ecosystem-kyverno` | kyverno | kyverno 3.9.1 | Policy engine | none | Git | internal |
 | `ecosystem-falco` | falco | falco 9.2.0 | Runtime security | none | Git | internal |
 | `ecosystem-opencost` | opencost | opencost 2.5.32 | Cost metrics. Duplicates kube-state-metrics series (M2) | none | Git | internal |
@@ -234,8 +189,8 @@ Reached only through `platform-tool-gateway` (namespace `tool-gateway` unless st
 
 | Release | Namespace | Chart | Purpose | State | Backup | Exposure | GitOps |
 |---------|-----------|-------|---------|-------|--------|----------|--------|
-| `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | Prometheus, Alertmanager, Grafana | Prometheus TSDB, Grafana DB, 40 GiB PVCs in the namespace | `VolSync` | Grafana tailnet; Alertmanager internal | Argo (`monitoring-kube-prometheus-stack`, adopted 2026-10-17) |
-| `loki` | monitoring | loki-7.0.0 | Log storage. **PVC 89% full** (A4) | 20 GiB | `VolSync` | internal | Argo (`monitoring-loki`, adopted 2026-10-17) |
+| `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | Prometheus, Alertmanager, Grafana | Prometheus TSDB (20 GiB), Grafana DB (5 GiB), Loki (30 GiB) | `VolSync` | Grafana tailnet; Alertmanager internal | Argo (`monitoring-kube-prometheus-stack`, adopted 2026-10-17) |
+| `loki` | monitoring | loki-7.0.0 | Log storage. The PVC was 89% full at 20 GiB (A4); it is 30 GiB on 2026-11-08 | 30 GiB | `VolSync` | internal | Argo (`monitoring-loki`, adopted 2026-10-17) |
 | `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | Telemetry pipeline | none | Git | internal | Argo (`monitoring-otel-collector`, adopted 2026-10-17) |
 
 ## Not tracked by Argo or Helm
@@ -246,7 +201,7 @@ These run live and are not owned by any Application. Manifests for some of them 
 |-----------|-----------|------------------|------|--------|----------|
 | `nats` (UI) | `nui` (NUI 0.10.0, `ghcr.io/nats-nui/nui` digest-pinned, tailnet only at `nui`, behind the Authentik proxy outpost `nui-auth` (admins only); NUI has no login of its own, and its NetworkPolicy admits only the outpost and the Backstage health probe; `/db` is an emptyDir, connection imported from SealedSecret `nui-nats-context`). It replaced `heynats`, `nats-dashboard` and `nats-ui` on 2026-11-07. The agent tools moved to namespace `agent-fabric` (Agent Console, agent-tap, digest-pinned) on 2026-10-17 | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
 | ~~`matrix`~~ | Synapse, Element Web, PostgreSQL, Redis | **Retired 2026-11-07.** Manifests parked at `platform/parked/matrix/`; Application `platform-matrix` removed | n/a | Final `pg_dump` and signing key in `backups/matrix/final-2026-11-07/`; VolSync restic repos kept under `backups/restic/matrix/` | none (tailnet hosts `matrix.` and `element.tail717ba0.ts.net` removed) |
-| `tailscale` | about 24 operator-generated proxy StatefulSets | generated | n/a | none | tailnet |
+| `tailscale` | operator, ProxyGroups `ingress` (2 pods) and `egress`, 9 per-resource proxy StatefulSets | generated | n/a | none | tailnet |
 | `kube-system` | Cilium, CoreDNS, Hubble, metrics-server, DO CSI and agents | DOKS-managed | n/a | none | `hubble` tailnet |
 
 ## GitOps gaps
@@ -255,13 +210,13 @@ Eleven releases were installed with `helm upgrade --install` (see `platform/inst
 
 | Release | Namespace | Chart | Rev | Last updated | Values in Git | Risk if the cluster is rebuilt |
 |---------|-----------|-------|-----|--------------|---------------|-------------------------------|
-| `argocd` | argocd | argo-cd-10.1.2 | 3 | 2026-07-11 | `platform/values/argocd.yaml` | Argo itself is not declarative yet; `platform-argocd` is defined (manual sync), adoption steps in `docs/gitops/ARGOCD-SELF-MANAGEMENT.md` |
+| `argocd` | argocd | argo-cd-10.1.2 | 4 | 2026-10-23 | `platform/values/argocd.yaml` | Argo itself is not declarative yet; `platform-argocd` is defined (manual sync), adoption steps in `docs/gitops/ARGOCD-SELF-MANAGEMENT.md` |
 | `cert-manager` | cert-manager | cert-manager-v1.20.3 | 5 | 2026-07-11 | `platform/values/cert-manager.yaml` | No `ClusterIssuer` is deployed (none is needed: public TLS ends at Cloudflare and tailnet TLS is Tailscale's). Add one with its own Cloudflare token the day a direct certificate is needed |
 | `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 | 1 | 2026-07-04 | `platform/values/ingress-nginx.yaml` | LB IP `143.244.220.155` is bound to this release |
 | `loki` | monitoring | loki-7.0.0 | 4 | 2026-07-11 | `platform/values/loki.yaml` | Logs only |
-| `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | 8 | 2026-07-17 | `platform/values/kube-prometheus-stack.yaml` | Alert routing: until 2026-11-07 Alertmanager's only receiver was `null` (A17). Now `AlertmanagerConfig/onemind-backstage` routes critical and warning (not `Watchdog`/`InfoInhibitor`) to the portal; there is no Telegram receiver (on hold) |
+| `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | 9 | 2026-10-17 | `platform/values/kube-prometheus-stack.yaml` | Alert routing: until 2026-11-07 Alertmanager's only receiver was `null` (A17). Now `AlertmanagerConfig/onemind-backstage` routes critical and warning (not `Watchdog`/`InfoInhibitor`) to the portal; there is no Telegram receiver in Alertmanager. Falco (via falcosidekick) also posts to Alertmanager and Loki, and the Hermes `infra-health` cron polls alerts every 15 minutes |
 | `nack` | nats | nack-0.34.0 | 4 | 2026-07-11 | `platform/nats/nack-values.yaml` | Streams are not reconciled until reinstalled |
-| `nats` | nats | nats-2.14.2 | 10 | 2026-07-11 | `platform/nats/values.template.yaml` plus an **out-of-band, gitignored** `values.secret.yaml` | Passwords exist only on the machine that last ran Helm; Argo and Helm both own the StatefulSet |
+| `nats` | nats | nats-2.14.2 | 11 (failed) | 2026-11-07 | `platform/nats/values.template.yaml` plus an **out-of-band, gitignored** `values.secret.yaml` | Passwords exist only on the machine that last ran Helm; Argo and Helm both own the StatefulSet |
 | `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | 3 | 2026-07-17 | `platform/values/otel-collector.yaml` | Telemetry only |
 | `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | 3 | 2026-07-11 | `platform/values/tailscale-operator.yaml` | All admin UIs depend on it |
 | `takserver` | takserver | takserver-4.6.0 | 34 | 2026-09-29 | `platform/takserver/values-onemind.yaml` and chart `platform/takserver/chart` | The most important workload has no reproducible rebuild path |
@@ -272,7 +227,7 @@ Whether the values in Git still match what is deployed was not checked; `helm ge
 
 Gaps beyond the eleven releases:
 
-- **Adopted workloads (pending first sync):** the former `nats` UIs (now NUI) have Applications whose manifests were reconciled against the live objects (live won every difference). `platform-nats-tools` is auto-sync with `prune: false`; `platform-matrix` is manual because the live Synapse `homeserver.yaml` holds plaintext database, Redis and registration secrets that cannot be committed. Remaining gaps: the Secrets (`matrix-secrets`, `nats-creds`, `ghcr`) and the `matrix` and `nats` Namespaces are still created out of band; `platform/nats-tools/*.sealedsecret.yaml` and `namespace.yaml` target a `nats-tools` namespace that does not exist and are excluded; the `agenttap` Ingress points at port 8080 while its Service listens on 8088 (unchanged from live); `matrix-secrets` was applied with `kubectl apply`, so its values sit in a `last-applied-configuration` annotation and should be rotated.
+- **Adopted workloads (pending first sync):** the former `nats` UIs (now NUI) have Applications whose manifests were reconciled against the live objects (live won every difference). `platform-nats-tools` is auto-sync with `prune: false`; `platform-matrix` was removed with Matrix (2026-11-07). Remaining gaps: the Secrets (`nats-creds`, `ghcr`) and the `nats` Namespace are still created out of band; `platform/nats-tools/*.sealedsecret.yaml` and `namespace.yaml` target a `nats-tools` namespace that does not exist and are excluded; the `agenttap` Ingress points at port 8080 while its Service listens on 8088 (unchanged from live);
 - **Two owners of one resource:** `nats` StatefulSet (Helm and `platform-nats`); `SealedSecret auth/ghcr` (`platform-ecosystem-resources` and `platform-backups`).
 - **Terraform vs live:** `infra/main.tf` defaults (`onemind-hub`, `s-4vcpu-8gb` x3, `1.36.0-do.2`, pool `onemind-hub-core`) do not match the live cluster (`omos-cloud`, pool `onemind-hub-core-v2` on 8 vCPU / 16 GiB, `1.36.0-do.3`). `infra/ecosystem-workers/` is a separate root for the ecosystem pool. Terraform state was not inspected; do not apply `infra/` without a clean `terraform plan`.
 
@@ -282,7 +237,7 @@ Gaps beyond the eleven releases:
 |------|-------------------|
 | Public, Cloudflare ranges only (nginx) | `auth.onemindos.dev`, `ws.onemindos.dev` (NATS WebSocket), `onemindos.dev` (tak-portal) |
 | Public, control plane | Kubernetes API endpoint, no control-plane firewall (review finding H3) |
-| Tailnet only | Matrix (`matrix`, `element`), TAK (`tak`: 8089, 8443, 8446, 64738), TAK Portal (`enroll`), FedHub (`fedhub`), Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NUI (`nui`), `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
+| Tailnet only | TAK (`tak`: 8089, 8443, 8446, 64738), TAK Portal (`enroll`), FedHub (`fedhub`), Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NUI (`nui`), `omos-nats` (4222, 7422, 8080). 24 of the 26 tailnet ingresses share the `ProxyGroup` `ingress` |
 
 ## Mutable image tags
 
