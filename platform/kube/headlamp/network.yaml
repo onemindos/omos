@@ -9,10 +9,10 @@ spec:
   podSelector: {}
   policyTypes: [Ingress]
 ---
-# Headlamp only from the shared Authentik gate outpost (gate-outpost in auth, platform/auth/gate-outpost.yaml). Its tailnet
-# Ingress now lives in auth and points at the outpost, so the tailnet ACL in platform/core/policy.hujson still decides who
-# reaches the gate and Authentik decides who gets through. The Tailscale proxies and other pods are refused.
-# Rollback: restore ingress.yaml, delete gate-headlamp in auth, and re-add the Tailscale proxy rule that was here.
+# Headlamp only from its Authentik gate outpost (gate-outpost in this namespace, gate-outpost.yaml). The tailnet Ingress points
+# at the outpost, so the tailnet ACL in platform/core/policy.hujson still decides who reaches the gate and Authentik decides
+# who gets through. The Tailscale proxies and other pods are refused.
+# Rollback: point ingress.yaml back at Service headlamp and re-add the Tailscale proxy rule (see git history of this file).
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -25,10 +25,7 @@ spec:
   policyTypes: [Ingress]
   ingress:
     - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: auth
-          podSelector:
+        - podSelector:
             matchLabels:
               app.kubernetes.io/name: gate-outpost
       ports:
