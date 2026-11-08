@@ -90,7 +90,7 @@ run_capture() { # name seconds pipeline-files...
   sleep 0.5
   MTA_BASE_URL="http://127.0.0.1:$HPORT" CELESTRAK_BASE_URL="http://127.0.0.1:$HPORT" \
     MTA_PROTO_DIR="$WORK/proto" MTA_POLL_INTERVAL=3s CELESTRAK_POLL_INTERVAL=3s \
-    "$RPC" streams --chilled "$@" >"$WORK/logs/$name/redpanda-connect.log" 2>&1 &
+    "$RPC" ${RESOURCES:+-r "$RESOURCES"} streams --chilled "$@" >"$WORK/logs/$name/redpanda-connect.log" 2>&1 &
   local rp=$!
   sleep "$secs"
   kill "$rp" 2>/dev/null || true; wait "$rp" 2>/dev/null || true
@@ -115,7 +115,8 @@ sed -e "s#https://api-endpoint.mta.info#http://127.0.0.1:$HPORT#g" \
     -e "s#/proto/#$WORK/proto/#g" \
     -e 's#interval: "30s"#interval: "3s"#' \
     "$WORK/pipelines/feed-mta.yaml" >"$WORK/pipelines/legacy-feed-mta-local.yaml"
-run_capture legacy 5 "$WORK/pipelines/legacy-feed-mta-local.yaml"
+# The legacy pod runs with -r mta-resources.yaml (the dedupe cache feed-mta.yaml refers to).
+RESOURCES="$WORK/pipelines/mta-resources.yaml" run_capture legacy 5 "$WORK/pipelines/legacy-feed-mta-local.yaml"
 
 echo "== check"
 "$PY" "$HERE/replay_check.py" check "$HERE/fixtures" "$WORK/logs" | tee "$WORK/logs/check.txt"

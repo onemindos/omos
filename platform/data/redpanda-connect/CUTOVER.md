@@ -39,10 +39,10 @@ keeps its args and is not restarted (a ConfigMap change does not restart it).
 Check (read-only):
 
 ```bash
-kubectl --context do-nyc3-omos-cloud -n omos get deploy redpanda-connect redpanda-connect-grammar feed-satellites
+kubectl --context do-nyc3-omos-cloud -n feeds get deploy redpanda-connect redpanda-connect-grammar feed-satellites
 # expected: redpanda-connect 1/1, redpanda-connect-grammar 0/0, feed-satellites 1/1
 kubectl --context do-nyc3-omos-cloud get --raw \
-  "/api/v1/namespaces/omos/pods/$(kubectl --context do-nyc3-omos-cloud -n omos get pod -l app.kubernetes.io/name=redpanda-connect -o name | cut -d/ -f2):4195/proxy/streams"
+  "/api/v1/namespaces/feeds/pods/$(kubectl --context do-nyc3-omos-cloud -n feeds get pod -l app.kubernetes.io/name=redpanda-connect -o name | cut -d/ -f2):4195/proxy/streams"
 # expected: only {"feed-mta":{"active":true,...}}
 ```
 
@@ -61,9 +61,9 @@ Checks after Argo syncs (the `nats` commands need a NATS user; run them from the
 `omos-nats` or from a pod with the CLI):
 
 ```bash
-kubectl --context do-nyc3-omos-cloud -n omos get pod -l app.kubernetes.io/name=redpanda-connect-grammar -o wide
+kubectl --context do-nyc3-omos-cloud -n feeds get pod -l app.kubernetes.io/name=redpanda-connect-grammar -o wide
 # expected: 1/1 Running on the onemind-ecosystem-cpu node
-kubectl --context do-nyc3-omos-cloud -n omos logs deploy/redpanda-connect-grammar | grep -iE "error|permission" | head
+kubectl --context do-nyc3-omos-cloud -n feeds logs deploy/redpanda-connect-grammar | grep -iE "error|permission" | head
 # expected: no output (a "Permissions Violation" line means prerequisite 2 is not met: go back to replicas 0)
 nats sub 'tel.feed.>' --count 4
 # expected: tel.feed.mta.status every 30 s with stale:false, published > 0, lastError null;
@@ -100,7 +100,7 @@ PR (one PR, both fields, so the two feeds cut over together):
 Checks:
 
 ```bash
-kubectl --context do-nyc3-omos-cloud -n omos get deploy redpanda-connect feed-satellites
+kubectl --context do-nyc3-omos-cloud -n feeds get deploy redpanda-connect feed-satellites
 # expected: 0/0 for both
 nats sub tak.cot.inject --count 20 --timeout 90s | grep -cE 'MTA-(MNR|LIRR)-|SAT-'
 # expected: 0 (only projector output, uids OM.*, remains)

@@ -19,7 +19,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redpanda-connect-grammar
-  namespace: omos
+  namespace: feeds
   labels:
     app.kubernetes.io/name: redpanda-connect-grammar
     app.kubernetes.io/part-of: omos-feeds
