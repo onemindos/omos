@@ -79,4 +79,4 @@ spec:
         accessModes: [ReadWriteOnce]
         storageClassName: do-block-storage-retain
         resources:
-          requests: {storage: 10Gi}
+          requests: {storage: 3Gi}
