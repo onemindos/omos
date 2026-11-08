@@ -210,9 +210,30 @@ manifest, and `nats kv put` turns it off and on again on the cluster within seco
    feeds publish raw observations and only the entity service writes `ent.*`. *Recommended.*
 4. **Lock down the streams API** (Service without the API port, NetworkPolicy) in the same PR as the
    controller. *Recommended*; it closes an exposure that exists today.
+5. **Restore the TAK-to-NATS wire.** Found by the cleanup session on 2026-11-07: the
+   NatsBridgePlugin JAR is not in the `takserver-plugins` pod (no plugin has loaded since its restart
+   on 2026-11-07 05:25 UTC), and `tak-nats-leaf` in `takserver` has 0 client connections, although
+   its leaf link to the main bus is up. So TAK's own traffic (EUD positions, chat) does not reach
+   NATS. The COT stream still fills, but only from the feeds publishing `tak.cot.inject`; with no
+   subscriber on the TAK side, those markers probably do not reach TAK either (to check during
+   phase 1: interest on `tak.cot.inject`). Two ways back:
+   - **a. Adopt `tak-client`** (`platform/takserver/tak-client`, Argo app
+     `platform-takserver-tak-client`, manual sync, never synced). It is a TAK streaming client on
+     8089: TAK traffic out on `tak.cot.out` (inside the existing `tak.cot.>`), `tak.cot.inject` in.
+     It is a direct client of the main bus, so `tak-nats-leaf` can be retired. It runs on the
+     ecosystem pool (25m/32Mi requests). The owner mints its TAK client certificate and seals two
+     Secrets (steps in its README). *Recommended*: Argo-managed, no change to the Helm-CLI release
+     `takserver`, and it removes the last leaf inside the cluster.
+   - **b. Restore the plugin**: put the JAR (`services/takserver/plugin/`) back into the plugins
+     image or volume. This touches the Helm-CLI release `takserver` (no `helm upgrade` without the
+     owner) and keeps `tak-nats-leaf`.
+   Not both at once: each injects `tak.cot.inject` into TAK, so running both would show every
+   marker twice. CLAUDE.md still calls the plugin the live wire and needs updating with whichever
+   is chosen.
 
-Namespace: everything stays in `omos`. The planned rename to `feeds` is a separate session's work;
-manifests here will follow it, and nothing in this design depends on the namespace name.
+Namespace: the cleanup session is renaming `omos` to `feeds` (owner-approved 2026-11-07). This
+design is rebased after that lands and its manifests use `feeds`; nothing in it depends on the
+name otherwise.
 
 ## 6. Risks and notes
 
