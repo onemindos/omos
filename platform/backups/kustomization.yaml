@@ -4,6 +4,7 @@ resources:
 - snapshot-class.yaml
 - legacy-credentials.sealed.yaml
 - backups.yaml
+- clickhouse-prune.yaml
 - sealed/takserver-platform-backup-credentials.yaml
 - sealed/nats-platform-backup-credentials.yaml
 - sealed/clickhouse-backup-s3-creds.yaml
