@@ -11,53 +11,6 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: postgres-network
-spec:
-  podSelector:
-    matchLabels:
-      app: postgres
-  policyTypes:
-    - Ingress
-    - Egress
-  egress:
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: kube-system
-          podSelector:
-            matchLabels:
-              k8s-app: kube-dns
-      ports:
-        - protocol: UDP
-          port: 53
-        - protocol: TCP
-          port: 53
-  ingress:
-    - from:
-        - podSelector:
-            matchLabels:
-              app: thingsboard
-      ports:
-        - protocol: TCP
-          port: 5432
-    - from:
-        - podSelector:
-            matchLabels:
-              app: bootstrap
-      ports:
-        - protocol: TCP
-          port: 5432
-    - from:
-        - podSelector:
-            matchLabels:
-              app: platform-backup
-      ports:
-        - protocol: TCP
-          port: 5432
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
   name: thingsboard-network
 spec:
   podSelector:
@@ -79,13 +32,6 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
-    - to:
-        - podSelector:
-            matchLabels:
-              app: postgres
-      ports:
-        - protocol: TCP
-          port: 5432
     # Shared CNPG cluster (database thingsboard), the postgres Deployment replacement.
     - to:
         - namespaceSelector:
@@ -130,13 +76,6 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
-    - to:
-        - podSelector:
-            matchLabels:
-              app: postgres
-      ports:
-        - protocol: TCP
-          port: 5432
     # Shared CNPG cluster (database thingsboard), the postgres Deployment replacement.
     - to:
         - namespaceSelector:
