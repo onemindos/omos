@@ -72,7 +72,7 @@ jobs:
           docker run --rm --entrypoint bash
           ghcr.io/onemindos/onemind-postgres:sha-${{ github.sha }}
           -ec 'initdb -D /tmp/test-db;
-          pg_ctl -D /tmp/test-db -o "-k /tmp" -w start;
+          pg_ctl -D /tmp/test-db -o "-k /tmp -c shared_preload_libraries=timescaledb" -w start;
           psql -h /tmp -d postgres -v ON_ERROR_STOP=1 -f /extension-check.sql'
       - name: Record image digest
         run: printf '%s\n' '${{ steps.image.outputs.digest }}' > image-digest.txt
