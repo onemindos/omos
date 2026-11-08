@@ -7,7 +7,7 @@
 # Namespace: auth (created by platform-auth-infra, wave 2)
 #
 # External dependencies (deployed by platform-auth-infra):
-#   authentik-postgres.auth.svc.cluster.local:5432  — Postgres 17
+#   onemind-data-rw.onemind-data.svc.cluster.local:5432 — shared CloudNativePG cluster (moved 2026-11-08)
 #   authentik-redis.auth.svc.cluster.local:6379     — Redis 7
 #   authentik-secret                                 — SealedSecret
 #
@@ -41,13 +41,16 @@ spec:
           envFrom:
             - secretRef:
                 name: authentik-secret
+            # Later source wins: the database password for onemind-data.
+            - secretRef:
+                name: authentik-db
 
         authentik:
           secret_key: ""  # loaded from AUTHENTIK_SECRET_KEY env var
           error_reporting:
             enabled: false
           postgresql:
-            host: "authentik-postgres.auth.svc.cluster.local"
+            host: "onemind-data-rw.onemind-data.svc.cluster.local"
             port: 5432
             name: "authentik"
             user: "authentik"
@@ -77,7 +80,7 @@ spec:
               memory: 1Gi
 
         postgresql:
-          enabled: false  # using authentik-postgres StatefulSet
+          enabled: false  # using the shared onemind-data cluster
 
         redis:
           enabled: false  # using authentik-redis Deployment
@@ -98,4 +101,3 @@ spec:
       jsonPointers:
         - /spec/template/metadata/annotations
         - /spec/template/spec/containers/0/resources
-        - /spec/replicas  # temporary: database move window (bulk-pg-consolidate)
