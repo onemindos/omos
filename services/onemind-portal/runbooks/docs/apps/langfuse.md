@@ -2,21 +2,21 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-LLM observability & tracing. Tracks prompts, completions, latency, cost, and evals for AI agents. Self-hosted in namespace onemind-ai (web, worker and Redis) by Argo application ecosystem-langfuse over the tailnet; Deployments observed 1/1 on 2026-11-07.
+LLM observability & tracing. Tracks prompts, completions, latency, cost, and evals for AI agents. Self-hosted in namespace langfuse (web, worker and Redis) by Argo application ecosystem-langfuse over the tailnet; Deployments observed 1/1 on 2026-11-07.
 
 ## Where it runs
 
 - Catalog entity: `component:default/langfuse` in System `observability`
 - Argo CD application: `ecosystem-langfuse`
-- Namespace: `onemind-ai`
+- Namespace: `langfuse`
 
 ## Workloads
 
 | Workload | Kind | Namespace |
 | --- | --- | --- |
-| `langfuse-redis` | Deployment | `onemind-ai` |
-| `langfuse-web` | Deployment | `onemind-ai` |
-| `langfuse-worker` | Deployment | `onemind-ai` |
+| `langfuse-redis` | Deployment | `langfuse` |
+| `langfuse-web` | Deployment | `langfuse` |
+| `langfuse-worker` | Deployment | `langfuse` |
 
 ## When it looks wrong
 
@@ -32,8 +32,8 @@ LLM observability & tracing. Tracks prompts, completions, latency, cost, and eva
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name="onemind-ai"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=onemind-ai`
+- Loki query: `{k8s_namespace_name="langfuse"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=langfuse`
 - Source: `onemindos/omos`
 
 ## Escalate

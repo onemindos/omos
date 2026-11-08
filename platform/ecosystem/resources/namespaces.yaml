@@ -1,4 +1,4 @@
-# onemind-core, onemind-ai and velero are labelled in platform/security/shared-namespaces.yaml, because
+# onemind-core, langfuse and velero are labelled in platform/security/shared-namespaces.yaml, because
 # other Applications create them with CreateNamespace=true (see the comment there).
 apiVersion: v1
 kind: Namespace

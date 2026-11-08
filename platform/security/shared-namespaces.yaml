@@ -134,10 +134,9 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: onemind-ai
+  name: langfuse
   annotations:
     argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
-    volsync.backube/privileged-movers: 'true'
   labels:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu

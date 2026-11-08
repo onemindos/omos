@@ -49,5 +49,5 @@ schedules:
       includedNamespaces:
       - onemind-core
       - onemind-data
-      - onemind-ai
+      - langfuse
       snapshotVolumes: false

@@ -19,7 +19,7 @@ spec:
           kubernetes.io/metadata.name: onemind-core
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: onemind-ai
+          kubernetes.io/metadata.name: langfuse
     ports:
     - protocol: TCP
       port: 5432

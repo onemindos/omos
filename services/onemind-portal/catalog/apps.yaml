@@ -6734,7 +6734,7 @@ metadata:
   name: langfuse
   title: Langfuse
   description: LLM observability & tracing. Tracks prompts, completions, latency,
-    cost, and evals for AI agents. Self-hosted in namespace onemind-ai (web,
+    cost, and evals for AI agents. Self-hosted in namespace langfuse (web,
     worker and Redis) by Argo application ecosystem-langfuse over the tailnet;
     Deployments observed 1/1 on 2026-11-07.
   tags:
@@ -6772,13 +6772,13 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/langfuse/
     github.com/project-slug: onemindos/omos
-    backstage.io/kubernetes-namespace: onemind-ai
+    backstage.io/kubernetes-namespace: langfuse
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=langfuse
-    onemind.io/kubernetes-namespaces: onemind-ai
-    onemind.io/kubernetes-workloads: onemind-ai/langfuse-redis,onemind-ai/langfuse-web,onemind-ai/langfuse-worker
-    grafana/alert-label-selector: namespace=onemind-ai
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-ai
-    onemind.io/logs-query: '{k8s_namespace_name="onemind-ai"}'
+    onemind.io/kubernetes-namespaces: langfuse
+    onemind.io/kubernetes-workloads: langfuse/langfuse-redis,langfuse/langfuse-web,langfuse/langfuse-worker
+    grafana/alert-label-selector: namespace=langfuse
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=langfuse
+    onemind.io/logs-query: '{k8s_namespace_name="langfuse"}'
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8725,7 +8725,7 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/redpanda-connect/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: omos/redpanda-connect
+    onemind.io/kubernetes-workloads: feeds/redpanda-connect
     onemind.io/api-relationship-source: platform/data/redpanda-connect/deployment.yaml
       (four pipelines publish tak.cot.inject)
   labels:
@@ -8764,7 +8764,7 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/omos-data-pipeline/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: omos/feed-intel,omos/feed-satellites,omos/omos-tak-projector,omos/sink-clickhouse
+    onemind.io/kubernetes-workloads: feeds/feed-intel,feeds/feed-satellites,feeds/omos-tak-projector,feeds/sink-clickhouse
     onemind.io/api-relationship-source: platform/omos/tak-projector.yaml (intel.>
       durable consumer, cmd.projector.enable/disable, publishes tak.cot.inject);
       platform/omos/feed-scripts.yaml (feed-satellites publishes

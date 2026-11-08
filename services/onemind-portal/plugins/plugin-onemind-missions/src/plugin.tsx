@@ -204,9 +204,6 @@ export function Missions() {
                 <MenuItem value="onemind-core/onemind-ingestion">
                   Source projection worker
                 </MenuItem>
-                <MenuItem value="onemind-ai/docling">
-                  Document processing worker
-                </MenuItem>
               </Select>
             </FormControl>
           )}

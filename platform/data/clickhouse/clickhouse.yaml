@@ -44,7 +44,7 @@ spec:
       legacy_ro/profile: legacy_ro
       legacy_ro/quota: default
       # Langfuse (platform/ecosystem/values/langfuse.yaml): owns only the `langfuse` database. SHA-256 of the password sealed in
-      # onemind-ai/langfuse-auth (key clickhouse-password); a hash for the same no-restart reason as legacy_ro above.
+      # langfuse/langfuse-auth (key clickhouse-password); a hash for the same no-restart reason as legacy_ro above.
       # The grant includes CREATE DATABASE, which the Langfuse PreSync Job uses to create the (empty) database.
       langfuse/password_sha256_hex: "b5d35516710ad1985687d7c6444b235ad3c334c4c69d10cec1e8d2fad621b490"
       langfuse/networks/ip: "10.0.0.0/8"

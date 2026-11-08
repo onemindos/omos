@@ -4,7 +4,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: langfuse
-  namespace: onemind-ai
+  namespace: langfuse
   annotations:
     tailscale.com/proxy-group: ingress
     tailscale.com/hostname: onemind-langfuse
@@ -20,13 +20,13 @@ spec:
         - onemind-langfuse
 ---
 # Who may reach Langfuse web: the Tailscale proxy (UI), the Hermes agent (trace ingestion at /api/public/ingestion and the OTEL endpoint)
-# and the other onemind-ai pods. Hermes's own egress allowlist (platform/hermes/onemind-hermes/network.yaml) must also allow
-# langfuse-web.onemind-ai:3000 before the agent is wired to it.
+# and the other pods in this namespace. Hermes's own egress allowlist (platform/hermes/onemind-hermes/network.yaml) must also allow
+# langfuse-web.langfuse:3000 before the agent is wired to it.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: langfuse-web-clients
-  namespace: onemind-ai
+  namespace: langfuse
 spec:
   podSelector:
     matchLabels:
@@ -39,7 +39,7 @@ spec:
             matchExpressions:
               - key: kubernetes.io/metadata.name
                 operator: In
-                values: [onemind-ai, tailscale, hermes]
+                values: [langfuse, tailscale, hermes]
       ports:
         - protocol: TCP
           port: 3000

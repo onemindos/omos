@@ -57,7 +57,7 @@ spec:
     - to:
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: onemind-ai
+              kubernetes.io/metadata.name: langfuse
           podSelector:
             matchLabels:
               app: web

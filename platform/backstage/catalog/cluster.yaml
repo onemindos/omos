@@ -5307,7 +5307,7 @@ metadata:
     onemind.io/documented-tags: OMOS Feed, TAK Server
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
-    onemind.io/runtime-evidence: Deployment omos/omos-tak-projector
+    onemind.io/runtime-evidence: Deployment feeds/omos-tak-projector
     onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e818eb6d2ddea4ff77c23.md
@@ -5378,7 +5378,7 @@ metadata:
     onemind.io/documented-tags: OMOS Feed, Data
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
-    onemind.io/runtime-evidence: Deployment omos/sink-clickhouse
+    onemind.io/runtime-evidence: Deployment feeds/sink-clickhouse
     onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8197af14e4631a656d65.md
@@ -7684,7 +7684,7 @@ metadata:
     onemind.io/documented-tags: OMOS Feed
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
-    onemind.io/runtime-evidence: Deployment omos/feed-intel
+    onemind.io/runtime-evidence: Deployment feeds/feed-intel
     onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a7b836e7cf6518f1e7.md
@@ -7755,7 +7755,7 @@ metadata:
     onemind.io/documented-address: https://github.com/onemindos/omos-infra
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
-    onemind.io/runtime-evidence: Deployment omos/redpanda-connect; Service omos/redpanda-connect
+    onemind.io/runtime-evidence: Deployment feeds/redpanda-connect; Service feeds/redpanda-connect
     onemind.io/repository-url: https://github.com/onemindos/omos
     onemind.io/pillar-review: proposed
   links:
@@ -8790,7 +8790,7 @@ metadata:
     onemind.io/documented-tags: OMOS Feed
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
-    onemind.io/runtime-evidence: Deployment omos/feed-satellites
+    onemind.io/runtime-evidence: Deployment feeds/feed-satellites
     onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81fca08cfaf9f04514a1.md
@@ -11725,10 +11725,10 @@ kind: Component
 metadata:
   name: k8s-onemind-ai-langfuse-redis-0a1f87dd
   title: Langfuse — Redis
-  description: Deployment in onemind-ai
+  description: Deployment in langfuse
   annotations:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=langfuse,app.kubernetes.io/name=redis
-    backstage.io/kubernetes-namespace: onemind-ai
+    backstage.io/kubernetes-namespace: langfuse
     onemind.io/inventory-source: kubernetes
     onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
     onemind.io/kubernetes-workload: langfuse-redis
@@ -11740,7 +11740,7 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
   tags:
     - kubernetes
-    - onemind-ai
+    - langfuse
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload
@@ -11758,10 +11758,10 @@ kind: Component
 metadata:
   name: k8s-onemind-ai-langfuse-web-b2a337e1
   title: Langfuse — Web
-  description: Deployment in onemind-ai
+  description: Deployment in langfuse
   annotations:
     backstage.io/kubernetes-label-selector: app=web,app.kubernetes.io/instance=langfuse,app.kubernetes.io/name=langfuse
-    backstage.io/kubernetes-namespace: onemind-ai
+    backstage.io/kubernetes-namespace: langfuse
     onemind.io/inventory-source: kubernetes
     onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
     onemind.io/kubernetes-workload: langfuse-web
@@ -11773,7 +11773,7 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
   tags:
     - kubernetes
-    - onemind-ai
+    - langfuse
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload
@@ -11791,10 +11791,10 @@ kind: Component
 metadata:
   name: k8s-onemind-ai-langfuse-worker-54f8d17d
   title: Langfuse — Worker
-  description: Deployment in onemind-ai
+  description: Deployment in langfuse
   annotations:
     backstage.io/kubernetes-label-selector: app=worker,app.kubernetes.io/instance=langfuse,app.kubernetes.io/name=langfuse
-    backstage.io/kubernetes-namespace: onemind-ai
+    backstage.io/kubernetes-namespace: langfuse
     onemind.io/inventory-source: kubernetes
     onemind.io/inventory-observed-at: 2026-11-07T07:40:58.101Z
     onemind.io/kubernetes-workload: langfuse-worker
@@ -11806,7 +11806,7 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
   tags:
     - kubernetes
-    - onemind-ai
+    - langfuse
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload
