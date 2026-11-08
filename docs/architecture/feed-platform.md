@@ -40,7 +40,7 @@ a single archive pipeline copies feed data into ClickHouse for the time machine.
 
 | Piece | State |
 |---|---|
-| Redpanda Connect pod `redpanda-connect` (namespace `omos`, hub-core pool) | Image `redpandadata/connect@sha256:b462…` = **4.103.1**. Limit 128 MiB, using about 90 MiB. Runs in streams mode, but its args start **only `feed-mta`**. |
+| Redpanda Connect pod `redpanda-connect` (namespace `feeds`, renamed from `omos` on 2026-11-08 by PR #760; hub-core pool) | Image `redpandadata/connect@sha256:b462…` = **4.103.1**. Limit 128 MiB, using about 90 MiB. Runs in streams mode, but its args start **only `feed-mta`**. |
 | `feed-aircraft`, `feed-hazards`, `feed-ships` | In the ConfigMap, **not running**. `feed-hazards` duplicates the USGS and NWS collectors in `feed-intel`. |
 | `feed-mta` | Running. Builds CoT XML inside the pipeline and publishes to `tak.cot.inject`. |
 | Python pods | `feed-intel` (USGS, NOAA, EMSC, FIRMS, GDACS, EONET, ACLED), `feed-satellites`, `sink-clickhouse`, `omos-tak-projector`. |
@@ -50,7 +50,7 @@ a single archive pipeline copies feed data into ClickHouse for the time machine.
 | `WORLD` stream (`evt.world.>`) | Exists, R3, 24 h, **0 messages**. |
 | TAK projector | Already reads `ent.*.*.state` and `intel.>` and builds CoT. So CoT-in-one-place is half done. |
 | ClickHouse sink | Python. Reads `intel.>` (durable) and `ent.*.*.state` (core). **Discards a batch** when ClickHouse is down. |
-| Streams API | On by default in 4.103.1 (no `--bind-http` gate in this version). A hand-applied Service `redpanda-connect` (not in Git) exposes port 4195 to the whole cluster, and `omos` has **no NetworkPolicy**. |
+| Streams API | On by default in 4.103.1 (no `--bind-http` gate in this version). Before the rename a hand-applied Service `redpanda-connect` (not in Git) exposed port 4195 to the whole cluster. In `feeds` (verified 2026-11-08) there is no Service and **no NetworkPolicy**, so the port is still reachable on the pod IP from any pod. |
 | Open PRs | **#553** omos-ingest (Go collector framework, NWS first, merges cleanly). **#558** grammar MTA pipeline on `evt.world.rail.*` plus satellites on `intel.space.celestrak.tle`, in a new `redpanda-connect-grammar` Deployment at 0 replicas on the ecosystem pool (needs a small rebase). |
 
 ## 3. The pieces
@@ -231,9 +231,8 @@ manifest, and `nats kv put` turns it off and on again on the cluster within seco
    marker twice. CLAUDE.md still calls the plugin the live wire and needs updating with whichever
    is chosen.
 
-Namespace: the cleanup session is renaming `omos` to `feeds` (owner-approved 2026-11-07). This
-design is rebased after that lands and its manifests use `feeds`; nothing in it depends on the
-name otherwise.
+Namespace: `feeds`. The cleanup session renamed `omos` to `feeds` on 2026-11-08 (PR #760); paths
+and Argo Application names are unchanged, and every manifest in this design targets `feeds`.
 
 ## 6. Risks and notes
 
@@ -243,4 +242,4 @@ name otherwise.
 - Streams mode rejects `cache_resources` inside a stream config; shared caches go in a resources file
   loaded with `-r` (as `mta-resources.yaml` does today).
 - `protobuf to_json` field names differ between Connect versions (#558 handles both cases).
-- The NATS TLS posture (`skip_cert_verify: true`) is kept for now; the CA in `omos` is #553's A0-6.
+- The NATS TLS posture (`skip_cert_verify: true`) is kept for now; the CA in `feeds` is #553's A0-6.
