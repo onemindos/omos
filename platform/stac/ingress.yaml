@@ -8,6 +8,7 @@ metadata:
   name: stac
   namespace: stac
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: stac
 spec:
   ingressClassName: tailscale
@@ -25,6 +26,7 @@ metadata:
   name: stac-browser
   namespace: stac
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: stac-browser
 spec:
   ingressClassName: tailscale

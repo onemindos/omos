@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: thingsboard
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: thingsboard
     argocd.argoproj.io/sync-wave: '4'
 spec:

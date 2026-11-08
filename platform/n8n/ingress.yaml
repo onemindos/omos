@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: n8n
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: n8n
 spec:
   ingressClassName: tailscale
