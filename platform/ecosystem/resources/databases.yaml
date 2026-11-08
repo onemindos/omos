@@ -85,3 +85,36 @@ spec:
   cluster:
     name: onemind-data
   databaseReclaimPolicy: retain
+---
+# n8n workflow automation, moved from the n8n postgres StatefulSet on 2026-11-08 (bulk-pg-consolidate).
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: onemind-n8n
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  name: n8n
+  owner: n8n
+  cluster:
+    name: onemind-data
+  databaseReclaimPolicy: retain
+  extensions:
+  - name: uuid-ossp
+    ensure: present
+---
+# ThingsBoard CE, moved from the thingsboard postgres Deployment on 2026-11-08 (bulk-pg-consolidate).
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: onemind-thingsboard
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  name: thingsboard
+  owner: thingsboard
+  cluster:
+    name: onemind-data
+  databaseReclaimPolicy: retain

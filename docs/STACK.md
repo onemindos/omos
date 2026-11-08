@@ -35,8 +35,8 @@ Namespace `omos` is now `feeds` and `onemind-ai` is now `langfuse`; Headlamp mov
 ServiceAccount and its token stay in `kube`). 24 of the 26 tailnet ingresses share the Tailscale `ProxyGroup` `ingress` (2 pods,
 `platform/core/tailscale-proxygroup-ingress.yaml`); `argocd` and `onemind-auth` keep their own proxies. Hermes is one
 container (`hermes`), connected to NATS as `onemind-hermes-nats-platform`, with Langfuse tracing at `langfuse-web.langfuse`.
-Volumes: NATS 3 x 20 GiB, `onemind-data` 3 x 5 GiB on PostgreSQL 16 (a PostgreSQL 17 upgrade was rolled back on
-2026-11-08: Apache AGE blocks `pg_upgrade`), Hermes 10 GiB, TAK PostgreSQL 10 GiB, Loki 30 GiB, Prometheus 20 GiB;
+Volumes: NATS 3 x 20 GiB, `onemind-data` 3 x 5 GiB on PostgreSQL 17.11 with TimescaleDB 2.26.4
+preloaded (upgraded 2026-11-08; see `services/onemind-postgres/README.md`), Hermes 10 GiB, TAK PostgreSQL 10 GiB, Loki 30 GiB, Prometheus 20 GiB;
 OneTAK, Karakeep, n8n and Forgejo disks were shrunk. ClickHouse runs 26.8.36.3 with a 7-day TTL on its system logs and
 a CronJob (`prune-clickhouse-backups`) that keeps 14 days of backups. Grafana signs in through Authentik and has the
 ClickHouse plugin; Falco sends to Alertmanager and Loki; alerts reach the owner through the Hermes `infra-health` cron
@@ -107,7 +107,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-nats` | nats | NATS 3-node JetStream cluster manifests, TLS, 39 Stream/KeyValue CRs, WebSocket ingress, Tailscale LB `omos-nats` | JetStream streams, 3 x 20 GiB of PVCs | `backup-nats-streams` stream archive (03:30 UTC, restore-verified, 39 streams), `VolSync` x3 | `ws.onemindos.dev` public (CF); `omos-nats` tailnet; 4222 internal | Argo **and** Helm CLI (two owners; the StatefulSet is tracked by both) |
 | `platform-auth-helm` | auth | Authentik IdP (chart 2026.8.2) | PostgreSQL 17, Redis, 5 GiB | `PG dump` (05:00 UTC), `VolSync` | `auth.onemindos.dev` public (CF); `onemind-auth` tailnet | Argo |
 | `platform-auth-infra` | auth | Authentik Postgres, Redis, secrets, ingress | see above | see above | see above | Argo |
-| `platform-backups` | ops, plus Jobs in auth, backstage, n8n, nats, takml, takserver | Logical PostgreSQL/NATS backup CronJobs and encrypted cluster recovery exports | backup credentials (SealedSecrets) | self (writes to Spaces); drills in `docs/operations/` | internal | Argo. Shares `SealedSecret auth/ghcr` with `platform-ecosystem-resources` |
+| `platform-backups` | ops, plus Jobs in auth, backstage, nats, takml, takserver | encrypted cluster recovery exports | backup credentials (SealedSecrets) | self (writes to Spaces); drills in `docs/operations/` | internal | Argo. Shares `SealedSecret auth/ghcr` with `platform-ecosystem-resources` |
 | `platform-volume-backups` | ops | 46 VolSync `ReplicationSource` objects, all `Successful` at last check | restic repositories in Spaces | n/a | internal | Argo |
 | `platform-volsync` | ops | VolSync operator (chart 0.16.0) | none | n/a | internal | Argo |
 | `platform-ops` | ops | `health-keeper` read-only cluster observer (every 5 minutes). Logs only, it does not alert | none | Git | internal | Argo |
@@ -145,7 +145,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-redpanda-connect` | feeds | Redpanda Connect (digest-pinned): legacy `redpanda-connect` (`feed-mta` CoT) and `redpanda-connect-grammar` (the feed engine: runs the feed controller and seeder on the ecosystem pool, 1 replica; each source starts from `platform/data/sources/<id>.yaml` when its key in the NATS KV bucket `feed-control` is enabled; `mta-rail` seeded off; streams API closed by a NetworkPolicy; runbook `platform/data/redpanda-connect/CUTOVER.md`) | none | Git | internal | Argo |
 | `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (Tile38), WebODM | about 42 GiB of PVCs (shrunk 2026-11-08) | `VolSync` x5 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.tail717ba0.ts.net` **tailnet** | Argo |
 | `platform-takml` | takml | TAK-ML vision pipeline | PostgreSQL moved to `onemind-data` (database `takml_server`, 2026-11-08), 3 GiB of volumes | CNPG Barman (database), `VolSync` (models, JAR) | internal | Argo |
-| `platform-n8n` | n8n | n8n workflow automation | PostgreSQL, 5 GiB (2 + 3, shrunk 2026-11-08) | `PG dump` (05:20 UTC), `VolSync` | tailnet | Argo |
+| `platform-n8n` | n8n | n8n workflow automation | PostgreSQL moved to `onemind-data` (database `n8n`, 2026-11-08), 2 GiB volume | CNPG Barman (database), `VolSync` (data) | tailnet | Argo |
 | `platform-home-assistant` | home-assistant | Cloud Home Assistant (Container, `2026.11.0` by digest, hub-core only) with HACS preinstalled; the single place to view everything. Real devices stay on the home HA box, linked later via Remote Home Assistant over Tailscale. **Proposed, not yet synced** | `/config` 5 GiB (`do-block-storage-retain`) | `VolSync` source in `platform/home-assistant/backup.yaml`, **paused** until its restic Secret is sealed | `ha.tail717ba0.ts.net` tailnet | Argo |
 | `platform-kube` | kube, headlamp | Headlamp (namespace `headlamp`, manifests in `platform/kube/headlamp/`) and the `ai-operator` ServiceAccount (stays in `kube`) | none | Git | tailnet | Argo |
 | `platform-ecosystem-applications` | argocd | Generates the `ecosystem-*` Applications (11) from `platform/ecosystem/applications` | none | Git | internal | Argo |
@@ -161,7 +161,7 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 |-------------|-----------|-----------------|---------|-------|--------|----------|
 | `ecosystem-cnpg` | cnpg-system | cloudnative-pg 0.29.1 | CloudNativePG operator | none | Git | internal |
 | `ecosystem-barman` | cnpg-system | plugin-barman-cloud 0.8.1 | CNPG backup plugin | none | Git | internal |
-| `ecosystem-onemind-core` | onemind-core | local `platform/ecosystem/charts/onemind-core` | OneMind core runtime. CNPG cluster `onemind-data` (3 instances x 5 GiB, PostgreSQL 16) lives in `onemind-data` | PostgreSQL | `Velero`, `Barman` | internal |
+| `ecosystem-onemind-core` | onemind-core | local `platform/ecosystem/charts/onemind-core` | OneMind core runtime. CNPG cluster `onemind-data` (3 instances x 5 GiB, PostgreSQL 17, TimescaleDB) lives in `onemind-data` | PostgreSQL | `Velero`, `Barman` | internal |
 | `ecosystem-openfga` | onemind-core | openfga 0.3.16 | Fine-grained authorization | PostgreSQL (CNPG) | `Velero`, `Barman` | internal |
 | ~~`ecosystem-litellm`~~ | onemind-ai (now `langfuse`) | litellm-helm 1.104.2 (OCI) | **Retired 2026-11-06** (removed from Git). Database and role `litellm` dropped (verified live 2026-11-07) | PostgreSQL (CNPG) | `Velero`, `Barman` | none after cleanup |
 | ~~`ecosystem-ollama`~~ | onemind-ai (now `langfuse`) | ollama 1.86.0 | **Retired 2026-11-06** (removed from Git). Volume `onemind-cpu-model` (20 GiB, Retain) kept | 20 GiB models | VolSync source removed | none after cleanup |

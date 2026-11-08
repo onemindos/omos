@@ -9,6 +9,7 @@ resources:
   - portal-redirect.yaml
   - availability.yaml
   - backstage-secrets.sealedsecret.yaml
+  - backstage-db.sealedsecret.yaml
   - ghcr.sealedsecret.yaml
   - backup.sealedsecret.yaml
   - mcp.sealedsecret.yaml
