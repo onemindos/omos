@@ -27,11 +27,11 @@ repoServer:
     limits:
       memory: 512Mi
 
-# ApplicationSet controller off (no ApplicationSets exist; owner-approved 2026-11-07). The live Deployment is
-# scaled to 0 by hand (Argo does not prune it), the same way #725 kept live matching Git. Turn it back on here
-# and `kubectl scale` it to 1 before creating any ApplicationSet.
+# ApplicationSet controller off (no ApplicationSets exist; owner-approved 2026-11-07). The chart has no
+# `enabled` switch, so replicas: 0 keeps the Deployment at 0 and Argo CD sync keeps it there. Set it back
+# to 1 before creating any ApplicationSet.
 applicationSet:
-  enabled: false
+  replicas: 0
   resources:
     requests:
       cpu: 50m
