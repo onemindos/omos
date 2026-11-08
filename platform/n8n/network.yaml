@@ -32,6 +32,13 @@ spec:
         - podSelector:
             matchLabels: {app: n8n-postgres}
       ports: [{protocol: TCP, port: 5432}]
+    # Shared CNPG cluster (database n8n), the n8n-postgres replacement.
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: onemind-data}
+          podSelector:
+            matchLabels: {cnpg.io/cluster: onemind-data}
+      ports: [{protocol: TCP, port: 5432}]
     - to:
         - namespaceSelector:
             matchLabels: {kubernetes.io/metadata.name: kube-system}

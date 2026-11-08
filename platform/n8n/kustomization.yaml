@@ -4,6 +4,7 @@ namespace: n8n
 resources:
   - namespace.yaml
   - secrets.sealedsecret.yaml
+  - n8n-pg-creds.sealedsecret.yaml
   - postgres.yaml
   - deployment.yaml
   - network.yaml

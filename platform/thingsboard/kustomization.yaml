@@ -4,6 +4,7 @@ namespace: thingsboard
 resources:
   - namespace.yaml
   - sealed/
+  - thingsboard-pg-creds.sealedsecret.yaml
   - pvcs.yaml
   - postgres.yaml
   - application.yaml
