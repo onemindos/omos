@@ -30,9 +30,3 @@ spec:
       namespace: backstage
       name: argocd-mesh
       jsonPointers: [/spec/externalName]
-    # Temporary (database move, bulk-pg-consolidate): lets the portal be scaled to 0 for the dump window.
-    - group: apps
-      kind: Deployment
-      namespace: backstage
-      name: backstage
-      jsonPointers: [/spec/replicas]

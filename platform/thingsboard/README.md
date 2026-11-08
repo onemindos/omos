@@ -8,7 +8,7 @@ IoT authority or automatic migration of retained Mac data.
 
 Pinned upstream `thingsboard/tb-node:4.3.1.8` is the published pre4.4 Community
 Apache2.0 line, with a verified Linuxamd64 image. The official CE Docker guide
-currently specifies this tag. Its dedicated PostgreSQL17 database persists the
+currently specifies this tag. Its PostgreSQL17 database (in `onemind-data`) persists the
 configuration and telemetry; no Kafka or external cloud service is added.
 
 Queue type is explicitly `in-memory`: this is an evaluation monolith. In-flight
@@ -93,13 +93,11 @@ the stored one (update the store); the sealed hash is not a rotation path.
 
 ## Recovery
 
-The10Gi database claim uses `do-block-storage-retain` and `Prune=false`. Its
-VolSync Snapshot/Restic source captures the whole PostgreSQL data directory with
-WAL, to its own encrypted repository; temporary/cache claims use `do-block-storage`.
-This is a crash-consistent physical backup, not a verified logical dump/restore.
-Application logs and transient renderer data are emptyDir; important application
-entities are in PostgreSQL. Custom files/extensions added later require explicit
-backup scope changes.
+The database `thingsboard` lives in the shared `onemind-data` CloudNativePG cluster
+(moved from a dedicated PostgreSQL pod on 2026-11-08, bulk-pg-consolidate), covered by its
+Barman base backups and WAL archive. The old 10Gi claim `database` (retain class) was
+kept for the owner to delete. Application logs and transient renderer data are emptyDir;
+important application entities are in PostgreSQL.
 
 Before upgrades, preserve a consistent logical dump and database roles plus the
 exact image lock, bootstrap marker and independent JWT/SealedSecrets recovery

@@ -32,6 +32,9 @@ backend:
     img-src: ["'self'", 'data:', 'blob:', 'https://avatars.githubusercontent.com', 'https://tile.openstreetmap.org']
     worker-src: ["'self'", 'blob:']
   database:
+    # The image default is backstage-postgres; the shared CloudNativePG cluster serves the portal since the 2026-11-08 move.
+    connection:
+      host: onemind-data-rw.onemind-data.svc.cluster.local
     knexConfig:
       pool:
         min: 0

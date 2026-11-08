@@ -125,6 +125,15 @@ spec:
       createrole: false
       passwordSecret:
         name: db-thingsboard
+    # Authentik (SSO) database, moved from authentik-postgres on 2026-11-08 (bulk-pg-consolidate).
+    - name: authentik
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      createrole: false
+      passwordSecret:
+        name: db-authentik
   postgresql:
     shared_preload_libraries:
     - age

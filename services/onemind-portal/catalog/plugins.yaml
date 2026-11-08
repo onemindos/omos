@@ -3588,6 +3588,49 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: mcp-adapter-ntfy
+  title: 'MCP adapter: ntfy'
+  description: Push notifications to the owner's phone (self-hosted ntfy). No adapter implemented yet; the entry
+    reserves the application in apps.yaml.
+  tags:
+  - plugin
+  - mcp-adapter
+  - planned
+  - cluster
+  - mcp
+  labels:
+    onemind.io/plugin-type: mcp-adapter
+    onemind.io/plugin-status: planned
+    onemind.io/plugin-origin: onemind
+    onemind.io/runs-on-kind: cluster
+    onemind.io/pillar: so
+  annotations:
+    onemind.io/plugin-type: mcp-adapter
+    onemind.io/plugin-status: planned
+    onemind.io/plugin-origin: onemind
+    onemind.io/runs-on-kind: cluster
+    onemind.io/runs-on: ns hermes / deploy onemind-mcp (MCP server, streamable HTTP :8000/mcp)
+    onemind.io/connects-to: ntfy,onemind-mcp
+    onemind.io/plugin-source: platform/hermes/mcp/apps.yaml
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/hermes/mcp/apps.yaml
+    onemind.io/plugin-build: services/onemind-mcp (Python MCP server image, onemind-mcp.yml); adapters in onemind_mcp/adapters/
+    onemind.io/plugin-verified: 2026-10-29 onemind-mcp pod Running; enabled flag from apps.yaml, upstream health
+      not probed
+    onemind.io/mcp-app-id: ntfy
+    onemind.io/blocked-reason: Not an MCP target yet. Hermes publishes to topic hermes with its own write-only token
+      (Secret ntfy-auth); a reviewed publish-only adapter is a separate step.
+spec:
+  type: mcp-adapter
+  lifecycle: planned
+  owner: group:default/onemind-admins
+  system: onemind-plugin-ecosystem
+  subcomponentOf: component:default/onemind-mcp
+  dependsOn:
+  - component:default/k8s-hermes-onemind-mcp-07887746
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: mcp-adapter-authentik
   title: 'MCP adapter: authentik'
   description: Authentication and identity management. No adapter implemented yet; the entry reserves the application

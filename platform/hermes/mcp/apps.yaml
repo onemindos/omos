@@ -108,6 +108,10 @@ apps:
   enabled: false
   blocked_reason: Excluded from general agent content access. Owner-controlled vault permissions and purpose-specific integration require separate
     authorization; admin token is not a vault-reading credential.
+- id: ntfy
+  description: Push notifications to the owner's phone (self-hosted ntfy)
+  enabled: false
+  blocked_reason: 'Not an MCP target yet. Hermes publishes to topic hermes with its own write-only token (Secret ntfy-auth); a reviewed publish-only adapter is a separate step.'
 - id: authentik
   description: Authentication and identity management
   enabled: false

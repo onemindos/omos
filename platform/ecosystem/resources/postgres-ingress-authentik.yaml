@@ -1,0 +1,23 @@
+# Authentik (namespace auth, server and worker) reaches the shared onemind-data cluster. NetworkPolicies are additive.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-ingress-authentik
+  namespace: onemind-data
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: onemind-data
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: auth
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: authentik
+    ports:
+    - protocol: TCP
+      port: 5432
