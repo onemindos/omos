@@ -37,8 +37,34 @@ spec:
         runAsUser: 70
         runAsGroup: 70
         fsGroup: 70
+        # Only fix ownership when the volume root is wrong; a recursive fsGroup pass on
+        # a new node makes PGDATA group-writable and Postgres then refuses to start.
+        fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
+      initContainers:
+        # PostgreSQL requires PGDATA to be 0700 or 0750. After the 2026-11-08 node
+        # replacement it came back 0770 and the server crash-looped. Runs as uid 70,
+        # which owns the directory, so no root is needed.
+        - name: fix-pgdata-perms
+          image: openremote/postgresql@sha256:1622df4e31a0492e40d44920592264e2400adf7295fa68c6a63135a5ce7ffaf7
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c", "if [ -d /var/lib/postgresql/data/pgdata ]; then chmod 0700 /var/lib/postgresql/data/pgdata; fi"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
       containers:
         - name: postgres
           image: openremote/postgresql@sha256:1622df4e31a0492e40d44920592264e2400adf7295fa68c6a63135a5ce7ffaf7
