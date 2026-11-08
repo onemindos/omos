@@ -171,6 +171,16 @@ for errors and Cloudflare tunnel metrics; confirm nothing still reaches `143.244
 `platform/core/cloudflared.yaml` + `config.yaml`, and delete the stale A records. Rollback: re-create the Service as `LoadBalancer` (a new IP; DO LBs are not
 recoverable, so re-point DNS).
 
+## Shared Tailscale ingress ProxyGroup (2026-11-08)
+
+Tailscale Ingresses no longer get one proxy pod each. The ProxyGroup `ingress` (2 pods, `platform/core/tailscale-proxygroup-ingress.yaml`) serves them as Tailscale Services; add `tailscale.com/proxy-group: ingress` to an Ingress to use it. The hostname is the first label of `spec.tls[0].hosts[0]`, so URLs did not change.
+
+- Needs `autoApprovers.services` for `tag:k8s` in `platform/core/policy.hujson` (already there) and an operator OAuth client that can write Services (it worked, nothing to change).
+- Order when moving an Ingress: the old per-ingress device holds the name, so the operator logs "name exists but is not a service" for a minute or two, then the old proxy is removed and the Service comes up. Expect about 2 minutes of downtime per UI.
+- NetworkPolicies that admit the old proxy pod by label (`tailscale.com/parent-resource: <ingress>`, type `ingress`) must also admit `parent-resource: ingress`, type `proxygroup`. Namespace-wide `tailscale` peers need nothing.
+- Still on their own proxy: `argocd` and `onemind-auth`. Backstage reaches them through egress Services (`backstage/argocd-mesh`, `authentik-mesh`) and tailnet grants written against their old device IPs. Moving them needs those grants changed to `svc:` and the egress path tested first.
+- `monitoring/grafana` and `kube-system/hubble` are hand-applied Ingresses (not in Git); they were annotated with `kubectl annotate`.
+
 ## 5. TAK clients over Tailscale (current state, 2026-10-23)
 
 TAK has no public listener. The only path is the Tailscale Service `takserver/tak-tailnet`
