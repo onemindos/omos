@@ -205,23 +205,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
-  name: tak
-  title: TAK
-  description: "The TAK family. TAK Server (core, plugins, FedHub, LDAP, voice)
-    and OneTAK (enrollment portal, WebODM, tiles, media), kept together."
-  labels:
-    onemind.io/catalog-axis: deployment
-    onemind.io/pillar: so
-    onemind.io/family: tak
-  annotations:
-    onemind.io/pillar-review: proposed
-spec:
-  owner: group:default/onemind-admins
-  domain: domain:default/onemind-so
----
-apiVersion: backstage.io/v1alpha1
-kind: System
-metadata:
   name: geospatial
   title: Geospatial, drones & robotics
   description: Map, routing, geocoding and imagery services, drone software and
@@ -442,10 +425,9 @@ kind: Component
 metadata:
   name: opencage
   title: OpenCage
-  description: >-
-    External reference. Hosted geocoding and geosearch provider, not a sovereign
-    self-hosted backend. No OneMind installation, hosting or integration
-    verified.
+  description: External reference. Hosted geocoding and geosearch provider, not a
+    sovereign self-hosted backend. No OneMind installation, hosting or
+    integration verified.
   tags:
     - reference
     - geospatial
@@ -473,11 +455,10 @@ kind: Component
 metadata:
   name: graphhopper
   title: GraphHopper
-  description: >-
-    External reference. Routing provider with an open-source routing engine and
-    a separate hosted Directions API; hosted optimization and API features are
-    not assumed to ship with the engine. No OneMind installation, hosting or
-    integration verified.
+  description: External reference. Routing provider with an open-source routing
+    engine and a separate hosted Directions API; hosted optimization and API
+    features are not assumed to ship with the engine. No OneMind installation,
+    hosting or integration verified.
   tags:
     - reference
     - geospatial
@@ -505,11 +486,10 @@ kind: Component
 metadata:
   name: overpass-api
   title: Overpass API
-  description: >-
-    External reference. OpenStreetMap query service for spatial and tag-based
-    data extraction. Public instances have usage policies and capacity limits;
-    not an approved automated operational dependency. No OneMind installation,
-    hosting or integration verified.
+  description: External reference. OpenStreetMap query service for spatial and
+    tag-based data extraction. Public instances have usage policies and capacity
+    limits; not an approved automated operational dependency. No OneMind
+    installation, hosting or integration verified.
   tags:
     - reference
     - geospatial
@@ -537,8 +517,7 @@ kind: Component
 metadata:
   name: overpass-turbo
   title: Overpass Turbo
-  description: >-
-    External reference. Browser GUI for developing Overpass queries and
+  description: External reference. Browser GUI for developing Overpass queries and
     exploring OpenStreetMap results. Includes a community-curated examples and
     learning list; public query backends remain subject to their usage policies.
     No OneMind installation, hosting or integration verified.
@@ -572,21 +551,30 @@ kind: Component
 metadata:
   name: valhalla
   title: Valhalla
-  description: >-
-    External reference. Open-source OpenStreetMap routing engine with matrices,
-    isochrones, map matching and elevation sampling. The additional FOSSGIS
-    public demo is third-party, fair-use limited and not an approved automated
-    operational dependency. No OneMind installation, hosting or integration
-    verified.
+  description: External reference. Open-source OpenStreetMap routing engine with
+    matrices, isochrones, map matching and elevation sampling. The additional
+    FOSSGIS public demo is third-party, fair-use limited and not an approved
+    automated operational dependency. No OneMind installation, hosting or
+    integration verified.
   tags:
     - reference
     - geospatial
+    - geo
   annotations:
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
     onemind.io/launcher-url: https://github.com/valhalla/valhalla
     onemind.io/launcher-category: Geospatial
     onemind.io/pillar-review: proposed
+    onemind.io/documented-purpose: Open-source routing engine (full planet)
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🌍 Geo
+    onemind.io/documented-at: 2026-09-03 07:00:38Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-address: https://valhalla.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
+    onemind.io/verification: reference
   links:
     - url: https://github.com/valhalla/valhalla
       title: External reference
@@ -594,6 +582,8 @@ metadata:
     - url: https://valhalla.openstreetmap.de
       title: FOSSGIS public demo (fair-use limited)
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81f99634de87ffa4e749.md
+      title: "Archived registry: Valhalla"
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -608,12 +598,11 @@ kind: Component
 metadata:
   name: nominatim-upstream
   title: Nominatim (upstream reference)
-  description: >-
-    External reference. Self-hostable OpenStreetMap name/address and reverse
-    geocoder. Distinct from the archived OneMind Nominatim registry record; no
-    local availability claimed. Public service use requires usage-policy review
-    and is not an approved automated operational dependency. No OneMind
-    installation, hosting or integration verified.
+  description: External reference. Self-hostable OpenStreetMap name/address and
+    reverse geocoder. Distinct from the archived OneMind Nominatim registry
+    record; no local availability claimed. Public service use requires
+    usage-policy review and is not an approved automated operational dependency.
+    No OneMind installation, hosting or integration verified.
   tags:
     - reference
     - geospatial
@@ -641,8 +630,7 @@ kind: Component
 metadata:
   name: organic-maps
   title: Organic Maps
-  description: >-
-    External reference. Privacy-focused offline OpenStreetMap maps and
+  description: External reference. Privacy-focused offline OpenStreetMap maps and
     navigation for hiking, cycling and driving. No OneMind installation, hosting
     or integration verified.
   tags:
@@ -672,23 +660,34 @@ kind: Component
 metadata:
   name: maputnik
   title: Maputnik
-  description: >-
-    External reference. Open-source visual editor for the MapLibre Style
-    Specification, not a tile generator or proof of ATAK style compatibility. No
-    OneMind installation, hosting or integration verified.
+  description: External reference. Open-source visual editor for the MapLibre
+    Style Specification, not a tile generator or proof of ATAK style
+    compatibility. No OneMind installation, hosting or integration verified.
   tags:
     - reference
     - geospatial
+    - geo
   annotations:
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
     onemind.io/launcher-url: https://maputnik.github.io
     onemind.io/launcher-category: Geospatial
     onemind.io/pillar-review: proposed
+    onemind.io/documented-purpose: Visual map style editor
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🌍 Geo
+    onemind.io/documented-at: 2026-09-03 07:00:40Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-address: https://maputnik.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
+    onemind.io/verification: reference
   links:
     - url: https://maputnik.github.io
       title: External reference
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81a8a942d9af85058ca8.md
+      title: "Archived registry: Maputnik"
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -703,8 +702,7 @@ kind: Component
 metadata:
   name: suncalc
   title: SunCalc
-  description: >-
-    External reference. Solar position, sunrise, sunset, daylight and
+  description: External reference. Solar position, sunrise, sunset, daylight and
     shadow-length reference; not a complete terrain shade assessment. No OneMind
     installation, hosting or integration verified.
   tags:
@@ -734,10 +732,9 @@ kind: Component
 metadata:
   name: komoot
   title: Komoot
-  description: >-
-    External reference. Hosted outdoor route planning and discovery for hiking
-    and cycling; not a self-hosted routing backend. No OneMind installation,
-    hosting or integration verified.
+  description: External reference. Hosted outdoor route planning and discovery for
+    hiking and cycling; not a self-hosted routing backend. No OneMind
+    installation, hosting or integration verified.
   tags:
     - reference
     - geospatial
@@ -765,11 +762,10 @@ kind: Component
 metadata:
   name: adsb-exchange
   title: ADS-B Exchange
-  description: >-
-    External reference. External aircraft monitoring and flight-data provider.
-    Any future CoT bridge requires API, licensing and redistribution review; no
-    complete coverage or flight-safety suitability claimed. No OneMind
-    installation, hosting or integration verified.
+  description: External reference. External aircraft monitoring and flight-data
+    provider. Any future CoT bridge requires API, licensing and redistribution
+    review; no complete coverage or flight-safety suitability claimed. No
+    OneMind installation, hosting or integration verified.
   tags:
     - reference
     - intelligence
@@ -800,12 +796,11 @@ kind: Component
 metadata:
   name: openstreetmap
   title: OpenStreetMap (external reference)
-  description: >-
-    External reference. Collaborative geographic data and maps, created by
-    contributors and available under an open license. Distinct from the archived
-    OpenStreetMap registry record. No approved API feed, complete coverage or
-    flight-safety suitability claimed. No OneMind deployment, compatibility or
-    integration verified.
+  description: External reference. Collaborative geographic data and maps, created
+    by contributors and available under an open license. Distinct from the
+    archived OpenStreetMap registry record. No approved API feed, complete
+    coverage or flight-safety suitability claimed. No OneMind deployment,
+    compatibility or integration verified.
   tags:
     - reference
     - geospatial
@@ -833,12 +828,11 @@ kind: Component
 metadata:
   name: opensky-network
   title: OpenSky Network (external reference)
-  description: >-
-    External reference. Aircraft-tracking research network providing air traffic
-    data for research; not an OpenStreetMap or geocoding service. Distinct from
-    the archived OpenSky registry record. No approved API feed, complete
-    coverage or flight-safety suitability claimed. No OneMind deployment,
-    compatibility or integration verified.
+  description: External reference. Aircraft-tracking research network providing
+    air traffic data for research; not an OpenStreetMap or geocoding service.
+    Distinct from the archived OpenSky registry record. No approved API feed,
+    complete coverage or flight-safety suitability claimed. No OneMind
+    deployment, compatibility or integration verified.
   tags:
     - reference
     - intelligence
@@ -848,10 +842,20 @@ metadata:
     onemind.io/launcher-url: https://opensky-network.org
     onemind.io/launcher-category: Intelligence
     onemind.io/pillar-review: approved
+    onemind.io/documented-purpose: Global ADS-B flight tracking API
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 📡 Intel
+    onemind.io/documented-at: 2026-09-03 08:46:34Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-address: https://opensky-network.org
+    onemind.io/verification: reference
   links:
     - url: https://opensky-network.org
       title: Official website (external reference)
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816f8042cbf5b699b5ec.md
+      title: "Archived registry: OpenSky"
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -861,17 +865,16 @@ spec:
   owner: group:default/onemind-admins
   system: intelligence
 ---
-# Upstream reference only: deployed MediaMTX remains the OneTAK media workload.
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: mediamtx-upstream
   title: MediaMTX (upstream reference)
-  description: >-
-    Official upstream reference for MediaMTX, an open-source live media router
-    for publishing, reading, proxying, forwarding, recording and playing back
-    real-time video and audio streams. Listed in TAK Ecosystem for its video
-    role; not a separate OneMind deployment or a claim of tested integration.
+  description: Official upstream reference for MediaMTX, an open-source live media
+    router for publishing, reading, proxying, forwarding, recording and playing
+    back real-time video and audio streams. Listed in TAK Ecosystem for its
+    video role; not a separate OneMind deployment or a claim of tested
+    integration.
   tags:
     - reference
     - media
@@ -881,6 +884,7 @@ metadata:
     onemind.io/launcher-url: https://mediamtx.org
     onemind.io/launcher-category: TAK Ecosystem
     onemind.io/pillar-review: proposed
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://mediamtx.org
       title: Official upstream website
@@ -899,10 +903,10 @@ kind: Component
 metadata:
   name: tacsync
   title: TacSync
-  description: >-
-    External tactical reference for team awareness in milsims, with private map
-    sessions joined by QR code and no TAK server setup. Listed by request in TAK
-    Ecosystem; no TAK interoperability or OneMind integration is claimed.
+  description: External tactical reference for team awareness in milsims, with
+    private map sessions joined by QR code and no TAK server setup. Listed by
+    request in TAK Ecosystem; no TAK interoperability or OneMind integration is
+    claimed.
   tags:
     - tak-ecosystem
     - reference
@@ -930,10 +934,9 @@ kind: Component
 metadata:
   name: cesium-ion-for-tak
   title: Cesium ion for TAK
-  description: >-
-    External reference to Cesium ion for TAK plugins for 3D Tiles, imagery and
-    terrain from cloud or self-hosted Cesium ion sources. No OneMind deployment,
-    integration or tested compatibility is claimed.
+  description: External reference to Cesium ion for TAK plugins for 3D Tiles,
+    imagery and terrain from cloud or self-hosted Cesium ion sources. No OneMind
+    deployment, integration or tested compatibility is claimed.
   tags:
     - tak-ecosystem
     - reference
@@ -961,10 +964,9 @@ kind: Component
 metadata:
   name: district47
   title: District47
-  description: >-
-    External reference for ATAK plugins and KMZ data packages, radios, mesh and
-    power hardware, and field training. No OneMind affiliation or integration
-    implied.
+  description: External reference for ATAK plugins and KMZ data packages, radios,
+    mesh and power hardware, and field training. No OneMind affiliation or
+    integration implied.
   tags:
     - tak-ecosystem
     - reference
@@ -992,10 +994,10 @@ kind: Component
 metadata:
   name: xmpp-for-tak
   title: XMPP for TAK
-  description: >-
-    Self-hosted messaging for ATAK’s TAK Chat plugin and standard desktop/mobile
-    XMPP clients, with persistent rooms, direct messages and a future Hermes
-    bridge. Deferred; plugin compatibility and integration remain untested.
+  description: Self-hosted messaging for ATAK’s TAK Chat plugin and standard
+    desktop/mobile XMPP clients, with persistent rooms, direct messages and a
+    future Hermes bridge. Deferred; plugin compatibility and integration remain
+    untested.
   tags:
     - tak-ecosystem
     - planned
@@ -1008,8 +1010,10 @@ metadata:
     onemind.io/launcher-category: TAK Ecosystem
     onemind.io/documented-status: Planned — deferred, not deployed; plugin
       compatibility and integration untested
-    onemind.io/hosting: planned-not-deployed
+    onemind.io/hosting: digitalocean-nyc3
     onemind.io/pillar-review: proposed
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1018,6 +1022,8 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: tak-ecosystem
+  dependsOn:
+    - component:default/k8s-backstage-backstage-21b99354
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1033,6 +1039,8 @@ metadata:
     - url: https://argocd.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8158815be14e14b0f162.md
+      title: "Archived registry: ArgoCD"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8158815be14e14b0f162.md
       title: "Archived registry: ArgoCD"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8158815be14e14b0f162.md
@@ -1064,7 +1072,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:01:08Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
+    onemind.io/verified-at: 2026-11-08T14:59:23.152Z
     onemind.io/documented-address: https://argocd.tail717ba0.ts.net
     onemind.io/documented-tags: Monitoring
     argocd/app-name: platform-argocd
@@ -1112,6 +1120,8 @@ metadata:
       title: Operations runbook
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81899931d63301bfe25d.md
       title: "Archived registry: Headlamp"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81899931d63301bfe25d.md
+      title: "Archived registry: Headlamp"
   annotations:
     onemind.io/access-points: |-
       [
@@ -1138,22 +1148,22 @@ metadata:
     onemind.io/documented-at: 2026-09-03 21:19:39Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
-    onemind.io/runtime-evidence: Deployment kube/headlamp; Service kube/headlamp
+    onemind.io/verified-at: 2026-11-08T14:59:23.152Z
+    onemind.io/runtime-evidence: Deployment headlamp/headlamp; Service headlamp/headlamp
     onemind.io/documented-address: https://headlamp.tail717ba0.ts.net
     argocd/app-name: platform-kube
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: kube
     backstage.io/kubernetes-label-selector: app=headlamp
     onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: kube
     grafana/alert-label-selector: namespace=kube
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=kube
-    onemind.io/logs-query: '{k8s_namespace_name="kube"}'
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/headlamp/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: kube/headlamp
+    onemind.io/kubernetes-namespaces: headlamp
+    onemind.io/kubernetes-workloads: headlamp/headlamp
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=headlamp
+    onemind.io/logs-query: '{k8s_namespace_name="headlamp"}'
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1163,7 +1173,7 @@ spec:
   owner: group:default/onemind-admins
   system: developer-platform
   dependsOn:
-    - component:default/k8s-kube-headlamp-c14c4d45
+    - component:default/k8s-headlamp-headlamp-6effd23b
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1179,6 +1189,8 @@ metadata:
     - url: https://login.tailscale.com/admin/machines
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e814781a8e3955ee46860.md
+      title: "Archived registry: Tailscale Mesh (15 proxies)"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e814781a8e3955ee46860.md
       title: "Archived registry: Tailscale Mesh (15 proxies)"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e814781a8e3955ee46860.md
@@ -1232,6 +1244,8 @@ metadata:
       title: "Archived registry: Cloudflare"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8188a304d6e8212ce8a0.md
       title: "Archived registry: Cloudflare"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8188a304d6e8212ce8a0.md
+      title: "Archived registry: Cloudflare"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -1276,6 +1290,8 @@ metadata:
     - url: https://cloud.digitalocean.com/
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819b853bed35001c206b.md
+      title: "Archived registry: DigitalOcean"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819b853bed35001c206b.md
       title: "Archived registry: DigitalOcean"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819b853bed35001c206b.md
@@ -1328,6 +1344,8 @@ metadata:
       title: "Archived registry: Agent Web UI"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816a83c1dbdc285b898d.md
       title: "Archived registry: Agent Web UI"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816a83c1dbdc285b898d.md
+      title: "Archived registry: Agent Web UI"
   annotations:
     onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
     onemind.io/launcher-review: reachable-from-operator-mac
@@ -1355,7 +1373,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:33:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
+    onemind.io/verified-at: 2026-11-08T14:59:23.152Z
     onemind.io/runtime-evidence: Deployment agent-fabric/agent-console 1/1 (observed
       2026-11-07); it moved from the nats namespace to agent-fabric
     onemind.io/documented-address: https://agent-web-ui.tail717ba0.ts.net
@@ -1391,6 +1409,7 @@ metadata:
   description: NATS web UI (official nats-nui/nui) with the in-cluster bus preconfigured
   tags:
     - messaging
+    - nats
     - deployment-verified
   links:
     - url: https://nui.tail717ba0.ts.net/
@@ -1398,6 +1417,8 @@ metadata:
       icon: dashboard
     - url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
       title: Operations runbook
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81dfb106d5c7afb68acd.md
+      title: "Archived registry: nui"
   annotations:
     onemind.io/access-points: |-
       [
@@ -1423,11 +1444,22 @@ metadata:
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: nats
     grafana/alert-label-selector: namespace=nats
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nui
-    onemind.io/logs-query: '{k8s_namespace_name="nats", k8s_pod_name=~"(nui)-.*"}'
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nui&var-workload=nui-auth
+    onemind.io/logs-query: '{k8s_namespace_name="nats", k8s_pod_name=~"(nui|nui-auth)-.*"}'
     onemind.io/recovery-runbook: apps/nui/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: nats/nui
+    onemind.io/kubernetes-workloads: nats/nui,nats/nui-auth
+    onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: Third-party NATS UI — removed, redundant
+    onemind.io/documented-host: 🐳 Docker Local
+    onemind.io/documented-status: 📚 Reference
+    onemind.io/documented-category: 🚌 NATS
+    onemind.io/documented-at: 2026-09-03 07:33:16Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-address: https://github.com/nats-nui/nui
+    onemind.io/documented-tags: NATS
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-11-08T14:59:23.152Z
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1438,6 +1470,7 @@ spec:
   system: messaging-nats
   dependsOn:
     - component:default/k8s-nats-nui-87fa5daa
+    - component:default/k8s-nats-nui-auth-95f99d27
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1495,15 +1528,14 @@ metadata:
     onemind.io/hosting: digitalocean-nyc3
     argocd/app-name: platform-cloudtak
     argocd/instance-name: onemind-cloud
-    onemind.io/tech-stack-status: Setup pending
+    onemind.io/tech-stack-status: Active
     onemind.io/tech-stack-category: TAK Ecosystem
     onemind.io/license: Open Source
     onemind.io/onemind-integration: "true"
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81289a86c81a18d29511
     onemind.io/tech-stack-url: https://github.com/dfpc-coe/CloudTAK
-    onemind.io/tech-stack-notes: Pinned upstream browser TAK client in
-      platform/cloudtak. Spaces credentials and first-run TAK configuration are
-      required; live acceptance is pending.
+    onemind.io/tech-stack-notes: Cloud-native TAK server frontend. Self-hosted at
+      onemindos.dev. Manages COT streams, data packages, and mission data.
     onemind.io/supported-platforms: Web,K8s
     onemind.io/pillar-review: proposed
     grafana/dashboard-selector: uid == 'onemind-workload'
@@ -1516,6 +1548,7 @@ metadata:
     grafana/alert-label-selector: namespace=cloudtak
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=cloudtak
     onemind.io/logs-query: '{k8s_namespace_name="cloudtak"}'
+    onemind.io/relationship-source: ingress-service-selector
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1524,6 +1557,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: tak-ecosystem
+  dependsOn:
+    - component:default/k8s-cloudtak-cloudtak-api-7201980b
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1573,7 +1608,7 @@ spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
-  system: tak
+  system: tak-ecosystem
   providesApis:
     - api:default/tak-cot-bridge
 ---
@@ -1587,7 +1622,7 @@ metadata:
     - launcher-review-required
     - tak-ecosystem
     - tak-server
-    - documented-unverified
+    - deployment-verified
   links:
     - url: https://enroll.tail717ba0.ts.net
       title: Open application
@@ -1598,6 +1633,10 @@ metadata:
       title: "Archived registry: OneTAK"
     - url: https://portal.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
       title: Operations runbook
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e815eb011df18773e15dc.md
+      title: "Archived registry: OneTAK"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a98fb4e78fdda75950.md
+      title: "Archived registry: OneTAK"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e815eb011df18773e15dc.md
       title: "Archived registry: OneTAK"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a98fb4e78fdda75950.md
@@ -1613,7 +1652,7 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-14 00:44:22Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
-    onemind.io/verification: documented-unverified
+    onemind.io/verification: deployment-verified
     onemind.io/documented-address: https://atoc.onemindos.dev
     onemind.io/documented-tags: TAK Server
     argocd/app-name: platform-onetak
@@ -1630,6 +1669,8 @@ metadata:
     onemind.io/recovery-runbook: apps/onetak/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: onetak/onetak-media,onetak/tak-portal
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/verified-at: 2026-11-08T14:59:23.152Z
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1637,7 +1678,9 @@ spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
-  system: tak
+  system: tak-ecosystem
+  dependsOn:
+    - component:default/k8s-onetak-tak-portal-034c1ce9
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1688,8 +1731,7 @@ kind: Component
 metadata:
   name: cotak
   title: COTAK
-  description: >-
-    External Colorado TAK program and guest resources.
+  description: External Colorado TAK program and guest resources.
   tags:
     - tak-ecosystem
     - reference
@@ -1717,8 +1759,7 @@ kind: Component
 metadata:
   name: gotak
   title: GoTAK
-  description: >-
-    External TAK ecosystem products and resources.
+  description: External TAK ecosystem products and resources.
   tags:
     - tak-ecosystem
     - reference
@@ -1746,8 +1787,7 @@ kind: Component
 metadata:
   name: takgrid
   title: TAKGRID
-  description: >-
-    External TAK ecosystem services and resources.
+  description: External TAK ecosystem services and resources.
   tags:
     - tak-ecosystem
     - reference
@@ -1775,9 +1815,8 @@ kind: Component
 metadata:
   name: omnitak-external
   title: OmniTAK (external project)
-  description: >-
-    External third-party OmniTAK project; unrelated to OneMind and its retired
-    OmniTAK name.
+  description: External third-party OmniTAK project; unrelated to OneMind and its
+    retired OmniTAK name.
   tags:
     - tak-ecosystem
     - reference
@@ -1805,8 +1844,7 @@ kind: Component
 metadata:
   name: engindearing-projects
   title: engindearing-projects
-  description: >-
-    External GitHub organization for engindearing projects, including OmniTAK.
+  description: External GitHub organization for engindearing projects, including OmniTAK.
   tags:
     - tak-ecosystem
     - reference
@@ -1869,6 +1907,8 @@ metadata:
     - url: https://tak.gov/
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab80dc586e6c4cf42.md
+      title: "Archived registry: TAK GOV"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab80dc586e6c4cf42.md
       title: "Archived registry: TAK GOV"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab80dc586e6c4cf42.md
@@ -1974,6 +2014,8 @@ metadata:
       title: Operations runbook
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e39fd6f5e8cda2cb01.md
       title: "Archived registry: Grafana"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e39fd6f5e8cda2cb01.md
+      title: "Archived registry: Grafana"
   annotations:
     onemind.io/access-points: |-
       [
@@ -2001,7 +2043,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:01:11Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
+    onemind.io/verified-at: 2026-11-08T14:59:23.152Z
     onemind.io/documented-address: https://grafana.tail717ba0.ts.net
     onemind.io/documented-tags: Monitoring
     onemind.io/tech-stack-status: Active
@@ -2118,6 +2160,7 @@ metadata:
     onemind.io/recovery-runbook: apps/clickhouse/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: clickhouse/chi-onemind-onemind-0-0,kube-system/platform-clickhouse-operator
+    onemind.io/relationship-source: ingress-service-selector
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2126,6 +2169,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: data-storage
+  dependsOn:
+    - component:default/k8s-backstage-backstage-21b99354
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -2144,8 +2189,9 @@ metadata:
     onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
-    onemind.io/hosting: mesh-endpoint-unverified
+    onemind.io/hosting: digitalocean-nyc3
     onemind.io/pillar-review: proposed
+    onemind.io/relationship-source: ingress-service-selector
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2154,6 +2200,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: data-storage
+  dependsOn:
+    - component:default/k8s-backstage-backstage-21b99354
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -2238,6 +2286,7 @@ metadata:
     backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
     onemind.io/kubernetes-scope: namespace
     onemind.io/kubernetes-workloads: monitoring/alertmanager-monitoring-kube-prometheus-alertmanager,monitoring/monitoring-kube-prometheus-operator,monitoring/monitoring-kube-state-metrics,monitoring/prometheus-monitoring-kube-prometheus-prometheus
+    onemind.io/relationship-source: ingress-service-selector
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2246,6 +2295,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: observability
+  dependsOn:
+    - component:default/k8s-backstage-backstage-21b99354
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -2263,6 +2314,8 @@ metadata:
     - url: https://portal.tail717ba0.ts.net/catalog/default/component/nats-surveyor
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8141870fea96e2732cf7.md
+      title: "Archived registry: NATS Surveyor"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8141870fea96e2732cf7.md
       title: "Archived registry: NATS Surveyor"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8141870fea96e2732cf7.md
@@ -2294,7 +2347,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 08:14:19Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
+    onemind.io/verified-at: 2026-11-08T14:59:23.152Z
     onemind.io/runtime-evidence: Deployment nats/nats-surveyor; Service nats/nats-surveyor
     onemind.io/documented-address: https://github.com/nats-io/nats-surveyor
     onemind.io/documented-tags: NATS, Monitoring
@@ -2309,6 +2362,7 @@ metadata:
     onemind.io/recovery-runbook: apps/nats-surveyor/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: nats/nats-surveyor
+    onemind.io/relationship-source: ingress-service-selector
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2319,6 +2373,7 @@ spec:
   system: messaging-nats
   dependsOn:
     - component:default/k8s-nats-nats-surveyor-d19787d9
+    - component:default/k8s-backstage-backstage-21b99354
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -2335,6 +2390,8 @@ metadata:
     - url: https://tileserver.onemindos.dev
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b8aa3ddd0a1f032dac.md
+      title: "Archived registry: TileServer GL"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b8aa3ddd0a1f032dac.md
       title: "Archived registry: TileServer GL"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b8aa3ddd0a1f032dac.md
@@ -2366,7 +2423,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:00:37Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
+    onemind.io/verified-at: 2026-11-08T14:59:23.152Z
     onemind.io/runtime-evidence: Deployment onetak/tileserver-gl; Service onetak/tileserver-gl
     onemind.io/documented-address: https://tileserver.tail717ba0.ts.net
     onemind.io/documented-tags: Geo
@@ -2411,6 +2468,8 @@ metadata:
       title: "Archived registry: WebODM"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e816c97dfc37ab88251bc.md
       title: "Archived registry: WebODM"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e816c97dfc37ab88251bc.md
+      title: "Archived registry: WebODM"
   annotations:
     onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
@@ -2437,7 +2496,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:00:34Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
+    onemind.io/verified-at: 2026-11-08T14:59:23.152Z
     onemind.io/runtime-evidence: Deployment onetak/webodm; Service onetak/webodm
     onemind.io/documented-address: https://webodm.tail717ba0.ts.net
     onemind.io/documented-tags: Geo
@@ -2453,6 +2512,7 @@ metadata:
     onemind.io/recovery-runbook: apps/webodm/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: onetak/nodeodm,onetak/webodm,onetak/webodm-broker,onetak/webodm-db
+    onemind.io/relationship-source: ingress-service-selector
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2463,6 +2523,7 @@ spec:
   system: geospatial
   dependsOn:
     - component:default/k8s-onetak-webodm-c4998b47
+    - component:default/k8s-backstage-backstage-21b99354
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -2783,6 +2844,8 @@ metadata:
       title: "Archived registry: 1Password"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8165a3a2fb59b639a15b.md
       title: "Archived registry: 1Password"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8165a3a2fb59b639a15b.md
+      title: "Archived registry: 1Password"
   annotations:
     onemind.io/access-points: |-
       [
@@ -2892,6 +2955,8 @@ metadata:
       title: "Archived registry: Raindrop.io"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b69fcce49a37fc8a7c.md
       title: "Archived registry: Raindrop.io"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b69fcce49a37fc8a7c.md
+      title: "Archived registry: Raindrop.io"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -2941,6 +3006,8 @@ metadata:
       title: "Archived registry: AT&T Prepaid"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e814ca638d7301b53411b.md
       title: "Archived registry: AT&T Prepaid"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e814ca638d7301b53411b.md
+      title: "Archived registry: AT&T Prepaid"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -2976,6 +3043,8 @@ metadata:
     - url: https://github.com/onemindos
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81a59a22e9df6ad509db.md
+      title: "Archived registry: GitHub"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81a59a22e9df6ad509db.md
       title: "Archived registry: GitHub"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81a59a22e9df6ad509db.md
@@ -3031,6 +3100,8 @@ metadata:
       title: "Archived registry: Composio"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e817eb25cc0716ec0cacd.md
       title: "Archived registry: Composio"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e817eb25cc0716ec0cacd.md
+      title: "Archived registry: Composio"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -3066,6 +3137,8 @@ metadata:
     - url: https://miro.com/app/dashboard/org/3458764575937063233/team/3458764575937063234/
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ae96ade7dffe2f1f3d.md
+      title: "Archived registry: Miro"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ae96ade7dffe2f1f3d.md
       title: "Archived registry: Miro"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ae96ade7dffe2f1f3d.md
@@ -3152,6 +3225,8 @@ metadata:
       title: "Archived registry: Mercury"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81038e5cff998afacc9e.md
       title: "Archived registry: Mercury"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81038e5cff998afacc9e.md
+      title: "Archived registry: Mercury"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -3215,6 +3290,8 @@ metadata:
       title: "Archived registry: Experian"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81fd8220d62858309f05.md
       title: "Archived registry: Experian"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81fd8220d62858309f05.md
+      title: "Archived registry: Experian"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -3249,6 +3326,8 @@ metadata:
     - url: https://ciam.tui.transunion.com/realms/TransUnion/protocol/openid-connect/auth?response_type=code&redirect_uri=https://service.transunion.com/dss/ssoRedirect.page&client_id=Phoenix&scope=openid
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8181ad96c13f18a45db7.md
+      title: "Archived registry: TransUnion"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8181ad96c13f18a45db7.md
       title: "Archived registry: TransUnion"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8181ad96c13f18a45db7.md
@@ -3291,6 +3370,8 @@ metadata:
       title: "Archived registry: Equifax"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e5b4b0e7460dc5e132.md
       title: "Archived registry: Equifax"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e5b4b0e7460dc5e132.md
+      title: "Archived registry: Equifax"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -3325,6 +3406,8 @@ metadata:
     - url: https://www.innovis.com/login/index
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8162b34dea7818b74301.md
+      title: "Archived registry: Innovis"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8162b34dea7818b74301.md
       title: "Archived registry: Innovis"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8162b34dea7818b74301.md
@@ -3970,8 +4053,9 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: messaging-nats
-  definition: |
+  definition: >
     asyncapi: 2.6.0
+
     info:
       title: OneMind NATS events
       version: 1.0.0
@@ -3979,6 +4063,7 @@ spec:
         le, ge plus sys; the deployed streams also capture task, cloud, bio, robot, drone, world (WORLD), tak (GEO:
         evt.tak.cot.>, evt.tak.status.>), mission and map (MISSION) and sys (SYS). Never publish a command as an event."
     defaultContentType: application/json
+
     servers:
       onemind-cloud:
         url: nats.nats.svc.cluster.local:4222
@@ -4093,14 +4178,16 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: messaging-nats
-  definition: |
+  definition: >
     asyncapi: 2.6.0
+
     info:
       title: OneMind NATS commands
       version: 1.0.0
       description: Commands (imperatives), docs/NATS-DOCTRINE.md section 2 and the map/fleet/mission commands of section 9
         (cmd.map.>, cmd.fleet.>, cmd.mission.>). The CMD stream captures cmd.>.
     defaultContentType: application/json
+
     servers:
       onemind-cloud:
         url: nats.nats.svc.cluster.local:4222
@@ -4203,14 +4290,16 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: messaging-nats
-  definition: |
+  definition: >
     asyncapi: 2.6.0
+
     info:
       title: OneMind NATS telemetry
       version: 1.0.0
       description: Telemetry, docs/NATS-DOCTRINE.md section 2; fleet positions use tel.fleet.{class}.{id}.position with the
         geo-envelope of section 9.2. Node-local telemetry stays on the leaf; core merges tel.> for fleet analytics.
     defaultContentType: application/json
+
     servers:
       onemind-cloud:
         url: nats.nats.svc.cluster.local:4222
@@ -4322,8 +4411,9 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: messaging-nats
-  definition: |
+  definition: >
     asyncapi: 2.6.0
+
     info:
       title: OneMind NATS intelligence
       version: 1.0.0
@@ -4331,6 +4421,7 @@ spec:
         OMOS intel feeds (platform/omos/intel-scripts.yaml) as JSON with an intel envelope; no schema is published in
         services/schemas yet.
     defaultContentType: application/json
+
     servers:
       onemind-cloud:
         url: nats.nats.svc.cluster.local:4222
@@ -4391,14 +4482,16 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: messaging-nats
-  definition: |
+  definition: >
     asyncapi: 2.6.0
+
     info:
       title: OneMind NATS service RPC
       version: 1.0.0
       description: Internal service RPC, docs/NATS-DOCTRINE.md section 2 (request/reply, no JetStream capture). Discovery for
         agents uses $SRV (see nats-agent-protocol).
     defaultContentType: application/json
+
     servers:
       onemind-cloud:
         url: nats.nats.svc.cluster.local:4222
@@ -4507,8 +4600,9 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: messaging-nats
-  definition: |
+  definition: >
     asyncapi: 2.6.0
+
     info:
       title: OneMind NATS agent fabric
       version: 1.0.0
@@ -4516,6 +4610,7 @@ spec:
         read endpoint subjects from $SRV.PING.agents / $SRV.INFO.agents (stall-timeout request-many), never hardcode a
         roster. Payloads follow the upstream protocol; no local schema."
     defaultContentType: application/json
+
     servers:
       onemind-cloud:
         url: nats.nats.svc.cluster.local:4222
@@ -4603,8 +4698,9 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: tak-ecosystem
-  definition: |
+  definition: >
     asyncapi: 2.6.0
+
     info:
       title: TAK CoT bridge
       version: 1.0.0
@@ -4613,6 +4709,7 @@ spec:
         services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml). It reaches the bus through the tak-nats-leaf
         leaf node. Payload is CoT XML, not the JSON envelope.
     defaultContentType: application/json
+
     servers:
       onemind-cloud:
         url: nats.nats.svc.cluster.local:4222
@@ -5095,6 +5192,8 @@ metadata:
       icon: docs
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ff9adee34d630631f3.md
       title: "Archived registry: Proton Mail"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ff9adee34d630631f3.md
+      title: "Archived registry: Proton Mail"
   labels:
     onemind.io/catalog-role: app
     onemind.io/pillar: so
@@ -5453,6 +5552,8 @@ metadata:
     - url: https://github.com/ollama/ollama
       title: GitHub repository
       icon: docs
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819a92b8de74c33144cd.md
+      title: "Archived registry: Ollama"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819a92b8de74c33144cd.md
       title: "Archived registry: Ollama"
   labels:
@@ -6779,6 +6880,9 @@ metadata:
     grafana/alert-label-selector: namespace=langfuse
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=langfuse
     onemind.io/logs-query: '{k8s_namespace_name="langfuse"}'
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/tech-stack-notes: LLM observability & tracing. Tracks prompts,
+      completions, latency, cost, and evals for AI agents. Self-hostable.
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6787,6 +6891,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: observability
+  dependsOn:
+    - component:default/k8s-langfuse-langfuse-web-e495efd6
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -7128,6 +7234,8 @@ metadata:
       title: "Archived registry: Home Assistant"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812c9700faea244ec699.md
       title: "Archived registry: Home Assistant"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812c9700faea244ec699.md
+      title: "Archived registry: Home Assistant"
   annotations:
     onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: timeout-from-operator-mac
@@ -7219,10 +7327,9 @@ kind: Component
 metadata:
   name: hermes-atlas
   title: Hermes Atlas
-  description: >-
-    External reference: Community-curated Hermes ecosystem directory with
-    guides, tools, skills and plugins. No OneMind installation or integration
-    verified.
+  description: "External reference: Community-curated Hermes ecosystem directory
+    with guides, tools, skills and plugins. No OneMind installation or
+    integration verified."
   tags:
     - reference
     - hermes
@@ -7251,10 +7358,9 @@ kind: Component
 metadata:
   name: hermes-bible
   title: Hermes Bible
-  description: >-
-    External reference: Unofficial community documentation and workflows for
-    Hermes Agent; not affiliated with Nous Research. No OneMind installation or
-    integration verified.
+  description: "External reference: Unofficial community documentation and
+    workflows for Hermes Agent; not affiliated with Nous Research. No OneMind
+    installation or integration verified."
   tags:
     - reference
     - hermes
@@ -7283,9 +7389,8 @@ kind: Component
 metadata:
   name: oh-my-hermes
   title: Oh My Hermes
-  description: >-
-    External reference: Community coding harness for Hermes Agent with IDE
-    workflows. No OneMind installation or integration verified.
+  description: "External reference: Community coding harness for Hermes Agent with
+    IDE workflows. No OneMind installation or integration verified."
   tags:
     - reference
     - hermes
@@ -7314,9 +7419,9 @@ kind: Component
 metadata:
   name: hermes-official-plugins
   title: Hermes Official Plugins
-  description: >-
-    External reference: Official Hermes Agent plugins built and maintained by
-    Nous Research. No OneMind installation or integration verified.
+  description: "External reference: Official Hermes Agent plugins built and
+    maintained by Nous Research. No OneMind installation or integration
+    verified."
   tags:
     - reference
     - hermes
@@ -7345,10 +7450,9 @@ kind: Component
 metadata:
   name: hermes-skills
   title: Hermes Skills
-  description: >-
-    External reference: Official Nous Research Hermes skills documentation entry
-    point, redirecting to the skills marketplace. No OneMind installation or
-    integration verified.
+  description: "External reference: Official Nous Research Hermes skills
+    documentation entry point, redirecting to the skills marketplace. No OneMind
+    installation or integration verified."
   tags:
     - reference
     - hermes
@@ -7377,9 +7481,8 @@ kind: Component
 metadata:
   name: hermes-documentation
   title: Hermes Documentation
-  description: >-
-    External reference: Official Nous Research documentation for Hermes Agent.
-    No OneMind installation or integration verified.
+  description: "External reference: Official Nous Research documentation for
+    Hermes Agent. No OneMind installation or integration verified."
   tags:
     - reference
     - hermes
@@ -7408,25 +7511,37 @@ kind: Component
 metadata:
   name: osiris
   title: OSIRIS
-  description: >-
-    External reference for a global OSINT dashboard combining flight tracking,
-    public CCTV, earthquakes, conflict mapping and news feeds. No OneMind
-    deployment, compatibility or integration verified.
+  description: External reference for a global OSINT dashboard combining flight
+    tracking, public CCTV, earthquakes, conflict mapping and news feeds. No
+    OneMind deployment, compatibility or integration verified.
   tags:
     - reference
     - osint
     - geospatial-intelligence
     - situational-awareness
+    - omos-intel
   links:
     - url: https://github.com/simplifaisoul/osiris
       title: External reference
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e819cbdf7fbc0c195dbd7.md
+      title: "Archived registry: Osiris"
   annotations:
     onemind.io/launcher-url: https://github.com/simplifaisoul/osiris
     onemind.io/launcher-category: Intelligence
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/pillar-review: approved
+    onemind.io/documented-purpose: Lives in omos-infra/platform/intel/osiris —
+      pending standalone repo extraction
+    onemind.io/documented-host: 🐳 Docker Local
+    onemind.io/documented-status: 📚 Reference
+    onemind.io/documented-category: 📡 Intel
+    onemind.io/documented-at: 2026-09-03 07:01:04Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-address: https://github.com/simplifaisoul/osiris
+    onemind.io/documented-tags: OMOS-Intel
+    onemind.io/verification: reference
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7441,9 +7556,8 @@ kind: Component
 metadata:
   name: worldwideview
   title: WorldWideView (external reference)
-  description: >-
-    External reference for a plugin-driven geospatial intelligence engine
-    rendering data layers on a CesiumJS 3D globe. No OneMind deployment,
+  description: External reference for a plugin-driven geospatial intelligence
+    engine rendering data layers on a CesiumJS 3D globe. No OneMind deployment,
     compatibility or integration verified.
   tags:
     - reference
@@ -7473,24 +7587,36 @@ kind: Component
 metadata:
   name: worldmonitor
   title: World Monitor
-  description: >-
-    External reference for global situational awareness across news,
+  description: External reference for global situational awareness across news,
     geopolitics, infrastructure and other public-source signals, with map and
     globe views. No OneMind deployment, compatibility or integration verified.
   tags:
     - reference
     - osint
     - situational-awareness
+    - omos-intel
   links:
     - url: https://github.com/koala73/worldmonitor
       title: External reference
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e817c9538c8feb1e5ce3e.md
+      title: "Archived registry: WorldMonitor"
   annotations:
     onemind.io/launcher-url: https://github.com/koala73/worldmonitor
     onemind.io/launcher-category: Intelligence
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/pillar-review: approved
+    onemind.io/documented-purpose: Lives in omos-infra/platform/intel/worldmonitor —
+      pending standalone repo extraction
+    onemind.io/documented-host: 🐳 Docker Local
+    onemind.io/documented-status: 📚 Reference
+    onemind.io/documented-category: 📡 Intel
+    onemind.io/documented-at: 2026-09-03 07:01:05Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-address: https://github.com/koala73/worldmonitor
+    onemind.io/documented-tags: OMOS-Intel
+    onemind.io/verification: reference
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7505,10 +7631,9 @@ kind: Component
 metadata:
   name: argos-atlas
   title: Argos Atlas
-  description: >-
-    External reference for a hosted public-source map with camera, flight, ship,
-    conflict and news layers. Provider data and hosting are unverified. No
-    OneMind deployment, compatibility or integration verified.
+  description: External reference for a hosted public-source map with camera,
+    flight, ship, conflict and news layers. Provider data and hosting are
+    unverified. No OneMind deployment, compatibility or integration verified.
   tags:
     - reference
     - osint
@@ -7538,8 +7663,7 @@ kind: Component
 metadata:
   name: gods-eye-view
   title: God's Eye View
-  description: >-
-    External reference for a 3D globe combining public aircraft, ship,
+  description: External reference for a 3D globe combining public aircraft, ship,
     satellite, earthquake and camera data. Traffic is simulated; not all layers
     are live observations. No OneMind deployment, compatibility or integration
     verified.
@@ -7548,16 +7672,30 @@ metadata:
     - osint
     - geospatial-intelligence
     - situational-awareness
+    - omos-intel
   links:
     - url: https://github.com/bilawalsidhu/gods-eye-view
       title: External reference
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e815192a3e2716188e0ef.md
+      title: "Archived registry: Gods Eye View"
   annotations:
     onemind.io/launcher-url: https://github.com/bilawalsidhu/gods-eye-view
     onemind.io/launcher-category: Intelligence
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/pillar-review: approved
+    onemind.io/documented-purpose: Live spatial intelligence on a photorealistic 3D
+      globe — aircraft, ships, satellites, earthquakes, traffic, public cameras.
+      Cesium/WebGL. Pending cluster deployment.
+    onemind.io/documented-host: 🐳 Docker Local
+    onemind.io/documented-status: 📚 Reference
+    onemind.io/documented-category: 📡 Intel
+    onemind.io/documented-at: 2026-09-03 07:00:15Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-address: https://github.com/bilawalsidhu/gods-eye-view
+    onemind.io/documented-tags: OMOS-Intel
+    onemind.io/verification: reference
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7795,7 +7933,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: forgejo
-  title: "Forgejo — independent code mirror"
+  title: Forgejo — independent code mirror
   description: Private GitHub pull-mirror/standby forge with coordinated encrypted
     backups, served over the tailnet; Deployment forgejo/forgejo observed 1/1
     running on 2026-11-07. Mirror enrollment and restore acceptance are not
@@ -7823,6 +7961,8 @@ metadata:
     grafana/alert-label-selector: namespace=forgejo
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=forgejo
     onemind.io/logs-query: '{k8s_namespace_name="forgejo"}'
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
   tags:
     - forgejo
     - git
@@ -7835,6 +7975,8 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: developer-platform
+  dependsOn:
+    - component:default/k8s-forgejo-forgejo-5445701c
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -7870,6 +8012,8 @@ metadata:
     grafana/alert-label-selector: namespace=gatus
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=gatus
     onemind.io/logs-query: '{k8s_namespace_name="gatus"}'
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
   tags:
     - gatus
     - monitoring
@@ -7881,6 +8025,8 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: observability
+  dependsOn:
+    - component:default/k8s-gatus-gatus-a4e4d6c5
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -7902,6 +8048,8 @@ metadata:
     onemind.io/runtime-evidence: Ingress hermes/onemind-hermes-web at
       onemind-hermes-web.tail717ba0.ts.net (observed 2026-11-07)
     onemind.io/pillar-review: proposed
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7912,6 +8060,7 @@ spec:
   system: ai-agents
   dependsOn:
     - component:default/onemind-hermes
+    - component:default/k8s-hermes-onemind-hermes-2c3922bb
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -7934,6 +8083,8 @@ metadata:
       stac-browser.tail717ba0.ts.net; Deployment stac-browser 1/1 (observed
       2026-11-07)
     onemind.io/pillar-review: proposed
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7944,6 +8095,7 @@ spec:
   system: geospatial
   dependsOn:
     - component:default/stac
+    - component:default/k8s-stac-stac-browser-9b69cdea
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -7971,6 +8123,7 @@ metadata:
     onemind.io/recovery-runbook: apps/platform-core/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: github-runner/github-runner,github-runner/github-runner-hermes,kube-system/sealed-secrets-controller
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7986,6 +8139,8 @@ metadata:
   name: cert-manager
   tags:
     - kubernetes
+    - networking
+    - documented-unverified
   title: cert-manager
   description: Certificate management for the cluster.
   annotations:
@@ -8006,9 +8161,22 @@ metadata:
     onemind.io/recovery-runbook: apps/cert-manager/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: cert-manager/cert-manager,cert-manager/cert-manager-cainjector,cert-manager/cert-manager-webhook
+    onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: Automated TLS via Let's Encrypt
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🏗️ Infrastructure
+    onemind.io/documented-at: 2026-09-03 07:00:52Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-tags: Networking
+    onemind.io/verification: documented-unverified
+    onemind.io/runtime-evidence: Deployment cert-manager/cert-manager; Service cert-manager/cert-manager
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
+  links:
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812899b8c2b1670b04e6.md
+      title: "Archived registry: cert-manager"
 spec:
   type: service
   lifecycle: production
@@ -8021,6 +8189,8 @@ metadata:
   name: ingress-nginx
   tags:
     - kubernetes
+    - networking
+    - documented-unverified
   title: ingress-nginx
   description: Public ingress controller.
   annotations:
@@ -8043,9 +8213,21 @@ metadata:
     onemind.io/recovery-runbook: apps/ingress-nginx/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: ingress-nginx/ingress-nginx-controller
+    onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: HTTP/HTTPS ingress controller
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🏗️ Infrastructure
+    onemind.io/documented-at: 2026-09-03 07:00:50Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-tags: Networking
+    onemind.io/verification: documented-unverified
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
+  links:
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8198b4a5e3b0fc75ddf3.md
+      title: "Archived registry: ingress-nginx"
 spec:
   type: service
   lifecycle: production
@@ -8076,7 +8258,8 @@ metadata:
     github.com/project-slug: onemindos/omos
     backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
     onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/operator,tailscale/ts-agent-console-8khxt,tailscale/ts-agent-tap-v7ktr,tailscale/ts-argocd-slkzh,tailscale/ts-cloudtak-htdck,tailscale/ts-cloudtak-tiles-p26wj,tailscale/ts-element-tailnet-xzvtx,tailscale/ts-fedhub-tailnet-gzz6j,tailscale/ts-forgejo-qgj96,tailscale/ts-gatus-gl2gp,tailscale/ts-grafana-ksprn,tailscale/ts-headlamp-4qwkc,tailscale/ts-hubble-tw85d,tailscale/ts-karakeep-g8xzs,tailscale/ts-langfuse-rj8v9,tailscale/ts-n8n-pmtds,tailscale/ts-omos-dell-zeus-f7vnz,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-onemind-hermes-tgjq9,tailscale/ts-onemind-hermes-web-5m4zq,tailscale/ts-onemind-preview-shtd7,tailscale/ts-opencost-rqpmq,tailscale/ts-openremote-xpvxj,tailscale/ts-portal-p86hp,tailscale/ts-stac-browser-gjsms,tailscale/ts-stac-tp9ln,tailscale/ts-synapse-tailnet-qtrg2,tailscale/ts-tak-portal-ingress-xpxhs,tailscale/ts-tak-tailnet-jtgn4,tailscale/ts-thingsboard-cgsbq,tailscale/ts-vaultwarden-rdctp
+    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/ingress,tailscale/operator,tailscale/ts-argocd-slkzh,tailscale/ts-fedhub-tailnet-gzz6j,tailscale/ts-omos-dell-zeus-f7vnz,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-tak-tailnet-jtgn4
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8113,6 +8296,7 @@ metadata:
     onemind.io/kubernetes-workloads: kube-system/coredns,kube-system/konnectivity-agent,kube-system/metrics-server
     argocd/app-name: platform-metrics-server
     argocd/instance-name: onemind-cloud
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8152,6 +8336,7 @@ metadata:
       (subscribes tel.fleet.>, evt.world.>, evt.tak.cot.>), deployed as
       onemind-core/onemind-ingestion
     onemind.io/argocd-apps: ecosystem-onemind-core,platform-policy
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8198,6 +8383,8 @@ metadata:
     backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
     onemind.io/kubernetes-scope: namespace
     onemind.io/kubernetes-workloads: auth/authentik-postgres,auth/authentik-redis,auth/platform-auth-helm-authentik-server,auth/platform-auth-helm-authentik-worker
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8206,6 +8393,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: identity-access
+  dependsOn:
+    - component:default/k8s-auth-platform-auth-helm-authentik-server-78f74c27
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -8231,6 +8420,7 @@ metadata:
     onemind.io/recovery-runbook: apps/openfga/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: onemind-core/openfga
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8267,6 +8457,7 @@ metadata:
     onemind.io/recovery-runbook: apps/kyverno/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: kyverno/kyverno-admission-controller,kyverno/kyverno-background-controller,kyverno/kyverno-cleanup-controller,kyverno/kyverno-reports-controller
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8302,6 +8493,7 @@ metadata:
     grafana/alert-label-selector: namespace=falco
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=falco
     onemind.io/logs-query: '{k8s_namespace_name="falco"}'
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8337,6 +8529,7 @@ metadata:
     grafana/alert-label-selector: namespace=trivy-system
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=trivy-system
     onemind.io/logs-query: '{k8s_namespace_name="trivy-system"}'
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8376,6 +8569,8 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/vaultwarden/
     github.com/project-slug: onemindos/omos
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8384,6 +8579,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: identity-access
+  dependsOn:
+    - component:default/k8s-vaultwarden-vaultwarden-fa08c5c9
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -8413,6 +8610,7 @@ metadata:
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: backstage/backstage,backstage/backstage-postgres,backstage/portal-redirect
     onemind.io/prometheus-scopes: backstage,postgres
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8428,6 +8626,8 @@ metadata:
   name: opentelemetry-collector
   tags:
     - kubernetes
+    - monitoring
+    - documented-unverified
   title: OpenTelemetry Collector
   description: Telemetry collection (DaemonSet agent).
   annotations:
@@ -8439,9 +8639,22 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/opentelemetry-collector/
     github.com/project-slug: onemindos/omos
+    onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: OTel collector agents on all 3 nodes — ships
+      metrics, traces, and logs to Loki, Tempo, and Prometheus
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 📊 Observability
+    onemind.io/documented-at: 2026-09-03 07:31:21Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-tags: Monitoring
+    onemind.io/verification: documented-unverified
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
+  links:
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ea737d1a5eac43a8a.md
+      title: "Archived registry: OpenTelemetry Collector"
 spec:
   type: service
   lifecycle: production
@@ -8474,6 +8687,8 @@ metadata:
     onemind.io/recovery-runbook: apps/opencost/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: opencost/opencost
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8486,6 +8701,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: observability
+  dependsOn:
+    - component:default/k8s-opencost-opencost-768f8da7
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -8506,6 +8723,7 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/health-keeper/
     github.com/project-slug: onemindos/omos
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8540,6 +8758,7 @@ metadata:
     onemind.io/recovery-runbook: apps/cloudnative-pg/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: cnpg-system/barman-plugin-barman-cloud,cnpg-system/cnpg-cloudnative-pg
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8575,6 +8794,7 @@ metadata:
     onemind.io/logs-query: '{k8s_namespace_name="onemind-data"}'
     grafana/dashboard-selector: uid == 'onemind-workload'
     github.com/project-slug: onemindos/omos
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8610,6 +8830,7 @@ metadata:
     onemind.io/recovery-runbook: apps/velero/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: velero/velero
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8645,6 +8866,7 @@ metadata:
     onemind.io/recovery-runbook: apps/volsync/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: ops/platform-volsync
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8686,6 +8908,7 @@ metadata:
     onemind.io/kubernetes-workloads: nats/nack,nats/nats,nats/nats-leafz-exporter
     onemind.io/prometheus-scopes: nats
     onemind.io/api-relationship-source: platform/nats/streams/ (JetStream streams for every modeled subject family)
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8718,7 +8941,7 @@ metadata:
     backstage.io/kubernetes-namespace: feeds
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=redpanda-connect
     onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: omos
+    onemind.io/kubernetes-namespaces: feeds
     grafana/alert-label-selector: namespace=feeds
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=feeds&var-workload=redpanda-connect
     onemind.io/logs-query: '{k8s_namespace_name="feeds", k8s_pod_name=~"(redpanda-connect)-.*"}'
@@ -8728,6 +8951,7 @@ metadata:
     onemind.io/kubernetes-workloads: feeds/redpanda-connect
     onemind.io/api-relationship-source: platform/data/redpanda-connect/deployment.yaml
       (four pipelines publish tak.cot.inject)
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8746,14 +8970,14 @@ metadata:
   tags:
     - kubernetes
   title: OMOS data pipeline
-  description: Feed, projector and sink services in the feeds namespace.
+  description: Feed, projector and sink services in the omos namespace.
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-omos
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: omos
+    onemind.io/kubernetes-namespaces: feeds
     backstage.io/kubernetes-namespace: feeds
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name in
       (feed-intel,feed-satellites,omos-tak-projector,sink-clickhouse)
@@ -8771,6 +8995,7 @@ metadata:
       tak.cot.inject); platform/omos/intel-scripts.yaml (publishes intel.* and
       tel.feed.*.status)
     onemind.io/argocd-apps: platform-omos,platform-omos-entity
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8808,7 +9033,8 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/takml/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: takml/takml-db,takml/takml-server,takml/takml-vision-worker
+    onemind.io/kubernetes-workloads: takml/takml-server,takml/takml-vision-worker
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8840,6 +9066,7 @@ metadata:
     onemind.io/kubernetes-workloads: onetak/tile38
     backstage.io/kubernetes-namespace: onetak
     backstage.io/kubernetes-label-selector: app=tile38
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8855,12 +9082,16 @@ metadata:
   name: stac
   tags:
     - kubernetes
+    - geo
+    - deployment-verified
   title: STAC imagery catalog
   description: STAC API (pgstac on onemind-data), STAC Browser and the WebODM-to-STAC sync.
   links:
     - url: https://stac.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8112af60e8ea79c23728.md
+      title: "Archived registry: STAC API"
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
@@ -8878,6 +9109,19 @@ metadata:
     onemind.io/kubernetes-workloads: stac/stac-api,stac/stac-api-writer,stac/stac-browser
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=stac
     onemind.io/logs-query: '{k8s_namespace_name="stac"}'
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: SpatioTemporal Asset Catalog API
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🌍 Geo
+    onemind.io/documented-at: 2026-09-03 07:00:35Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-address: https://stac.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-11-08T14:59:23.152Z
+    onemind.io/runtime-evidence: Deployment stac/stac-api; Service stac/stac-api
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8886,6 +9130,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: geospatial
+  dependsOn:
+    - component:default/k8s-stac-stac-api-da8472a8
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -8915,6 +9161,8 @@ metadata:
     onemind.io/recovery-runbook: apps/n8n/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: n8n/n8n,n8n/postgres
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8923,6 +9171,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: ai-agents
+  dependsOn:
+    - component:default/k8s-n8n-n8n-28ebae17
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -8957,6 +9207,17 @@ metadata:
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=onemind-hermes
     onemind.io/logs-query: '{k8s_namespace_name="hermes", k8s_pod_name=~"(onemind-hermes)-.*"}'
     onemind.io/argocd-apps: platform-hermes-base,platform-onemind-hermes
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: AI / ML
+    onemind.io/license: Commercial
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81f4b144f3e8313ce477
+    onemind.io/tech-stack-notes: OneMind's primary AI agent. Runs on NATS,
+      interfaces with Bedrock/Claude, manages state.db, handles voice + text
+      tasks.
+    onemind.io/supported-platforms: Linux,K8s
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8965,6 +9226,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: ai-agents
+  dependsOn:
+    - component:default/k8s-hermes-onemind-hermes-2c3922bb
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -8997,6 +9260,7 @@ metadata:
     onemind.io/deployment-source: platform/hermes/mcp; platform/argocd/platform-onemind-mcp.yaml
     onemind.io/relationship-source: platform/hermes/mcp/deployment.yaml
       (NATS_MONITOR_URL nats-0 monitoring port 8222, PROMETHEUS_URL)
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9043,6 +9307,7 @@ metadata:
     grafana/alert-label-selector: namespace=tool-gateway
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=tool-gateway&var-workload=agentgateway
     onemind.io/logs-query: '{k8s_namespace_name="tool-gateway", k8s_pod_name=~"(agentgateway)-.*"}'
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9076,6 +9341,7 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/mcp-kubernetes/
     github.com/project-slug: onemindos/omos
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9112,6 +9378,7 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/execute-gate/
     github.com/project-slug: onemindos/omos
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9145,6 +9412,7 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/mcp-clickhouse/
     github.com/project-slug: onemindos/omos
+    onemind.io/inventory-review: imported-link
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9186,6 +9454,8 @@ metadata:
     grafana/alert-label-selector: namespace=karakeep
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=karakeep
     onemind.io/logs-query: '{k8s_namespace_name="karakeep"}'
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://karakeep.tail717ba0.ts.net
       title: Open application
@@ -9198,6 +9468,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: personal-tools
+  dependsOn:
+    - component:default/k8s-karakeep-web-181a9c70
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -9231,6 +9503,8 @@ metadata:
     grafana/alert-label-selector: namespace=openremote
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=openremote
     onemind.io/logs-query: '{k8s_namespace_name="openremote"}'
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://openremote.tail717ba0.ts.net
       title: Open application
@@ -9243,6 +9517,8 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: home-homestead
+  dependsOn:
+    - component:default/k8s-openremote-proxy-3ba5d9d5
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -9276,6 +9552,8 @@ metadata:
     grafana/alert-label-selector: namespace=thingsboard
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=thingsboard
     onemind.io/logs-query: '{k8s_namespace_name="thingsboard"}'
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://thingsboard.tail717ba0.ts.net
       title: Open application
@@ -9288,6 +9566,8 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: home-homestead
+  dependsOn:
+    - component:default/k8s-thingsboard-thingsboard-e7a29ab6
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource

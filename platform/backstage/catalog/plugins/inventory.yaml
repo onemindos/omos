@@ -137,7 +137,7 @@ plugins:
     origin: onemind
     source: platform/omos/tak-projector.yaml
     build: "python:3.12-alpine, script in ConfigMap"
-    runsOn: {kind: cluster, location: "ns omos / deploy omos-tak-projector", host: component:default/k8s-omos-omos-tak-projector-ac850041}
+    runsOn: {kind: cluster, location: "ns feeds / deploy omos-tak-projector", host: component:default/k8s-feeds-omos-tak-projector-72b6bb31}
     connectsTo: [nats, tak-server]
     publishes: [tak-cot-inject]
     subscribes: [ent-state, intel-all, cmd-all]

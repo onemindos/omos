@@ -1,5 +1,5 @@
 {
-  "observedAt": "2026-10-20T06:51:11.173Z",
+  "observedAt": "2026-11-08T14:59:23.152Z",
   "items": [
     {
       "kind": "Deployment",
@@ -15,11 +15,6 @@
       "kind": "Deployment",
       "namespace": "argocd",
       "name": "argocd-applicationset-controller"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "argocd",
-      "name": "argocd-dex-server"
     },
     {
       "kind": "Deployment",
@@ -63,6 +58,11 @@
     },
     {
       "kind": "Deployment",
+      "namespace": "backstage",
+      "name": "portal-redirect"
+    },
+    {
+      "kind": "Deployment",
       "namespace": "cert-manager",
       "name": "cert-manager"
     },
@@ -78,6 +78,26 @@
     },
     {
       "kind": "Deployment",
+      "namespace": "cloudtak",
+      "name": "cloudtak-api"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "cloudtak",
+      "name": "cloudtak-events"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "cloudtak",
+      "name": "cloudtak-retention"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "cloudtak",
+      "name": "cloudtak-tiles"
+    },
+    {
+      "kind": "Deployment",
       "namespace": "cnpg-system",
       "name": "barman-plugin-barman-cloud"
     },
@@ -85,6 +105,46 @@
       "kind": "Deployment",
       "namespace": "cnpg-system",
       "name": "cnpg-cloudnative-pg"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "falco",
+      "name": "falco-falcosidekick"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "feeds",
+      "name": "feed-intel"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "feeds",
+      "name": "feed-satellites"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "feeds",
+      "name": "omos-tak-projector"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "feeds",
+      "name": "redpanda-connect"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "feeds",
+      "name": "sink-clickhouse"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "forgejo",
+      "name": "forgejo"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "gatus",
+      "name": "gatus"
     },
     {
       "kind": "Deployment",
@@ -98,8 +158,38 @@
     },
     {
       "kind": "Deployment",
+      "namespace": "headlamp",
+      "name": "headlamp"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "hermes",
+      "name": "onemind-hermes"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "hermes",
+      "name": "onemind-mcp"
+    },
+    {
+      "kind": "Deployment",
       "namespace": "ingress-nginx",
       "name": "ingress-nginx-controller"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "karakeep",
+      "name": "chrome"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "karakeep",
+      "name": "meilisearch"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "karakeep",
+      "name": "web"
     },
     {
       "kind": "Deployment",
@@ -138,16 +228,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "kube",
-      "name": "headlamp"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "kube",
-      "name": "kubernetes-dashboard"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "kyverno",
       "name": "kyverno-admission-controller"
     },
@@ -168,13 +248,18 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "matrix",
-      "name": "element-web"
+      "namespace": "langfuse",
+      "name": "langfuse-redis"
     },
     {
       "kind": "Deployment",
-      "namespace": "matrix",
-      "name": "synapse"
+      "namespace": "langfuse",
+      "name": "langfuse-web"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "langfuse",
+      "name": "langfuse-worker"
     },
     {
       "kind": "Deployment",
@@ -209,7 +294,7 @@
     {
       "kind": "Deployment",
       "namespace": "nats",
-      "name": "nats-metrics-scrape"
+      "name": "nats-leafz-exporter"
     },
     {
       "kind": "Deployment",
@@ -223,38 +308,8 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "nextcloud",
-      "name": "nextcloud"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "nextcloud",
-      "name": "nextcloud-redis"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "feeds",
-      "name": "feed-intel"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "feeds",
-      "name": "feed-satellites"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "feeds",
-      "name": "omos-tak-projector"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "feeds",
-      "name": "redpanda-connect"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "feeds",
-      "name": "sink-clickhouse"
+      "namespace": "nats",
+      "name": "nui-auth"
     },
     {
       "kind": "Deployment",
@@ -274,47 +329,12 @@
     {
       "kind": "Deployment",
       "namespace": "onetak",
-      "name": "maputnik"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onetak",
-      "name": "martin"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onetak",
       "name": "nodeodm"
     },
     {
       "kind": "Deployment",
       "namespace": "onetak",
-      "name": "nominatim"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onetak",
       "name": "onetak-media"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onetak",
-      "name": "onetak-minio"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onetak",
-      "name": "onetak-postgis"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onetak",
-      "name": "overpass"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onetak",
-      "name": "pg-featureserv"
     },
     {
       "kind": "Deployment",
@@ -334,11 +354,6 @@
     {
       "kind": "Deployment",
       "namespace": "onetak",
-      "name": "valhalla"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onetak",
       "name": "webodm"
     },
     {
@@ -353,13 +368,28 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "openclaw",
-      "name": "openclaw"
+      "namespace": "opencost",
+      "name": "opencost"
     },
     {
       "kind": "Deployment",
-      "namespace": "opencost",
-      "name": "opencost"
+      "namespace": "openremote",
+      "name": "keycloak"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openremote",
+      "name": "manager"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openremote",
+      "name": "postgresql"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openremote",
+      "name": "proxy"
     },
     {
       "kind": "Deployment",
@@ -368,13 +398,23 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "tailscale",
-      "name": "operator"
+      "namespace": "stac",
+      "name": "stac-api"
     },
     {
       "kind": "Deployment",
-      "namespace": "takml",
-      "name": "takml-db"
+      "namespace": "stac",
+      "name": "stac-api-writer"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "stac",
+      "name": "stac-browser"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "tailscale",
+      "name": "operator"
     },
     {
       "kind": "Deployment",
@@ -438,6 +478,46 @@
     },
     {
       "kind": "Deployment",
+      "namespace": "thingsboard",
+      "name": "postgres"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "thingsboard",
+      "name": "thingsboard"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "tool-gateway",
+      "name": "agentgateway"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "tool-gateway",
+      "name": "execute-gate"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "tool-gateway",
+      "name": "mcp-clickhouse"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "tool-gateway",
+      "name": "mcp-kubernetes"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "trivy-system",
+      "name": "trivy-operator"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "vaultwarden",
+      "name": "vaultwarden"
+    },
+    {
+      "kind": "Deployment",
       "namespace": "velero",
       "name": "velero"
     },
@@ -460,16 +540,6 @@
       "kind": "StatefulSet",
       "namespace": "clickhouse",
       "name": "chi-onemind-onemind-0-0"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "matrix",
-      "name": "postgres"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "matrix",
-      "name": "redis"
     },
     {
       "kind": "StatefulSet",
@@ -504,12 +574,7 @@
     {
       "kind": "StatefulSet",
       "namespace": "tailscale",
-      "name": "ts-agent-console-8khxt"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-agent-tap-v7ktr"
+      "name": "ingress"
     },
     {
       "kind": "StatefulSet",
@@ -519,42 +584,12 @@
     {
       "kind": "StatefulSet",
       "namespace": "tailscale",
-      "name": "ts-cilium-gateway-gateway-default-bl4tw"
+      "name": "ts-fedhub-tailnet-gzz6j"
     },
     {
       "kind": "StatefulSet",
       "namespace": "tailscale",
-      "name": "ts-cilium-gateway-gateway-default-hl5fh"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-grafana-ksprn"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-headlamp-4qwkc"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-hubble-tw85d"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-kubernetes-dashboard-9r9fp"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-n8n-pmtds"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-observer-pftsp"
+      "name": "ts-omos-dell-zeus-f7vnz"
     },
     {
       "kind": "StatefulSet",
@@ -580,21 +615,6 @@
       "kind": "StatefulSet",
       "namespace": "tailscale",
       "name": "ts-onemind-auth-4w5hk"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-onemind-preview-shtd7"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-openclaw-gateway-s7hcm"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-opencost-rqpmq"
     },
     {
       "kind": "StatefulSet",
@@ -672,19 +692,9 @@
       "name": "otel-collector-opentelemetry-collector-agent"
     },
     {
-      "kind": "DaemonSet",
-      "namespace": "velero",
-      "name": "node-agent"
-    },
-    {
       "kind": "CronJob",
       "namespace": "auth",
       "name": "backup-postgres-auth"
-    },
-    {
-      "kind": "CronJob",
-      "namespace": "backstage",
-      "name": "backstage-backup"
     },
     {
       "kind": "CronJob",
@@ -698,8 +708,18 @@
     },
     {
       "kind": "CronJob",
-      "namespace": "matrix",
-      "name": "backup-postgres-matrix"
+      "namespace": "clickhouse",
+      "name": "prune-clickhouse-backups"
+    },
+    {
+      "kind": "CronJob",
+      "namespace": "forgejo",
+      "name": "forgejo-coordinated-backup"
+    },
+    {
+      "kind": "CronJob",
+      "namespace": "monitoring",
+      "name": "backup-grafana-sqlite"
     },
     {
       "kind": "CronJob",
@@ -728,8 +748,8 @@
     },
     {
       "kind": "CronJob",
-      "namespace": "takml",
-      "name": "backup-postgres-takml"
+      "namespace": "stac",
+      "name": "webodm-stac-sync"
     },
     {
       "kind": "CronJob",
@@ -740,6 +760,11 @@
       "kind": "CronJob",
       "namespace": "takserver",
       "name": "cot-retention"
+    },
+    {
+      "kind": "CronJob",
+      "namespace": "vaultwarden",
+      "name": "vaultwarden-sqlite-backup"
     },
     {
       "kind": "Service",
@@ -755,11 +780,6 @@
       "kind": "Service",
       "namespace": "argocd",
       "name": "argocd-applicationset-controller"
-    },
-    {
-      "kind": "Service",
-      "namespace": "argocd",
-      "name": "argocd-dex-server"
     },
     {
       "kind": "Service",
@@ -813,6 +833,11 @@
     },
     {
       "kind": "Service",
+      "namespace": "backstage",
+      "name": "portal-redirect"
+    },
+    {
+      "kind": "Service",
       "namespace": "cert-manager",
       "name": "cert-manager"
     },
@@ -838,6 +863,21 @@
     },
     {
       "kind": "Service",
+      "namespace": "cloudtak",
+      "name": "cloudtak-api"
+    },
+    {
+      "kind": "Service",
+      "namespace": "cloudtak",
+      "name": "cloudtak-tiles"
+    },
+    {
+      "kind": "Service",
+      "namespace": "cloudtak",
+      "name": "takserver"
+    },
+    {
+      "kind": "Service",
       "namespace": "cnpg-system",
       "name": "barman-cloud"
     },
@@ -850,6 +890,31 @@
       "kind": "Service",
       "namespace": "default",
       "name": "kubernetes"
+    },
+    {
+      "kind": "Service",
+      "namespace": "falco",
+      "name": "falco-falcosidekick"
+    },
+    {
+      "kind": "Service",
+      "namespace": "forgejo",
+      "name": "forgejo"
+    },
+    {
+      "kind": "Service",
+      "namespace": "gatus",
+      "name": "gatus"
+    },
+    {
+      "kind": "Service",
+      "namespace": "headlamp",
+      "name": "headlamp"
+    },
+    {
+      "kind": "Service",
+      "namespace": "hermes",
+      "name": "omos-dell-zeus"
     },
     {
       "kind": "Service",
@@ -868,6 +933,16 @@
     },
     {
       "kind": "Service",
+      "namespace": "hermes",
+      "name": "onemind-hermes"
+    },
+    {
+      "kind": "Service",
+      "namespace": "hermes",
+      "name": "onemind-mcp"
+    },
+    {
+      "kind": "Service",
       "namespace": "ingress-nginx",
       "name": "ingress-nginx-controller"
     },
@@ -875,6 +950,21 @@
       "kind": "Service",
       "namespace": "ingress-nginx",
       "name": "ingress-nginx-controller-admission"
+    },
+    {
+      "kind": "Service",
+      "namespace": "karakeep",
+      "name": "chrome"
+    },
+    {
+      "kind": "Service",
+      "namespace": "karakeep",
+      "name": "meilisearch"
+    },
+    {
+      "kind": "Service",
+      "namespace": "karakeep",
+      "name": "web"
     },
     {
       "kind": "Service",
@@ -943,16 +1033,6 @@
     },
     {
       "kind": "Service",
-      "namespace": "kube",
-      "name": "headlamp"
-    },
-    {
-      "kind": "Service",
-      "namespace": "kube",
-      "name": "kubernetes-dashboard"
-    },
-    {
-      "kind": "Service",
       "namespace": "kyverno",
       "name": "kyverno-background-controller-metrics"
     },
@@ -983,23 +1063,13 @@
     },
     {
       "kind": "Service",
-      "namespace": "matrix",
-      "name": "element-web"
+      "namespace": "langfuse",
+      "name": "langfuse-redis"
     },
     {
       "kind": "Service",
-      "namespace": "matrix",
-      "name": "postgres"
-    },
-    {
-      "kind": "Service",
-      "namespace": "matrix",
-      "name": "redis"
-    },
-    {
-      "kind": "Service",
-      "namespace": "matrix",
-      "name": "synapse"
+      "namespace": "langfuse",
+      "name": "langfuse-web"
     },
     {
       "kind": "Service",
@@ -1084,6 +1154,11 @@
     {
       "kind": "Service",
       "namespace": "nats",
+      "name": "nats-leafz-exporter"
+    },
+    {
+      "kind": "Service",
+      "namespace": "nats",
       "name": "nats-surveyor"
     },
     {
@@ -1094,27 +1169,22 @@
     {
       "kind": "Service",
       "namespace": "nats",
+      "name": "nui-auth"
+    },
+    {
+      "kind": "Service",
+      "namespace": "nats",
       "name": "omos-nats"
-    },
-    {
-      "kind": "Service",
-      "namespace": "nextcloud",
-      "name": "nextcloud"
-    },
-    {
-      "kind": "Service",
-      "namespace": "nextcloud",
-      "name": "nextcloud-redis"
-    },
-    {
-      "kind": "Service",
-      "namespace": "feeds",
-      "name": "redpanda-connect"
     },
     {
       "kind": "Service",
       "namespace": "onemind-core",
       "name": "onemind-core"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-core",
+      "name": "onemind-core-dapr"
     },
     {
       "kind": "Service",
@@ -1144,47 +1214,12 @@
     {
       "kind": "Service",
       "namespace": "onetak",
-      "name": "maputnik"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onetak",
-      "name": "martin"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onetak",
       "name": "nodeodm"
     },
     {
       "kind": "Service",
       "namespace": "onetak",
-      "name": "nominatim"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onetak",
       "name": "onetak-media"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onetak",
-      "name": "onetak-minio"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onetak",
-      "name": "onetak-postgis"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onetak",
-      "name": "overpass"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onetak",
-      "name": "pg-featureserv"
     },
     {
       "kind": "Service",
@@ -1204,11 +1239,6 @@
     {
       "kind": "Service",
       "namespace": "onetak",
-      "name": "valhalla"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onetak",
       "name": "webodm"
     },
     {
@@ -1218,13 +1248,28 @@
     },
     {
       "kind": "Service",
-      "namespace": "openclaw",
-      "name": "openclaw"
+      "namespace": "opencost",
+      "name": "opencost"
     },
     {
       "kind": "Service",
-      "namespace": "opencost",
-      "name": "opencost"
+      "namespace": "openremote",
+      "name": "keycloak"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openremote",
+      "name": "manager"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openremote",
+      "name": "postgresql"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openremote",
+      "name": "proxy"
     },
     {
       "kind": "Service",
@@ -1233,13 +1278,18 @@
     },
     {
       "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-agent-console-8khxt"
+      "namespace": "stac",
+      "name": "stac-api"
     },
     {
       "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-agent-tap-v7ktr"
+      "namespace": "stac",
+      "name": "stac-api-writer"
+    },
+    {
+      "kind": "Service",
+      "namespace": "stac",
+      "name": "stac-browser"
     },
     {
       "kind": "Service",
@@ -1259,42 +1309,12 @@
     {
       "kind": "Service",
       "namespace": "tailscale",
-      "name": "ts-cilium-gateway-gateway-default-bl4tw"
+      "name": "ts-fedhub-tailnet-gzz6j"
     },
     {
       "kind": "Service",
       "namespace": "tailscale",
-      "name": "ts-cilium-gateway-gateway-default-hl5fh"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-grafana-ksprn"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-headlamp-4qwkc"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-hubble-tw85d"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-kubernetes-dashboard-9r9fp"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-n8n-pmtds"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-observer-pftsp"
+      "name": "ts-omos-dell-zeus-f7vnz"
     },
     {
       "kind": "Service",
@@ -1324,27 +1344,7 @@
     {
       "kind": "Service",
       "namespace": "tailscale",
-      "name": "ts-onemind-preview-shtd7"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-openclaw-gateway-s7hcm"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-opencost-rqpmq"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
       "name": "ts-tak-tailnet-jtgn4"
-    },
-    {
-      "kind": "Service",
-      "namespace": "takml",
-      "name": "takml-db"
     },
     {
       "kind": "Service",
@@ -1364,17 +1364,17 @@
     {
       "kind": "Service",
       "namespace": "takserver",
+      "name": "fedhub-tailnet"
+    },
+    {
+      "kind": "Service",
+      "namespace": "takserver",
       "name": "fedhub-ui"
     },
     {
       "kind": "Service",
       "namespace": "takserver",
       "name": "murmur"
-    },
-    {
-      "kind": "Service",
-      "namespace": "takserver",
-      "name": "tak-external"
     },
     {
       "kind": "Service",
@@ -1430,6 +1430,46 @@
       "kind": "Service",
       "namespace": "takserver",
       "name": "takserver-postgresql-hl"
+    },
+    {
+      "kind": "Service",
+      "namespace": "thingsboard",
+      "name": "postgres"
+    },
+    {
+      "kind": "Service",
+      "namespace": "thingsboard",
+      "name": "thingsboard"
+    },
+    {
+      "kind": "Service",
+      "namespace": "tool-gateway",
+      "name": "agentgateway"
+    },
+    {
+      "kind": "Service",
+      "namespace": "tool-gateway",
+      "name": "execute-gate"
+    },
+    {
+      "kind": "Service",
+      "namespace": "tool-gateway",
+      "name": "mcp-clickhouse"
+    },
+    {
+      "kind": "Service",
+      "namespace": "tool-gateway",
+      "name": "mcp-kubernetes"
+    },
+    {
+      "kind": "Service",
+      "namespace": "trivy-system",
+      "name": "trivy-operator"
+    },
+    {
+      "kind": "Service",
+      "namespace": "vaultwarden",
+      "name": "vaultwarden"
     },
     {
       "kind": "Service",

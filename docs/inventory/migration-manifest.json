@@ -1,6 +1,6 @@
 {
-  "reviewedAt": "2026-10-06",
-  "total": 174,
+  "reviewedAt": "2026-11-08T14:59:23.152Z",
+  "total": 168,
   "pages": [
     {
       "title": "Martin",
@@ -53,12 +53,6 @@
     {
       "title": "Cloudflare Tunnel",
       "file": "docs/inventory/fabric/3b9d0cf70a7e811fb22ff0467ff07122.md",
-      "blank": true,
-      "complete": true
-    },
-    {
-      "title": "STAC Browser",
-      "file": "docs/inventory/fabric/3b9d0cf70a7e8124a3eed9d89f3a0a5c.md",
       "blank": true,
       "complete": true
     },
@@ -447,12 +441,6 @@
       "complete": true
     },
     {
-      "title": "NATS Dashboard",
-      "file": "docs/inventory/fabric/3d0d0cf70a7e8123b817ccdf71662d03.md",
-      "blank": true,
-      "complete": true
-    },
-    {
       "title": "Claude Code (Bedrock)",
       "file": "docs/inventory/fabric/3d0d0cf70a7e8125a316ef1df9160933.md",
       "blank": true,
@@ -479,12 +467,6 @@
     {
       "title": "NodeODM",
       "file": "docs/inventory/fabric/3d0d0cf70a7e81338840ec1c874371c6.md",
-      "blank": true,
-      "complete": true
-    },
-    {
-      "title": "gastbob-nats-ui",
-      "file": "docs/inventory/fabric/3d0d0cf70a7e81379661cd62a0279c31.md",
       "blank": true,
       "complete": true
     },
@@ -611,12 +593,6 @@
     {
       "title": "Reddit",
       "file": "docs/inventory/fabric/3d0d0cf70a7e816ab330c7b21cab93c8.md",
-      "blank": true,
-      "complete": true
-    },
-    {
-      "title": "NATS UI",
-      "file": "docs/inventory/fabric/3d0d0cf70a7e816ab4f1cb4d8a159823.md",
       "blank": true,
       "complete": true
     },
@@ -789,20 +765,8 @@
       "complete": true
     },
     {
-      "title": "heynats",
-      "file": "docs/inventory/fabric/3d0d0cf70a7e81a9b338c9d2b2f65479.md",
-      "blank": true,
-      "complete": true
-    },
-    {
       "title": "nats-android",
       "file": "docs/inventory/fabric/3d0d0cf70a7e81aa96c9c94ec8575773.md",
-      "blank": true,
-      "complete": true
-    },
-    {
-      "title": "Paperclip",
-      "file": "docs/inventory/fabric/3d0d0cf70a7e81ada22bc5a0b2164e0b.md",
       "blank": true,
       "complete": true
     },

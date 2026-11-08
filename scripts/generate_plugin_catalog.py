@@ -47,7 +47,7 @@ REF_RE = re.compile(r"^(component|resource|api|system):default/([a-z0-9][a-z0-9_
 MCP_ALIASES = {
     "tak": "tak-server",
     "home_assistant": "home-assistant",
-    "onemind_core": "k8s-omos-omos-tak-projector-ac850041",
+    "onemind_core": "k8s-feeds-omos-tak-projector-72b6bb31",
 }
 MCP_HOST = "component:default/k8s-hermes-onemind-mcp-07887746"
 

@@ -16,7 +16,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [ClickHouse](clickhouse.md) | data-storage |
 | [CloudNativePG](cloudnative-pg.md) | data-storage |
 | [CloudTAK](cloudtak.md) | tak-ecosystem |
-| [Element Chat](element-chat.md) | communication |
 | [Tool gateway execute gate (execute-gate)](execute-gate.md) | ai-agents |
 | [Falco](falco.md) | identity-access |
 | [FedHub](fedhub.md) | tak-ecosystem |
@@ -33,7 +32,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Kyverno](kyverno.md) | identity-access |
 | [Langfuse](langfuse.md) | observability |
 | [Loki](loki.md) | observability |
-| [Matrix Synapse](matrix-synapse.md) | communication |
 | [Tool gateway ClickHouse backend (mcp-clickhouse)](mcp-clickhouse.md) | ai-agents |
 | [Tool gateway Kubernetes backend (mcp-kubernetes)](mcp-kubernetes.md) | ai-agents |
 | [n8n](n8n.md) | ai-agents |

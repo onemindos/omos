@@ -40,7 +40,7 @@ workloads:
   kube-system/metrics-server: component:default/kubernetes-system
   kube-system/platform-clickhouse-operator: component:default/clickhouse
   kube-system/sealed-secrets-controller: component:default/platform-core
-  kube/headlamp: component:default/headlamp
+  headlamp/headlamp: component:default/headlamp
   kyverno/kyverno-admission-controller: component:default/kyverno
   kyverno/kyverno-background-controller: component:default/kyverno
   kyverno/kyverno-cleanup-controller: component:default/kyverno
@@ -58,6 +58,7 @@ workloads:
   nats/nats: component:default/nats
   nats/nats-surveyor: component:default/nats-surveyor
   nats/nui: component:default/nui
+  nats/nui-auth: component:default/nui
   feeds/feed-intel: component:default/omos-data-pipeline
   feeds/feed-satellites: component:default/omos-data-pipeline
   feeds/omos-tak-projector: component:default/omos-data-pipeline
@@ -77,26 +78,18 @@ workloads:
   opencost/opencost: component:default/opencost
   ops/platform-volsync: component:default/volsync
   tailscale/egress: component:default/tailscale-operator
+  tailscale/ingress: component:default/tailscale-operator
   tailscale/operator: component:default/tailscale-operator
-  tailscale/ts-agent-console-8khxt: component:default/tailscale-operator
-  tailscale/ts-agent-tap-v7ktr: component:default/tailscale-operator
   tailscale/ts-argocd-slkzh: component:default/tailscale-operator
-  tailscale/ts-grafana-ksprn: component:default/tailscale-operator
-  tailscale/ts-headlamp-4qwkc: component:default/tailscale-operator
-  tailscale/ts-hubble-tw85d: component:default/tailscale-operator
-  tailscale/ts-n8n-pmtds: component:default/tailscale-operator
   tailscale/ts-omos-ha-edge-rlv6k: component:default/tailscale-operator
   tailscale/ts-omos-mbp-hgq9w: component:default/tailscale-operator
   tailscale/ts-omos-nats-fs6r4: component:default/tailscale-operator
   tailscale/ts-omos-s24-44l4v: component:default/tailscale-operator
   tailscale/ts-onemind-auth-4w5hk: component:default/tailscale-operator
-  tailscale/ts-onemind-preview-shtd7: component:default/tailscale-operator
-  tailscale/ts-opencost-rqpmq: component:default/tailscale-operator
   tailscale/ts-tak-tailnet-jtgn4: component:default/tailscale-operator
   tool-gateway/agentgateway: component:default/agentgateway
   tool-gateway/mcp-clickhouse: component:default/mcp-clickhouse
   tool-gateway/mcp-kubernetes: component:default/mcp-kubernetes
-  takml/takml-db: component:default/takml
   takml/takml-server: component:default/takml
   takml/takml-vision-worker: component:default/takml
   takserver/fedhub: component:default/fedhub
@@ -140,25 +133,8 @@ workloads:
   stac/stac-browser: component:default/stac
   tool-gateway/execute-gate: component:default/execute-gate
   trivy-system/trivy-operator: component:default/trivy-operator
-  tailscale/ts-cloudtak-htdck: component:default/tailscale-operator
-  tailscale/ts-cloudtak-tiles-p26wj: component:default/tailscale-operator
-  tailscale/ts-element-tailnet-xzvtx: component:default/tailscale-operator
   tailscale/ts-fedhub-tailnet-gzz6j: component:default/tailscale-operator
-  tailscale/ts-forgejo-qgj96: component:default/tailscale-operator
-  tailscale/ts-gatus-gl2gp: component:default/tailscale-operator
-  tailscale/ts-karakeep-g8xzs: component:default/tailscale-operator
-  tailscale/ts-langfuse-rj8v9: component:default/tailscale-operator
   tailscale/ts-omos-dell-zeus-f7vnz: component:default/tailscale-operator
-  tailscale/ts-onemind-hermes-tgjq9: component:default/tailscale-operator
-  tailscale/ts-onemind-hermes-web-5m4zq: component:default/tailscale-operator
-  tailscale/ts-openremote-xpvxj: component:default/tailscale-operator
-  tailscale/ts-portal-p86hp: component:default/tailscale-operator
-  tailscale/ts-stac-browser-gjsms: component:default/tailscale-operator
-  tailscale/ts-stac-tp9ln: component:default/tailscale-operator
-  tailscale/ts-synapse-tailnet-qtrg2: component:default/tailscale-operator
-  tailscale/ts-tak-portal-ingress-xpxhs: component:default/tailscale-operator
-  tailscale/ts-thingsboard-cgsbq: component:default/tailscale-operator
-  tailscale/ts-vaultwarden-rdctp: component:default/tailscale-operator
 argoApplications:
   app-of-apps: component:default/argocd
   ecosystem-barman: component:default/cloudnative-pg

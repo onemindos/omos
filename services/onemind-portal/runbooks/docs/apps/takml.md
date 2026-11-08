@@ -14,7 +14,6 @@ TAK-ML server, database and vision worker.
 
 | Workload | Kind | Namespace |
 | --- | --- | --- |
-| `takml-db` | Deployment | `takml` |
 | `takml-server` | Deployment | `takml` |
 | `takml-vision-worker` | Deployment | `takml` |
 
