@@ -172,7 +172,7 @@ patches; Telegram remains selected. See the updated approval record below.
 | `cnpg-system`, `onemind-data` | CloudNativePG operator and the `onemind-data` cluster | 2 | Argo CD; databases as an OpenChoreo ResourceType |
 | `clickhouse` | ClickHouse | 2 | Argo CD; ResourceType later |
 | `onemind-search` | OpenSearch | 2 | Argo CD; also the observability plane's log store |
-| `onemind-ai` | (LiteLLM and CPU model retired 2026-11-06) | 2 | Argo CD. agentgateway is the hub; Hermes uses Ollama Cloud |
+| `langfuse` | Langfuse web, worker and Valkey (renamed from onemind-ai; LiteLLM and CPU model retired 2026-11-06) | 2 | Argo CD. agentgateway is the hub; Hermes uses Ollama Cloud |
 | (`dapr-system` removed 2026-11-07) | Dapr control plane and the onemind-core Dapr workflow retired; missions run in-process until orchestration moves to Hermes | n/a | Gone from Git and cluster |
 | `keda` | KEDA | 2 | Argo CD; OpenChoreo autoscaling module |
 | `monitoring` | Prometheus, Alertmanager, Grafana, Loki, Tempo, OTel collector | 2 | Argo CD; becomes the observability plane's metrics and events modules |

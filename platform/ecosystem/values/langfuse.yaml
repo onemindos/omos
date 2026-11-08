@@ -1,5 +1,5 @@
 # Langfuse v3 (LLM observability) for the Hermes agent. Argo Application: platform/ecosystem/applications/ecosystem-langfuse.yaml
-# (chart langfuse/langfuse 2.2.3, app 4.75.0). Namespace onemind-ai, tailnet-only UI at https://onemind-langfuse.tail717ba0.ts.net.
+# (chart langfuse/langfuse 2.2.3, app 4.75.0). Namespace langfuse, tailnet-only UI at https://onemind-langfuse.tail717ba0.ts.net.
 #
 # Everything stateful is external and already exists:
 #   Postgres   database + role `langfuse` in CNPG cluster onemind-data (platform/ecosystem/resources/databases.yaml)
@@ -8,7 +8,7 @@
 #   Blob store DigitalOcean Spaces bucket onemind-backups, prefix langfuse/ (bucket-scoped credentials, secret langfuse-s3)
 #   Redis      the chart's bundled Valkey: queue and cache only, so no persistence (a restart drops queued, unprocessed events)
 #
-# Secrets (all SealedSecrets in platform/ecosystem/resources/secrets/, namespace onemind-ai):
+# Secrets (all SealedSecrets in platform/ecosystem/resources/secrets/, namespace langfuse):
 #   langfuse-auth        salt, encryption-key, nextauth-secret, clickhouse-password (redis-password there is unused)
 #   langfuse-db          username, password, uri (this chart reads password; the role name is set below)
 #   langfuse-oidc        client-id, client-secret (Authentik provider onemind-langfuse)
@@ -177,7 +177,7 @@ extraManifests:
     kind: Job
     metadata:
       name: langfuse-clickhouse-database
-      namespace: onemind-ai
+      namespace: langfuse
       annotations:
         argocd.argoproj.io/hook: PreSync
         argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded

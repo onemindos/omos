@@ -930,10 +930,3 @@ spec:
       limits:
         cpu: '1'
         memory: 1Gi
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: platform-volume-backup
-  namespace: onemind-ai
-automountServiceAccountToken: false

@@ -69,6 +69,6 @@
     "version": "2.2.3",
     "appVersion": "4.75.0",
     "url": "https://github.com/langfuse/langfuse-k8s/releases/download/langfuse-2.2.3/langfuse-2.2.3.tgz",
-    "namespace": "onemind-ai"
+    "namespace": "langfuse"
   }
 ]

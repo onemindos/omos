@@ -12,7 +12,7 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "platform/ecosystem/resources/secrets"
-NAMESPACES = ["onemind-data", "onemind-core", "onemind-ai", "velero"]
+NAMESPACES = ["onemind-data", "onemind-core", "langfuse", "velero"]
 
 
 def existing(namespace, name):
@@ -51,7 +51,7 @@ def main():
              ["onemind", "openfga", "langfuse"]}
     app_namespaces = {"onemind": "onemind-core",
                       "openfga": "onemind-core",
-                      "langfuse": "onemind-ai"}
+                      "langfuse": "langfuse"}
     uris = {}
     for role, password in roles.items():
         pair = {"username": role, "password": password}
@@ -76,8 +76,8 @@ def main():
     backup = existing("ops", "platform-backup-credentials")
     add("velero", "velero-credentials", {"cloud": "[default]\naws_access_key_id=" + backup["S3_ACCESS_KEY"] +
                                          "\naws_secret_access_key=" + backup["S3_SECRET_KEY"] + "\n"})
-    add("onemind-ai", "langfuse-s3", {"access-key": backup["S3_ACCESS_KEY"], "secret-key": backup["S3_SECRET_KEY"]})
-    add("onemind-ai", "langfuse-auth", {"salt": secrets.token_urlsafe(48), "encryption-key": secrets.token_hex(32),
+    add("langfuse", "langfuse-s3", {"access-key": backup["S3_ACCESS_KEY"], "secret-key": backup["S3_SECRET_KEY"]})
+    add("langfuse", "langfuse-auth", {"salt": secrets.token_urlsafe(48), "encryption-key": secrets.token_hex(32),
                                         "nextauth-secret": secrets.token_urlsafe(48),
                                         "redis-password": secrets.token_urlsafe(40),
                                         "clickhouse-password": secrets.token_urlsafe(40)})

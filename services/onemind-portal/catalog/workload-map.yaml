@@ -58,11 +58,11 @@ workloads:
   nats/nats: component:default/nats
   nats/nats-surveyor: component:default/nats-surveyor
   nats/nui: component:default/nui
-  omos/feed-intel: component:default/omos-data-pipeline
-  omos/feed-satellites: component:default/omos-data-pipeline
-  omos/omos-tak-projector: component:default/omos-data-pipeline
-  omos/redpanda-connect: component:default/redpanda-connect
-  omos/sink-clickhouse: component:default/omos-data-pipeline
+  feeds/feed-intel: component:default/omos-data-pipeline
+  feeds/feed-satellites: component:default/omos-data-pipeline
+  feeds/omos-tak-projector: component:default/omos-data-pipeline
+  feeds/redpanda-connect: component:default/redpanda-connect
+  feeds/sink-clickhouse: component:default/omos-data-pipeline
   onemind-core/onemind-core: component:default/onemind-core
   onemind-core/onemind-ingestion: component:default/onemind-core
   onemind-core/openfga: component:default/openfga
@@ -132,9 +132,9 @@ workloads:
   cloudtak/cloudtak-tiles: component:default/cloudtak
   falco/falco-falcosidekick: component:default/falco
   nats/nats-leafz-exporter: component:default/nats
-  onemind-ai/langfuse-redis: component:default/langfuse
-  onemind-ai/langfuse-web: component:default/langfuse
-  onemind-ai/langfuse-worker: component:default/langfuse
+  langfuse/langfuse-redis: component:default/langfuse
+  langfuse/langfuse-web: component:default/langfuse
+  langfuse/langfuse-worker: component:default/langfuse
   stac/stac-api: component:default/stac
   stac/stac-api-writer: component:default/stac
   stac/stac-browser: component:default/stac

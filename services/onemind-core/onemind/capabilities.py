@@ -15,7 +15,7 @@ CAPABILITIES = {
     "restart-worker": {"description": "Restart a designated OneMind worker deployment", "mutates": True},
 }
 ROOT = pathlib.Path("/var/run/secrets/kubernetes.io/serviceaccount")
-ALLOWED_RESTARTS = {("onemind-core", "onemind-ingestion"), ("onemind-ai", "docling")}
+ALLOWED_RESTARTS = {("onemind-core", "onemind-ingestion")}
 
 
 def kube(method, path, body=None):

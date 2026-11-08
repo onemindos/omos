@@ -95,14 +95,14 @@ two SealedSecrets, pinned image digest).
 ## Langfuse — running 2026-11-07
 
 Self-hosted Langfuse v3 for Hermes traces. Live 2026-11-07: `ecosystem-langfuse` Synced and Healthy, web, worker and Valkey pods Running (10 to 12 hours), Tailscale ingress `onemind-langfuse.tail717ba0.ts.net`. Source: chart `langfuse` 2.2.3 (app 4.75.0),
-Application `ecosystem-langfuse`, namespace `onemind-ai`, web and worker one replica each on the ecosystem pool. It reuses the
+Application `ecosystem-langfuse`, namespace `langfuse`, web and worker one replica each on the ecosystem pool. It reuses the
 database `langfuse` in CNPG `onemind-data`, a `langfuse` user and database in ClickHouse `clickhouse/onemind`, Spaces bucket
 `onemind-backups` (prefix `langfuse/`), the bundled Valkey (no PVC) and the Authentik provider `onemind-langfuse`. Hermes is wired to it: the
 `onemind-hermes` Deployment loads Secret `hermes-langfuse` and installs the pinned Langfuse plugin at start. Trace flow and the ClickHouse/CNPG recovery path are not verified here.
 
 | Tier | Application | Namespace | State / recovery | Exposure | Status |
 | --- | --- | --- | --- | --- | --- |
-| 2 | `ecosystem-langfuse` | `onemind-ai` | PostgreSQL (CNPG `onemind-data`, `Velero`, `Barman`), ClickHouse database `langfuse` (VolSync of the ClickHouse PVC), event blobs in Spaces; Valkey queue is disposable | Tailnet only: `https://onemind-langfuse.tail717ba0.ts.net`, Authentik sign-in only | Auto-sync, Synced/Healthy (2026-11-07) |
+| 2 | `ecosystem-langfuse` | `langfuse` | PostgreSQL (CNPG `onemind-data`, `Velero`, `Barman`), ClickHouse database `langfuse` (VolSync of the ClickHouse PVC), event blobs in Spaces; Valkey queue is disposable | Tailnet only: `https://onemind-langfuse.tail717ba0.ts.net`, Authentik sign-in only | Auto-sync, Synced/Healthy (2026-11-07) |
 
 ## Summary
 
@@ -136,7 +136,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 
 ### Column legend
 
-- **Backup:** `PG dump` = scheduled CronJob that uploads an encrypted archive to Spaces and restore-verifies it. `VolSync` = restic copy of the PVC to Spaces. `Velero` = daily namespace backup (06:00 UTC, 720 h retention) for `onemind-core`, `onemind-data`, `onemind-ai`. `Barman` = CNPG continuous backup. `Git` = stateless, rebuilt from this repo. All of these land in DigitalOcean Spaces `nyc3`, the same provider and region as the cluster (report finding A18).
+- **Backup:** `PG dump` = scheduled CronJob that uploads an encrypted archive to Spaces and restore-verifies it. `VolSync` = restic copy of the PVC to Spaces. `Velero` = daily namespace backup (06:00 UTC, 720 h retention) for `onemind-core`, `onemind-data`, `langfuse`. `Barman` = CNPG continuous backup. `Git` = stateless, rebuilt from this repo. All of these land in DigitalOcean Spaces `nyc3`, the same provider and region as the cluster (report finding A18).
 - **Exposure:** `public` = reachable from the internet. `public (CF)` = nginx ingress restricted to Cloudflare source ranges. `public (open)` = nginx ingress with no source restriction. `tailnet` = Tailscale ingress or LB only. `internal` = ClusterIP only.
 - **GitOps:** `Argo` = an Argo Application reconciles it from this repo. `Helm CLI` = installed with `helm upgrade` from a laptop (see [GitOps gaps](#gitops-gaps)). `none` = applied by hand, no owner in Git or Helm.
 
@@ -209,7 +209,7 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 | `ecosystem-openfga` | onemind-core | openfga 0.3.16 | Fine-grained authorization | PostgreSQL (CNPG) | `Velero`, `Barman` | internal |
 | ~~`ecosystem-litellm`~~ | onemind-ai | litellm-helm 1.104.2 (OCI) | **Retired 2026-11-06** (removed from Git). Database and role `litellm` dropped (verified live 2026-11-07) | PostgreSQL (CNPG) | `Velero`, `Barman` | none after cleanup |
 | ~~`ecosystem-ollama`~~ | onemind-ai | ollama 1.86.0 | **Retired 2026-11-06** (removed from Git). Volume `onemind-cpu-model` (20 GiB, Retain) kept | 20 GiB models | `Velero` (`onemind-ai`); VolSync source removed | none after cleanup |
-| `ecosystem-langfuse` | onemind-ai | langfuse 2.2.3 (app 4.75.0) | LLM observability for Hermes traces (web, worker, bundled Valkey). **Prepared 2026-11-07, not yet synced** | PostgreSQL (CNPG `onemind-data`), ClickHouse `langfuse` database, Spaces prefix `onemind-backups/langfuse/` | `Velero`, `Barman`, `VolSync` (ClickHouse) | tailnet `onemind-langfuse` |
+| `ecosystem-langfuse` | langfuse | langfuse 2.2.3 (app 4.75.0) | LLM observability for Hermes traces (web, worker, bundled Valkey). **Prepared 2026-11-07, not yet synced** | PostgreSQL (CNPG `onemind-data`), ClickHouse `langfuse` database, Spaces prefix `onemind-backups/langfuse/` | `Velero`, `Barman`, `VolSync` (ClickHouse) | tailnet `onemind-langfuse` |
 | `ecosystem-kyverno` | kyverno | kyverno 3.9.1 | Policy engine | none | Git | internal |
 | `ecosystem-falco` | falco | falco 9.2.0 | Runtime security | none | Git | internal |
 | `ecosystem-opencost` | opencost | opencost 2.5.32 | Cost metrics. Duplicates kube-state-metrics series (M2) | none | Git | internal |
