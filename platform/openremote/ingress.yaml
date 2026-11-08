@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: openremote
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: openremote
     argocd.argoproj.io/sync-wave: '4'
 spec:
