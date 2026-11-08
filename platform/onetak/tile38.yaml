@@ -72,7 +72,7 @@ spec:
   storageClassName: do-block-storage-retain
   resources:
     requests:
-      storage: 10Gi
+      storage: 2Gi
 ---
 apiVersion: v1
 kind: Service
