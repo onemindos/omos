@@ -68,7 +68,7 @@ spec:
   storageClassName: do-block-storage-retain
   resources:
     requests:
-      storage: 80Gi
+      storage: 20Gi
 ---
 apiVersion: v1
 kind: ConfigMap
