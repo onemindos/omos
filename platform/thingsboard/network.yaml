@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: default-deny
+  namespace: thingsboard
 spec:
   podSelector: {}
   policyTypes:
@@ -12,6 +13,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: thingsboard-network
+  namespace: thingsboard
 spec:
   podSelector:
     matchLabels:
@@ -43,6 +45,23 @@ spec:
       ports:
         - protocol: TCP
           port: 5432
+    # Authentik OIDC (token, userinfo and JWKS endpoints at auth.onemindos.dev): public HTTPS only.
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              - 100.64.0.0/10
+              - 169.254.0.0/16
+              - 127.0.0.0/8
+              - 0.0.0.0/8
+              - 224.0.0.0/4
+              - 240.0.0.0/4
+      ports:
+        - protocol: TCP
+          port: 443
   ingress:
     - from:
         - namespaceSelector:
@@ -56,6 +75,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: bootstrap-network
+  namespace: thingsboard
 spec:
   podSelector:
     matchLabels:
