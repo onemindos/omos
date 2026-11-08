@@ -1,0 +1,113 @@
+# promtool unit tests for platform/ingest/prometheusrule.yaml (run.sh extracts its spec
+# into rules.yaml beside this file in a temp directory).
+rule_files:
+  - rules.yaml
+evaluation_interval: 30s
+tests:
+  # A feed that succeeds every minute, then stops at t=10m (last success = 600 s). Its
+  # limit is 10 minutes, so it is stale from t=20m and the alert fires 2 minutes later.
+  - interval: 1m
+    input_series:
+      - series: 'ingest_feed_last_success_timestamp_seconds{job="omos-ingest",source="nws-alerts",instance="10.0.0.1:9464"}'
+        values: '0+60x10 600x30'
+      - series: 'ingest_feed_stale_after_seconds{job="omos-ingest",source="nws-alerts",instance="10.0.0.1:9464"}'
+        values: '600x40'
+      - series: 'ingest_feed_leader{job="omos-ingest",source="nws-alerts",instance="omos-ingest-0"}'
+        values: '1x40'
+      - series: 'up{job="omos-ingest",instance="10.0.0.1:9464"}'
+        values: '1x40'
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: OneMindFeedStale
+        exp_alerts: []
+      - eval_time: 21m
+        alertname: OneMindFeedStale
+        exp_alerts: []
+      - eval_time: 25m
+        alertname: OneMindFeedStale
+        exp_alerts:
+          - exp_labels: {severity: warning, service: omos-ingest, source: nws-alerts}
+            exp_annotations:
+              summary: "Feed nws-alerts is stale"
+              description: "Last successful fetch 15m 0s ago, beyond the limit in its feed registry entry. Check tel.feed.nws-alerts.status lastError and the upstream."
+      - eval_time: 25m
+        alertname: OneMindIngestDown
+        exp_alerts: []
+
+  # After a leader change the demoted instance keeps an old timestamp; the newest one wins.
+  - interval: 1m
+    input_series:
+      - series: 'ingest_feed_last_success_timestamp_seconds{job="omos-ingest",source="nws-alerts",instance="old"}'
+        values: '0x30'
+      - series: 'ingest_feed_last_success_timestamp_seconds{job="omos-ingest",source="nws-alerts",instance="new"}'
+        values: '0+60x30'
+      - series: 'ingest_feed_stale_after_seconds{job="omos-ingest",source="nws-alerts",instance="new"}'
+        values: '600x30'
+    alert_rule_test:
+      - eval_time: 25m
+        alertname: OneMindFeedStale
+        exp_alerts: []
+
+  # The collector is gone: no healthy target for 5 minutes.
+  - interval: 1m
+    input_series:
+      - series: 'up{job="omos-ingest",instance="10.0.0.1:9464"}'
+        values: '1x5 0x20'
+    alert_rule_test:
+      - eval_time: 8m
+        alertname: OneMindIngestDown
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: OneMindIngestDown
+        exp_alerts:
+          - exp_labels: {severity: warning, service: omos-ingest}
+            exp_annotations:
+              summary: "omos-ingest is not being scraped"
+              description: "No healthy omos-ingest target for 5 minutes: every feed it runs is unmonitored and probably stale."
+
+  # No instance holds the lease; a never-fetched source; publishes retrying with no acks.
+  - interval: 1m
+    input_series:
+      - series: 'ingest_feed_leader{job="omos-ingest",source="nws-alerts",instance="a"}'
+        values: '0x30'
+      - series: 'ingest_feed_stale{job="omos-ingest",source="new-feed",instance="a"}'
+        values: '1x30'
+      - series: 'ingest_publish_retries_total{job="omos-ingest",source="nws-alerts",instance="a"}'
+        values: '0+5x30'
+      - series: 'ingest_published_total{job="omos-ingest",source="nws-alerts",instance="a"}'
+        values: '100x30'
+      - series: 'ingest_rejected_total{job="omos-ingest",source="nws-alerts",instance="a"}'
+        values: '0+1x30'
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: OneMindFeedNoLeader
+        exp_alerts:
+          - exp_labels: {severity: warning, service: omos-ingest, source: nws-alerts}
+            exp_annotations:
+              summary: "No omos-ingest instance holds the lease for nws-alerts"
+              description: "Every instance is standby for 2 minutes. Check KV ingest-locks and NATS connectivity."
+      - eval_time: 20m
+        alertname: OneMindFeedNeverFetched
+        exp_alerts:
+          - exp_labels: {severity: warning, service: omos-ingest, source: new-feed}
+            exp_annotations:
+              summary: "Feed new-feed has not fetched successfully since its collector started"
+              description: "The leader reports the source stale with no successful fetch. Check the collector logs and the upstream."
+      - eval_time: 20m
+        alertname: OneMindIngestPublishRetrying
+        exp_alerts:
+          - exp_labels: {severity: warning, service: omos-ingest, source: nws-alerts}
+            exp_annotations:
+              summary: "omos-ingest cannot get JetStream acks for nws-alerts"
+              description: "Publishes are retrying and none succeed: NATS down, stream missing or full (discard new). Records wait in the collector; nothing is checkpointed."
+      # 1 reject per minute: 15 in the first 15 minutes (quiet), 29 by minute 29 (> 20, fires).
+      - eval_time: 15m
+        alertname: OneMindIngestDeadLetters
+        exp_alerts: []
+      - eval_time: 29m
+        alertname: OneMindIngestDeadLetters
+        exp_alerts:
+          - exp_labels: {severity: info, service: omos-ingest, source: nws-alerts}
+            exp_annotations:
+              summary: "nws-alerts rejected 29 records in the last hour"
+              description: "Upstream data fails the schema. Read the reasons on evt.sys.nws-alerts.rejected."

@@ -59,6 +59,15 @@ database `langfuse` in CNPG `onemind-data`, a `langfuse` user and database in Cl
 | --- | --- | --- | --- | --- | --- |
 | 2 | `ecosystem-langfuse` | `langfuse` | PostgreSQL (CNPG `onemind-data`, `Velero`, `Barman`), ClickHouse database `langfuse` (VolSync of the ClickHouse PVC), event blobs in Spaces; Redis queue is disposable | Tailnet only: `https://onemind-langfuse.tail717ba0.ts.net`, Authentik sign-in only | Auto-sync, Synced/Healthy (2026-11-07) |
 
+## omos-ingest preparation — 2026-10-29
+
+Feature A0 (collector framework, `services/bridge/ingest`). Not live: it needs this PR merged,
+the first image build, a digest pin and a manual Argo sync ([platform/ingest](../platform/ingest/README.md)).
+
+| Tier | Application | Namespace | State / recovery | Exposure | Status |
+| --- | --- | --- | --- | --- | --- |
+| 2 | `platform-ingest` | `omos` | No PVC. Leases and checkpoints in NATS KV `ingest-locks` and `ingest-state` (NACK CRs in `platform/nats/streams/`), covered by the NATS stream backup | internal; metrics on 9464 scraped by kube-prometheus-stack | Awaiting reviewed merge, image build and digest pin, manual Argo sync. First source NWS alerts on `intel.weather.noaa.alert`, beside the legacy `feed-intel` NOAA task |
+
 ## Summary
 
 Trivy pilot, prepared 2026-10-24 and retargeted 2026-11-04: a bounded Argo-managed

@@ -1,0 +1,56 @@
+[
+ {
+  "subject": "",
+  "msgId": "firms:34.1234:-117.5678:2026-10-29:1030",
+  "ts": "",
+  "data": {
+   "acq_date": "2026-10-29",
+   "acq_time": 1030,
+   "bright_ti4": 330.5,
+   "confidence": "n",
+   "id": "34.1234:-117.5678:2026-10-29:1030",
+   "lat": 34.1234,
+   "latitude": 34.1234,
+   "lon": -117.5678,
+   "longitude": -117.5678
+  }
+ },
+ {
+  "subject": "",
+  "msgId": "firms:34.2:-117.6:2026-10-29:1031",
+  "ts": "",
+  "data": {
+   "acq_date": "2026-10-29",
+   "acq_time": 1031,
+   "bright_ti4": 301.2,
+   "confidence": "l",
+   "id": "34.2:-117.6:2026-10-29:1031",
+   "lat": 34.2,
+   "latitude": 34.2,
+   "lon": -117.6,
+   "longitude": -117.6
+  }
+ },
+ {
+  "subject": "",
+  "msgId": "firms:-12.5:130.9:2026-10-29:412",
+  "ts": "",
+  "data": {
+   "acq_date": "2026-10-29",
+   "acq_time": 412,
+   "bright_ti4": 345,
+   "confidence": "h",
+   "id": "-12.5:130.9:2026-10-29:412",
+   "lat": -12.5,
+   "latitude": -12.5,
+   "lon": 130.9,
+   "longitude": 130.9
+  }
+ },
+ {
+  "subject": "",
+  "msgId": "",
+  "ts": "",
+  "error": "line 5: 2 fields, header has 6"
+ }
+]

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/ingest/feed-status/v1",
+  "title": "Feed status (tel.feed.{source}.status)",
+  "description": "Freshness heartbeat that the omos-ingest lease holder publishes for each source every statusInterval (default 10 s).",
+  "type": "object",
+  "required": ["source", "kind", "collector", "instance", "leader", "fetchedAt", "count", "lastError", "staleAfterSec", "stale", "at"],
+  "additionalProperties": true,
+  "properties": {
+    "source": {"type": "string"},
+    "kind": {"enum": ["rest_poll", "sse", "websocket", "rss", "file"]},
+    "collector": {"const": "omos-ingest"},
+    "instance": {"type": "string"},
+    "leader": {"type": "boolean"},
+    "fetchedAt": {"type": ["string", "null"], "description": "Last successful fetch, RFC 3339"},
+    "count": {"type": "integer", "minimum": 0, "description": "Records in the last successful fetch"},
+    "published": {"type": "integer", "minimum": 0},
+    "lastError": {"type": ["string", "null"]},
+    "errorAt": {"type": ["string", "null"]},
+    "staleAfterSec": {"type": "number"},
+    "ageSec": {"type": ["number", "null"]},
+    "stale": {"type": "boolean"},
+    "at": {"type": "string"}
+  }
+}

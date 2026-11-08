@@ -1,0 +1,92 @@
+# Feed freshness and pipeline health for omos-ingest (feature A0). It ships with the
+# platform-ingest Application (manual sync), so the absent-collector alert cannot fire
+# before the collector is deployed. Routed by the existing Alertmanager config.
+# Unit test: services/bridge/ingest/test/alerts/ingest-rules.test.yaml (promtool).
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: omos-ingest
+  namespace: omos
+  labels:
+    release: monitoring
+    app: kube-prometheus-stack
+spec:
+  groups:
+    - name: onemind.ingest
+      interval: 30s
+      rules:
+        # Stale feed: the newest success from any instance is older than the source's own
+        # limit (staleAfter in the feed registry). max by source takes the newest success from any instance,
+        # so a demoted instance's old value does not raise a false alert.
+        - alert: OneMindFeedStale
+          expr: |
+            (time() - max by (source) (ingest_feed_last_success_timestamp_seconds{job="omos-ingest"}))
+              > max by (source) (ingest_feed_stale_after_seconds{job="omos-ingest"})
+          for: 2m
+          labels:
+            severity: warning
+            service: omos-ingest
+          annotations:
+            summary: "Feed {{ $labels.source }} is stale"
+            description: >-
+              Last successful fetch {{ $value | humanizeDuration }} ago, beyond the limit in its feed registry entry.
+              Check tel.feed.{{ $labels.source }}.status lastError and the upstream.
+
+        # A source that never fetched since the leader started has no timestamp; catch it by
+        # the stale gauge, which is 1 for never-fetched sources.
+        - alert: OneMindFeedNeverFetched
+          expr: |
+            min by (source) (ingest_feed_stale{job="omos-ingest"}) == 1
+            unless on (source) ingest_feed_last_success_timestamp_seconds{job="omos-ingest"}
+          for: 15m
+          labels:
+            severity: warning
+            service: omos-ingest
+          annotations:
+            summary: "Feed {{ $labels.source }} has not fetched successfully since its collector started"
+            description: "The leader reports the source stale with no successful fetch. Check the collector logs and the upstream."
+
+        - alert: OneMindFeedNoLeader
+          expr: |
+            max by (source) (ingest_feed_leader{job="omos-ingest"}) == 0
+          for: 2m
+          labels:
+            severity: warning
+            service: omos-ingest
+          annotations:
+            summary: "No omos-ingest instance holds the lease for {{ $labels.source }}"
+            description: "Every instance is standby for 2 minutes. Check KV ingest-locks and NATS connectivity."
+
+        - alert: OneMindIngestDown
+          expr: |
+            absent(up{job="omos-ingest"} == 1)
+          for: 5m
+          labels:
+            severity: warning
+            service: omos-ingest
+          annotations:
+            summary: "omos-ingest is not being scraped"
+            description: "No healthy omos-ingest target for 5 minutes: every feed it runs is unmonitored and probably stale."
+
+        - alert: OneMindIngestPublishRetrying
+          expr: |
+            sum by (source) (rate(ingest_publish_retries_total{job="omos-ingest"}[5m])) > 0
+            and sum by (source) (rate(ingest_published_total{job="omos-ingest"}[5m])) == 0
+          for: 10m
+          labels:
+            severity: warning
+            service: omos-ingest
+          annotations:
+            summary: "omos-ingest cannot get JetStream acks for {{ $labels.source }}"
+            description: "Publishes are retrying and none succeed: NATS down, stream missing or full (discard new). Records wait in the collector; nothing is checkpointed."
+
+        - alert: OneMindIngestDeadLetters
+          expr: |
+            sum by (source) (increase(ingest_rejected_total{job="omos-ingest"}[1h])) > 20
+          for: 0m
+          labels:
+            severity: info
+            service: omos-ingest
+          annotations:
+            summary: "{{ $labels.source }} rejected {{ $value }} records in the last hour"
+            description: "Upstream data fails the schema. Read the reasons on evt.sys.{{ $labels.source }}.rejected."

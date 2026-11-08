@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/intel/weather-alert/v1",
+  "title": "Weather alert (intel.weather.{source}.alert data)",
+  "description": "The data object of a weather alert published by omos-ingest inside the bus envelope. Field values follow CAP 1.2 as served by api.weather.gov /alerts. Consumers must tolerate unknown fields.",
+  "type": "object",
+  "required": ["id", "type", "event", "sent", "severity", "urgency", "certainty", "status", "messageType", "areaDesc"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "type": {"const": "weather_alert"},
+    "event": {"type": "string", "minLength": 1, "maxLength": 200},
+    "headline": {"type": "string", "maxLength": 1000},
+    "description": {"type": "string", "maxLength": 1000},
+    "instruction": {"type": "string", "maxLength": 1000},
+    "severity": {"enum": ["Extreme", "Severe", "Moderate", "Minor", "Unknown"]},
+    "urgency": {"enum": ["Immediate", "Expected", "Future", "Past", "Unknown"]},
+    "certainty": {"enum": ["Observed", "Likely", "Possible", "Unlikely", "Unknown"]},
+    "status": {"enum": ["Actual", "Exercise", "System", "Test", "Draft"]},
+    "messageType": {"enum": ["Alert", "Update", "Cancel", "Ack", "Error"]},
+    "sent": {"$ref": "#/$defs/datetime"},
+    "effective": {"$ref": "#/$defs/datetime"},
+    "onset": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/datetime"}]},
+    "expires": {"$ref": "#/$defs/datetime"},
+    "ends": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/datetime"}]},
+    "areaDesc": {"type": "string"},
+    "affectedZones": {"type": "array", "items": {"type": "string"}, "maxItems": 2000},
+    "ugc": {"type": "array", "items": {"type": "string"}, "maxItems": 2000},
+    "same": {"type": "array", "items": {"type": "string"}, "maxItems": 2000},
+    "references": {"type": "array", "items": {"type": "string"}, "maxItems": 500},
+    "lat": {"type": "number", "minimum": -90, "maximum": 90},
+    "lon": {"type": "number", "minimum": -180, "maximum": 180},
+    "geometry": {"type": "object", "required": ["type"]}
+  },
+  "dependentRequired": {"lat": ["lon"], "lon": ["lat"]},
+  "$defs": {
+    "datetime": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$"}
+  }
+}

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:georss="http://www.georss.org/georss">
+  <title>Synthetic Atom feed (test fixture)</title>
+  <entry><id>urn:uuid:1</id><title>First</title><updated>2026-10-29T09:00:00Z</updated></entry>
+  <entry><id>urn:uuid:2</id><title>Second</title><updated>2026-10-29T09:05:00Z</updated><georss:point>40.7 -74.0</georss:point></entry>
+</feed>
