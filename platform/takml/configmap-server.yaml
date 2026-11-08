@@ -13,7 +13,7 @@ data:
     server.api.key.enabled=true
     springdoc.api-docs.path=/v3/api-docs
     springdoc.swagger-ui.path=/swagger-ui.html
-    spring.datasource.url=jdbc:postgresql://takml-db.takml.svc.cluster.local:5432/takml_server
+    spring.datasource.url=jdbc:postgresql://onemind-data-rw.onemind-data.svc.cluster.local:5432/takml_server
     spring.datasource.username=takml
     spring.jpa.hibernate.ddl-auto=update
     spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect

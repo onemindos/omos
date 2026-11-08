@@ -14,7 +14,6 @@ resources:
 - sealed/auth-ghcr.yaml
 - sealed/n8n-platform-backup-credentials.yaml
 - sealed/n8n-ghcr.yaml
-- sealed/takml-platform-backup-credentials.yaml
 - sealed/backstage-platform-backup-credentials.yaml
 - network.yaml
 - cluster-recovery.yaml
