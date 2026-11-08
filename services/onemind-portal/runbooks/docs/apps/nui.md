@@ -15,6 +15,7 @@ NATS web UI (official nats-nui/nui) with the in-cluster bus preconfigured
 | Workload | Kind | Namespace |
 | --- | --- | --- |
 | `nui` | Deployment | `nats` |
+| `nui-auth` | Deployment | `nats` |
 
 ## When it looks wrong
 
@@ -30,8 +31,8 @@ NATS web UI (official nats-nui/nui) with the in-cluster bus preconfigured
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name="nats", k8s_pod_name=~"(nui)-.*"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nui`
+- Loki query: `{k8s_namespace_name="nats", k8s_pod_name=~"(nui|nui-auth)-.*"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nui&var-workload=nui-auth`
 - Source: `onemindos/omos`
 
 ## Escalate

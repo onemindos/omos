@@ -2,7 +2,7 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Feed, projector and sink services in the feeds namespace.
+Feed, projector and sink services in the omos namespace.
 
 ## Where it runs
 

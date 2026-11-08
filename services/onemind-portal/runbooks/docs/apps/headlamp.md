@@ -8,13 +8,13 @@ Kubernetes cluster dashboard
 
 - Catalog entity: `component:default/headlamp` in System `developer-platform`
 - Argo CD application: `platform-kube`
-- Namespace: `kube`
+- Namespace: `headlamp`
 
 ## Workloads
 
 | Workload | Kind | Namespace |
 | --- | --- | --- |
-| `headlamp` | Deployment | `kube` |
+| `headlamp` | Deployment | `headlamp` |
 
 ## When it looks wrong
 
@@ -30,8 +30,8 @@ Kubernetes cluster dashboard
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name="kube"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=kube`
+- Loki query: `{k8s_namespace_name="headlamp"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=headlamp`
 - Source: `onemindos/omos`
 
 ## Escalate

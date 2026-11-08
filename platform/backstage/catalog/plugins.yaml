@@ -867,7 +867,7 @@ metadata:
     onemind.io/plugin-status: live
     onemind.io/plugin-origin: onemind
     onemind.io/runs-on-kind: cluster
-    onemind.io/runs-on: ns omos / deploy omos-tak-projector
+    onemind.io/runs-on: ns feeds / deploy omos-tak-projector
     onemind.io/connects-to: nats,tak-server
     onemind.io/nats-publishes: tak.cot.inject
     onemind.io/nats-subscribes: ent.>,intel.>,cmd.>
@@ -883,7 +883,7 @@ spec:
   subcomponentOf: component:default/tak-server
   dependsOn:
   - component:default/nats
-  - component:default/k8s-omos-omos-tak-projector-ac850041
+  - component:default/k8s-feeds-omos-tak-projector-72b6bb31
   - resource:default/nats-subject-tak-cot-inject
   - resource:default/nats-subject-ent-state
   - resource:default/nats-subject-intel-all
@@ -3496,7 +3496,7 @@ spec:
   subcomponentOf: component:default/onemind-mcp
   dependsOn:
   - component:default/k8s-hermes-onemind-mcp-07887746
-  - component:default/k8s-omos-omos-tak-projector-ac850041
+  - component:default/k8s-feeds-omos-tak-projector-72b6bb31
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
