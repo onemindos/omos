@@ -6,6 +6,7 @@ metadata:
   name: langfuse
   namespace: onemind-ai
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: onemind-langfuse
 spec:
   ingressClassName: tailscale
