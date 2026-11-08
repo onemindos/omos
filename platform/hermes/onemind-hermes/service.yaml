@@ -20,6 +20,7 @@ metadata:
   name: onemind-hermes
   namespace: hermes
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: onemind-hermes
 spec:
   ingressClassName: tailscale
@@ -39,6 +40,7 @@ metadata:
   name: onemind-hermes-web
   namespace: hermes
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: onemind-hermes-web
 spec:
   ingressClassName: tailscale
