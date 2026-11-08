@@ -171,6 +171,7 @@ metadata:
   name: forgejo
   namespace: forgejo
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: forgejo
 spec:
   ingressClassName: tailscale

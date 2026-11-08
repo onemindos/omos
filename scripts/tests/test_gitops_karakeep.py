@@ -58,7 +58,7 @@ class KarakeepDeployment(unittest.TestCase):
         self.assertTrue(all(d["spec"].get("type", "ClusterIP") == "ClusterIP" for d in services))
         ingress = next(d for d in self.docs if d["kind"] == "Ingress")
         self.assertEqual(ingress["spec"]["ingressClassName"], "tailscale")
-        self.assertEqual(ingress["metadata"]["annotations"], {"tailscale.com/hostname": "karakeep"})
+        self.assertEqual(ingress["metadata"]["annotations"], {"tailscale.com/hostname": "karakeep", "tailscale.com/proxy-group": "ingress"})
         self.assertEqual(ingress["spec"]["defaultBackend"]["service"]["name"], "web")
         # A parent namespace transformer must not move the auth-only hook/secret.
         self.assertNotIn("namespace", self.kustomization)

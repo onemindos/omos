@@ -4,6 +4,7 @@ metadata:
   name: karakeep
   namespace: karakeep
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: karakeep
 spec:
   ingressClassName: tailscale
