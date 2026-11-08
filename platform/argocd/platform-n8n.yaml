@@ -17,3 +17,10 @@ spec:
       prune: true
       selfHeal: true
     syncOptions: [CreateNamespace=true]
+  ignoreDifferences:
+    # Temporary (database move, bulk-pg-consolidate): lets n8n be scaled to 0 for the dump window.
+    - group: apps
+      kind: Deployment
+      namespace: n8n
+      name: n8n
+      jsonPointers: [/spec/replicas]
