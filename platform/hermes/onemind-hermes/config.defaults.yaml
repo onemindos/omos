@@ -100,10 +100,10 @@ webapp:
   port: 9120
   public_url: https://onemind-hermes-web.tail717ba0.ts.net
 
-# Chat channels, moved from Legacy (same bot identities). The Telegram bot token and
-# the Matrix access token are NOT here: they come from the onemind-hermes-runtime
-# SealedSecret (TELEGRAM_BOT_TOKEN, MATRIX_ACCESS_TOKEN), and their presence enables
-# each platform. Top-level scalars below are exported by Hermes to the matching env
+# Chat channels, moved from Legacy (same bot identity). Matrix was retired on
+# 2026-11-08 (platform/parked/matrix). The Telegram bot token is NOT here: it comes
+# from the onemind-hermes-runtime SealedSecret (TELEGRAM_BOT_TOKEN), and its presence
+# enables the platform. Top-level scalars below are exported by Hermes to the matching env
 # vars when the container env does not already set them (gateway/run.py
 # _bridge_config_to_env). Unknown senders get nothing: the allowlists are the only
 # way in, and the pairing flow is suppressed when an allowlist is set.
@@ -113,13 +113,6 @@ GATEWAY_ALLOW_ALL_USERS: 'false'
 TELEGRAM_ALLOW_ALL_USERS: 'false'
 TELEGRAM_ALLOWED_USERS: '8297858681'      # Zeus only
 TELEGRAM_HOME_CHANNEL: '8297858681'       # Zeus's DM
-MATRIX_ALLOW_ALL_USERS: 'false'
-MATRIX_ALLOWED_USERS: '@zeus:onemindos.dev'   # Zeus only; invites from others are refused
-# In-cluster Synapse Service, not the public hostname (matrix.onemindos.dev is going
-# tailnet-only). NetworkPolicy egress: network.yaml. E2EE stays off, as on Legacy.
-MATRIX_HOMESERVER: http://synapse.matrix.svc.cluster.local:8008
-MATRIX_USER_ID: '@legacy:onemindos.dev'
-# MATRIX_REQUIRE_MENTION keeps its default (true): rooms need an @-mention, DMs do not.
 # OneMind tools come from the agentgateway tool gateway (platform/tool-gateway, design
 # docs/architecture/onemind-tool-gateway.md): one MCP server per route, tools named
 # <target>_<tool>. Each route lists only the classified read and write tools; destructive
