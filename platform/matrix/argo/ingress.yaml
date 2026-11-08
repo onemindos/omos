@@ -10,6 +10,7 @@ metadata:
   name: synapse-tailnet
   namespace: matrix
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: matrix
 spec:
   ingressClassName: tailscale
@@ -28,6 +29,7 @@ metadata:
   name: element-tailnet
   namespace: matrix
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: element
 spec:
   ingressClassName: tailscale

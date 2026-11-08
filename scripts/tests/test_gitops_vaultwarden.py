@@ -69,7 +69,8 @@ class VaultwardenSafety(unittest.TestCase):
         policies = [d for d in self.docs if d['kind'] == 'NetworkPolicy']
         web = next(d for d in policies if d['spec']['podSelector'].get('matchLabels', {}).get('app.kubernetes.io/component') == 'web')
         peers = web['spec']['ingress'][0]['from']
-        self.assertEqual(len(peers), 1)
+        self.assertEqual(len(peers), 2)  # its own proxy, then the shared ingress ProxyGroup
+        self.assertEqual(peers[1]['podSelector']['matchLabels']['tailscale.com/parent-resource-type'], 'proxygroup')
         self.assertEqual(peers[0]['namespaceSelector']['matchLabels']['kubernetes.io/metadata.name'], 'tailscale')
         self.assertEqual(peers[0]['podSelector']['matchLabels']['tailscale.com/parent-resource'], 'vaultwarden')
         blocks = [peer['ipBlock'] for rule in web['spec']['egress'] for peer in rule['to'] if 'ipBlock' in peer]

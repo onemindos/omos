@@ -256,6 +256,7 @@ metadata:
   name: portal
   namespace: backstage
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: portal
 spec:
   ingressClassName: tailscale

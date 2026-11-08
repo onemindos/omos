@@ -4,6 +4,7 @@ metadata:
   name: vaultwarden
   namespace: vaultwarden
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: vaultwarden
 spec:
   ingressClassName: tailscale
