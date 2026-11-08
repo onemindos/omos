@@ -31,8 +31,8 @@ Changes since 2026-11-07, all verified live: Dapr, LiteLLM, Matrix, HeyNATS, `na
 and Tempo are gone (NUI behind the Authentik outpost `nui-auth` is the only NATS UI); the `takml-db` PostgreSQL is gone
 (TAK.ML uses database `takml_server` in `onemind-data`; its old volume and PV were deleted after a DigitalOcean snapshot);
 the Velero node agent is gone; the Argo CD ApplicationSet controller and `takserver-nats-box` run at 0 replicas.
-Namespace `omos` is now `feeds` and `onemind-ai` is now `langfuse`; `kube` was not renamed (Headlamp and the `ai-operator`
-ServiceAccount). 24 of the 26 tailnet ingresses share the Tailscale `ProxyGroup` `ingress` (2 pods,
+Namespace `omos` is now `feeds` and `onemind-ai` is now `langfuse`; Headlamp moved from `kube` to its own `headlamp` namespace (the `ai-operator`
+ServiceAccount and its token stay in `kube`). 24 of the 26 tailnet ingresses share the Tailscale `ProxyGroup` `ingress` (2 pods,
 `platform/core/tailscale-proxygroup-ingress.yaml`); `argocd` and `onemind-auth` keep their own proxies. Hermes is one
 container (`hermes`), connected to NATS as `onemind-hermes-nats-platform`, with Langfuse tracing at `langfuse-web.langfuse`.
 Volumes: NATS 3 x 20 GiB, `onemind-data` 3 x 5 GiB on PostgreSQL 16 (a PostgreSQL 17 upgrade was rolled back on
@@ -146,7 +146,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (Tile38), WebODM | about 42 GiB of PVCs (shrunk 2026-11-08) | `VolSync` x5 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.tail717ba0.ts.net` **tailnet** | Argo |
 | `platform-takml` | takml | TAK-ML vision pipeline | PostgreSQL moved to `onemind-data` (database `takml_server`, 2026-11-08), 3 GiB of volumes | CNPG Barman (database), `VolSync` (models, JAR) | internal | Argo |
 | `platform-n8n` | n8n | n8n workflow automation | PostgreSQL, 5 GiB (2 + 3, shrunk 2026-11-08) | `PG dump` (05:20 UTC), `VolSync` | tailnet | Argo |
-| `platform-kube` | kube | Headlamp | none | Git | tailnet | Argo |
+| `platform-kube` | kube, headlamp | Headlamp (namespace `headlamp`, manifests in `platform/kube/headlamp/`) and the `ai-operator` ServiceAccount (stays in `kube`) | none | Git | tailnet | Argo |
 | `platform-ecosystem-applications` | argocd | Generates the `ecosystem-*` Applications (11) from `platform/ecosystem/applications` | none | Git | internal | Argo |
 | `platform-ecosystem-foundation` | argocd | Generates the foundation `ecosystem-*` Applications (10) | none | Git | internal | Argo |
 | `platform-tool-gateway` | tool-gateway | Legacy's tool front door: agentgateway v1.7.0 standalone chart (`agentgateway-standalone`, no controller, no CRDs) on the ecosystem pool. Nine MCP routes (`/ops`, `/dev`, `/cloud`, `/data`, `/tak`, `/home`, `/work`, `/identity`, `/execute`) and six live targets: `onemind` and `kubernetes` (ops), `stac`, `core` and `clickhouse` (data), `mediamtx` (tak); [backends below](#tool-gateway-backends-tier-2). Per-target classification is the policy plane: destructive tools are hidden on every route and `/execute/mcp` is deny-all until Phase 4. **Hermes is not cut over to it yet** (Phase 5); LiteLLM still serves the MCP hub. Design: [`onemind-tool-gateway.md`](architecture/onemind-tool-gateway.md); runbook: [`tool-gateway.md`](operations/tool-gateway.md). Verified live 2026-10-30 (read-only): Synced and Healthy, 1/1 Ready | none (config is in the repo; sessions are in memory) | Git (SealedSecrets `gateway-clients`, `gateway-target-onemind`, `-core`, `-mediamtx`, `-clickhouse`) | internal: ClusterIP `agentgateway:8080`, ingress only from `onemind-hermes` | Argo |
@@ -255,7 +255,7 @@ At capture (2026-10-09), 31 container references used `:latest`, a bare image na
 | nats | `heynats`, `nats-dashboard`, `nats-metrics-scrape`, `nats-ui` (all `ghcr.io/...:latest`), `nats-surveyor:latest` |
 | onetak | `nodeodm`, `stac-api`, `tak-portal`, `tile38`, `tileserver-gl`, `webodm`, `webodm-db` (and a bare `busybox` init container) |
 | feeds | `omos-mission-engine:latest` |
-| kube | `headlamp:latest` |
+| headlamp | `headlamp:latest` |
 | takserver | `murmur:latest` |
 | matrix | init containers using bare `busybox` / `busybox:latest` |
 
