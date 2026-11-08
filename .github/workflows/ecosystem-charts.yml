@@ -13,9 +13,9 @@ permissions:
   contents: read
 jobs:
   render:
-    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    # GitHub-hosted runner (free, public repo; no cluster access needed): pull requests from forks still do not run here.
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, linux, amd64, zeus-v2]
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4

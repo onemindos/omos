@@ -36,11 +36,11 @@ jobs:
   lint:
     name: Lint & Validate
     # Per-change lint gates do not apply to the scheduled/manual full-tree run.
-    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    # GitHub-hosted runner (free, public repo; no cluster access needed): pull requests from forks still do not run here.
     if: >-
       github.event_name == 'push' ||
       (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
-    runs-on: [self-hosted, linux, amd64, zeus-v2]
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -48,7 +48,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      # The self-hosted image does not ship a pinned Python with pip: install one per job.
+      # Pin Python explicitly rather than relying on the runner image.
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
@@ -92,9 +92,9 @@ jobs:
 
   manifests:
     name: Kubernetes manifest schema (kubeconform)
-    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    # GitHub-hosted runner (free, public repo; no cluster access needed): pull requests from forks still do not run here.
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, linux, amd64, zeus-v2]
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -102,7 +102,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      # The self-hosted image does not ship a pinned Python with pip: install one per job.
+      # Pin Python explicitly rather than relying on the runner image.
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
@@ -136,9 +136,9 @@ jobs:
 
   helm:
     name: Helm render check
-    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    # GitHub-hosted runner (free, public repo; no cluster access needed): pull requests from forks still do not run here.
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, linux, amd64, zeus-v2]
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -150,7 +150,7 @@ jobs:
         with:
           version: ${{ env.HELM_VERSION }}
 
-      # The self-hosted image does not ship a pinned Python with pip: install one per job.
+      # Pin Python explicitly rather than relying on the runner image.
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
@@ -159,7 +159,7 @@ jobs:
       - name: Install YAML dependencies for render and startup contracts
         run: pip install pyyaml ruamel.yaml==0.18.16
 
-      # The self-hosted image's system node is too old for `node --test` (used by the portal contract tests).
+      # Pin Node explicitly (needed for `node --test` in the portal contract tests).
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: "24"
@@ -217,9 +217,9 @@ jobs:
 
   secrets:
     name: Secret scan (gitleaks)
-    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    # GitHub-hosted runner (free, public repo; no cluster access needed): pull requests from forks still do not run here.
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, linux, amd64, zeus-v2]
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
