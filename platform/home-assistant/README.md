@@ -36,3 +36,15 @@ Assistant box, which remains the device hub; this instance only mirrors it.
   restic repository Secret `home-assistant-config-restic` is sealed and added to
   `kustomization.yaml` (see the TODO there). Snapshots are crash-consistent.
 - Do not delete the PVC or namespace without a fresh snapshot and approval.
+
+## HTTP settings live in `.storage/http` (2026.11+)
+
+Home Assistant no longer reads `http:` from `configuration.yaml`. A YAML
+block is migrated once as an unconfirmed "pending" trial that reverts after
+five minutes unless promoted in the UI, and through the Tailscale proxy the
+UI is unreachable until `trusted_proxies` is active. The init container
+therefore seeds `.storage/http` directly with `use_x_forwarded_for` and
+`trusted_proxies: 10.109.0.0/16` as the stable config (fresh volumes only).
+Change proxy settings later in the UI and confirm them within five minutes.
+The first live volume was fixed by hand on 2026-11-08 (backup at
+`.storage/http.bak-2026-11-08`).
