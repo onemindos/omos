@@ -112,10 +112,6 @@ apps:
   description: Authentication and identity management
   enabled: false
   blocked_reason: Separate identity-administration permission and scoped adapter required; user app access does not grant identity admin.
-- id: home_assistant
-  description: Cloud Home Assistant dashboard (home devices via Remote Home Assistant)
-  enabled: false
-  blocked_reason: 'Not an MCP target yet. Needs a reviewed adapter and an owner-created long-lived access token with a scoped HA user; device control stays off until then.'
 - id: kubernetes
   description: Cluster workloads and deployment control
   enabled: false
