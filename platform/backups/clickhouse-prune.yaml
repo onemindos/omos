@@ -1,0 +1,120 @@
+# Keeps 14 days of ClickHouse backups. backup-clickhouse (backups.yaml) writes one
+# folder per day to Spaces under backups/clickhouse/YYYY-MM-DD/ and never prunes.
+# This sibling job runs after it, uses the same Spaces credentials and deletes only
+# dated folders older than the cutoff. It refuses to delete anything unless a recent
+# folder with a .backup marker exists (so a failed backup never empties the history),
+# and it never deletes the newest folder. Set DRY_RUN=1 to only list.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: prune-clickhouse-backups
+  namespace: clickhouse
+spec:
+  schedule: 30 4 * * *
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 1800
+      template:
+        metadata:
+          labels:
+            app: prune-clickhouse-backups
+        spec:
+          automountServiceAccountToken: false
+          restartPolicy: Never
+          securityContext:
+            runAsUser: 65532
+            runAsGroup: 65532
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: rclone
+            # rclone 1.75 multi-arch index digest, same as offsite-copy.yaml.
+            image: docker.io/rclone/rclone:1.75@sha256:2687085f718d3c628f7fdfb77c52a1d344332aed543110bb88088f2c70d43eb5
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            env:
+            - name: HOME
+              value: /tmp
+            - name: DRY_RUN
+              value: '0'
+            - name: KEEP_DAYS
+              value: '14'
+            - name: RCLONE_CONFIG_S3_TYPE
+              value: s3
+            - name: RCLONE_CONFIG_S3_PROVIDER
+              value: DigitalOcean
+            - name: RCLONE_CONFIG_S3_ENDPOINT
+              value: nyc3.digitaloceanspaces.com
+            - name: RCLONE_CONFIG_S3_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: backup-s3-creds
+                  key: ACCESS_KEY
+            - name: RCLONE_CONFIG_S3_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backup-s3-creds
+                  key: SECRET_KEY
+            command:
+            - /bin/sh
+            - -eu
+            - -c
+            - |
+              BASE="s3:onemind-backups/backups/clickhouse"
+              COMMON="--s3-no-check-bucket --retries 3 --log-level INFO"
+              NOW="$(date -u +%s)"
+              CUTOFF="$(date -u -d "@$((NOW - KEEP_DAYS * 86400))" +%Y-%m-%d)"
+              YESTERDAY="$(date -u -d "@$((NOW - 86400))" +%Y-%m-%d)"
+              # shellcheck disable=SC2086
+              rclone lsf "$BASE" --dirs-only $COMMON | tr -d / \
+                | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort > /tmp/folders
+              NEWEST="$(tail -n 1 /tmp/folders)"
+              echo "[$(date -u)] cutoff=${CUTOFF} newest=${NEWEST} folders=$(wc -l < /tmp/folders) dry_run=${DRY_RUN}"
+              # Guard: a backup from today or yesterday must exist and be complete.
+              RECENT="$(awk -v y="$YESTERDAY" '$0 >= y' /tmp/folders | tail -n 1)"
+              if [ -z "$RECENT" ]; then
+                echo "No backup from ${YESTERDAY} or later; refusing to prune" >&2
+                exit 1
+              fi
+              # shellcheck disable=SC2086
+              if ! rclone lsf "$BASE/$RECENT/.backup" $COMMON > /dev/null 2>&1; then
+                echo "Backup ${RECENT} has no .backup marker; refusing to prune" >&2
+                exit 1
+              fi
+              awk -v c="$CUTOFF" -v n="$NEWEST" '$0 < c && $0 != n' /tmp/folders > /tmp/old
+              echo "Folders to delete: $(wc -l < /tmp/old)"
+              while read -r d; do
+                [ -n "$d" ] || continue
+                if [ "$DRY_RUN" = "1" ]; then
+                  echo "DRY RUN would delete ${BASE}/${d}"
+                else
+                  echo "Deleting ${BASE}/${d}"
+                  # shellcheck disable=SC2086
+                  rclone purge "$BASE/$d" $COMMON
+                fi
+              done < /tmp/old
+              echo "[$(date -u)] prune complete"
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+                ephemeral-storage: 64Mi
+              limits:
+                memory: 256Mi
+                ephemeral-storage: 256Mi
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          volumes:
+          - name: tmp
+            emptyDir:
+              sizeLimit: 64Mi
