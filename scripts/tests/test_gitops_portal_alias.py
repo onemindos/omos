@@ -55,6 +55,12 @@ class PortalAlias(unittest.TestCase):
                 "tailscale.com/parent-resource-ns": ingress["namespace"],
                 "tailscale.com/parent-resource-type": "ingress",
             }},
+        }, {  # the shared ingress ProxyGroup (annotation tailscale.com/proxy-group: ingress)
+            "namespaceSelector": {"matchLabels": {"kubernetes.io/metadata.name": "tailscale"}},
+            "podSelector": {"matchLabels": {
+                "tailscale.com/parent-resource": "ingress",
+                "tailscale.com/parent-resource-type": "proxygroup",
+            }},
         }])
         container, = deployment["template"]["spec"]["containers"]
         self.assertEqual(rule["ports"], [{"protocol": "TCP", "port": container["ports"][0]["containerPort"]}])

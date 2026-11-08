@@ -5,6 +5,7 @@ metadata:
   name: headlamp
   namespace: kube
   annotations:
+    tailscale.com/proxy-group: ingress
     tailscale.com/hostname: headlamp
 spec:
   ingressClassName: tailscale

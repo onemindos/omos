@@ -34,6 +34,13 @@ spec:
               tailscale.com/parent-resource: headlamp
               tailscale.com/parent-resource-ns: kube
               tailscale.com/parent-resource-type: ingress
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+          podSelector:
+            matchLabels:
+              tailscale.com/parent-resource: ingress
+              tailscale.com/parent-resource-type: proxygroup
       ports:
         - protocol: TCP
           port: 4466
