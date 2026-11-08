@@ -4,7 +4,7 @@
 # platform-takml: TAK ML vision pipeline
 #
 # Covers: platform/takml/
-#   deployment.yaml         — takml-server, takml-db, takml-vision-worker
+#   deployment.yaml         — takml-server, takml-vision-worker
 #   configmap-server.yaml   — server config
 #   pvcs.yaml               — persistent storage
 #   namespace.yaml          — takml namespace

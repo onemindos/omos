@@ -1,9 +1,8 @@
 # takml network policies: deny everything, then allow only the flows the
 # workloads use (checked against live pods and logs on 2026-10-27).
 #
-# The backup-postgres-takml CronJob (platform/backups/postgres.yaml) is covered
-# here, not in platform/backups/network.yaml, so every takml rule syncs and rolls
-# back together in this prune-enabled app (platform-backups has prune: false).
+# The database moved to the shared onemind-data cluster on 2026-11-08; its Barman
+# backups cover it, so the backup-postgres-takml CronJob and its policy are gone.
 # VolSync movers (app=platform-volume-backup) already have DNS + HTTPS egress
 # from platform/backups/volsync/network.yaml; they read the PVCs locally.
 # Cilium allows kubelet probes from the node, so tcpSocket probes keep working.
@@ -41,31 +40,6 @@ spec:
     - protocol: TCP
       port: 53
 ---
-# takml-db: PostgreSQL for takml-server and the daily pg_dump. No egress beyond DNS.
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: takml-db
-  namespace: takml
-spec:
-  podSelector:
-    matchLabels:
-      app: takml-db
-  policyTypes:
-  - Ingress
-  - Egress
-  ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: takml-server
-    - podSelector:
-        matchLabels:
-          app: platform-backup
-    ports:
-    - protocol: TCP
-      port: 5432
----
 # takml-server: no in-cluster caller was found (no Service references, no
 # request logs since the 2026-10-23 start), so only this namespace and
 # monitoring may reach 8234.
@@ -91,14 +65,7 @@ spec:
     - protocol: TCP
       port: 8234
   egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: takml-db
-    ports:
-    - protocol: TCP
-      port: 5432
-  # Shared CNPG cluster (database takml_server), the takml-db replacement.
+  # Shared CNPG cluster (database takml_server), replaced takml-db on 2026-11-08.
   - to:
     - namespaceSelector:
         matchLabels:
@@ -177,57 +144,3 @@ spec:
     ports:
     - protocol: TCP
       port: 4222
----
-# backup-postgres-takml pods: same rules as platform-backup-egress for n8n and
-# backstage in platform/backups/network.yaml (takml-db, DNS, Spaces, S3 proxy).
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: platform-backup-egress
-  namespace: takml
-spec:
-  podSelector:
-    matchLabels:
-      app: platform-backup
-  policyTypes:
-  - Ingress
-  - Egress
-  egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: takml-db
-    ports:
-    - protocol: TCP
-      port: 5432
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: kube-system
-      podSelector:
-        matchLabels:
-          k8s-app: kube-dns
-    ports:
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 53
-  - to:
-    - ipBlock:
-        cidr: 0.0.0.0/0
-        except:
-        - 10.0.0.0/8
-        - 172.16.0.0/12
-        - 192.168.0.0/16
-        - 100.64.0.0/10
-        - 169.254.0.0/16
-        - 127.0.0.0/8
-    ports:
-    - protocol: TCP
-      port: 443
-  - to:
-    - ipBlock:
-        cidr: 10.10.255.254/32
-    ports:
-    - protocol: TCP
-      port: 443

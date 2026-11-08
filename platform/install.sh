@@ -196,8 +196,8 @@ kubectl --context "$CTX" apply -f "$PLATFORM/core/github-runner-rbac.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/core/github-runner.yaml"
 
 # -----------------------------------------------------------------------------
-# 13. TAK-ML — TAK ML server + vision worker + database
-# Secrets: takml-db-creds and takml-nats-creds are SealedSecrets in platform/takml/
+# 13. TAK-ML — TAK ML server + vision worker (database is in onemind-data)
+# Secrets: takml-pg-creds and takml-nats-creds are SealedSecrets in platform/takml/
 # NOTE: takml-server-jar PVC must be populated manually on first deploy:
 #   kubectl run jar-loader --image=busybox --restart=Never -n takml \
 #     --overrides='{"spec":{"volumes":[{"name":"jar","persistentVolumeClaim":{"claimName":"takml-server-jar"}}],"containers":[{"name":"jar-loader","image":"busybox","command":["sleep","3600"],"volumeMounts":[{"mountPath":"/jar","name":"jar"}]}]}}'
@@ -207,7 +207,7 @@ kubectl --context "$CTX" apply -f "$PLATFORM/core/github-runner.yaml"
 # -----------------------------------------------------------------------------
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/namespace.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/pvcs.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/takml/takml-db-creds.sealedsecret.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/takml/takml-pg-creds.sealedsecret.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/takml-nats-creds.sealedsecret.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/configmap-server.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/deployment.yaml"

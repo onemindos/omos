@@ -85,12 +85,6 @@
   },
   {
     "namespace": "takml",
-    "pvc": "takml-db-data",
-    "source": "volume-a9d9abb1777a",
-    "size": "5Gi"
-  },
-  {
-    "namespace": "takml",
     "pvc": "takml-models",
     "source": "volume-45a600854340",
     "size": "2Gi"
