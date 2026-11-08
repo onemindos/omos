@@ -1,11 +1,10 @@
-# Ingress to the kube namespace: deny by default, then only the paths Headlamp needs. Cilium enforces these.
+# Ingress to the headlamp namespace: deny by default, then only the paths Headlamp needs. Cilium enforces these.
 # Egress is unchanged: Headlamp's backend sends every user request on to the Kubernetes API server.
-# The ai-operator resources (ai-operator.yaml) run no pods, so these policies do not apply to them.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: default-deny-ingress
-  namespace: kube
+  namespace: headlamp
 spec:
   podSelector: {}
   policyTypes: [Ingress]
@@ -18,7 +17,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: headlamp-from-tailscale
-  namespace: kube
+  namespace: headlamp
 spec:
   podSelector:
     matchLabels:
@@ -32,7 +31,7 @@ spec:
           podSelector:
             matchLabels:
               tailscale.com/parent-resource: headlamp
-              tailscale.com/parent-resource-ns: kube
+              tailscale.com/parent-resource-ns: headlamp
               tailscale.com/parent-resource-type: ingress
         - namespaceSelector:
             matchLabels:
@@ -45,13 +44,13 @@ spec:
         - protocol: TCP
           port: 4466
 ---
-# The portal's status check: an unauthenticated GET of http://headlamp.kube.svc:4466/ from the Backstage backend
+# The portal's status check: an unauthenticated GET of http://headlamp.headlamp.svc:4466/ from the Backstage backend
 # (services/onemind-portal/plugins/plugin-onemind-common-backend/src/health.ts). Without it the check shows unknown.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: headlamp-from-portal
-  namespace: kube
+  namespace: headlamp
 spec:
   podSelector:
     matchLabels:

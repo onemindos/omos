@@ -5,7 +5,7 @@ import http from 'node:http';
 const targets=[
   {name:'Identity',entity:'component:default/k8s-auth-platform-auth-helm-authentik-server-78f74c27',url:'http://platform-auth-helm-authentik-server.auth.svc/-/health/ready/',link:'https://onemind-auth.tail717ba0.ts.net',scope:'Readiness endpoint'},
   {name:'Grafana',entity:'component:default/grafana',url:'http://monitoring-grafana.monitoring.svc/api/health',link:'https://grafana.tail717ba0.ts.net',scope:'Application health endpoint'},
-  {name:'Headlamp',entity:'component:default/headlamp',url:'http://headlamp.kube.svc:4466/',link:'https://headlamp.tail717ba0.ts.net',scope:'Web page response'},
+  {name:'Headlamp',entity:'component:default/headlamp',url:'http://headlamp.headlamp.svc:4466/',link:'https://headlamp.tail717ba0.ts.net',scope:'Web page response'},
   {name:'NUI',entity:'component:default/nui',url:'http://nui.nats.svc:31311/health',link:'https://nui.tail717ba0.ts.net',scope:'Application health endpoint'},
 ];
 function get(url:string):Promise<{code:number;body:string}>{return new Promise((resolve,reject)=>{
