@@ -332,7 +332,7 @@ existing backups. See `platform/parked/nextcloud/RETIREMENT.md`.
 | Tier | Application | Namespace | State/recovery | Exposure | Status |
 |---|---|---|---|---|---|
 |2|`platform-openremote`|`openremote`|Dedicated PostgreSQL17/Keycloak, retained10Gi DB plus5Gi manager storage; separate crash-consistent VolSync sources, coordinated recovery pending|Private `openremote.tail717ba0.ts.net` (Tailscale ingress); native login; no external MQTT|Manual sync, Synced/Healthy since 2026-11-05; 4 pods Running (2d16h); retained database and storage claims Bound; VolSync sources syncing; coordinated restore and acceptance not recorded|
-|2|`platform-thingsboard`|`thingsboard`|Apache CE4.3.1.8 monolith, retained10Gi PostgreSQL; no-demo guarded schema/admin hook; in-memory queue is an evaluation limitation|Private `thingsboard.tail717ba0.ts.net` (Tailscale ingress); native login; no external MQTT|Manual sync, Synced/Healthy (last sync 2026-11-06); ThingsBoard and PostgreSQL pods Running; VolSync source syncing; acceptance not recorded|
+|2|`platform-thingsboard`|`thingsboard`|Apache CE4.3.1.8 monolith, database `thingsboard` in `onemind-data` (moved 2026-11-08); no-demo guarded schema/admin hook; in-memory queue is an evaluation limitation|Private `thingsboard.tail717ba0.ts.net` (Tailscale ingress); native login; no external MQTT|Manual sync, Synced/Healthy (last sync 2026-11-06); ThingsBoard pod Running; backed up by CNPG Barman; acceptance not recorded|
 
 These are fresh evaluation deployments, not migrations of retained Mac volumes. User expressly chose both for
 comparison. See the owning READMEs for edition, launch and restore requirements.
