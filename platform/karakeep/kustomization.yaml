@@ -26,9 +26,10 @@ configMapGenerator:
   literals:
   - NEXTAUTH_URL=https://karakeep.tail717ba0.ts.net
   - AUTH_TRUSTED_ORIGINS=
-  # v0.34.1 also blocks first OIDC enrollment when DISABLE_SIGNUPS=true.
-  # Password signup/login remain disabled; Authentik admits only the existing owner.
-  - DISABLE_SIGNUPS=false
+  # v0.34.1 also blocks first OIDC enrollment when DISABLE_SIGNUPS=true. The owner's
+  # Authentik-linked account exists (checked 2026-11-08: one user, one `custom` OIDC account),
+  # so new sign-ups are now closed. To enrol another person, set this to false temporarily.
+  - DISABLE_SIGNUPS=true
   - DISABLE_PASSWORD_AUTH=true
   - OAUTH_AUTO_REDIRECT=true
   - OAUTH_CLIENT_ID=onemind-karakeep
