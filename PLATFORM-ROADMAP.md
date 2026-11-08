@@ -177,7 +177,7 @@ patches; Telegram remains selected. See the updated approval record below.
 | `keda` | KEDA | 2 | Argo CD; OpenChoreo autoscaling module |
 | `monitoring` | Prometheus, Alertmanager, Grafana, Loki, Tempo, OTel collector | 2 | Argo CD; becomes the observability plane's metrics and events modules |
 | `opencost` | OpenCost | 2 | Argo CD; OpenChoreo FinOps module |
-| `omos` | feed-intel, feed-satellites, omos-tak-projector, redpanda-connect, sink-clickhouse | 3 | OpenChoreo Project `omos-feeds` |
+| `feeds` | feed-intel, feed-satellites, omos-tak-projector, redpanda-connect, sink-clickhouse | 3 | OpenChoreo Project `omos-feeds` |
 | `onetak` | 19 geo and mapping apps (Valhalla, Martin, Nominatim, WebODM, STAC, TileServer and others) | 3 | OpenChoreo Project `onetak` |
 | `takml` | takml-server, takml-vision-worker, takml-db | 3 | OpenChoreo Project `takml` |
 | `onemind-core` | onemind-core, onemind-ingestion, OpenFGA | 3 | OpenChoreo Project `onemind` |

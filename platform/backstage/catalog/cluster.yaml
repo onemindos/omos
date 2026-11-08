@@ -1465,10 +1465,10 @@ kind: Component
 metadata:
   name: k8s-omos-feed-intel-4488fd05
   title: OMOS data pipeline — Feed Intel
-  description: Deployment in omos
+  description: Deployment in feeds
   annotations:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=feed-intel
-    backstage.io/kubernetes-namespace: omos
+    backstage.io/kubernetes-namespace: feeds
     onemind.io/inventory-source: kubernetes
     onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
     onemind.io/hosting: digitalocean-nyc3
@@ -1480,7 +1480,7 @@ metadata:
     onemind.io/pillar-review: proposed
   tags:
     - kubernetes
-    - omos
+    - feeds
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload
@@ -1498,10 +1498,10 @@ kind: Component
 metadata:
   name: k8s-omos-feed-satellites-e3372fac
   title: OMOS data pipeline — Feed Satellites
-  description: Deployment in omos
+  description: Deployment in feeds
   annotations:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=feed-satellites
-    backstage.io/kubernetes-namespace: omos
+    backstage.io/kubernetes-namespace: feeds
     onemind.io/inventory-source: kubernetes
     onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
     onemind.io/hosting: digitalocean-nyc3
@@ -1513,7 +1513,7 @@ metadata:
     onemind.io/pillar-review: proposed
   tags:
     - kubernetes
-    - omos
+    - feeds
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload
@@ -1531,10 +1531,10 @@ kind: Component
 metadata:
   name: k8s-omos-omos-tak-projector-ac850041
   title: OMOS data pipeline — TAK Projector
-  description: Deployment in omos
+  description: Deployment in feeds
   annotations:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=omos-tak-projector
-    backstage.io/kubernetes-namespace: omos
+    backstage.io/kubernetes-namespace: feeds
     onemind.io/inventory-source: kubernetes
     onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
     onemind.io/hosting: digitalocean-nyc3
@@ -1546,7 +1546,7 @@ metadata:
     onemind.io/pillar-review: proposed
   tags:
     - kubernetes
-    - omos
+    - feeds
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload
@@ -1564,10 +1564,10 @@ kind: Component
 metadata:
   name: k8s-omos-redpanda-connect-0c0b667d
   title: Redpanda Connect — Core
-  description: Deployment in omos
+  description: Deployment in feeds
   annotations:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=redpanda-connect
-    backstage.io/kubernetes-namespace: omos
+    backstage.io/kubernetes-namespace: feeds
     onemind.io/inventory-source: kubernetes
     onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
     onemind.io/hosting: digitalocean-nyc3
@@ -1579,7 +1579,7 @@ metadata:
     onemind.io/pillar-review: proposed
   tags:
     - kubernetes
-    - omos
+    - feeds
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload
@@ -1597,10 +1597,10 @@ kind: Component
 metadata:
   name: k8s-omos-sink-clickhouse-29b3c0a3
   title: OMOS data pipeline — Sink Clickhouse
-  description: Deployment in omos
+  description: Deployment in feeds
   annotations:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=sink-clickhouse
-    backstage.io/kubernetes-namespace: omos
+    backstage.io/kubernetes-namespace: feeds
     onemind.io/inventory-source: kubernetes
     onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
     onemind.io/hosting: digitalocean-nyc3
@@ -1612,7 +1612,7 @@ metadata:
     onemind.io/pillar-review: proposed
   tags:
     - kubernetes
-    - omos
+    - feeds
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: workload

@@ -40,17 +40,17 @@ spec:
       exclude: "*.proto,pipelines/"
   destination:
     server: https://kubernetes.default.svc
-    namespace: omos
+    namespace: feeds
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-    # omos is labelled by platform-omos (platform/omos), a different Application in the same
-    # wave. If this app creates omos first, the Kyverno Enforce policy require-namespace-layer-label
+    # feeds is labelled by platform-omos (platform/omos), a different Application in the same
+    # wave. If this app creates feeds first, the Kyverno Enforce policy require-namespace-layer-label
     # denies an unlabelled namespace, so Argo creates it with the same labels as platform-omos.
-    # omos carries no argocd.argoproj.io/sync-options annotation, so the one Argo adds is harmless.
+    # feeds carries no argocd.argoproj.io/sync-options annotation, so the one Argo adds is harmless.
     managedNamespaceMetadata:
       labels:
         app.kubernetes.io/part-of: omos-platform

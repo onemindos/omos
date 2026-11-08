@@ -233,27 +233,27 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "omos",
+      "namespace": "feeds",
       "name": "feed-intel"
     },
     {
       "kind": "Deployment",
-      "namespace": "omos",
+      "namespace": "feeds",
       "name": "feed-satellites"
     },
     {
       "kind": "Deployment",
-      "namespace": "omos",
+      "namespace": "feeds",
       "name": "omos-tak-projector"
     },
     {
       "kind": "Deployment",
-      "namespace": "omos",
+      "namespace": "feeds",
       "name": "redpanda-connect"
     },
     {
       "kind": "Deployment",
-      "namespace": "omos",
+      "namespace": "feeds",
       "name": "sink-clickhouse"
     },
     {
@@ -1108,7 +1108,7 @@
     },
     {
       "kind": "Service",
-      "namespace": "omos",
+      "namespace": "feeds",
       "name": "redpanda-connect"
     },
     {

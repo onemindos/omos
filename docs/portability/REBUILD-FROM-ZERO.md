@@ -109,7 +109,7 @@ Argo CD itself is a Helm-CLI release, not self-managed (gap G3). Chart `argo-cd`
    - Argo `CreateNamespace=true` creates a bare namespace. Every namespace that an Application
      creates this way without shipping its own labelled Namespace is labelled by `platform-security`
      (`platform/security/shared-namespaces.yaml`) in the same sync as, and before, the policies, or
-     (only `omos`, via `platform-redpanda-connect`) by `managedNamespaceMetadata`. So holding apps
+     (only `feeds`, via `platform-redpanda-connect`) by `managedNamespaceMetadata`. So holding apps
      back (item 5, Step 6) cannot make a namespace create fail. If an Application still fails with
      `denied the request` naming `onemind.io/layer`, sync `platform-security` and then that
      Application again: Argo retries a failed automated sync only a few times within minutes and

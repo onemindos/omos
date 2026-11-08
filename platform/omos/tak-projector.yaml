@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: omos-tak-projector-script
-  namespace: omos
+  namespace: feeds
 data:
   projector.py: |
     #!/usr/bin/env python3
@@ -446,7 +446,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: omos-tak-projector
-  namespace: omos
+  namespace: feeds
   labels:
     app.kubernetes.io/name: omos-tak-projector
     app.kubernetes.io/part-of: omos-platform

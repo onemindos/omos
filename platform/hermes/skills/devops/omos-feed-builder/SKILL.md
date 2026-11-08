@@ -30,7 +30,7 @@ Feed collectors should not each open their own TAK connection. Use an independen
 
 Canonical GitOps repo: `onemindos/omos`, branch `main`. Verify the live Argo CD Application's `spec.source` before editing.
 Feed manifests: `platform/omos/`.
-Redpanda Connect: `platform/data/redpanda-connect/deployment.yaml`, Argo CD application `platform-redpanda-connect`, destination namespace `omos`.
+Redpanda Connect: `platform/data/redpanda-connect/deployment.yaml`, Argo CD application `platform-redpanda-connect`, destination namespace `feeds`.
 Guide: inspect `platform/omos/FEED-DEVELOPMENT.md` in the canonical revision if present.
 
 ## Key Steps
@@ -110,4 +110,4 @@ Feed API keys live in a SealedSecret beside the workload (`platform/omos/`), ref
 
 ## Existing feeds
 
-The set of feeds, their replica counts and which are live changes. List them from the cluster and `platform/omos/` (`kubectl -n omos get deploy`) rather than trusting any written inventory.
+The set of feeds, their replica counts and which are live changes. List them from the cluster and `platform/omos/` (`kubectl -n feeds get deploy`) rather than trusting any written inventory.

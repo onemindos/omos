@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sink-clickhouse
-  namespace: omos
+  namespace: feeds
   labels:
     app.kubernetes.io/name: sink-clickhouse
     app.kubernetes.io/part-of: omos-platform

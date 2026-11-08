@@ -1131,7 +1131,7 @@
    "kind": "Deployment",
    "metadata": {
     "name": "feed-intel",
-    "namespace": "omos"
+    "namespace": "feeds"
    },
    "spec": {
     "selector": {
@@ -1146,7 +1146,7 @@
    "kind": "Deployment",
    "metadata": {
     "name": "feed-satellites",
-    "namespace": "omos"
+    "namespace": "feeds"
    },
    "spec": {
     "selector": {
@@ -1161,7 +1161,7 @@
    "kind": "Deployment",
    "metadata": {
     "name": "omos-tak-projector",
-    "namespace": "omos"
+    "namespace": "feeds"
    },
    "spec": {
     "selector": {
@@ -1176,7 +1176,7 @@
    "kind": "Deployment",
    "metadata": {
     "name": "redpanda-connect",
-    "namespace": "omos"
+    "namespace": "feeds"
    },
    "spec": {
     "selector": {
@@ -1191,7 +1191,7 @@
    "kind": "Deployment",
    "metadata": {
     "name": "sink-clickhouse",
-    "namespace": "omos"
+    "namespace": "feeds"
    },
    "spec": {
     "selector": {

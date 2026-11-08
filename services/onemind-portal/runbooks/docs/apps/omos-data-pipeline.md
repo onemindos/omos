@@ -2,22 +2,22 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Feed, projector and sink services in the omos namespace.
+Feed, projector and sink services in the feeds namespace.
 
 ## Where it runs
 
 - Catalog entity: `component:default/omos-data-pipeline` in System `messaging-nats`
 - Argo CD applications: `platform-omos`, `platform-omos-entity`
-- Namespace: `omos`
+- Namespace: `feeds`
 
 ## Workloads
 
 | Workload | Kind | Namespace |
 | --- | --- | --- |
-| `feed-intel` | Deployment | `omos` |
-| `feed-satellites` | Deployment | `omos` |
-| `omos-tak-projector` | Deployment | `omos` |
-| `sink-clickhouse` | Deployment | `omos` |
+| `feed-intel` | Deployment | `feeds` |
+| `feed-satellites` | Deployment | `feeds` |
+| `omos-tak-projector` | Deployment | `feeds` |
+| `sink-clickhouse` | Deployment | `feeds` |
 
 ## When it looks wrong
 
@@ -33,8 +33,8 @@ Feed, projector and sink services in the omos namespace.
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name="omos", k8s_pod_name=~"(feed-intel|feed-satellites|omos-tak-projector|sink-clickhouse)-.*"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=omos&var-workload=feed-intel&var-workload=feed-satellites&var-workload=omos-tak-projector&var-workload=sink-clickhouse`
+- Loki query: `{k8s_namespace_name="feeds", k8s_pod_name=~"(feed-intel|feed-satellites|omos-tak-projector|sink-clickhouse)-.*"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=feeds&var-workload=feed-intel&var-workload=feed-satellites&var-workload=omos-tak-projector&var-workload=sink-clickhouse`
 - Source: `onemindos/omos`
 
 ## Escalate

@@ -13,7 +13,7 @@
 #   feed-ships.yaml    — AIS vessel positions via aisstream.io WebSocket → tak.cot.inject
 #   feed-aircraft.yaml — ADS-B aircraft via OpenSky REST → tak.cot.inject (15s poll)
 #
-# Secrets required in omos namespace:
+# Secrets required in feeds namespace:
 #   omos-nats-creds   — NATS_USER, NATS_PASSWORD
 #   omos-feed-secrets — AISSTREAM_API_KEY (ships), OPENSKY_USERNAME/PASSWORD (aircraft, optional)
 #
@@ -23,7 +23,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: redpanda-connect-pipelines
-  namespace: omos
+  namespace: feeds
 data:
   mta-resources.yaml: |
     # mta-resources.yaml — shared resources for feed-mta.yaml (loaded with -r; streams mode rejects
@@ -385,7 +385,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: redpanda-connect-proto
-  namespace: omos
+  namespace: feeds
 data:
   gtfs-realtime.proto: |
     syntax = "proto2";
@@ -556,7 +556,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redpanda-connect
-  namespace: omos
+  namespace: feeds
   labels:
     app.kubernetes.io/name: redpanda-connect
     app.kubernetes.io/part-of: omos-feeds

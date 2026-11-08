@@ -1,7 +1,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # LAYER 3 — MAKE SENSE (entity service)                          sync-wave: "4"
 # ─────────────────────────────────────────────────────────────────────────────
-# platform-omos-entity: the OneMind entity service (FEATURES A4), namespace omos.
+# platform-omos-entity: the OneMind entity service (FEATURES A4), namespace feeds.
 #
 # Covers: platform/omos/entity/ (Deployment only; it reuses the omos-nats-creds
 # SealedSecret that platform-omos applies).
@@ -28,7 +28,7 @@ spec:
     path: platform/omos/entity
   destination:
     server: https://kubernetes.default.svc
-    namespace: omos
+    namespace: feeds
   syncPolicy:
     retry:
       limit: 0

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: omos
+  name: feeds
   labels:
     app.kubernetes.io/part-of: omos-platform
     onemind.io/layer: sense

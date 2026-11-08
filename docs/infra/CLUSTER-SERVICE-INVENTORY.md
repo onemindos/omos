@@ -61,10 +61,10 @@ objects. `HEAD` means the Git-tracked branch revision shown by Argo CD at captur
 | `platform-monitoring` | `platform/monitoring` | `monitoring` | Synced / Healthy |
 | `platform-nats` | `platform/nats` | `nats` | Synced / Healthy |
 | `platform-observability` | `platform/data/clickhouse` | `clickhouse` | Synced / Healthy |
-| `platform-omos` | `platform/omos` | `omos` | Synced / Healthy |
+| `platform-omos` | `platform/omos` | `feeds` | Synced / Healthy |
 | `platform-onetak` | `platform/onetak` | `onetak` | Synced / Healthy |
 | `platform-ops` | `platform/ops` | `ops` | Synced / Healthy |
-| `platform-redpanda-connect` | `platform/data/redpanda-connect` | `omos` | Synced / Healthy |
+| `platform-redpanda-connect` | `platform/data/redpanda-connect` | `feeds` | Synced / Healthy |
 | `platform-takml` | `platform/takml` | `takml` | Synced / Healthy |
 | `platform-takserver` | `platform/takserver/deploy` | `takserver` | Synced / Degraded |
 | `platform-zeus-site` | retired 2026-10-10 (Application and `platform/zeus-site` removed; cleanup tracked in `docs/operations/RETIRE-ZEUS-SITE.md`) | `zeus-site` | Retired |
@@ -100,7 +100,7 @@ a route is used by a human or application.
 | `matrix` | 4 | 4 | 0 | 0 |
 | `monitoring` | 13 | 13 | 0 | 0 |
 | `nats` | 9 | 9 | 0 | 0 |
-| `omos` | 2 | 1 | 1 | 0 |
+| `feeds` | 2 | 1 | 1 | 0 |
 | `onetak` | 19 | 17 | 2 | 0 |
 | `openclaw` | 1 | 1 | 0 | 0 |
 | `tailscale` | 20 | 20 | 0 | 0 |

@@ -289,31 +289,31 @@
   },
   {
     "name": "k8s-omos-feed-intel-4488fd05",
-    "namespace": "omos",
+    "namespace": "feeds",
     "workload": "feed-intel",
     "selector": "app.kubernetes.io/name=feed-intel"
   },
   {
     "name": "k8s-omos-feed-satellites-e3372fac",
-    "namespace": "omos",
+    "namespace": "feeds",
     "workload": "feed-satellites",
     "selector": "app.kubernetes.io/name=feed-satellites"
   },
   {
     "name": "k8s-omos-omos-tak-projector-ac850041",
-    "namespace": "omos",
+    "namespace": "feeds",
     "workload": "omos-tak-projector",
     "selector": "app.kubernetes.io/name=omos-tak-projector"
   },
   {
     "name": "k8s-omos-redpanda-connect-0c0b667d",
-    "namespace": "omos",
+    "namespace": "feeds",
     "workload": "redpanda-connect",
     "selector": "app.kubernetes.io/name=redpanda-connect"
   },
   {
     "name": "k8s-omos-sink-clickhouse-29b3c0a3",
-    "namespace": "omos",
+    "namespace": "feeds",
     "workload": "sink-clickhouse",
     "selector": "app.kubernetes.io/name=sink-clickhouse"
   },
@@ -745,7 +745,7 @@
   },
   {
     "name": "k8s-omos-omos-mission-engine-23fd014f",
-    "namespace": "omos",
+    "namespace": "feeds",
     "workload": "omos-mission-engine",
     "selector": "app.kubernetes.io/name=omos-mission-engine"
   },

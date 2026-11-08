@@ -103,7 +103,7 @@ spec:
         # feed-intel, feed-satellites, omos-tak-projector, redpanda-connect, sink-clickhouse.
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: omos
+              kubernetes.io/metadata.name: feeds
         # onemind-core (API) and onemind-ingestion.
         - namespaceSelector:
             matchLabels:

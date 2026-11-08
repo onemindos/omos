@@ -211,7 +211,7 @@ The existing read adapters for Prometheus, Alertmanager and Loki (`onemind-mcp`)
 | 33 | tileserver-gl, STAC Browser | Tile and browse UIs; tiles are binary |
 | 34 | Agent Console, `agent-tap` | Bus UIs; Legacy uses NATS directly |
 | 35 | NATS web UI and exporters (`nui`, `nats-surveyor`) | UIs and exporters |
-| 36 | Redpanda Connect (`omos`) | Internal pipeline; a streams REST API exists but offers nothing Legacy needs |
+| 36 | Redpanda Connect (`feeds`) | Internal pipeline; a streams REST API exists but offers nothing Legacy needs |
 | 37 | TAK internals (Ignite, messaging, plugins, config, LDAP, Mumble bridge, murmur) | Reached through TAK Server (row 25) and NATS; admin surface only |
 | 38 | Controllers: cert-manager, ingress-nginx, Tailscale operator, Kyverno, Falco, CNPG, Barman, Velero, VolSync, metrics-server | No app API; their custom resources are readable and patchable through row 1 |
 | 39 | Databases: Postgres (authentik, backstage, matrix, n8n, paperclip, takml, TAK, WebODM, CNPG `onemind-data`), Redis, MongoDB | No raw SQL for the agent (existing rule in `apps.yaml`); app APIs instead |

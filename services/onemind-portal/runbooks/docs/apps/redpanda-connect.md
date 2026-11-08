@@ -8,13 +8,13 @@ Stream processing between NATS and downstream sinks.
 
 - Catalog entity: `component:default/redpanda-connect` in System `messaging-nats`
 - Argo CD application: `platform-redpanda-connect`
-- Namespace: `omos`
+- Namespace: `feeds`
 
 ## Workloads
 
 | Workload | Kind | Namespace |
 | --- | --- | --- |
-| `redpanda-connect` | Deployment | `omos` |
+| `redpanda-connect` | Deployment | `feeds` |
 
 ## When it looks wrong
 
@@ -30,8 +30,8 @@ Stream processing between NATS and downstream sinks.
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name="omos", k8s_pod_name=~"(redpanda-connect)-.*"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=omos&var-workload=redpanda-connect`
+- Loki query: `{k8s_namespace_name="feeds", k8s_pod_name=~"(redpanda-connect)-.*"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=feeds&var-workload=redpanda-connect`
 - Source: `onemindos/omos`
 
 ## Escalate
