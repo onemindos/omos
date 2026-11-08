@@ -118,3 +118,18 @@ spec:
   cluster:
     name: onemind-data
   databaseReclaimPolicy: retain
+---
+# Authentik database, moved from the authentik-postgres StatefulSet on 2026-11-08 (bulk-pg-consolidate).
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: onemind-authentik
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  name: authentik
+  owner: authentik
+  cluster:
+    name: onemind-data
+  databaseReclaimPolicy: retain
