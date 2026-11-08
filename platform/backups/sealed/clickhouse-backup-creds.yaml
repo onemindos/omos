@@ -1,0 +1,18 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/namespace-wide: "true"
+  name: clickhouse-backup-creds
+  namespace: clickhouse
+spec:
+  encryptedData:
+    CH_PASSWORD: AgBX4jTaHioCxPIlTabKUlBQz4/GAp4zhtvuaFUtCYYvKkijMm2BWyibzSBiRix24w1EKPxEr2bxRbXm5HIbkO7js2BtAF2E5M//HoxfM0Ga+hqhco6/1WFZVG8Fv+gg7wCUprnl+qjIzJPsSmBCSkbtJVsAsRWO53MujR1pUJs60wMBAZpCqiFmCrTuLt1aQziePdqHTz3xyfF2opCTXOZ9H+mLyscW3oNZaLA/7Cx6qT03LEiKQDCTiDQHGOeKRQeH2z4YNyiGyo3umb86a4RXzXRUFPgf4s3bwDTLw4yP1kNmu6b/fKsEi0uvkeDt22dmPGz+NkBb2hFUeAKMyV6yMndt/EElZYkfwCwOHn9nF0DXaBgzjHUH3HzBrsDqeAsLZsGoagKOWw/WqEYLr8R/WOZj7itYYjjL2SPToLSnH5j9vQyK7ytXrET87bTkug1FV/x5Oy5MixH7vmu4uuw+KlF9Jb2u4xFC520M+dKQRJ4mv0cqjcqBSvPI8kavexONsCve4b7nhdDnU19yr6aqDWEowoaj4SGyvuJmbUVtAGYVKTpScwOFbIYIUztmFgcu+heMiplsmTDM4K+VNxA0su9xcvyJdrJVooWbcC1wju9mHmjupMaw5rBtnlFOKikSisvEQDY+k+BNekJ5dQbMQamUeac4CpgXMcD0wGrqPVgDJyfPq3x+fkCObuWKYXU+Wc8s2NosdQo2N/18WU0NDX4RQEAqohCuwN32aziOOpqDOcGM+CXOoV542FdTHxw=
+    CH_USER: AgAln7d8Vgs6iAVXL6IixynXnG8CcTei12IO3O6Y5dFMQT5P9pUrcgSRIIWYh1iz+gXa9S2Zryc/gqpRSmsq3fW6h3fjgblSbLoFxNcVDMrevwfmCD/mmIdvomUN/Er7NE8ChtCejFUB78l2woARISgYNN8s5806MM9vRcsDdy8Jr7eYG16LP13FVRRKgPanLldv0D+jFYsnlAWMtUuurCAQmD7SdISGiFVpjMJPN3jcznAdorz1D1ge7w+ySv98vqk7yFCtJoocPQ2yc6KQPsrI/HFuZGbl9XG14WKp2j22rztr45ZNJ9SPio4pW4/hXaHo+Lhqq8liwThJJ83CFLbKRzIcRi7T96tSTr0kghP2nnRUI+4afBtbV2oBivDk5ZBWpgVlJLyaTdNP+GnP5NCBZWss8l4nIkEqkd0jn6GrcCyb/toBWbI6RT2tzo8s+wJE3vQtsmvukVDjAfgUfxsW92g346m7Q4pk9H6DJYMPBZ9wag8rZOwd3UwaUFT5n205BLcpSiLB6j6QL5G9G5BxvUu/p91z1mErXNrsyje70YM1/TLtdYWy9Dv4N2CF6rmrdES/AoMmV6wnCaxfGBXvaaxfiiZ3FjDfV9qPCcD1bIw/EXTz52U6E7n2AgpHpXlIFY8++OkfiK2Yr4PjD7CtTMXvkZevDaf6QWbsPwk2VxCqoRuJ6KNxD+pEQKmgT90Y+pUG4Y7V
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/namespace-wide: "true"
+      name: clickhouse-backup-creds
+      namespace: clickhouse

@@ -7,6 +7,7 @@ resources:
 - sealed/takserver-platform-backup-credentials.yaml
 - sealed/nats-platform-backup-credentials.yaml
 - sealed/clickhouse-backup-s3-creds.yaml
+- sealed/clickhouse-backup-creds.yaml
 - postgres.yaml
 - sealed/auth-platform-backup-credentials.yaml
 - sealed/auth-ghcr.yaml
