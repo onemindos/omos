@@ -16,7 +16,7 @@ class NativeTopologyContracts(unittest.TestCase):
         pg = next(e for e in yaml.safe_load_all((ROOT / 'platform/backstage/postgres.yaml').read_text()) if e['kind'] == 'StatefulSet')
         self.assertEqual(pg['metadata']['name'], 'backstage-postgres')
         self.assertEqual(pg['spec']['volumeClaimTemplates'][0]['metadata']['name'], 'data')
-        self.assertEqual(pg['spec']['replicas'], 1)
+        self.assertEqual(pg['spec']['replicas'], 0)
         nats = yaml.safe_load((ROOT / 'platform/nats/nats-statefulset.yaml').read_text())
         self.assertEqual(nats['spec']['replicas'], 3)
         self.assertEqual(nats['spec']['volumeClaimTemplates'][0]['metadata']['name'], 'nats-js')

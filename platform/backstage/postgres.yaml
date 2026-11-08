@@ -20,7 +20,8 @@ metadata:
     app: backstage-postgres
 spec:
   serviceName: backstage-postgres
-  replicas: 1
+  # Retired 2026-11-08: the portal uses onemind-data. Kept at 0 (volume retained) until the owner deletes the claim.
+  replicas: 0
   selector:
     matchLabels: {app: backstage-postgres}
   template:

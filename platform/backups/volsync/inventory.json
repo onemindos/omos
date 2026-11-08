@@ -6,12 +6,6 @@
     "size": "5Gi"
   },
   {
-    "namespace": "backstage",
-    "pvc": "data-backstage-postgres-0",
-    "source": "volume-eb04d2fe651f",
-    "size": "10Gi"
-  },
-  {
     "namespace": "clickhouse",
     "pvc": "data-storage-chi-onemind-onemind-0-0-0",
     "source": "volume-ab4fbd87295d",
