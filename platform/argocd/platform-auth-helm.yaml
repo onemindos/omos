@@ -98,3 +98,4 @@ spec:
       jsonPointers:
         - /spec/template/metadata/annotations
         - /spec/template/spec/containers/0/resources
+        - /spec/replicas  # temporary: database move window (bulk-pg-consolidate)
