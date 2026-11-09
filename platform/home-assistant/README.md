@@ -32,9 +32,10 @@ Assistant box, which remains the device hub; this instance only mirrors it.
   the file belongs to the UI and is never overwritten.
 - The container runs as root, as the official image requires. The namespace is
   therefore `baseline` for Pod Security instead of `restricted`.
-- Backup: `backup.yaml` holds a VolSync source that is **paused** until the
-  restic repository Secret `home-assistant-config-restic` is sealed and added to
-  `kustomization.yaml` (see the TODO there). Snapshots are crash-consistent.
+- Backup: `backup.yaml` holds the VolSync source; its restic repository
+  Secret `home-assistant-config-restic` is declared in
+  `backup-config.sealedsecret.yaml` (unpaused; reseal the placeholder
+  payloads with kubeseal — see DIAGNOSIS.md). Snapshots are crash-consistent.
 - Do not delete the PVC or namespace without a fresh snapshot and approval.
 
 ## HTTP settings live in `.storage/http` (2026.11+)
