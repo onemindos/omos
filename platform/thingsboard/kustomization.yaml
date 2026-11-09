@@ -1,15 +1,15 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: thingsboard
 resources:
   - namespace.yaml
   - sealed/
   - thingsboard-pg-creds.sealedsecret.yaml
-  - pvcs.yaml
-  - postgres.yaml
   - application.yaml
   - ingress.yaml
   - network.yaml
-  - backup.yaml
   - bootstrap.yaml
   - bootstrap-config.yaml
+  - oidc.sealedsecret.yaml
+  - auth-oidc.sealedsecret.yaml
+  - auth-provider.yaml
+  - oauth-config.yaml

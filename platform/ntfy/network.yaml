@@ -1,0 +1,85 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: ntfy
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: dns
+  namespace: ntfy
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+---
+# ntfy needs no egress other than DNS: nothing leaves the cluster (no upstream
+# relay, no email, no web push). Ingress is the Tailscale proxy pods plus the
+# in-cluster publishers below.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: server
+  namespace: ntfy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ntfy
+      app.kubernetes.io/component: server
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    # Tailscale ingress proxy pods (ProxyGroup "ingress").
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: tailscale
+      podSelector:
+        matchLabels:
+          tailscale.com/parent-resource: ingress
+          tailscale.com/parent-resource-type: proxygroup
+    # In-cluster publishers. Each also needs its own egress rule to ntfy:8080
+    # in its namespace (follow-up, see README).
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: home-assistant
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: alertmanager
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: argocd
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: argocd-notifications-controller
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: n8n
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: hermes
+    ports:
+    - protocol: TCP
+      port: 8080

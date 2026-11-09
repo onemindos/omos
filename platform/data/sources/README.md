@@ -32,6 +32,14 @@ nats kv history feed-control mta-rail      # who changed it, and when
 
 Deleting the key also switches the feed off. Keys that are not a known source id are ignored.
 
+## First deploy of the bucket (once)
+
+NACK needs a server URL on each KeyValue CR, and that URL is set out of band, never in Git
+(`CLAUDE.md`, NATS Streams). After Argo first creates `kv-feed-control`, copy `spec.servers` from
+another live KeyValue CR in `nats` (for example `kv-world-state`) without printing it, then check
+`kubectl -n nats get keyvalue kv-feed-control` reports Ready. Until the bucket exists the engine pod
+crash-loops on "bucket not found"; delete the pod once the bucket is Ready.
+
 ## What the engine pod needs for these sources
 
 - ConfigMap `feed-sources` (generated) mounted at `/config/sources`.

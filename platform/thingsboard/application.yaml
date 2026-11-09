@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: thingsboard
+  namespace: thingsboard
 spec:
   selector:
     app: thingsboard
@@ -17,6 +18,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: thingsboard
+  namespace: thingsboard
   annotations:
     argocd.argoproj.io/sync-wave: '2'
 spec:
@@ -67,14 +69,14 @@ spec:
             - name: TB_SERVICE_ID
               value: onemind-thingsboard
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://postgres:5432/thingsboard
+              value: jdbc:postgresql://onemind-data-rw.onemind-data.svc.cluster.local:5432/thingsboard
             - name: SPRING_DATASOURCE_USERNAME
-              value: postgres
+              value: thingsboard
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: thingsboard-env
-                  key: DB_PASSWORD
+                  name: thingsboard-pg-creds
+                  key: password
             - name: JWT_TOKEN_SIGNING_KEY
               valueFrom:
                 secretKeyRef:

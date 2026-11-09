@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: openremote
+  namespace: openremote
   annotations:
     tailscale.com/proxy-group: ingress
     tailscale.com/hostname: openremote

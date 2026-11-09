@@ -71,47 +71,6 @@ automountServiceAccountToken: false
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: volume-86c342dd8d39
-  namespace: auth
-  annotations:
-    onemind.dev/source-pvc: pgdata-authentik-postgres-0
-spec:
-  sourcePVC: pgdata-authentik-postgres-0
-  paused: false
-  trigger:
-    schedule: 0 0 * * *
-  restic:
-    repository: volume-86c342dd8d39-restic
-    copyMethod: Snapshot
-    volumeSnapshotClassName: do-block-storage
-    storageClassName: do-block-storage
-    cacheStorageClassName: do-block-storage
-    cacheCapacity: 1Gi
-    pruneIntervalDays: 14
-    retain:
-      daily: 7
-      weekly: 4
-      monthly: 3
-      yearly: 1
-    moverServiceAccount: platform-volume-backup
-    moverPodLabels:
-      app: platform-volume-backup
-    moverSecurityContext:
-      runAsUser: 0
-      runAsGroup: 0
-      seccompProfile:
-        type: RuntimeDefault
-    moverResources:
-      requests:
-        cpu: 100m
-        memory: 256Mi
-      limits:
-        cpu: '1'
-        memory: 1Gi
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
   name: volume-ab4fbd87295d
   namespace: clickhouse
   annotations:

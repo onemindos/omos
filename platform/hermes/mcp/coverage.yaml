@@ -120,6 +120,10 @@ applications:
     apps:
     - agent_fabric
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-home-assistant:
+    apps:
+    - home_assistant
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-karakeep:
     apps:
     - karakeep
@@ -151,6 +155,10 @@ applications:
   platform-nats-tools:
     apps:
     - nats
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-ntfy:
+    apps:
+    - ntfy
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-observability:
     apps:

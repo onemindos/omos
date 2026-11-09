@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ntfy
+  namespace: ntfy
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: &labels
+      app.kubernetes.io/name: ntfy
+      app.kubernetes.io/component: server
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      # The ecosystem node has no free volume slots; stay on hub-core.
+      nodeSelector:
+        doks.digitalocean.com/node-pool: onemind-hub-core-v2
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: ntfy
+        image: binwiederhier/ntfy:v2.37.2@sha256:1875ddcf815c8a3c981d6d78c67a93452d0abba79b1ab9520b1f5f5238902bd7
+        imagePullPolicy: IfNotPresent
+        args:
+        - serve
+        env:
+        - name: TZ
+          value: Etc/UTC
+        # TODO(owner): sealed Secret `ntfy-auth` (keys NTFY_AUTH_USERS,
+        # NTFY_AUTH_TOKENS, NTFY_AUTH_ACCESS; see README). Optional so the pod starts without it;
+        # until it exists nobody can log in (deny-all).
+        envFrom:
+        - secretRef:
+            name: ntfy-auth
+            optional: true
+        ports:
+        - name: http
+          containerPort: 8080
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        startupProbe:
+          httpGet: &probe
+            path: /v1/health
+            port: http
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 24
+        readinessProbe:
+          httpGet: *probe
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        livenessProbe:
+          httpGet: *probe
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 6
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/ntfy
+        - name: config
+          mountPath: /etc/ntfy
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: ntfy-data
+      - name: config
+        configMap:
+          name: ntfy-config
+      - name: tmp
+        emptyDir:
+          sizeLimit: 32Mi

@@ -118,3 +118,13 @@ chart's generated plaintext Secret and mutable tags. Runtime routing/identity an
 restore acceptance on DOKS remain unexecuted. Cloud hosting does not establish
 local/off-grid operation; a later physical edge deployment must keep its own local
 identity, rules, storage and device connectivity during WAN loss.
+
+## Authentik sign-in (added 2026-11-08)
+
+OpenRemote's own Keycloak (master realm) now has an identity provider `authentik` (OIDC). The Keycloak login page shows "OneMind (Authentik)"; the Keycloak admin login stays as break-glass and Keycloak is not replaced.
+
+- `auth-provider.yaml` (Sync hook, namespace `auth`) creates the Authentik provider/application `onemind-openremote`, owner-only. Redirect: `https://openremote.tail717ba0.ts.net/auth/realms/master/broker/authentik/endpoint`.
+- `idp-config.yaml` (Sync hook, wave 3) signs in to the Keycloak admin API with the existing admin secret (read by the Job only) and creates or updates the provider. The client secret is sealed in `auth/openremote-oidc-bootstrap` and `openremote/openremote-oidc`.
+- Keycloak got egress to public HTTPS (Authentik) and an ingress rule for the hook.
+- The first Authentik user is created in the master realm with no roles. Sign in once through Authentik, then sign in as the Keycloak admin and grant that user the roles needed (Users -> the user -> Role mapping).
+- Rollback: delete the identity provider `authentik` in the master realm (Keycloak admin console), or remove `idp-config.yaml`.

@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: default-deny
+  namespace: openremote
 spec:
   podSelector: {}
   policyTypes:
@@ -12,6 +13,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: postgresql-network
+  namespace: openremote
 spec:
   podSelector:
     matchLabels:
@@ -59,6 +61,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: keycloak-network
+  namespace: openremote
 spec:
   podSelector:
     matchLabels:
@@ -86,6 +89,23 @@ spec:
       ports:
         - protocol: TCP
           port: 5432
+    # Authentik OIDC (token, userinfo, JWKS at auth.onemindos.dev): public HTTPS only.
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              - 100.64.0.0/10
+              - 169.254.0.0/16
+              - 127.0.0.0/8
+              - 0.0.0.0/8
+              - 224.0.0.0/4
+              - 240.0.0.0/4
+      ports:
+        - protocol: TCP
+          port: 443
   ingress:
     - from:
         - podSelector:
@@ -101,11 +121,19 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
+    - from:
+        - podSelector:
+            matchLabels:
+              app: idp-config
+      ports:
+        - protocol: TCP
+          port: 8080
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: manager-network
+  namespace: openremote
 spec:
   podSelector:
     matchLabels:
@@ -153,6 +181,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: proxy-network
+  namespace: openremote
 spec:
   podSelector:
     matchLabels:
@@ -192,6 +221,40 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: tailscale
+      ports:
+        - protocol: TCP
+          port: 8080
+---
+# Authentik identity-provider hook: may reach Keycloak and DNS only.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: idp-config-network
+  namespace: openremote
+spec:
+  podSelector:
+    matchLabels:
+      app: idp-config
+  policyTypes:
+    - Ingress
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to:
+        - podSelector:
+            matchLabels:
+              app: keycloak
       ports:
         - protocol: TCP
           port: 8080

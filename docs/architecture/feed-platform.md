@@ -1,8 +1,10 @@
 # Feed platform: 100+ sources, each switchable live
 
-Status: **decisions 1 to 5 approved by the owner on 2026-11-08. Phase 1 is built and in a pull
-request (feed schema and controller, engine wiring, NetworkPolicy); nothing is deployed yet.** Date:
-2026-11-08. Phases 2 to 5 are design only. Facts marked "verified" were checked read-only on
+Status: **decisions 1 to 5 approved by the owner on 2026-11-08. Phase 1 is live (PR #773, merged
+2026-11-08) and verified on the cluster: `nats kv put feed-control mta-rail` with `enabled:true`
+started the MTA stream within seconds (146 messages on `evt.world.rail.*` in `WORLD`), and
+`enabled:false` stopped it (no new messages in the next 60 s), with no pod restart. MTA is left off
+until the cutover.** Date: 2026-11-08. Phases 2 to 5 are design only. Facts marked "verified" were checked read-only on
 `do-nyc3-omos-cloud` or by running the pinned image locally on 2026-11-08.
 
 Background reading: the research report (OSIRIS, God's Eye View, Argos Atlas, WorldWideView) in the

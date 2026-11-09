@@ -8,7 +8,7 @@ IoT authority or automatic migration of retained Mac data.
 
 Pinned upstream `thingsboard/tb-node:4.3.1.8` is the published pre4.4 Community
 Apache2.0 line, with a verified Linuxamd64 image. The official CE Docker guide
-currently specifies this tag. Its dedicated PostgreSQL17 database persists the
+currently specifies this tag. Its PostgreSQL17 database (in `onemind-data`) persists the
 configuration and telemetry; no Kafka or external cloud service is added.
 
 Queue type is explicitly `in-memory`: this is an evaluation monolith. In-flight
@@ -93,13 +93,11 @@ the stored one (update the store); the sealed hash is not a rotation path.
 
 ## Recovery
 
-The10Gi database claim uses `do-block-storage-retain` and `Prune=false`. Its
-VolSync Snapshot/Restic source captures the whole PostgreSQL data directory with
-WAL, to its own encrypted repository; temporary/cache claims use `do-block-storage`.
-This is a crash-consistent physical backup, not a verified logical dump/restore.
-Application logs and transient renderer data are emptyDir; important application
-entities are in PostgreSQL. Custom files/extensions added later require explicit
-backup scope changes.
+The database `thingsboard` lives in the shared `onemind-data` CloudNativePG cluster
+(moved from a dedicated PostgreSQL pod on 2026-11-08, bulk-pg-consolidate), covered by its
+Barman base backups and WAL archive. The old 10Gi claim `database` (retain class) was
+kept for the owner to delete. Application logs and transient renderer data are emptyDir;
+important application entities are in PostgreSQL.
 
 Before upgrades, preserve a consistent logical dump and database roles plus the
 exact image lock, bootstrap marker and independent JWT/SealedSecrets recovery
@@ -118,3 +116,11 @@ The original Mac data and cluster PVCs must not be pruned as part of this pilot.
 - [Pinned schema](https://github.com/thingsboard/thingsboard/blob/v4.3.1.8/dao/src/main/resources/sql/schema-entities.sql)
 - [Licensing/support change](https://thingsboard.io/blog/one-thingsboard-source-available/)
 - [CE4.3.1.8 license](https://github.com/thingsboard/thingsboard/blob/v4.3.1.8/LICENSE)
+
+## Authentik sign-in (added 2026-11-08)
+
+The Community 4.3 edition has OAuth 2.0 login. `auth-provider.yaml` (Sync hook, namespace `auth`) creates the Authentik provider/application `onemind-thingsboard`, owner-only. `oauth-config.yaml` (Sync hook, wave 3) writes the OAuth client, the domain entry for `thingsboard.tail717ba0.ts.net` and their link into the ThingsBoard database (idempotent). The client secret is sealed in `auth/thingsboard-oidc-bootstrap` and `thingsboard/thingsboard-oidc`. The pod got egress to public HTTPS so it can reach Authentik. The local system administrator login is unchanged (break-glass).
+
+First sign-in: click "Sign in with Authentik" on the login page. ThingsBoard creates the tenant `OneMind` and a tenant-administrator user from the Authentik email (the sysadmin email differs, so this does not touch the system administrator). Devices, MQTT and access tokens are untouched.
+
+Rollback: `DELETE FROM domain_oauth2_client; DELETE FROM oauth2_client WHERE client_id='onemind-thingsboard';` (as the `thingsboard` database user), and remove `oauth-config.yaml`.

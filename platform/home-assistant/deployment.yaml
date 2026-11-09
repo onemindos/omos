@@ -1,0 +1,161 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: home-assistant
+  namespace: home-assistant
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: &labels
+      app.kubernetes.io/name: home-assistant
+      app.kubernetes.io/component: web
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      # The ecosystem node has no free volume slots; stay on hub-core.
+      nodeSelector:
+        doks.digitalocean.com/node-pool: onemind-hub-core-v2
+      initContainers:
+      # Seeds /config once. Existing files are never overwritten: the UI owns
+      # configuration.yaml after first boot.
+      - name: seed-config
+        image: alpine:3.22@sha256:49340b346798875b5592e5d420241f2f9cfba5f47e62ebb1446a1b34734e898f
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: HACS_VERSION
+          value: 2.0.5
+        - name: HACS_SHA256
+          value: 97be6b824a4f38e683728cc6dd72367f6b8bad0a43428b1b3b987a3087adf413
+        command:
+        - /bin/sh
+        - -ec
+        args:
+        - |
+          set -eu
+          if [ ! -e /config/configuration.yaml ]; then
+            cat > /config/configuration.yaml <<'CFG'
+          # Seeded by the home-assistant init container; edit freely.
+          default_config:
+
+          automation: !include automations.yaml
+          script: !include scripts.yaml
+          scene: !include scenes.yaml
+          CFG
+            touch /config/automations.yaml /config/scripts.yaml /config/scenes.yaml
+            echo "seeded configuration.yaml"
+          fi
+          # Since 2026.11 HA keeps HTTP settings in .storage/http, not YAML.
+          # A YAML http: block is migrated as an unconfirmed "pending" trial
+          # that reverts after 5 minutes unless promoted in the UI, which is
+          # unreachable through the proxy until trusted_proxies is active.
+          # Seed it as the stable config instead (fresh volumes only).
+          if [ ! -e /config/.storage/http ]; then
+            mkdir -p /config/.storage
+            cat > /config/.storage/http <<'HTTP'
+          {
+            "version": 3,
+            "minor_version": 1,
+            "key": "http",
+            "data": {
+              "stable": {
+                "server_port": 8123,
+                "use_x_forwarded_for": true,
+                "trusted_proxies": ["10.109.0.0/16"],
+                "cors_allowed_origins": ["https://cast.home-assistant.io"],
+                "login_attempts_threshold": -1,
+                "ip_ban_enabled": true,
+                "ssl_profile": "intermediate_v6",
+                "use_x_frame_options": true,
+                "created_at": "2026-11-08T00:00:00+00:00",
+                "error": null,
+                "error_message": null
+              },
+              "pending": null,
+              "yaml_migration_done": true
+            }
+          }
+          HTTP
+            echo "seeded .storage/http (trusted_proxies 10.109.0.0/16)"
+          fi
+          if [ ! -d /config/custom_components/hacs ]; then
+            wget -q -O /tmp/hacs.zip "https://github.com/hacs/integration/releases/download/${HACS_VERSION}/hacs.zip"
+            echo "${HACS_SHA256}  /tmp/hacs.zip" | sha256sum -c -
+            mkdir -p /config/custom_components/hacs
+            unzip -q /tmp/hacs.zip -d /config/custom_components/hacs
+            echo "installed HACS ${HACS_VERSION}"
+          fi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          seccompProfile:
+            type: RuntimeDefault
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: tmp
+          mountPath: /tmp
+      containers:
+      - name: home-assistant
+        image: ghcr.io/home-assistant/home-assistant:2026.11.0@sha256:c6c1ca9931036bf3a2c4cc088d8db25dfea3b33935a5ecc83c40349462e2f69e
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: TZ
+          value: Etc/UTC
+        ports:
+        - name: http
+          containerPort: 8123
+        # The official image runs as root under s6-overlay and needs the
+        # default capability set to chown/setuid, so only escalation is blocked.
+        securityContext:
+          allowPrivilegeEscalation: false
+          seccompProfile:
+            type: RuntimeDefault
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            cpu: '1'
+            memory: 1Gi
+        # First boot installs integrations and can take several minutes.
+        startupProbe:
+          httpGet: &probe
+            path: /manifest.json
+            port: http
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 60
+        readinessProbe:
+          httpGet: *probe
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          httpGet: *probe
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 6
+        volumeMounts:
+        - name: config
+          mountPath: /config
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: home-assistant-config
+      - name: tmp
+        emptyDir:
+          sizeLimit: 64Mi

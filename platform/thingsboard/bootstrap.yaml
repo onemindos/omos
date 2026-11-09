@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: thingsboard-bootstrap-v1
+  namespace: thingsboard
   annotations:
     argocd.argoproj.io/hook: Sync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
@@ -44,10 +45,10 @@ spec:
           env:
             - &id001
               name: PGHOST
-              value: postgres
+              value: onemind-data-rw.onemind-data.svc.cluster.local
             - &id002
               name: PGUSER
-              value: postgres
+              value: thingsboard
             - &id003
               name: PGDATABASE
               value: thingsboard
@@ -55,8 +56,8 @@ spec:
               name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: thingsboard-env
-                  key: DB_PASSWORD
+                  name: thingsboard-pg-creds
+                  key: password
             - &id005
               name: PGCONNECT_TIMEOUT
               value: '15'
@@ -144,14 +145,14 @@ spec:
             - name: TB_SERVICE_ID
               value: onemind-thingsboard
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://postgres:5432/thingsboard
+              value: jdbc:postgresql://onemind-data-rw.onemind-data.svc.cluster.local:5432/thingsboard
             - name: SPRING_DATASOURCE_USERNAME
-              value: postgres
+              value: thingsboard
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: thingsboard-env
-                  key: DB_PASSWORD
+                  name: thingsboard-pg-creds
+                  key: password
             - name: JWT_TOKEN_SIGNING_KEY
               valueFrom:
                 secretKeyRef:

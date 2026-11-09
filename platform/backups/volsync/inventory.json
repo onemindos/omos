@@ -1,11 +1,5 @@
 [
   {
-    "namespace": "auth",
-    "pvc": "pgdata-authentik-postgres-0",
-    "source": "volume-86c342dd8d39",
-    "size": "5Gi"
-  },
-  {
     "namespace": "clickhouse",
     "pvc": "data-storage-chi-onemind-onemind-0-0-0",
     "source": "volume-ab4fbd87295d",

@@ -212,3 +212,22 @@ UID1000/read-only-root/dropALL/no-new-privileges and writable data/tmp passed
 HTTP health200 and created SQLite/config under the retained path with no `/etc`
 configuration fallback. No account, mirror or external inference was invoked.
 The temporary container was removed; its data was synthetic, not production state. Real Argo rollout, account/mirror enrollment and recovery stay pending.
+
+## Authentik sign-in (added 2026-11-08)
+
+Forgejo has an extra "Sign in with Authentik" button. The local admin login stays as the break-glass login, and registration stays closed.
+
+- `auth-provider.yaml` (Argo Sync hook, namespace `auth`) creates the Authentik provider/application `onemind-forgejo`, bound to the owner account only. Callback: `https://forgejo.tail717ba0.ts.net/user/oauth2/authentik/callback`.
+- The client secret is sealed twice: `auth/forgejo-oidc-bootstrap` (for the hook) and `forgejo/forgejo-oidc` (read by the pod as `FORGEJO_OIDC_CLIENT_SECRET`, only so the one-time command below can use it).
+- Forgejo keeps login sources in its database, not in `app.ini`, so the source is created once with the CLI (the same command with `update-oauth --id N` changes it):
+
+```sh
+kubectl --context do-nyc3-omos-cloud -n forgejo exec deploy/forgejo -- sh -c \
+  'forgejo admin auth add-oauth --name authentik --provider openidConnect \
+   --key onemind-forgejo --secret "$FORGEJO_OIDC_CLIENT_SECRET" \
+   --auto-discover-url https://auth.onemindos.dev/application/o/onemind-forgejo/.well-known/openid-configuration \
+   --scopes "openid email profile"'
+```
+
+- First sign-in: click the Authentik button, sign in to Authentik, then choose "Link to existing account" and enter the local admin username and password once. Auto-registration is off and linking asks for the local password (`ACCOUNT_LINKING=login`).
+- Rollback: delete the source in Site Administration -> Authentication Sources, or `forgejo admin auth delete --id N`. Local login is unaffected.
