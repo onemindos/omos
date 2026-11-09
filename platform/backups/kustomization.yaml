@@ -19,3 +19,6 @@ resources:
 - sealed/ops-platform-backup-credentials.yaml
 - sealed/ops-ghcr.yaml
 - offsite-copy.yaml
+# Staged placeholder until the owner overwrites it with real kubeseal output
+# (OFFSITE-COPY.md steps 1-5, REMAINING-STEPS.md). It cannot be unsealed.
+- sealed/ops-offsite-copy-credentials.yaml

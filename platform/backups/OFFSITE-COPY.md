@@ -96,11 +96,18 @@ Not covered: provider Droplet/volume snapshots, the laptop recovery mirror
      > platform/backups/sealed/ops-offsite-copy-credentials.yaml
    ```
    Then delete the plaintext files. With DigitalOcean at both ends SRC and DST hold the
-   same key pair; they are separate so the destination can change provider.
-5. **Enable it** in one commit: add `- sealed/ops-offsite-copy-credentials.yaml` to
-   `platform/backups/kustomization.yaml` (deliberately not listed yet: a missing file
-   would break the whole `platform-backups` sync) and set `suspend: false` on
-   `backup-offsite-copy`.
+   same key pair; they are separate so the destination can change provider. The target
+   file already exists in Git as a clearly-marked placeholder (wired into
+   `kustomization.yaml` on `fix/offsite-copy-credentials-wiring`); this command's output
+   **overwrites the placeholder at the same path**. Only kubeseal output is committed —
+   never the pre-seal plaintext manifest.
+5. **Enable it** in one commit: set `suspend: false` on `backup-offsite-copy` and remove
+   the `onemind.io/backup-state` and `onemind.io/pending-reason` annotations (the portal
+   then tracks the job as active and `ScheduledBackupOverdue` starts applying). The
+   kustomization entry `- sealed/ops-offsite-copy-credentials.yaml` was pre-wired on
+   `fix/offsite-copy-credentials-wiring` (a missing resource would break the whole
+   `platform-backups` sync, so it is not added without a file behind it), so no
+   kustomization edit remains — just the step 4 file replacement and these two edits.
 6. **Seed and verify**: after Argo syncs, run once
    (`kubectl -n ops create job --from=cronjob/backup-offsite-copy offsite-seed-1`,
    then `kubectl -n ops logs -f job/offsite-seed-1`). The first run copies everything
@@ -188,7 +195,11 @@ and authenticated archive-decryption test is required after initial seeding.
 A successful size check is not a complete recovery drill.
 
 Current deployment remains suspended: no independent destination credentials are
-configured. The source's existing SFO3 example is regional redundancy within
-DigitalOcean, not protection against provider/account loss. Do not enable the job
-until the owner selects a destination, scoped credentials are sealed, initial
-copy passes, and recovery from that destination is verified.
+configured. The destination recorded in `offsite-copy-config` is DigitalOcean Spaces
+bucket `onemind-backups-sfo3` in `sfo3`; that is regional redundancy within
+DigitalOcean, not protection against provider/account loss. On
+`fix/offsite-copy-credentials-wiring` the kustomization wiring is staged against a
+marked placeholder SealedSecret (see `REMAINING-STEPS.md` at the repository root).
+Do not enable the job until the owner seals scoped credentials over that placeholder
+(step 4), the initial copy passes (step 6), and recovery from that destination is
+verified.
