@@ -1,4 +1,4 @@
-# Headlamp -- headlamp.tail717ba0.ts.net, behind the Authentik gate outpost (gate-outpost.yaml): sign-in first, admins only.
+# Headlamp -- headlamp.tail717ba0.ts.net, straight to Headlamp for now (the gate in gate-outpost.yaml is deployed but not in the path; see docs).
 # Rollback: point the backend back at Service headlamp, port 4466, and restore the Tailscale proxy rule in network.yaml.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -12,9 +12,9 @@ spec:
   ingressClassName: tailscale
   defaultBackend:
     service:
-      name: gate-outpost
+      name: headlamp
       port:
-        number: 9000
+        number: 4466
   tls:
     - hosts:
         - headlamp
