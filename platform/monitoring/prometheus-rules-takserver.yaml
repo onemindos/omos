@@ -34,10 +34,16 @@ spec:
             description: "takserver/{{ $labels.deployment }}{{ $labels.statefulset }} is down (single replica). EUD connections, CoT routing or the TAK → NATS bridge are affected."
 
         # Supporting services: federation hub, voice, NATS toolbox.
+        # Guard: only fire when the Deployment is actually scaled up. nats-box is a
+        # debug toolbox pinned at replicas: 0 by design; without the spec check it
+        # fires forever as a false positive (2026-11-09 audit).
         - alert: TAKSupportWorkloadUnavailable
           expr: |
             kube_deployment_status_replicas_available{job="kube-state-metrics",namespace="takserver",
               deployment=~"fedhub|murmur|mumble-bridge|takserver-nats-box"} == 0
+            and on (deployment)
+            kube_deployment_spec_replicas{job="kube-state-metrics",namespace="takserver",
+              deployment=~"fedhub|murmur|mumble-bridge|takserver-nats-box"} > 0
             or
             kube_statefulset_status_replicas_available{job="kube-state-metrics",namespace="takserver",
               statefulset=~"fedhub-mongodb"} == 0
