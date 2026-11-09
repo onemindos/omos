@@ -28,6 +28,13 @@ spec:
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: gate-outpost
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+          podSelector:
+            matchLabels:
+              tailscale.com/parent-resource: ingress
+              tailscale.com/parent-resource-type: proxygroup
       ports:
         - protocol: TCP
           port: 4466
