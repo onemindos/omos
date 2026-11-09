@@ -30,6 +30,7 @@ rules:
   - aquasecurity.github.io
   resources:
   - clusterconfigauditreports
+  - clustercompliancereports
   - clusterinfraassessmentreports
   - clusterrbacassessmentreports
   - clustersbomreports
