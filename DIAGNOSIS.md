@@ -57,13 +57,23 @@ flag and the missing SealedSecret distinguished them.
 
 No changes to the other 24 sources, schedules, retention, or prune semantics.
 
-## REQUIRED OWNER ACTION — reseal the placeholders
+## RESEAL STATUS — completed 2026-11-09 (Legacy via owner-Mac bridge)
 
-The two new SealedSecrets contain placeholder payloads. The sealed-secrets
-controller CANNOT decrypt them (it will log an error and no Secret will
-materialize) until every value is replaced with real kubeseal output. This is
-deliberate: no credentials may be committed to this repo, even sealed by
-anyone other than the key holder.
+The placeholder payloads in both SealedSecrets were replaced with real kubeseal
+output on 2026-11-09. Sealing ran entirely on the owner's Mac: values read
+read-only from the live `forgejo/forgejo-data-restic` Secret, RESTIC_REPOSITORY
+set per source to `<base>/<app>/<pvc>` (`…/ntfy/ntfy-data`,
+`…/home-assistant/home-assistant-config`), sealed against the live cluster key
+with kubeseal. Plaintext never left the Mac; only ciphertext reached this repo.
+
+NOTE (records hygiene): `~/.config/onemind/recovery/restic-password` on the Mac
+is STALE — it no longer matches the live restic password (same length,
+different bytes). The live Secret is authoritative. Refresh the recovery copy
+from the live Secret when convenient; not blocking.
+
+The manual sealing procedure below is retained for provenance/future rotations.
+
+### Manual reseal procedure (reference, already applied)
 
 For each of the two (substitute NAME, NAMESPACE, file path accordingly —
 `ntfy-data-restic`/ntfy/`backup-data.sealedsecret.yaml` and
