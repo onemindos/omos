@@ -8,11 +8,12 @@ automountServiceAccountToken: false
 # Whole-volume snapshot of /var/lib/ntfy (message cache, user database,
 # attachments). Crash-consistent, not an application-quiesced backup.
 #
-# TODO(owner): paused until the restic repository Secret exists. Seal
-# `ntfy-data-restic` (RESTIC_REPOSITORY, RESTIC_PASSWORD, AWS_ACCESS_KEY_ID,
-# AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION) in this namespace beside this
-# file, add it to kustomization.yaml, then set `paused: false`.
-# Pattern: platform/karakeep/backup-data.sealedsecret.yaml.
+# Restic repository Secret `ntfy-data-restic` lives in
+# backup-data.sealedsecret.yaml beside this file (in kustomization.yaml).
+# Its encrypted payloads are PLACEHOLDER until resealed with kubeseal —
+# see DIAGNOSIS.md at the repo root (branch fix/volsync-unsynced-ntfy-ha).
+# Until resealed, the mover Job fails with the repository Secret missing,
+# so syncs only start after the resealed file merges and Argo syncs it.
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
@@ -23,7 +24,7 @@ metadata:
     argocd.argoproj.io/sync-wave: '3'
 spec:
   sourcePVC: ntfy-data
-  paused: true
+  paused: false
   trigger:
     schedule: 50 14 * * *
   restic:

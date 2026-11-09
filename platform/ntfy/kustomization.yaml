@@ -9,3 +9,4 @@ resources:
 - ingress.yaml
 - network.yaml
 - backup.yaml
+- backup-data.sealedsecret.yaml

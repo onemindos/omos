@@ -96,8 +96,9 @@ curl -H "Authorization: Bearer $NTFY_TOKEN" -T snapshot.jpg -H "Filename: snapsh
 
 Publishing from each namespace needs its own change:
 
-- Seal `ntfy-auth` and `ntfy-data-restic`; set the VolSync source
-  `paused: false`.
+- Seal `ntfy-auth`. `ntfy-data-restic` is sealed via
+  `backup-data.sealedsecret.yaml` and the VolSync source is unpaused
+  (reseal the placeholder payloads with kubeseal — see DIAGNOSIS.md).
 - `home-assistant`: add an egress rule to `ntfy:8080` (its NetworkPolicy only
   allows public HTTPS today), then add the integration.
 - `monitoring`: Alertmanager receiver and an egress rule to `ntfy:8080`.
