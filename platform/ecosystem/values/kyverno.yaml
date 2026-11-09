@@ -16,7 +16,7 @@ admissionController:
   # KyvernoReportsDropped (prometheusRule below) says when to bump it. Remove the token after
   # upgrading to a release with the fix.
   podAnnotations: &reports-breaker-reset
-    onemind.io/reports-breaker-reset: '2026-10-27'
+    onemind.io/reports-breaker-reset: '2026-11-09'
   # Scrape the three report writers so the breaker counters reach Prometheus, which selects
   # ServiceMonitors labelled release: monitoring.
   serviceMonitor: &report-writer-metrics
