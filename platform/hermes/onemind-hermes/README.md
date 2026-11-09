@@ -684,7 +684,7 @@ returned cannot be delivered back (`Watch notification not admitted for nats cha
    up. Restoring is a last resort; it discards sessions written after the snapshot. Never recreate the live claim without
    owner approval (`CLAUDE.md`, deployment pattern item 6).
 4. After a revert, `config.yaml` stays stamped 52 (harmless on v0.22.5). To put the pre-migration file back anyway, copy
-   `/opt/data/backups/config/config.yaml.pre-docker-migrate.<stamp>` over `config.yaml` with the gateway stopped.
+   `/opt/data/backups/config/config.yaml.good.20261104-140645` (schema 51; the live upgrade did not write a `pre-docker-migrate` file) over `config.yaml` with the gateway stopped.
 
 **Smoke test without the cluster.** The checks above were run in throwaway containers from the pinned images with a scratch
 data volume, a local NATS server and a mock OpenAI-compatible model: the shipped init containers, every `*/apply.sh`
