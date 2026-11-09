@@ -161,6 +161,34 @@ testing.
 3. B in this order: Forgejo, ThingsBoard, OpenRemote (Keycloak broker), Gatus, Vaultwarden last.
 4. C in this order: Hubble (pilot), OpenCost, STAC browser, Agent Console, Agent Tap, Hermes dashboard and web app, Headlamp, n8n, TAK Portal. One app per PR, each with a rollback of "point the ingress back at the app service".
 
+### Progress and lessons — 2026-11-09
+
+Done (sign-in goes to Authentik; each app keeps one local break-glass login):
+
+| App | PRs | State |
+|---|---|---|
+| Karakeep | #795, #796 | New sign-ups closed (`DISABLE_SIGNUPS=true`); owner already linked |
+| Forgejo | #797, #798 | Authentik auth source; local admin kept |
+| ThingsBoard | #799, #801 | Authentik OAuth2 (CE supports it); sysadmin kept |
+| OpenRemote | #803 | Authentik identity provider in its Keycloak; Keycloak admin kept |
+| Langfuse | none | Sign-up left open until the owner's first Authentik sign-in (0 users); then set `AUTH_DISABLE_SIGNUP=true` |
+
+Not done: the C-group gates (Hermes dashboard and web app, TAK Portal, Agent Console and Tap,
+Hubble, OpenCost, STAC browser, Gatus). Headlamp has its Authentik provider and outpost
+(#804, #805) but the gate is not in the path (#809).
+
+Lessons from the Headlamp pilot:
+
+- A Tailscale ProxyGroup ingress cannot use an ExternalName backend ("invalid ClusterIP"), so its
+  backend must be a Service in the ingress's own namespace. One shared outpost Deployment cannot
+  sit behind many ingresses. Use one Authentik outpost (one token) with a small replica in each
+  app's namespace, and change only the ingress backend.
+- **Never delete or recreate an existing tailnet ingress, or change its first TLS host.** Each
+  recreate issues a new Let's Encrypt certificate, and the limit is 5 per name per week. Headlamp's
+  name used all 5 on 2026-11-08 and was down until it moved to `kube.tail717ba0.ts.net` (#810).
+  For the Hermes UIs this would mean days offline. Switch backends in place, one app per PR, and
+  let Argo's auto-sync apply each merge (do not race it with manual syncs).
+
 ### Owner actions by hand
 
 - Sign in to each B app once through Authentik to link or create the account, and approve linking Forgejo/ThingsBoard to the existing owner users.
