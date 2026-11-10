@@ -1,6 +1,6 @@
 # Zero-trust network rules for the agent fabric:
 #  - deny everything by default, in and out;
-#  - in: only the Tailscale proxies (tailnet ingress) may reach the two web apps;
+#  - in: only the Tailscale proxies (tailnet ingress) and the Authentik gate outpost may reach the two web apps;
 #  - out: only DNS and the NATS client port.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -24,6 +24,10 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: tailscale
+        # The Authentik gate (gate-outpost.yaml) in front of both tailnet names.
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: gate-outpost
       ports:
         - protocol: TCP
           port: 3300
