@@ -35,7 +35,7 @@ Namespace `omos` is now `feeds` and `onemind-ai` is now `langfuse`; Headlamp mov
 ServiceAccount and its token stay in `kube`). 24 of the 26 tailnet ingresses share the Tailscale `ProxyGroup` `ingress` (2 pods,
 `platform/core/tailscale-proxygroup-ingress.yaml`); `argocd` and `onemind-auth` keep their own proxies. Hermes is one
 container (`hermes`), connected to NATS as `onemind-hermes-nats-platform`, with Langfuse tracing at `langfuse-web.langfuse`.
-Volumes: NATS 3 x 20 GiB, `onemind-data` 3 x 5 GiB on PostgreSQL 17.11 with TimescaleDB 2.26.4
+Volumes: NATS 3 x 20 GiB, `onemind-data` 3 x 10 GiB on PostgreSQL 17.11 with TimescaleDB 2.26.4
 preloaded (upgraded 2026-11-08; see `services/onemind-postgres/README.md`), Hermes 10 GiB, TAK PostgreSQL 10 GiB, Loki 30 GiB, Prometheus 20 GiB;
 OneTAK, Karakeep, n8n and Forgejo disks were shrunk. ClickHouse runs 26.8.36.3 with a 7-day TTL on its system logs and
 a CronJob (`prune-clickhouse-backups`) that keeps 14 days of backups. Grafana signs in through Authentik and has the
@@ -170,7 +170,7 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 |-------------|-----------|-----------------|---------|-------|--------|----------|
 | `ecosystem-cnpg` | cnpg-system | cloudnative-pg 0.29.1 | CloudNativePG operator | none | Git | internal |
 | `ecosystem-barman` | cnpg-system | plugin-barman-cloud 0.8.1 | CNPG backup plugin | none | Git | internal |
-| `ecosystem-onemind-core` | onemind-core | local `platform/ecosystem/charts/onemind-core` | OneMind core runtime. CNPG cluster `onemind-data` (3 instances x 5 GiB, PostgreSQL 17, TimescaleDB) lives in `onemind-data` | PostgreSQL | `Velero`, `Barman` | internal |
+| `ecosystem-onemind-core` | onemind-core | local `platform/ecosystem/charts/onemind-core` | OneMind core runtime. CNPG cluster `onemind-data` (3 instances x 10 GiB, PostgreSQL 17, TimescaleDB) lives in `onemind-data` | PostgreSQL | `Velero`, `Barman` | internal |
 | `ecosystem-openfga` | onemind-core | openfga 0.3.16 | Fine-grained authorization | PostgreSQL (CNPG) | `Velero`, `Barman` | internal |
 | ~~`ecosystem-litellm`~~ | onemind-ai (now `langfuse`) | litellm-helm 1.104.2 (OCI) | **Retired 2026-11-06** (removed from Git). Database and role `litellm` dropped (verified live 2026-11-07) | PostgreSQL (CNPG) | `Velero`, `Barman` | none after cleanup |
 | ~~`ecosystem-ollama`~~ | onemind-ai (now `langfuse`) | ollama 1.86.0 | **Retired 2026-11-06** (removed from Git). Volume `onemind-cpu-model` (20 GiB, Retain) kept | 20 GiB models | VolSync source removed | none after cleanup |
