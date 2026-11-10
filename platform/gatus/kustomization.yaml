@@ -5,6 +5,8 @@ resources:
 - namespace.yaml
 - deployment.yaml
 - network.yaml
+- gate-outpost.yaml
+- gate-outpost.sealedsecret.yaml
 - servicemonitor.yaml
 - prometheusrule.yaml
 configMapGenerator:
