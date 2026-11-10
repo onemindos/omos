@@ -1,11 +1,10 @@
-# Authentik proxy providers for the shared gate outpost (platform/auth/gate-outpost.yaml).
-#
-# One outpost ("gate-outpost", type proxy, runs as our own Deployment in auth) fronts several tailnet apps. Each app has:
+# Authentik proxy providers for the gate outpost. One outpost ("gate-outpost", type proxy, one token) fronts several tailnet apps.
+# It runs as a small replica in each gated app's namespace (a Tailscale Ingress backend must be a Service in the Ingress's own
+# namespace; the operator refuses ExternalName). Example: platform/kube/headlamp/gate-outpost.yaml. Each app has:
 #   - a proxy provider (mode proxy): external https://<host>.tail717ba0.ts.net, internal = the app's in-cluster Service
 #   - an application bound to the group "authentik Admins" only
-# The outpost routes by Host header. To gate another app: add a row to APPS, move its tailscale Ingress into
-# platform/auth/gate-outpost.yaml (an Ingress backend must be in the same namespace as the Service, and the Tailscale
-# operator refuses ExternalName backends), and allow the outpost to reach the app in the app's NetworkPolicy.
+# The outpost routes by Host header. To gate another app: add a row to APPS, add the replica to the app's namespace, allow it in
+# the app's NetworkPolicy, then (separate PR) point the app's tailscale Ingress backend at the replica Service, in place.
 # Safe to re-run: existing objects are updated or left alone, nothing is deleted.
 apiVersion: batch/v1
 kind: Job
@@ -38,8 +37,24 @@ spec:
               DOMAIN = ".tail717ba0.ts.net"
               # slug, display name, tailnet host, internal URL, description
               APPS = [
-                  ("gate-headlamp", "Headlamp", "headlamp", "http://headlamp.headlamp.svc.cluster.local:4466",
+                  ("gate-headlamp", "Headlamp", "kube", "http://headlamp.headlamp.svc.cluster.local:4466",
                    "Kubernetes web UI"),
+                  ("gate-opencost", "OpenCost", "opencost", "http://opencost.opencost.svc.cluster.local:9090",
+                   "Cluster cost UI"),
+                  ("gate-stac-browser", "STAC Browser", "stac-browser", "http://stac-browser.stac.svc.cluster.local:8080",
+                   "STAC catalog browser"),
+                  ("gate-gatus", "Gatus", "status", "http://gatus.gatus.svc.cluster.local:8080",
+                   "Status page"),
+                  ("gate-hubble", "Hubble UI", "hubble", "http://hubble-ui.kube-system.svc.cluster.local:80",
+                   "Cilium network flow UI"),
+                  ("gate-agent-console", "Agent Console", "agent-console", "http://agent-console.agent-fabric.svc.cluster.local:3300",
+                   "Agent fabric console"),
+                  ("gate-agent-tap", "Agent Tap", "agent-tap", "http://agent-tap.agent-fabric.svc.cluster.local:8088",
+                   "Agent fabric traffic view"),
+                  ("gate-hermes", "Hermes dashboard", "onemind-hermes", "http://onemind-hermes.hermes.svc.cluster.local:9119",
+                   "Hermes dashboard"),
+                  ("gate-hermes-web", "Hermes web app", "onemind-hermes-web", "http://onemind-hermes.hermes.svc.cluster.local:9120",
+                   "Hermes web app"),
               ]
               with httpx.Client(headers=headers, timeout=30) as client:
                   def request(method, path, body=None):
