@@ -9136,7 +9136,7 @@ metadata:
   tags:
     - fabric-registry
     - tak-server
-    - documented-unverified
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Video streaming relay for TAK feeds (RTSP/RTMP)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -9145,7 +9145,8 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:00:31Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-tags: TAK Server
-    onemind.io/verification: documented-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/onetak-media; Service onetak/onetak-media
     onemind.io/pillar-review: proposed
   links:
@@ -9157,6 +9158,8 @@ spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: tak-ecosystem
+  dependsOn:
+    - component:default/k8s-onetak-onetak-media-31c9ce7b
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -11910,3 +11913,119 @@ spec:
   type: code-repository
   owner: group:default/onemind-admins
   system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-feeds-redpanda-connect-grammar-9d00c285
+  title: Redpanda Connect — Grammar
+  description: Deployment in feeds
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=redpanda-connect-grammar
+    backstage.io/kubernetes-namespace: feeds
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-10T04:40:36.947Z
+    onemind.io/kubernetes-workload: redpanda-connect-grammar
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+  tags:
+    - kubernetes
+    - feeds
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: messaging-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/redpanda-connect
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-headlamp-gate-outpost-4be75aa3
+  title: Headlamp — Gate Outpost
+  description: Deployment in headlamp
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=gate-outpost
+    backstage.io/kubernetes-namespace: headlamp
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-10T04:40:36.947Z
+    onemind.io/kubernetes-workload: gate-outpost
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+  tags:
+    - kubernetes
+    - headlamp
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: developer-platform
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/headlamp
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-home-assistant-home-assistant-3e9ecbc0
+  title: Home Assistant — Core
+  description: Deployment in home-assistant
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=web,app.kubernetes.io/name=home-assistant
+    backstage.io/kubernetes-namespace: home-assistant
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-10T04:40:36.947Z
+    onemind.io/kubernetes-workload: home-assistant
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+  tags:
+    - kubernetes
+    - home-assistant
+  labels:
+    onemind.io/pillar: le
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: home-homestead
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/home-assistant
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-ntfy-ntfy-48c452d3
+  title: ntfy — Core
+  description: Deployment in ntfy
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=server,app.kubernetes.io/name=ntfy
+    backstage.io/kubernetes-namespace: ntfy
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-11-10T04:40:36.947Z
+    onemind.io/kubernetes-workload: ntfy
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: approved
+  tags:
+    - kubernetes
+    - ntfy
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: communication
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/ntfy

@@ -15,6 +15,7 @@ Stream processing between NATS and downstream sinks.
 | Workload | Kind | Namespace |
 | --- | --- | --- |
 | `redpanda-connect` | Deployment | `feeds` |
+| `redpanda-connect-grammar` | Deployment | `feeds` |
 
 ## When it looks wrong
 
@@ -30,8 +31,8 @@ Stream processing between NATS and downstream sinks.
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name="feeds", k8s_pod_name=~"(redpanda-connect)-.*"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=feeds&var-workload=redpanda-connect`
+- Loki query: `{k8s_namespace_name="feeds", k8s_pod_name=~"(redpanda-connect|redpanda-connect-grammar)-.*"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=feeds&var-workload=redpanda-connect&var-workload=redpanda-connect-grammar`
 - Source: `onemindos/omos`
 
 ## Escalate

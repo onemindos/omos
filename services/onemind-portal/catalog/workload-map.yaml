@@ -40,7 +40,9 @@ workloads:
   kube-system/metrics-server: component:default/kubernetes-system
   kube-system/platform-clickhouse-operator: component:default/clickhouse
   kube-system/sealed-secrets-controller: component:default/platform-core
+  headlamp/gate-outpost: component:default/headlamp
   headlamp/headlamp: component:default/headlamp
+  home-assistant/home-assistant: component:default/home-assistant
   kyverno/kyverno-admission-controller: component:default/kyverno
   kyverno/kyverno-background-controller: component:default/kyverno
   kyverno/kyverno-cleanup-controller: component:default/kyverno
@@ -58,11 +60,13 @@ workloads:
   nats/nats: component:default/nats
   nats/nats-surveyor: component:default/nats-surveyor
   nats/nui: component:default/nui
+  ntfy/ntfy: component:default/ntfy
   nats/nui-auth: component:default/nui
   feeds/feed-intel: component:default/omos-data-pipeline
   feeds/feed-satellites: component:default/omos-data-pipeline
   feeds/omos-tak-projector: component:default/omos-data-pipeline
   feeds/redpanda-connect: component:default/redpanda-connect
+  feeds/redpanda-connect-grammar: component:default/redpanda-connect
   feeds/sink-clickhouse: component:default/omos-data-pipeline
   onemind-core/onemind-core: component:default/onemind-core
   onemind-core/onemind-ingestion: component:default/onemind-core
@@ -172,6 +176,7 @@ argoApplications:
   platform-hermes-base: component:default/onemind-hermes
   platform-onemind-hermes: component:default/onemind-hermes
   platform-onemind-mcp: component:default/onemind-mcp
+  platform-home-assistant: component:default/home-assistant
   platform-kube: component:default/headlamp
   platform-metrics-server: component:default/kubernetes-system
   platform-monitoring: component:default/grafana
@@ -179,6 +184,7 @@ argoApplications:
   platform-nats: component:default/nats
   platform-nats-streams: component:default/nats
   platform-nats-tools: component:default/nats
+  platform-ntfy: component:default/ntfy
   platform-observability: component:default/clickhouse
   platform-omos: component:default/omos-data-pipeline
   platform-omos-entity: component:default/omos-data-pipeline

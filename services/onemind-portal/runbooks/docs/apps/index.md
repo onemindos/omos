@@ -25,6 +25,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Grafana](grafana.md) | observability |
 | [Headlamp](headlamp.md) | developer-platform |
 | [Cluster health observer](health-keeper.md) | observability |
+| [Home Assistant](home-assistant.md) | home-homestead |
 | [Hubble UI](hubble-ui.md) | observability |
 | [ingress-nginx](ingress-nginx.md) | infrastructure |
 | [Karakeep](karakeep.md) | personal-tools |
@@ -37,6 +38,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [n8n](n8n.md) | ai-agents |
 | [NATS JetStream](nats.md) | messaging-nats |
 | [NATS Surveyor](nats-surveyor.md) | messaging-nats |
+| [ntfy](ntfy.md) | communication |
 | [NUI](nui.md) | messaging-nats |
 | [OMOS data pipeline](omos-data-pipeline.md) | messaging-nats |
 | [OneMind core services](onemind-core.md) | infrastructure |
