@@ -1,4 +1,5 @@
 # OpenCost UI — opencost.tail717ba0.ts.net (tailnet only, same pattern as Headlamp and Grafana).
+# Behind the Authentik gate (opencost-gate-outpost.yaml, admins only). Rollback: point the backend back at Service opencost:9090, in place.
 # Cost per namespace and per workload, read from the in-cluster Prometheus.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -12,9 +13,9 @@ spec:
   ingressClassName: tailscale
   defaultBackend:
     service:
-      name: opencost
+      name: gate-outpost
       port:
-        number: 9090
+        number: 9000
   tls:
     - hosts:
         - opencost
