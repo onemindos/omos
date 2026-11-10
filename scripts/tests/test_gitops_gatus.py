@@ -14,7 +14,9 @@ APP = ROOT / "platform/gatus"
 def render():
     if not shutil.which("kubectl"):
         raise unittest.SkipTest("Kustomize render needs kubectl")
-    return list(yaml.safe_load_all(subprocess.check_output(["kubectl", "kustomize", str(APP)], text=True)))
+    docs = list(yaml.safe_load_all(subprocess.check_output(["kubectl", "kustomize", str(APP)], text=True)))
+    # The Authentik gate outpost (gate-outpost.yaml) is a second, separate workload in this app; these contracts are about Gatus.
+    return [d for d in docs if d["metadata"]["name"] != "gate-outpost"]
 
 
 class GatusApp(unittest.TestCase):
@@ -94,10 +96,14 @@ class GatusApp(unittest.TestCase):
     def test_ingress_policy_admits_only_the_three_readers(self):
         policy = yaml.safe_load((APP / "network.yaml").read_text())
         self.assertEqual(policy["spec"]["policyTypes"], ["Ingress"])
+        peers = policy["spec"]["ingress"][0]["from"]
         namespaces = sorted(
-            peer["namespaceSelector"]["matchLabels"]["kubernetes.io/metadata.name"] for peer in policy["spec"]["ingress"][0]["from"]
+            peer["namespaceSelector"]["matchLabels"]["kubernetes.io/metadata.name"] for peer in peers if "namespaceSelector" in peer
         )
         self.assertEqual(namespaces, ["backstage", "monitoring", "tailscale"])
+        # The only other reader is the Authentik gate outpost in this namespace.
+        others = [peer for peer in peers if "namespaceSelector" not in peer]
+        self.assertEqual(others, [{"podSelector": {"matchLabels": {"app.kubernetes.io/name": "gate-outpost"}}}])
 
     def test_no_secret_or_credential_is_committed_here(self):
         for path in APP.iterdir():
