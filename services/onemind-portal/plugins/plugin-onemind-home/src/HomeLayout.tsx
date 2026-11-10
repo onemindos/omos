@@ -10,6 +10,7 @@ import { NextUpHero } from './NextUpHero';
 import { PlatformScore } from './PlatformScore';
 import { WaitingOnYou } from './WaitingOnYou';
 import { TasksCard } from './TasksCard';
+import { LiveTile } from './LiveTile';
 import { ActionTiles } from './ActionTiles';
 import { useBentoStyles } from './bento';
 import { JumpBackIn } from './JumpBackIn';
@@ -85,6 +86,7 @@ export function HomeLayout({ widgets, defaultConfig }: HomePageLayoutProps) {
               <NextUpHero />
               <PlatformScore />
             </Box>
+            <LiveTile />
             <Box className={bento.rowB}>
               <WaitingOnYou />
               <TasksCard />
