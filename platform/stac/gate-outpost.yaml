@@ -1,0 +1,151 @@
+# Authentik gate outpost for STAC Browser: https://stac-browser.tail717ba0.ts.net -> Authentik login (admins only) -> the app.
+#
+# - A replica of the ONE Authentik outpost "gate-outpost" (all gated apps share its token and provider list); each gated app runs a
+#   small replica in its own namespace because a Tailscale Ingress backend must be a Service in the Ingress's own namespace.
+#   Pattern and lessons: platform/kube/headlamp/gate-outpost.yaml and docs/roadmap/authentik-unified-login.md.
+# - Providers and applications (bound to authentik Admins) come from the Sync hook platform/auth/gate-providers.yaml.
+# - AUTHENTIK_TOKEN is the outpost's API token, sealed (namespace-wide) in gate-outpost.sealedsecret.yaml. Re-seal if the outpost is re-created.
+# - The image tag must match the Authentik server version (platform-auth-helm, 2026.8.2).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gate-outpost
+  namespace: stac
+  labels:
+    app.kubernetes.io/name: gate-outpost
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gate-outpost
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: gate-outpost
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: outpost
+          image: ghcr.io/goauthentik/proxy:2026.8.2@sha256:b76e672ad76cbdb30705f242422bec47df903fe9568fac207ba23e9d8713c59e
+          env:
+            - name: AUTHENTIK_HOST
+              value: http://platform-auth-helm-authentik-server.auth.svc.cluster.local
+            - name: AUTHENTIK_HOST_BROWSER
+              value: https://auth.onemindos.dev
+            - name: AUTHENTIK_INSECURE
+              value: "false"
+            - name: AUTHENTIK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gate-outpost
+                  key: AUTHENTIK_TOKEN
+          ports:
+            - name: http
+              containerPort: 9000
+            - name: metrics
+              containerPort: 9300
+          readinessProbe:
+            httpGet:
+              path: /outpost.goauthentik.io/ping
+              port: metrics
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /outpost.goauthentik.io/ping
+              port: metrics
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gate-outpost
+  namespace: stac
+  labels:
+    app.kubernetes.io/name: gate-outpost
+spec:
+  selector:
+    app.kubernetes.io/name: gate-outpost
+  ports:
+    - name: http
+      port: 9000
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: gate-outpost
+  namespace: stac
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: gate-outpost
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+      ports:
+        - protocol: TCP
+          port: 9000
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: auth
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: server
+              app.kubernetes.io/instance: platform-auth-helm
+      ports:
+        - protocol: TCP
+          port: 9000
+        - protocol: TCP
+          port: 80
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: stac
+              app.kubernetes.io/component: browser
+      ports:
+        - protocol: TCP
+          port: 8080
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
