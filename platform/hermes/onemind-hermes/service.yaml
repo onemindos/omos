@@ -24,11 +24,12 @@ metadata:
     tailscale.com/hostname: onemind-hermes
 spec:
   ingressClassName: tailscale
+  # Behind the Authentik gate (gate-outpost.yaml, admins only). Rollback: backend back to Service onemind-hermes:9119, in place.
   defaultBackend:
     service:
-      name: onemind-hermes
+      name: gate-outpost
       port:
-        number: 9119
+        number: 9000
   tls:
     - hosts:
         - onemind-hermes
@@ -44,11 +45,12 @@ metadata:
     tailscale.com/hostname: onemind-hermes-web
 spec:
   ingressClassName: tailscale
+  # Behind the Authentik gate (gate-outpost.yaml, admins only). Rollback: backend back to Service onemind-hermes:9120, in place.
   defaultBackend:
     service:
-      name: onemind-hermes
+      name: gate-outpost
       port:
-        number: 9120
+        number: 9000
   tls:
     - hosts:
         - onemind-hermes-web
