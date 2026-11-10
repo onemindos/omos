@@ -188,7 +188,23 @@ NetworkPolicy rules; PR B switches only the Ingress backend, in place. The provi
 | Hubble UI | #838, #839 | Gated; the hand-applied Ingress is now in `platform/kube/hubble/` with `Prune=false` |
 | Agent Console, Agent Tap | #836, #837 | Gated (one replica for both) |
 | TAK Portal (`enroll`) | none | Skipped on purpose: phones self-enroll there (`/`, `/enroll`, then the QR `/download/<token>`), and gating it would break enrollment |
-| Hermes dashboard and web app | #840 (replica, merged and Ready); PR B held | Not yet in the path. Waiting for the owner's OK before the two Ingress backends move (the owner uses these pages all day); Hermes pods are never restarted by this change |
+| Hermes dashboard and web app | #840 (gate replica, now removed by #846); #844 (Authentik provider); #845 (HOLD) | Not gated by a proxy. Built-in OIDC login chosen: Authentik side is live (#844); the Hermes env change is in draft PR #845 labelled HOLD and turns on at the owner's "restart now" (see below). Gate replica, its token and the two proxy providers are gone; the Hermes pod was not restarted |
+
+#### Hermes: built-in Authentik login (prepared 2026-11-10, waiting for the owner's restart)
+
+The owner chose Hermes's own OIDC login (dashboard_auth `self_hosted` plugin: authorization code + PKCE, public client)
+over the proxy gate, so the gate was removed (#846) and the Ingresses were never changed (no certificate burn).
+
+- Authentik (live, #844): provider `OneMind Hermes` (public client `onemind-hermes`, RS256), application `hermes`, bound to
+  `authentik Admins` only (Hermes does not check groups). Issuer `https://auth.onemindos.dev/application/o/hermes/`.
+  Redirect URIs: `https://onemind-hermes.tail717ba0.ts.net/auth/callback` and `https://onemind-hermes-web.tail717ba0.ts.net/auth/callback`.
+- Hermes (draft PR #845, label HOLD): three env vars on the `hermes` container: `HERMES_DASHBOARD_OIDC_ISSUER`,
+  `HERMES_DASHBOARD_OIDC_CLIENT_ID`, `HERMES_DASHBOARD_PUBLIC_URL` (the pod sees plain http behind the Tailscale Ingress, so the
+  redirect URI must be declared). The web app (9120) uses `webapp.public_url`, already set. Merging changes the pod template, so
+  the Deployment (`Recreate`) restarts Hermes; nothing else triggers it. The basic login (`hermes-dashboard-auth`) stays as the fallback.
+- Post-restart check: both login pages show an Authentik button; an admin signs in through Authentik on both; username/password
+  still works; a non-admin Authentik user is refused by Authentik.
+- Rollback: revert #845 (one more restart). Basic login works throughout.
 
 Lessons from the Headlamp pilot:
 
