@@ -14,6 +14,7 @@ Kubernetes cluster dashboard
 
 | Workload | Kind | Namespace |
 | --- | --- | --- |
+| `gate-outpost` | Deployment | `headlamp` |
 | `headlamp` | Deployment | `headlamp` |
 
 ## When it looks wrong

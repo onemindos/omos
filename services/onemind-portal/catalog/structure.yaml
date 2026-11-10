@@ -322,6 +322,12 @@ apps:
     description: >-
       Private ThingsBoard Community 4.3 IoT evaluation (ThingsBoard and PostgreSQL) deployed by Argo application platform-thingsboard and served over the
       tailnet; observed 2/2 pods running on 2026-11-07. Owner login, telemetry and restore acceptance are not recorded here.
+  - name: ntfy
+    title: ntfy
+    system: communication
+    description: >-
+      Self-hosted push notifications (ntfy v2.37.2) deployed by Argo application platform-ntfy in namespace ntfy and served over the tailnet only;
+      Home Assistant, Alertmanager, Argo CD, n8n and Hermes publish to topics. Access is deny-all until the ntfy-auth secret is sealed.
 placement:
   opencage: geospatial
   graphhopper: geospatial
