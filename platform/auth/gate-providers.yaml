@@ -51,10 +51,6 @@ spec:
                    "Agent fabric console"),
                   ("gate-agent-tap", "Agent Tap", "agent-tap", "http://agent-tap.agent-fabric.svc.cluster.local:8088",
                    "Agent fabric traffic view"),
-                  ("gate-hermes", "Hermes dashboard", "onemind-hermes", "http://onemind-hermes.hermes.svc.cluster.local:9119",
-                   "Hermes dashboard"),
-                  ("gate-hermes-web", "Hermes web app", "onemind-hermes-web", "http://onemind-hermes.hermes.svc.cluster.local:9120",
-                   "Hermes web app"),
               ]
               with httpx.Client(headers=headers, timeout=30) as client:
                   def request(method, path, body=None):

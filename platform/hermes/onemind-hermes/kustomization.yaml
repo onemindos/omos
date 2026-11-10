@@ -7,9 +7,6 @@ resources:
   - deployment.yaml
   - service.yaml
   - network.yaml
-  # Authentik gate outpost replica for the two tailnet UIs (gate-outpost.yaml); the Ingress backends move to it in a separate step.
-  - gate-outpost.yaml
-  - gate-outpost.sealedsecret.yaml
   - backup.yaml
   - runtime.sealedsecret.yaml
   # Client key for the tool gateway; deployment.yaml exposes it as ONEMIND_GATEWAY_KEY (Phase 5).

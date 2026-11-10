@@ -1,0 +1,83 @@
+# Removes the two Hermes proxy-gate providers and their applications from Authentik (the owner chose Hermes's
+# built-in OIDC login instead; see hermes-oidc-provider.yaml). Deleting a proxy provider also drops it from the
+# shared "gate-outpost" outpost; the outpost and the other gates are untouched. Only the exact names below are
+# deleted. Safe to re-run: nothing found means nothing done.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hermes-gate-removal-v1
+  namespace: auth
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  ttlSecondsAfterFinished: 86400
+  template:
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: removal
+          image: ghcr.io/onemindos/onemind-core@sha256:667f9836cda15e3aadd51c6186eb80839946a0d1c76fc26fcb367e81cbc6ff9a
+          command: [python, -c]
+          args:
+            - |
+              import os, httpx
+
+              base = "http://platform-auth-helm-authentik-server.auth.svc.cluster.local/api/v3/"
+              headers = {"Authorization": "Bearer " + os.environ["AUTH_TOKEN"]}
+              APP_SLUGS = ["gate-hermes", "gate-hermes-web"]
+              PROVIDER_NAMES = ["Gate Hermes dashboard", "Gate Hermes web app"]
+              with httpx.Client(headers=headers, timeout=30) as client:
+                  def request(method, path, body=None):
+                      response = client.request(method, base + path, json=body)
+                      if response.status_code == 404 and method == "DELETE":
+                          return {}
+                      if not response.is_success:
+                          raise RuntimeError("Identity API " + method + " " + path.split("?")[0]
+                                             + " failed with status " + str(response.status_code))
+                      return response.json() if response.content else {}
+
+                  for slug in APP_SLUGS:
+                      request("DELETE", "core/applications/" + slug + "/")
+                      print("Application " + slug + " absent")
+                  providers = request("GET", "providers/proxy/?page_size=200")["results"]
+                  for provider in providers:
+                      if provider["name"] in PROVIDER_NAMES:
+                          request("DELETE", "providers/proxy/" + str(provider["pk"]) + "/")
+                          print("Deleted proxy provider " + provider["name"])
+                  left = [p["name"] for p in request("GET", "providers/proxy/?page_size=200")["results"]
+                          if p["name"] in PROVIDER_NAMES]
+                  if left:
+                      raise RuntimeError("Hermes gate providers still present: " + ", ".join(left))
+              print("Hermes proxy gate removed from Authentik")
+          env:
+            - name: AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: AUTHENTIK_BOOTSTRAP_TOKEN
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi
