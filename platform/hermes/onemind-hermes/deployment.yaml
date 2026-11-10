@@ -305,6 +305,17 @@ spec:
               value: 0.0.0.0
             - name: HERMES_DASHBOARD_PORT
               value: '9119'
+            # Built-in Authentik login (dashboard_auth self_hosted plugin: OIDC code flow + PKCE, public client, no
+            # secret). Provider and application: platform/auth/hermes-oidc-provider.yaml. Access is limited to the
+            # authentik Admins group in Authentik; the basic-auth login (hermes-dashboard-auth) stays as the fallback.
+            # The web app on 9120 uses the same plugin and its own redirect URI (webapp.public_url in config.yaml).
+            - name: HERMES_DASHBOARD_OIDC_ISSUER
+              value: https://auth.onemindos.dev/application/o/hermes/
+            - name: HERMES_DASHBOARD_OIDC_CLIENT_ID
+              value: onemind-hermes
+            # Pod sees plain http behind the Tailscale Ingress, so the redirect URI must be declared, not guessed.
+            - name: HERMES_DASHBOARD_PUBLIC_URL
+              value: https://onemind-hermes.tail717ba0.ts.net
             - name: API_SERVER_ENABLED
               value: 'true'
             - name: API_SERVER_HOST
