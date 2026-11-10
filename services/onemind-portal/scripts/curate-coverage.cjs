@@ -88,8 +88,10 @@ function applyCoverage(model, coverage) {
   if (!coverage) return;
   const { appComponent, subcomponents, argoByApp, workloadNamespaces } = model;
   for (const [name, app] of appComponent) {
-    if (!argoByApp.has(name) && !subcomponents.has(name)) continue;
     const ann = annotationsOf(app);
+    // An operator-managed app (a CNPG Cluster) has no Deployment or StatefulSet; a reviewed namespace still earns a runbook.
+    const curatedNamespace = !!ann['backstage.io/kubernetes-namespace'] && !!ann['onemind.io/kubernetes-namespaces'];
+    if (!argoByApp.has(name) && !subcomponents.has(name) && !curatedNamespace) continue;
     const members = live(subcomponents.get(name) || []);
     const namespaces = namespacesOf(members);
     // A workload name narrows the dashboard and logs only when the namespace is shared with other apps.
@@ -121,7 +123,7 @@ function applyCoverage(model, coverage) {
       if (!ann['grafana/alert-label-selector']) ann['grafana/alert-label-selector'] = `namespace=${namespaces[0]}`;
       ann['onemind.io/grafana-dashboard-path'] = grafanaPath(coverage.genericDashboard.uid, namespaces, sharedWorkloads);
       ann['onemind.io/logs-query'] = logsQuery(coverage, namespaces, sharedWorkloads);
-    } else {
+    } else if (!curatedNamespace) {
       // Namespace unknown (no Deployment or StatefulSet observed): never guess one.
       for (const key of ['onemind.io/kubernetes-namespaces', 'onemind.io/kubernetes-workloads', 'onemind.io/grafana-dashboard-path', 'onemind.io/logs-query']) delete ann[key];
     }
@@ -130,6 +132,11 @@ function applyCoverage(model, coverage) {
     const scopes = coverage.prometheusScopes?.[name];
     if (scopes?.length) ann['onemind.io/prometheus-scopes'] = scopes.join(',');
     ann['onemind.io/recovery-runbook'] = `${coverage.runbooks.base}${name}/`;
+    // The Docs tab opens the app's runbook page in the shared runbooks site. A reviewed techdocs link is never replaced.
+    if (!ann['backstage.io/techdocs-ref'] && !ann['backstage.io/techdocs-entity']) {
+      ann['backstage.io/techdocs-entity'] = coverage.runbooks.entity || 'component:default/onemind-runbooks';
+      ann['backstage.io/techdocs-entity-path'] = `/${coverage.runbooks.base}${name}/`;
+    }
     if (!ann['github.com/project-slug']) ann['github.com/project-slug'] = coverage.repo;
   }
 }

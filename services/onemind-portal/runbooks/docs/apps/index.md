@@ -40,6 +40,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [NUI](nui.md) | messaging-nats |
 | [OMOS data pipeline](omos-data-pipeline.md) | messaging-nats |
 | [OneMind core services](onemind-core.md) | infrastructure |
+| [onemind-data (CNPG PostgreSQL cluster)](onemind-data.md) | data-storage |
 | [Legacy (onemind-hermes)](onemind-hermes.md) | ai-agents |
 | [OneMind internal app MCP](onemind-mcp.md) | ai-agents |
 | [OneTAK](onetak.md) | tak-ecosystem |
