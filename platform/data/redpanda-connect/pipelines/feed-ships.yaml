@@ -1,3 +1,4 @@
+# yamllint disable rule:line-length
 # feed-ships.yaml — AIS vessel positions via aisstream.io WebSocket → CoT → tak.cot.inject
 # Real-time streaming (no poll interval — messages arrive as vessels report)
 # Requires: AISSTREAM_API_KEY env var (from omos-feed-secrets)

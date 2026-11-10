@@ -1,3 +1,4 @@
+# yamllint disable rule:line-length
 # feed-aircraft.yaml — ADS-B aircraft positions via OpenSky Network REST → CoT → tak.cot.inject
 # Poll interval: 15s, global coverage
 # Anonymous access (rate-limited). Set OPENSKY_USERNAME + OPENSKY_PASSWORD for higher limits.
