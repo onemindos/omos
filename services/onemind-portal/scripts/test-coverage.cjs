@@ -184,6 +184,23 @@ test('every runbook annotation resolves to a generated page that matches the cat
   assert.equal(files.length, expected.size, 'no page for an app that no longer exists');
 });
 
+test('every app with a recovery runbook has a Docs link to an existing runbook page', () => {
+  let checked = 0;
+  for (const e of entities) {
+    const a = e.metadata.annotations || {};
+    if (!a['onemind.io/recovery-runbook']) continue;
+    const name = e.metadata.name;
+    assert.ok(a['backstage.io/techdocs-entity'] || a['backstage.io/techdocs-ref'], `${name} has no Docs link`);
+    if (a['backstage.io/techdocs-ref']) continue;
+    assert.equal(a['backstage.io/techdocs-entity'], 'component:default/onemind-runbooks', name);
+    const docPath = a['backstage.io/techdocs-entity-path'];
+    assert.match(docPath, /^\/[a-z0-9-]+(\/[a-z0-9-]+)*\/$/, `${name} path shape`);
+    assert.ok(fs.existsSync(path.join(root, 'runbooks/docs', docPath.slice(1).replace(/\/$/, '.md'))), `${name} -> ${docPath}`);
+    checked++;
+  }
+  assert.ok(checked >= 56, `only ${checked} Docs links checked`);
+});
+
 test('the app runbooks are part of the runbook site navigation', () => {
   assert.match(fs.readFileSync(path.join(root, 'runbooks/mkdocs.yml'), 'utf8'), /apps\/index\.md/);
 });

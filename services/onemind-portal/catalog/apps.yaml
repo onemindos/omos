@@ -1164,6 +1164,8 @@ metadata:
     onemind.io/kubernetes-workloads: headlamp/headlamp
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=headlamp
     onemind.io/logs-query: '{k8s_namespace_name="headlamp"}'
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/headlamp/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1390,6 +1392,8 @@ metadata:
     onemind.io/recovery-runbook: apps/agent-web-ui/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: agent-fabric/agent-console
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/agent-web-ui/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1460,6 +1464,8 @@ metadata:
     onemind.io/documented-tags: NATS
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-11-08T14:59:23.152Z
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/nui/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1549,6 +1555,8 @@ metadata:
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=cloudtak
     onemind.io/logs-query: '{k8s_namespace_name="cloudtak"}'
     onemind.io/relationship-source: ingress-service-selector
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/cloudtak/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1671,6 +1679,8 @@ metadata:
     onemind.io/kubernetes-workloads: onetak/onetak-media,onetak/tak-portal
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/verified-at: 2026-11-08T14:59:23.152Z
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/onetak/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1715,6 +1725,8 @@ metadata:
     onemind.io/recovery-runbook: apps/fedhub/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: takserver/fedhub,takserver/fedhub-mongodb
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/fedhub/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2069,6 +2081,8 @@ metadata:
     onemind.io/recovery-runbook: apps/grafana/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: monitoring/monitoring-grafana
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/grafana/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2109,6 +2123,8 @@ metadata:
     onemind.io/recovery-runbook: apps/agent-monitor/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: agent-fabric/agent-tap
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/agent-monitor/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2161,6 +2177,8 @@ metadata:
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: clickhouse/chi-onemind-onemind-0-0,kube-system/platform-clickhouse-operator
     onemind.io/relationship-source: ingress-service-selector
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/clickhouse/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2231,6 +2249,8 @@ metadata:
     onemind.io/recovery-runbook: apps/hubble-ui/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: kube-system/hubble-relay,kube-system/hubble-ui
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/hubble-ui/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2287,6 +2307,8 @@ metadata:
     onemind.io/kubernetes-scope: namespace
     onemind.io/kubernetes-workloads: monitoring/alertmanager-monitoring-kube-prometheus-alertmanager,monitoring/monitoring-kube-prometheus-operator,monitoring/monitoring-kube-state-metrics,monitoring/prometheus-monitoring-kube-prometheus-prometheus
     onemind.io/relationship-source: ingress-service-selector
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/prometheus/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2363,6 +2385,8 @@ metadata:
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: nats/nats-surveyor
     onemind.io/relationship-source: ingress-service-selector
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/nats-surveyor/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2438,6 +2462,8 @@ metadata:
     onemind.io/recovery-runbook: apps/tileserver-gl/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: onetak/tileserver-gl
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/tileserver-gl/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2513,6 +2539,8 @@ metadata:
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: onetak/nodeodm,onetak/webodm,onetak/webodm-broker,onetak/webodm-db
     onemind.io/relationship-source: ingress-service-selector
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/webodm/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6883,6 +6911,8 @@ metadata:
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/tech-stack-notes: LLM observability & tracing. Tracks prompts,
       completions, latency, cost, and evals for AI agents. Self-hostable.
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/langfuse/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7313,6 +7343,8 @@ metadata:
     onemind.io/recovery-runbook: apps/loki/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: monitoring/loki,monitoring/loki-gateway
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/loki/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7963,6 +7995,8 @@ metadata:
     onemind.io/logs-query: '{k8s_namespace_name="forgejo"}'
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/forgejo/
   tags:
     - forgejo
     - git
@@ -8014,6 +8048,8 @@ metadata:
     onemind.io/logs-query: '{k8s_namespace_name="gatus"}'
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/gatus/
   tags:
     - gatus
     - monitoring
@@ -8260,6 +8296,8 @@ metadata:
     onemind.io/kubernetes-scope: namespace
     onemind.io/kubernetes-workloads: tailscale/egress,tailscale/ingress,tailscale/operator,tailscale/ts-argocd-slkzh,tailscale/ts-fedhub-tailnet-gzz6j,tailscale/ts-omos-dell-zeus-f7vnz,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-tak-tailnet-jtgn4
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/tailscale-operator/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8297,6 +8335,8 @@ metadata:
     argocd/app-name: platform-metrics-server
     argocd/instance-name: onemind-cloud
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/kubernetes-system/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8337,6 +8377,8 @@ metadata:
       onemind-core/onemind-ingestion
     onemind.io/argocd-apps: ecosystem-onemind-core,platform-policy
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/onemind-core/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8421,6 +8463,8 @@ metadata:
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: onemind-core/openfga
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/openfga/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8458,6 +8502,8 @@ metadata:
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: kyverno/kyverno-admission-controller,kyverno/kyverno-background-controller,kyverno/kyverno-cleanup-controller,kyverno/kyverno-reports-controller
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/kyverno/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8494,6 +8540,8 @@ metadata:
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=falco
     onemind.io/logs-query: '{k8s_namespace_name="falco"}'
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/falco/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8530,6 +8578,8 @@ metadata:
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=trivy-system
     onemind.io/logs-query: '{k8s_namespace_name="trivy-system"}'
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/trivy-operator/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8571,6 +8621,8 @@ metadata:
     github.com/project-slug: onemindos/omos
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/vaultwarden/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8611,6 +8663,8 @@ metadata:
     onemind.io/kubernetes-workloads: backstage/backstage,backstage/backstage-postgres,backstage/portal-redirect
     onemind.io/prometheus-scopes: backstage,postgres
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/backstage/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8649,6 +8703,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-tags: Monitoring
     onemind.io/verification: documented-unverified
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/opentelemetry-collector/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8689,6 +8745,8 @@ metadata:
     onemind.io/kubernetes-workloads: opencost/opencost
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/opencost/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8759,6 +8817,8 @@ metadata:
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: cnpg-system/barman-plugin-barman-cloud,cnpg-system/cnpg-cloudnative-pg
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/cloudnative-pg/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8795,6 +8855,9 @@ metadata:
     grafana/dashboard-selector: uid == 'onemind-workload'
     github.com/project-slug: onemindos/omos
     onemind.io/inventory-review: imported-link
+    onemind.io/recovery-runbook: apps/onemind-data/
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/onemind-data/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8952,6 +9015,8 @@ metadata:
     onemind.io/api-relationship-source: platform/data/redpanda-connect/deployment.yaml
       (four pipelines publish tak.cot.inject)
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/redpanda-connect/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -8996,6 +9061,8 @@ metadata:
       tel.feed.*.status)
     onemind.io/argocd-apps: platform-omos,platform-omos-entity
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/omos-data-pipeline/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9035,6 +9102,8 @@ metadata:
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: takml/takml-server,takml/takml-vision-worker
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/takml/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9067,6 +9136,8 @@ metadata:
     backstage.io/kubernetes-namespace: onetak
     backstage.io/kubernetes-label-selector: app=tile38
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/geo-data-services/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9122,6 +9193,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-11-08T14:59:23.152Z
     onemind.io/runtime-evidence: Deployment stac/stac-api; Service stac/stac-api
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/stac/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9163,6 +9236,8 @@ metadata:
     onemind.io/kubernetes-workloads: n8n/n8n,n8n/postgres
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/n8n/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9261,6 +9336,8 @@ metadata:
     onemind.io/relationship-source: platform/hermes/mcp/deployment.yaml
       (NATS_MONITOR_URL nats-0 monitoring port 8222, PROMETHEUS_URL)
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/onemind-mcp/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9308,6 +9385,8 @@ metadata:
     onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=tool-gateway&var-workload=agentgateway
     onemind.io/logs-query: '{k8s_namespace_name="tool-gateway", k8s_pod_name=~"(agentgateway)-.*"}'
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/agentgateway/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9342,6 +9421,8 @@ metadata:
     onemind.io/recovery-runbook: apps/mcp-kubernetes/
     github.com/project-slug: onemindos/omos
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/mcp-kubernetes/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9379,6 +9460,8 @@ metadata:
     onemind.io/recovery-runbook: apps/execute-gate/
     github.com/project-slug: onemindos/omos
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/execute-gate/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9413,6 +9496,8 @@ metadata:
     onemind.io/recovery-runbook: apps/mcp-clickhouse/
     github.com/project-slug: onemindos/omos
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/mcp-clickhouse/
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -9456,6 +9541,8 @@ metadata:
     onemind.io/logs-query: '{k8s_namespace_name="karakeep"}'
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/karakeep/
   links:
     - url: https://karakeep.tail717ba0.ts.net
       title: Open application
@@ -9505,6 +9592,8 @@ metadata:
     onemind.io/logs-query: '{k8s_namespace_name="openremote"}'
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/openremote/
   links:
     - url: https://openremote.tail717ba0.ts.net
       title: Open application
@@ -9554,6 +9643,8 @@ metadata:
     onemind.io/logs-query: '{k8s_namespace_name="thingsboard"}'
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /apps/thingsboard/
   links:
     - url: https://thingsboard.tail717ba0.ts.net
       title: Open application
