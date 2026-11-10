@@ -9,3 +9,7 @@ The runner requires Node 22, kubectl context `do-nyc3-omos-cloud`, Tailscale sta
 Review observed-at and last-checked-at annotations independently of live health. Fresh snapshots still depend on review/merge before production catalog updates. A failed scheduled run is visible in GitHub Actions; configure repository notifications for failures. Repository listings at the discovery limit fail closed instead of publishing truncated results.
 
 Official references: [catalog integrations](https://backstage.io/docs/features/software-catalog/external-integrations/), [scheduled workflows](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule).
+
+## Curated reference cards and the image-build tests
+
+Components in `catalog/apps.yaml` tagged `reference` or `planned` are reviewed by hand. `scripts/curated-cards.cjs` puts them back byte-for-byte at the end of `refresh-inventory.cjs`, `enrich-inventory.cjs` and `verify-inventory.cjs`, so discovery cannot add hosting, dependency, `documented-*` or "Archived registry" changes to them. To change one of these cards, edit it in a normal pull request. `refresh-inventory.cjs` then runs the same `node --test` step as `packages/backend/Dockerfile` (read from that file) before it stages anything; on failure every generated file is restored and the workflow fails before a pull request opens.

@@ -1,6 +1,8 @@
 // Reviewed inventory refresh. No credentials, IP addresses, or user profiles are captured.
 const fs=require('fs'),cp=require('child_process'),path=require('path'),YAML=require('yaml'),crypto=require('crypto');
 process.chdir(path.resolve(__dirname,'..'));
+const curatedFiles=['catalog/apps.yaml','../../platform/backstage/catalog/apps.yaml'];const curatedOriginals=curatedFiles.map(f=>[f,fs.existsSync(f)?fs.readFileSync(f,'utf8'):null]);
+const {preserveCuratedCards}=require('./curated-cards.cjs');
 cp.execFileSync(process.execPath,['scripts/snapshot-cluster.cjs'],{stdio:'inherit'});
 const load=p=>YAML.parseAllDocuments(fs.readFileSync(p,'utf8')).map(x=>x.toJSON());
 const cluster=load('catalog/cluster.yaml'),apps=load('catalog/apps.yaml');
@@ -43,3 +45,4 @@ const runtime=JSON.parse(cp.execFileSync('kubectl',['get','deployments,statefuls
 fs.writeFileSync('catalog/runtime-source.json',JSON.stringify({observedAt:new Date().toISOString(),items:runtime.items.map(x=>({kind:x.kind,namespace:x.metadata.namespace,name:x.metadata.name}))},null,2)+'\n');
 cp.execFileSync(process.execPath,['scripts/curate-dependencies.cjs'],{stdio:'inherit'});
 cp.execFileSync(process.execPath,['scripts/verify-inventory.cjs'],{stdio:'inherit'});
+preserveCuratedCards(curatedOriginals);

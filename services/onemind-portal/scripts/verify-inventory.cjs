@@ -1,5 +1,7 @@
 // Only exact recorded identifiers or reviewed aliases establish deployed relationships.
 const fs=require('fs'),path=require('path'),Y=require('yaml'),crypto=require('crypto');process.chdir(path.resolve(__dirname,'..'));
+const curatedFiles=['catalog/apps.yaml','../../platform/backstage/catalog/apps.yaml'];const curatedOriginals=curatedFiles.map(f=>[f,fs.existsSync(f)?fs.readFileSync(f,'utf8'):null]);
+const {preserveCuratedCards}=require('./curated-cards.cjs');
 const load=p=>Y.parseAllDocuments(fs.readFileSync(p,'utf8')).map(x=>x.toJSON());
 const apps=load('catalog/apps.yaml'),cluster=load('catalog/cluster.yaml').filter(x=>!x.metadata.name.startsWith('repo-'));
 const repos=JSON.parse(fs.readFileSync('catalog/repositories-source.json')),runtime=JSON.parse(fs.readFileSync('catalog/runtime-source.json'));
@@ -43,3 +45,4 @@ for(const entity of [...apps,...cluster]){
 fs.writeFileSync('../../docs/inventory/migration-manifest.json',JSON.stringify({reviewedAt:runtime.observedAt,total:rows.length,pages:manifest},null,2)+'\n');
 for(const [file,docs]of [['apps.yaml',apps],['cluster.yaml',cluster]])for(const base of ['catalog','../../platform/backstage/catalog'])fs.writeFileSync(`${base}/${file}`,docs.map(x=>Y.stringify(x)).join('---\n'));
 console.log(JSON.stringify({repositories:repos.length,deploymentVerifiedEntries:verified,repositoryMatchedEntries:repositoryMatches,archivedPages:manifest.length,completePages:manifest.filter(x=>x.complete).length}));
+preserveCuratedCards(curatedOriginals);
