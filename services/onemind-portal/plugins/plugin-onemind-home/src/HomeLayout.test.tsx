@@ -24,6 +24,7 @@ jest.mock('./NextUpHero', () => ({ NextUpHero: mockStub('Next up') }));
 jest.mock('./PlatformScore', () => ({
   PlatformScore: mockStub('Platform score'),
 }));
+jest.mock('./LiveTile', () => ({ LiveTile: mockStub('Live') }));
 jest.mock('./WaitingOnYou', () => ({
   WaitingOnYou: mockStub('Waiting on you'),
 }));
@@ -55,6 +56,7 @@ const top = [
   'Command bar',
   'Next up',
   'Platform score',
+  'Live',
   'Waiting on you',
   'Tasks',
   'Do it now',

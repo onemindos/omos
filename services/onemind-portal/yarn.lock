@@ -6646,6 +6646,7 @@ __metadata:
     "@backstage/plugin-notifications": "npm:0.6.0"
     "@internal/plugin-onemind-common": "workspace:^"
     "@internal/plugin-onemind-live": "workspace:^"
+    "@internal/plugin-onemind-ops": "workspace:^"
     "@internal/plugin-onemind-theme": "workspace:^"
     "@material-ui/core": "npm:^4.12.2"
     "@material-ui/icons": "npm:^4.9.1"
