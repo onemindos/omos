@@ -94,11 +94,12 @@ metadata:
     tailscale.com/proxy-group: ingress
 spec:
   ingressClassName: tailscale
+  # Behind the Authentik gate (gate-outpost.yaml, admins only). Rollback: backend back to Service agent-console:3300, in place.
   defaultBackend:
     service:
-      name: agent-console
+      name: gate-outpost
       port:
-        number: 3300
+        number: 9000
   tls:
     - hosts:
         - agent-console
