@@ -1,8 +1,8 @@
-# Headlamp -- kube.tail717ba0.ts.net (temporary, 2026-11-09), straight to Headlamp for now (the gate in gate-outpost.yaml is deployed but not in the path; see docs).
+# Headlamp -- kube.tail717ba0.ts.net (temporary, 2026-11-09), behind the Authentik gate (gate-outpost.yaml, admins only).
 # Why kube: Let's Encrypt allows 5 certificates per name per week, and headlamp.tail717ba0.ts.net
 # used all 5 when its address was recreated on 2026-11-08 (blocked until 2026-11-10 00:31 UTC).
 # Switch back to headlamp after that date only if wanted; each switch costs one certificate.
-# Rollback: point the backend back at Service headlamp, port 4466, and restore the Tailscale proxy rule in network.yaml.
+# Rollback: point the backend back at Service headlamp, port 4466 (in place; never delete or recreate this Ingress). network.yaml already admits the Tailscale proxies to Headlamp.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -15,9 +15,9 @@ spec:
   ingressClassName: tailscale
   defaultBackend:
     service:
-      name: headlamp
+      name: gate-outpost
       port:
-        number: 4466
+        number: 9000
   tls:
     - hosts:
         - kube
