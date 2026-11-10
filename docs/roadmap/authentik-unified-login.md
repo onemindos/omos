@@ -173,9 +173,22 @@ Done (sign-in goes to Authentik; each app keeps one local break-glass login):
 | OpenRemote | #803 | Authentik identity provider in its Keycloak; Keycloak admin kept |
 | Langfuse | none | Sign-up left open until the owner's first Authentik sign-in (0 users); then set `AUTH_DISABLE_SIGNUP=true` |
 
-Not done: the C-group gates (Hermes dashboard and web app, TAK Portal, Agent Console and Tap,
-Hubble, OpenCost, STAC browser, Gatus). Headlamp has its Authentik provider and outpost
-(#804, #805) but the gate is not in the path (#809).
+Authentik login gates in front of the tailnet admin UIs (2026-11-10; admins group only; each app keeps its own login):
+one Authentik outpost `gate-outpost` and one token, with a small replica of it in each app's namespace
+(a `gate-outpost.yaml` plus a sealed token beside the app's manifests). PR A adds the replica and its
+NetworkPolicy rules; PR B switches only the Ingress backend, in place. The providers come from the Sync hook
+`platform/auth/gate-providers.yaml`; a hook-only change does not auto-sync, so sync `platform-auth-infra` once to the merge SHA.
+
+| App (tailnet name) | PRs | State |
+|---|---|---|
+| Headlamp (`kube`) | #804, #805, #809, #810, #821, #826 | Gated |
+| OpenCost | #830, #831 | Gated |
+| STAC browser (the `stac` API ingress is untouched) | #832, #833 | Gated |
+| Gatus (`status`) | #834, #835 | Gated |
+| Hubble UI | #838, #839 | Gated; the hand-applied Ingress is now in `platform/kube/hubble/` with `Prune=false` |
+| Agent Console, Agent Tap | #836, #837 | Gated (one replica for both) |
+| TAK Portal (`enroll`) | none | Skipped on purpose: phones self-enroll there (`/`, `/enroll`, then the QR `/download/<token>`), and gating it would break enrollment |
+| Hermes dashboard and web app | #840 (replica, merged and Ready); PR B held | Not yet in the path. Waiting for the owner's OK before the two Ingress backends move (the owner uses these pages all day); Hermes pods are never restarted by this change |
 
 Lessons from the Headlamp pilot:
 

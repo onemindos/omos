@@ -248,6 +248,7 @@ Gaps beyond the eleven releases:
 | Public, Cloudflare ranges only (nginx) | `auth.onemindos.dev`, `ws.onemindos.dev` (NATS WebSocket), `onemindos.dev` (tak-portal) |
 | Public, control plane | Kubernetes API endpoint, no control-plane firewall (review finding H3) |
 | Tailnet only | TAK (`tak`: 8089, 8443, 8446, 64738), TAK Portal (`enroll`), FedHub (`fedhub`), Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NUI (`nui`), `omos-nats` (4222, 7422, 8080). 24 of the 26 tailnet ingresses share the `ProxyGroup` `ingress` |
+| Behind an Authentik login gate (2026-11-10, admins only) | NUI, Headlamp (`kube`), OpenCost, STAC browser, Gatus (`status`), Hubble, Agent Console, Agent Tap (Hermes dashboard and web app: replica ready, Ingress switch waiting for the owner's OK) (see `docs/roadmap/authentik-unified-login.md`). A small `gate-outpost` replica sits in each app's namespace and the tailnet Ingress points at it. TAK Portal (`enroll`) is deliberately not gated: phones enroll there |
 
 ## Mutable image tags
 
