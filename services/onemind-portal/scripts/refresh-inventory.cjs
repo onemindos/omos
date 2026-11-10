@@ -4,6 +4,7 @@ const cp = require('child_process');
 const path = require('path');
 const YAML = require('yaml');
 const { missingDescription } = require('./inventory-status.cjs');
+const { preserveCuratedCards, runDockerfileCatalogTests } = require('./curated-cards.cjs');
 process.chdir(path.resolve(__dirname, '..'));
 const files = ['catalog/cluster.yaml', 'catalog/apps.yaml', 'catalog/repositories-source.json', 'catalog/runtime-source.json', '../../platform/backstage/catalog/cluster.yaml', '../../platform/backstage/catalog/apps.yaml'];
 const original = new Map(files.map(file => [file, fs.existsSync(file) ? fs.readFileSync(file) : null]));
@@ -57,6 +58,10 @@ try {
   cp.execFileSync(process.execPath, ['scripts/verify-inventory.cjs'], { stdio: 'inherit' });
   // Last: re-parent every entity into the reviewed SO/LE/HP/GE structure (verify and enrich re-add legacy Systems).
   cp.execFileSync(process.execPath, ['scripts/curate-structure.cjs'], { stdio: 'inherit' });
+  // Reviewed reference/planning cards are never rewritten by discovery; put them back before testing.
+  preserveCuratedCards(['catalog/apps.yaml', '../../platform/backstage/catalog/apps.yaml'].map(file => [file, original.get(file)]));
+  // Same catalog tests as the image build (packages/backend/Dockerfile). A failure restores every file above.
+  runDockerfileCatalogTests();
   console.log('Complete discovery staged for review. No entities deleted; no deployment or catalog API writes.');
 } catch (error) {
   for (const [file, bytes] of original) {
