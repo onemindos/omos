@@ -28,12 +28,13 @@ metadata:
   annotations:
     tailscale.com/proxy-group: ingress
     tailscale.com/hostname: stac-browser
+# Behind the Authentik gate (gate-outpost.yaml, admins only). Rollback: backend back to Service stac-browser:8080, in place.
 spec:
   ingressClassName: tailscale
   defaultBackend:
     service:
-      name: stac-browser
+      name: gate-outpost
       port:
-        number: 8080
+        number: 9000
   tls:
     - hosts: [stac-browser]
