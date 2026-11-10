@@ -2,6 +2,7 @@
 # its live name, hostname and TLS host (nothing is recreated, so no new certificate). Prune=false: even if this file is removed from
 # Git, Argo CD must never delete it (each recreate issues a new Let's Encrypt certificate; 5 per name per week).
 # The Hubble UI itself is DOKS-managed Cilium and is not touched; only this Ingress and the gate-outpost replica next to it are ours.
+# Behind the Authentik gate (gate-outpost.yaml, admins only).
 # Rollback of the gate: point the backend back at Service hubble-ui, port 80, in place.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -16,9 +17,9 @@ spec:
   ingressClassName: tailscale
   defaultBackend:
     service:
-      name: hubble-ui
+      name: gate-outpost
       port:
-        number: 80
+        number: 9000
   tls:
     - hosts:
         - hubble
