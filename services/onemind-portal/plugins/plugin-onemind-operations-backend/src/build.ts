@@ -16,7 +16,7 @@ import type {
 } from './types';
 
 export const ARGOCD_URL = 'https://argocd.tail717ba0.ts.net';
-export const HEADLAMP_URL = 'https://headlamp.tail717ba0.ts.net/c/main/workloads';
+export const HEADLAMP_URL = 'https://kube.tail717ba0.ts.net/c/main/workloads';
 export const GRAFANA_URL = 'https://grafana.tail717ba0.ts.net';
 export const ARGO_PROGRESSING_LIMIT_MS = 10 * 60000;
 export const WORKLOAD_PENDING_GRACE_MS = 2 * 60000;

@@ -140,7 +140,7 @@ export function summarizeStatus(
   };
 }
 
-const HEADLAMP = 'https://headlamp.tail717ba0.ts.net/c/main/workloads';
+const HEADLAMP = 'https://kube.tail717ba0.ts.net/c/main/workloads';
 const ARGOCD = 'https://argocd.tail717ba0.ts.net/applications/argocd';
 
 /**

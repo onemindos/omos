@@ -1,4 +1,4 @@
-# Authentik gate outpost for Headlamp: https://headlamp.tail717ba0.ts.net -> Authentik login (admins only) -> Headlamp.
+# Authentik gate outpost for Headlamp: https://kube.tail717ba0.ts.net -> Authentik login (admins only) -> Headlamp.
 #
 # - This is a replica of the ONE Authentik outpost "gate-outpost" (all gated apps share its token and provider list); each
 #   gated app runs a small replica in its own namespace because a Tailscale Ingress backend must be in the Ingress's namespace.

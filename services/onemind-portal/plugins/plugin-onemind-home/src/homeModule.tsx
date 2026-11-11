@@ -96,7 +96,7 @@ export function StatusPanel({ compact = false }: { compact?: boolean }){
   const abbreviated=compact&&!expanded;
   const stale=!!data&&(error||isStale(data));
   const issues=data?attentionEntries(data):[];
-  const setup=data?.needsSetup??(data?.backups.filter(backupNeedsSetup).map(x=>({key:`backup:${x.name}`,kind:'backup',severity:'warning' as const,title:`Backup ${x.name}: needs setup`,detail:x.pendingReason??'Waiting for setup only a person can do.',url:'https://headlamp.tail717ba0.ts.net/c/main/workloads'}))??[]);
+  const setup=data?.needsSetup??(data?.backups.filter(backupNeedsSetup).map(x=>({key:`backup:${x.name}`,kind:'backup',severity:'warning' as const,title:`Backup ${x.name}: needs setup`,detail:x.pendingReason??'Waiting for setup only a person can do.',url:'https://kube.tail717ba0.ts.net/c/main/workloads'}))??[]);
   return (<Box p={2}>
     <Typography variant="h5">Needs attention</Typography>
     <Typography variant="body2" color="textSecondary">Firing alerts, workload readiness, deployment health, storage and backups. The same list drives the Home status strip and <Link href="/live">Live Ops</Link>.</Typography>
