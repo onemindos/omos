@@ -46,11 +46,11 @@ fi
 # certs/files is mounted read-only into takserver, and makeCert.sh is Linux-only.
 # Generate in a throwaway container from the same image with the tak dir mounted rw.
 # Cert metadata matches the existing CA (C=US, ST=TX, L=Austin, O=TAK, OU=TAK-OPS).
-# Client .p12 password = CAPASS (default atakatak) unless overridden.
+# Client .p12 password = CAPASS, which must match the edge CA's key password. Required, no default.
 docker run --rm --entrypoint bash \
   -e STATE="${STATE:-TX}" -e CITY="${CITY:-Austin}" \
   -e ORGANIZATION="${ORGANIZATION:-TAK}" -e ORGANIZATIONAL_UNIT="${ORGANIZATIONAL_UNIT:-TAK-OPS}" \
-  -e CAPASS="${CAPASS:-atakatak}" \
+  -e CAPASS="${CAPASS:?set CAPASS (the edge CA key password)}" \
   -v "$ATAK_ROOT:/opt/tak" \
   "${TAK_IMAGE:-takserver:latest}" -lc "cd /opt/tak/certs && ./makeCert.sh client '$CERT_NAME'"
 
@@ -66,7 +66,7 @@ cp "$CERT_DIR/ca.pem" "$STACK_DIR/exports/ca.pem" 2>/dev/null || true
 chmod 600 "$STACK_DIR/exports/$CERT_NAME.p12"
 
 echo
-echo "Issued TAK device cert: $STACK_DIR/exports/$CERT_NAME.p12 (pass: ${CAPASS:-atakatak})"
+echo "Issued TAK device cert: $STACK_DIR/exports/$CERT_NAME.p12 (p12 password = CAPASS)"
 echo "TAK username: $CERT_NAME    Group: $GROUP    Role note: $ROLE_NOTE"
 echo "Connect ATAK/iTAK to 100.74.182.117:8089 (Tailscale) or 192.168.1.183:8089 (LAN), SSL/TLS."
 echo "Register the device in devices/registry.md and its devices/<id>.yaml."

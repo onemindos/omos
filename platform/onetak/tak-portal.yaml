@@ -38,6 +38,14 @@ spec:
                 secretKeyRef:
                   name: tak-portal-ca-certs-v2
                   key: ca-key-password
+            # Password written into every data package for the client and truststore .p12 (step 3,
+            # 2026-10-29). Needs an image built from services/tak-portal/main.py of this change; the previous
+            # image ignores it and keeps using the stock password. See DEPLOY-RUNBOOK.md, step 3.
+            - name: CERT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: tak-portal-package-pass
+                  key: package-password
           volumeMounts:
             - name: ca-certs
               mountPath: /certs

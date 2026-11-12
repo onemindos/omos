@@ -59,6 +59,184 @@ and are lost at the next restart), then restart config before messaging.
 
 ---
 
+## STEP 3 — last stock passwords and unencrypted keys (maintenance window)
+
+Prepared 2026-10-29. **Do not merge the step-3 PR until sections A to C are done**: the PR mounts Secrets that
+only exist after `scripts/tak/rotate-step3.sh` has run. Applies to: `cert-migration` leaf keys and stores,
+FedHub, TAK-ML, TAK Portal packages, the unused `tak-keystores` mounts. Nothing here changes `CoreConfig.xml`,
+so **no Ignite bounce is needed** (the passwords in CoreConfig are unchanged); the bounce procedure is in section G
+as a fallback only.
+
+### What changes
+
+| Consumer | Before | After |
+|---|---|---|
+| `takserver.key`, `admin.key`, `user.key` (cert-migration ConfigMap, unencrypted PEM) | ConfigMap | Secret `tak-leaf-identities`, PKCS#8 AES-256, mode 0400 |
+| `takserver.p12`, `admin.p12`, `user.p12`, `admin.jks`, `user.jks`, `truststore-root.p12` (stock password) | ConfigMap | same Secret, new random password (`leaf-password`) |
+| TAK Server tiers | cm items + `tak-keystores` Secret (never read) | projected volume = cm public files + `tak-leaf-identities` + `tak-server-stores` + `tak-ca-credentials`; `tak-keystores` mounts and the dead `cp /keystores/*` removed |
+| FedHub (own CA `onemind-fedhub`) | `fedhub-certs`, `keystorePassword` literal | `fedhub-certs-v2` (re-encrypted, no CA keys), `fedhub-store-pass` (password, substituted by the `copy-configs` init container), `fedhub-ca-keys` (mounted nowhere) |
+| TAK-ML | `tak-keystores-copy` (every TAK store), literals in the properties file | `takml-tak-client` (only `takserver.jks` and `truststore-root.jks`), `render-config` init container writes the properties file into an in-memory emptyDir |
+| TAK Portal | `CERT_PASS = b"atakatak"` in `main.py` | `CERT_PASS` env from `tak-portal-package-pass`; random per package if unset; never a default |
+| `provision-channels.sh`, `provider-patch.yaml`, `infra/edge/*` scripts | literals | Secret read / required env, no default |
+
+TAK Server itself reads only `*.jks` from the Secrets and `ca.pem`; none of the moved files is opened by the
+server (verified: CoreConfig references only `ca-signing.jks`, `takserver.jks`, `truststore-root.jks`,
+`fed-truststore.jks`, `ca.pem`). They stay mounted at the same paths for operator tooling.
+
+### A. Preparation (no impact, any time before the window)
+
+Needs `kubectl` (context `do-nyc3-omos-cloud`), `kubeseal`, JDK 11+ `keytool`, OpenSSL 3 (not the macOS LibreSSL;
+`OPENSSL=/opt/homebrew/opt/openssl@3/bin/openssl`), `jq`. `OLD_PASS` is the stock TAK store password (see
+`docs/operations/tak-ca-password-rotation-step1-2026-10-29.md`).
+
+```bash
+export OLD_PASS=...            # the stock TAK store password; not recorded anywhere new
+git switch chore/tak-ca-password-rotation-step3
+scripts/tak/rotate-step3.sh preflight    # read-only; proves the stock password opens every source
+scripts/tak/rotate-step3.sh backup       # Secret takserver/tak-step3-backup-20261029 (all sources)
+scripts/tak/rotate-step3.sh generate     # writes 6 *.sealedsecret.yaml files, applies nothing
+git status                               # expect exactly the 6 new files listed in the script header
+scripts/tak/rotate-step3.sh stage        # kubectl apply the SealedSecrets; nothing mounts them yet
+scripts/tak/rotate-step3.sh verify       # new passwords open the new stores, stock does not,
+                                         # certificate fingerprints and public keys equal the originals
+git add platform && git commit -m "chore(tak): step 3 sealed secrets" && git push
+```
+
+`generate` refuses to overwrite existing files (`--force` draws new passwords, then run `stage` again).
+Wait for CI on the PR (yamllint, kubeconform, gitleaks, ShellCheck) to be green with the six files included.
+
+### B. Baseline (immediately before the window)
+
+```bash
+KC="kubectl --context do-nyc3-omos-cloud -n takserver"
+$KC get pods -o wide
+# server certificate fingerprint on each TAK port (expected B7:2E:4F:01:...:D3:61) and the CA (72:93:0A:5B:...:3A:15)
+for p in 8089 8443 8446; do
+  $KC exec deploy/takserver-messaging -c takserver-messaging -- sh -c \
+    "echo | openssl s_client -connect localhost:$p 2>/dev/null | openssl x509 -noout -fingerprint -sha256"
+done
+# established EUD connections on 8089 (same method as step 2)
+$KC exec deploy/takserver-messaging -c takserver-messaging -- sh -c \
+  "awk 'NR>1 && \$4==\"01\" && \$2 ~ /:1F91\$/' /proc/net/tcp | wc -l"
+$KC exec deploy/fedhub -c fedhub -- sh -c \
+  "echo | openssl s_client -connect localhost:9102 2>/dev/null | openssl x509 -noout -fingerprint -sha256"
+kubectl --context do-nyc3-omos-cloud -n takml logs deploy/takml-server --tail=200 | grep -v -i password | grep -i "mission token" | tail -1
+```
+
+Record the output (public fingerprints and counts only).
+
+### C. Pause Argo (app-of-apps FIRST, otherwise it re-enables the children)
+
+```bash
+A="kubectl --context do-nyc3-omos-cloud -n argocd"
+for app in app-of-apps platform-takserver platform-fedhub platform-takml platform-onetak; do
+  $A patch application "$app" --type merge -p '{"spec":{"syncPolicy":{"automated":null}}}'
+done
+$A get applications app-of-apps platform-takserver platform-fedhub platform-takml platform-onetak \
+  -o custom-columns=NAME:.metadata.name,AUTO:.spec.syncPolicy.automated
+```
+
+All five must show `<none>`. In step 2 Argo selfHeal re-applied the new specs twice during a rollback until both the
+app and app-of-apps were paused; do not skip app-of-apps.
+
+### D. Merge and roll, one application at a time
+
+Merge the PR (owner). Nothing changes in the cluster yet. Then, in this order, restore auto-sync for one app, wait,
+verify, continue.
+
+```bash
+restore() { $A patch application "$1" --type merge -p '{"spec":{"syncPolicy":{"automated":{"prune":true,"selfHeal":true}}}}'; }
+```
+
+1. `restore app-of-apps` (picks up the merged revision; children stay paused). Then `restore platform-takserver`.
+   Argo rolls by sync wave: config (0), messaging (1), api (2), plugins (3). Expect **8089, 8443, 8446 down about
+   5 to 8 minutes** (messaging has an 80 s readiness delay; step 2 measured 7 minutes). Wait until all four are Ready:
+   `$KC rollout status deploy/takserver-config deploy/takserver-messaging deploy/takserver-api deploy/takserver-plugins`
+   (one `rollout status` per deployment). Run verification E.1 to E.3.
+2. `restore platform-fedhub`: one pod restart, about 1 to 2 minutes (UI/federation 9100, 9443, 9101, 9102). Verify E.4.
+3. `restore platform-takml`: one pod restart, about 2 minutes (60 s startup probe delay). Verify E.5.
+4. `restore platform-onetak`: adds the `CERT_PASS` env; the old portal image ignores it. No downtime beyond a pod restart.
+
+Portal image (separate, gated on a device test): merging changes `services/tak-portal/main.py`, which makes
+`.github/workflows/build-tak-portal.yml` build a new image. Pin its digest in `platform/onetak/tak-portal.yaml` in a
+follow-up PR only after a real ATAK and a real iTAK device import a package built by that image (see E.6).
+
+### E. Verification
+
+1. **TAK Server**: pods Ready, restarts 0; the fingerprints from B are identical on 8089, 8443, 8446; the established
+   count on 8089 is back to the B value; `/Marti/api/version` with the admin client certificate returns 200
+   (this is what `services/takserver/provision-channels.sh` does; run it, expect only `EXISTS` lines).
+2. **Keys encrypted, nothing stock left in the pods**:
+   `$KC exec deploy/takserver-config -c takserver-config -- sh -c 'head -1 /certs-configmap/admin.key /certs-configmap/takserver.key /certs-configmap/user.key'`
+   must show `BEGIN ENCRYPTED PRIVATE KEY` three times; `ls /keystores` must fail (mount removed).
+3. **`CoreConfig.xml` unchanged**: `$KC exec deploy/takserver-config -c takserver-config -- grep -c '__[A-Z_]*__' /opt/tak/conf/CoreConfig.xml` prints 0, and
+   `scripts/tak/rotate-step3.sh verify` still passes.
+4. **FedHub**: pod Ready, 0 restarts; `$KC logs deploy/fedhub -c fedhub --tail=300 | grep -i -E 'keystore|ssl|password was incorrect|exception'` shows nothing new;
+   the server certificate on 9102 has the fingerprint recorded in B; the UI answers on `fedhub.tail717ba0.ts.net:9100` with the admin client certificate
+   and on 9443 through Authentik; any existing federation peer shows connected in the UI (peers re-dial within `clientRefreshTime`).
+5. **TAK-ML**: pod Ready; `kubectl -n takml logs deploy/takml-server | grep -v -i password | grep -E 'FileClientImpl|SSL|Handshake'` shows the
+   `mission token` line again and no handshake error (the app logs `Loading property tak.client_store.password`: do not paste that line anywhere).
+6. **Portal enrollment** (after the new image is pinned): enroll a throw-away callsign at `enroll.tail717ba0.ts.net`,
+   download the zip and check `MANIFEST/manifest.xml` and `*.pref` hold a password that is not the stock one;
+   `openssl pkcs12 -in certs/<callsign>.p12 -passin env:PKGPASS -noout` succeeds with that password and fails with the stock one;
+   import the package on one ATAK and one iTAK device and confirm they connect. If either device ignores the
+   password in the package, roll the portal back to the previous digest (existing devices are unaffected either way).
+
+### F. Cleanup after the soak period (each step needs the owner's approval; the backup Secrets must exist first)
+
+```bash
+kubectl --context do-nyc3-omos-cloud -n takserver patch configmap cert-migration --type json -p '[
+ {"op":"remove","path":"/data/admin.key"},{"op":"remove","path":"/data/takserver.key"},{"op":"remove","path":"/data/user.key"},
+ {"op":"remove","path":"/binaryData/admin.jks"},{"op":"remove","path":"/binaryData/admin.p12"},
+ {"op":"remove","path":"/binaryData/takserver.p12"},{"op":"remove","path":"/binaryData/truststore-root.p12"},
+ {"op":"remove","path":"/binaryData/user.jks"},{"op":"remove","path":"/binaryData/user.p12"}]'
+```
+
+Then delete the Secrets `tak-keystores` (takserver), `tak-keystores-copy` (takml) and `fedhub-certs` (takserver; remove
+`platform/takserver/fedhub/fedhub-certs.sealedsecret.yaml` in the same PR), and finally the backup Secrets
+`tak-step3-backup-20261029`, `tak-step2-backup-20261029`, `tak-ca-backup-20261029`.
+
+### G. Rollback and the Ignite full bounce
+
+The old sources stay in the cluster until section F, so rollback is complete at any point before it.
+
+1. Pause Argo as in C (app-of-apps first).
+2. Revert the merge on `main` (PR) **or**, for speed, with Argo paused undo the workloads in the reverse of the roll:
+   `kubectl -n takserver rollout undo deploy/takserver-plugins deploy/takserver-api deploy/takserver-messaging deploy/takserver-config`
+   (one command per deployment, in that order), `rollout undo deploy/fedhub`, and `kubectl -n takml rollout undo deploy/takml-server`.
+   The previous revisions mount `cert-migration` (old keys) and `tak-keystores`, both still present.
+3. Merge the revert PR, then restore auto-sync as in D (app-of-apps first).
+
+The CoreConfig is not touched by step 3, so the cached copy in Ignite stays valid and no bounce is needed. If the
+config pod ever rewrites `/opt/tak/conf/CoreConfig.xml` with values that differ from the template (check with
+`diff` against a freshly rendered file, or a messaging crash loop with "keystore password was incorrect"), do the
+full bounce with Argo paused:
+
+```bash
+KC="kubectl --context do-nyc3-omos-cloud -n takserver"
+for d in takserver-api takserver-plugins takserver-messaging takserver-config; do $KC scale deploy/$d --replicas=0; done
+$KC delete pod takserver-ignite-0
+$KC wait --for=condition=Ready pod/takserver-ignite-0 --timeout=300s
+for d in takserver-config takserver-messaging takserver-api takserver-plugins; do
+  $KC scale deploy/$d --replicas=1
+  $KC rollout status deploy/$d --timeout=600s
+done
+```
+
+Expect about 8 minutes without 8089, 8443 and 8446. Afterwards confirm `/opt/tak/conf/CoreConfig.xml` in the config pod
+still holds the intended values and restore auto-sync.
+
+### Device impact (read from `services/tak-portal/main.py`)
+
+Existing devices are not affected. TAK Server authenticates a client by its certificate in the TLS handshake; it never
+checks the password of the `.p12` on the device. Each device keeps its own stored copy of its `.p12` and truststore
+passwords (set when its package was imported), and neither the server stores nor the CA changed. Only packages issued
+**after the new portal image is deployed** carry the new password: the portal writes it into the package manifest
+(`certPassword`) and `caPassword0` / `clientPassword0` of the `.pref`, and encrypts both `.p12` files with it. Until
+the image is pinned, the old image keeps issuing packages with the stock password.
+
+---
+
 ## 0. Source material (paths on Zeus's Mac)
 
 | Thing | Path |
@@ -118,7 +296,7 @@ docker rm -f tak-ca-setup 2>/dev/null
 docker run --name tak-ca-setup \
   --env CA_NAME=onemind-tak --env STATE=FL --env CITY=Tampa --env ORGANIZATIONAL_UNIT=OneMind \
   takserver-ca-setup:5.8-onemind
-docker cp tak-ca-setup:/files ./certs-out    # ~31 files, storepass = the keystore password (default until step-2 rotation; see Secret tak-keystores in ns takserver)
+docker cp tak-ca-setup:/files ./certs-out    # ~31 files, storepass = the generator's stock password; re-encrypt every store with a random one before use, see PASSWORD SUPPLY and STEP 3
 ```
 Required outputs (verify present): `takserver.jks`, `truststore-root.jks`, `fed-truststore.jks`, `admin.pem`.
 `takserver.jks` = single PrivateKeyEntry, alias **`takserver`** (JwtUtils uses the keystore's first alias).
