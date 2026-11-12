@@ -1,0 +1,20 @@
+--- a/platform/hermes/onemind-hermes/deployment.yaml
++++ b/platform/hermes/onemind-hermes/deployment.yaml
+@@ -20,6 +20,8 @@
+         onemind.io/agent: legacy
+     spec:
+       automountServiceAccountToken: false
++      imagePullSecrets:
++        - name: onemind-hermes-registry
+       terminationGracePeriodSeconds: 60
+       securityContext:
+         seccompProfile:
+@@ -191,7 +193,7 @@
+               mountPath: /tmp
+       containers:
+         - name: hermes
+-          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
++          image: ghcr.io/onemindos/hermes-agent@sha256:7e02bd636a1a6d66276bd006581eec72009aaa582af22a48605d8eae0bed9693
+           args: [gateway, run]
+           securityContext:
+             allowPrivilegeEscalation: false
