@@ -59,6 +59,18 @@ database `langfuse` in CNPG `onemind-data`, a `langfuse` user and database in Cl
 | --- | --- | --- | --- | --- | --- |
 | 2 | `ecosystem-langfuse` | `langfuse` | PostgreSQL (CNPG `onemind-data`, `Velero`, `Barman`), ClickHouse database `langfuse` (VolSync of the ClickHouse PVC), event blobs in Spaces; Redis queue is disposable | Tailnet only: `https://onemind-langfuse.tail717ba0.ts.net`, Authentik sign-in only | Auto-sync, Synced/Healthy (2026-11-07) |
 
+## Task service preparation — 2026-10-29
+
+FEATURES D2 and H4 (onemind-xr): missions and tasks per `mission-task.md`, the only writer of KV
+`mission-state` and of `evt.mission.>`, applying `cmd.mission.*` from the policy service. Not deployed:
+the Application is manual and waits for the owner steps in
+[`platform/mission/README.md`](../platform/mission/README.md) (NATS user `mission`, one SealedSecret,
+pinned image digest, the policy service first). Supersedes the parked, never-built `omos-mission-engine`.
+
+| Tier | Application | Namespace | State / recovery | Exposure | Status |
+| --- | --- | --- | --- | --- | --- |
+| 2 | `platform-mission` | `onemind-core` | No PVC; records in KV `mission-state` (R3, history 5), history in `MISSION` (`evt.mission.>`, 90 d) | None (NATS client only; no Service or ingress); ecosystem pool | Manual Argo, not synced; [owner steps](../platform/mission/README.md) pending |
+
 ## Summary
 
 Trivy pilot, prepared 2026-10-24 and retargeted 2026-11-04: a bounded Argo-managed
