@@ -1072,7 +1072,7 @@ metadata:
     - infrastructure
     - deployment-verified
   links:
-    - url: https://headlamp.tail717ba0.ts.net/c/main/token
+    - url: https://kube.tail717ba0.ts.net/c/main/token
       title: Open application
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81899931d63301bfe25d.md
@@ -1093,7 +1093,7 @@ metadata:
           "method": "Kubernetes",
           "location": "OneMind Cloud — NYC3",
           "targetRef": "resource:default/do-nyc3-omos-cloud",
-          "url": "https://headlamp.tail717ba0.ts.net/c/main/token",
+          "url": "https://kube.tail717ba0.ts.net/c/main/token",
           "evidence": "Catalog snapshot",
           "observedAt": "2026-10-06"
         }
@@ -1111,7 +1111,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-11-08T14:59:23.152Z
     onemind.io/runtime-evidence: Deployment headlamp/headlamp; Service headlamp/headlamp
-    onemind.io/documented-address: https://headlamp.tail717ba0.ts.net
+    onemind.io/documented-address: https://kube.tail717ba0.ts.net
     argocd/app-name: platform-kube
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: kube

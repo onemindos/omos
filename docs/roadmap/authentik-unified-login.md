@@ -137,7 +137,7 @@ testing.
 | Hermes dashboard | `onemind-hermes.tail717ba0.ts.net` | Own dashboard username/password (`hermes-dashboard-auth`) | Medium. Outpost adds a gate; the dashboard login stays unless header auth is added upstream |
 | Hermes web app | `onemind-hermes-web.tail717ba0.ts.net` | Own app login | Same. Native clients and API calls must bypass |
 | WebODM | none (ClusterIP `webodm`, no ingress today) | Own Django users | No SSO upstream (no header auth). Gate only when an ingress is added |
-| Headlamp | `headlamp.tail717ba0.ts.net` | In-cluster service account (everyone with tailnet access has its rights) | Gate entrance now. Native Headlamp OIDC is not useful on DOKS because the API server will not accept Authentik tokens (DOKS has no custom OIDC setting) |
+| Headlamp | `kube.tail717ba0.ts.net` (was `headlamp`) | In-cluster service account (everyone with tailnet access has its rights) | Gate entrance now. Native Headlamp OIDC is not useful on DOKS because the API server will not accept Authentik tokens (DOKS has no custom OIDC setting) |
 | n8n 2.42.4 | `n8n.tail717ba0.ts.net` | Own owner account | Community edition has no SSO (docs list SSO as Business/Enterprise, verify on the pricing page). Gate the UI with an outpost; webhook paths must be exempt or kept internal |
 | TAK Portal | `enroll.tail717ba0.ts.net` | Own login (and public landing at `onemindos.dev`) | Gate `enroll` only if it is private to staff. Do not touch the public root or enrollment downloads |
 
