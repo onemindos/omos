@@ -1,5 +1,5 @@
 # omos entity service. Base images pinned by digest (resolved 2026-10-29).
-FROM golang:1.26-alpine@sha256:a2012b4a1d1f9f7e9f44e0d39b805a901e856b1dd80b4e6ee4338db547050308 AS build
+FROM golang:1.26-alpine@sha256:30b1e546a9c7fa3b747c2bdba3a0c7bdf3a02ebb4c5b8405d2f948d7e8aac4ec AS build
 WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
