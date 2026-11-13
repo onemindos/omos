@@ -4,6 +4,8 @@ namespace: hermes
 resources:
   - mac-access/onemind-hermes-mac-ssh.sealedsecret.json
   - pvc.yaml
+  # Agent scratch space at /opt/scratch, kept off the data volume (README "Scratch volume").
+  - scratch-pvc.yaml
   - deployment.yaml
   - service.yaml
   - network.yaml

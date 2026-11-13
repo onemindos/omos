@@ -62,6 +62,15 @@ spec:
                   os.chown(target.parent, owner.pw_uid, owner.pw_gid)
                   os.chown(target, owner.pw_uid, owner.pw_gid)
 
+              # Agent scratch volume (scratch-pvc.yaml): a fresh volume is root-owned. Give the
+              # hermes user the top level and the dirs the main container's env points at.
+              # Top level only; never recurse through existing agent work.
+              for sub in ('', 'work', 'cache'):
+                  folder = Path('/opt/scratch') / sub
+                  folder.mkdir(exist_ok=True)
+                  if owner and os.geteuid() == 0:
+                      os.chown(folder, owner.pw_uid, owner.pw_gid)
+
               # Direct image Python stays root here; resolve the actual hermes account
               # and prepare owner-only credentials exclusively in the RAM volume.
               import subprocess
@@ -141,6 +150,8 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /opt/data
+            - name: scratch
+              mountPath: /opt/scratch
             - name: defaults
               mountPath: /defaults
               readOnly: true
@@ -372,6 +383,24 @@ spec:
             # GATEWAY_ALLOW_ALL_USERS stays false, so Telegram and Matrix keep their allowlists.
             - name: NATS_ALLOW_ALL_USERS
               value: 'true'
+            # ---- Agent scratch space (README "Scratch volume") ----
+            # Terminal commands start in /opt/scratch/work instead of the gateway's cwd (the data volume),
+            # and build/package caches go to /opt/scratch/cache. None of these names are on Hermes's
+            # child-env blocklist (tools/environments/local_env_policy.py), so terminal commands inherit them.
+            - name: TERMINAL_CWD
+              value: /opt/scratch/work
+            - name: XDG_CACHE_HOME
+              value: /opt/scratch/cache
+            - name: GOPATH
+              value: /opt/scratch/go
+            - name: GOCACHE
+              value: /opt/scratch/cache/go-build
+            - name: UV_CACHE_DIR
+              value: /opt/scratch/cache/uv
+            - name: PIP_CACHE_DIR
+              value: /opt/scratch/cache/pip
+            - name: npm_config_cache
+              value: /opt/scratch/cache/npm
           ports:
             - name: dashboard
               containerPort: 9119
@@ -398,6 +427,8 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /opt/data
+            - name: scratch
+              mountPath: /opt/scratch
             - name: mac-ssh
               mountPath: /var/run/legacy-mac-ssh
               readOnly: true
@@ -447,6 +478,9 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: onemind-hermes-data
+        - name: scratch
+          persistentVolumeClaim:
+            claimName: onemind-hermes-scratch
         - name: defaults
           configMap:
             name: onemind-hermes-defaults
