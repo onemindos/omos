@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: onemind-hermes-scratch
+  namespace: hermes
+  labels:
+    app.kubernetes.io/name: onemind-hermes
+    onemind.io/data-class: scratch
+spec:
+  # Agent working space (terminal cwd, Go/uv/pip/npm caches, worktrees), mounted at /opt/scratch.
+  # It is a separate volume so that a runaway build fills this disk and not onemind-hermes-data, where
+  # state.db lives (2026-11-12: agent build caches filled the 10Gi data volume, and state.db writes failed).
+  # Deliberately NOT backed up (no ReplicationSource) and reclaim policy Delete: everything here can be
+  # rebuilt. Push work to Git; do not keep anything here that only exists here.
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: do-block-storage
+  resources:
+    requests:
+      storage: 50Gi
