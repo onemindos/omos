@@ -7,7 +7,10 @@ metadata:
     app.kubernetes.io/name: onemind-hermes
     onemind.io/agent: legacy
 spec:
-  replicas: 1
+  # 0 since 2026-11-14: Legacy now runs on the founder's Mac (more CPU and RAM for coding; the
+  # pod hit its 3Gi limit and was OOMKilled). The PVC is kept (Retain), so setting this back
+  # to 1 restores the cluster instance as it was.
+  replicas: 0
   strategy:
     type: Recreate
   selector:
