@@ -7,10 +7,10 @@ metadata:
     app.kubernetes.io/name: onemind-hermes
     onemind.io/agent: legacy
 spec:
-  # 0 since 2026-11-14: Legacy now runs on the founder's Mac (more CPU and RAM for coding; the
-  # pod hit its 3Gi limit and was OOMKilled). The PVC is kept (Retain), so setting this back
-  # to 1 restores the cluster instance as it was.
-  replicas: 0
+  # Back to 1 on 2026-11-15: the cluster runs the always-on Legacy (Telegram bot, cron jobs).
+  # The founder's Mac runs Hermes for coding only, with no Telegram token, so only one
+  # machine polls the bot. Telegram allows one poller per token.
+  replicas: 1
   strategy:
     type: Recreate
   selector:
