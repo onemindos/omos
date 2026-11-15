@@ -222,6 +222,30 @@ Both SealedSecrets are namespace-wide scoped
 Deployment uses one replica and `Recreate`. PVC annotations prevent Argo
 prune/delete of its data.
 
+## Scratch volume
+
+Agent work (terminal commands, Go/uv/pip/npm caches, worktrees, throwaway databases) lives on its
+own volume, `onemind-hermes-scratch` (50Gi, `do-block-storage`, reclaim `Delete`), mounted at
+`/opt/scratch`. Before this, terminal commands started in the gateway's working directory on the data
+volume. On 2026-11-12 an agent's build caches (4.7G in `/opt/data/agent-a-20261112`, plus 1.9G of uv
+cache) filled the then-10Gi data volume, and `state.db` writes failed with `disk I/O error`.
+
+- `TERMINAL_CWD=/opt/scratch/work` is where terminal commands start.
+- `XDG_CACHE_HOME`, `GOPATH`, `GOCACHE`, `UV_CACHE_DIR`, `PIP_CACHE_DIR` and `npm_config_cache` point
+  under `/opt/scratch`. They are not on Hermes's child-env blocklist, so terminal commands inherit them.
+- `initial-config` creates `/opt/scratch/{work,cache}` owned by `hermes` (top level only).
+- **Not backed up.** No ReplicationSource covers it, and deleting the claim deletes the volume. Push work
+  to Git; nothing should exist only here.
+- If it fills, agent builds get `No space left on device`; the gateway and `state.db` are unaffected.
+  Clear `/opt/scratch/cache` freely.
+
+**Memory is not isolated by this.** Agent commands still run inside the `hermes` container and share
+its 3Gi limit with the gateway (the 2026-11-12 19:51 UTC OOM kill). Hermes's own per-command cap
+(`TERMINAL_LOCAL_MEMORY_MAX_MB`) works through `systemd-run --user --scope`. This container has no
+systemd and mounts `/sys/fs/cgroup` read-only, so that cap cannot take effect here. Real memory
+isolation needs agent commands to run in a separate pod with its own limits, e.g. Hermes's `ssh`
+terminal backend pointed at a sandbox pod. That is a follow-up.
+
 ## Backup
 
 `ReplicationSource onemind-hermes-data` snapshots the PVC nightly at 01:25 UTC
