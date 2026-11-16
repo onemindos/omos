@@ -30,7 +30,7 @@ const LIVE_TAILNET_HOSTS = new Set(
     'onemind-hermes-web',
     'karakeep',
     'hubble',
-    'headlamp',
+    'kube', // Headlamp (renamed from headlamp on 2026-11-09, #810)
     'element',
     'matrix',
     'grafana',

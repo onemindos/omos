@@ -32,7 +32,7 @@ export const TILES: Tile[] = [
   {
     key: 'workloads',
     label: 'Workloads not ready',
-    href: 'https://headlamp.tail717ba0.ts.net/c/main/workloads',
+    href: 'https://kube.tail717ba0.ts.net/c/main/workloads',
     external: true,
     hint: 'Fewer ready replicas than desired',
   },
