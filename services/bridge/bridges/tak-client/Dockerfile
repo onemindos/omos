@@ -1,6 +1,6 @@
 # omos tak-client (TAK Server streaming client bridge). Base images pinned by digest
 # (same digests as services/entity/Dockerfile on feat/entity-service, resolved 2026-10-29).
-FROM golang:1.26-alpine@sha256:a2012b4a1d1f9f7e9f44e0d39b805a901e856b1dd80b4e6ee4338db547050308 AS build
+FROM golang:1.26-alpine@sha256:ecb67f987aa1a57794c91d19ade7ae0209f2f0f5496aaef9e6ae85ddf92d02ab AS build
 WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
