@@ -37,6 +37,96 @@ prometheus:
     ruleSelectorNilUsesHelmValues: false
 
 alertmanager:
+  # Base Alertmanager config: the chart defaults, restated so live routing is readable here, plus
+  # Telegram for critical and warning alerts. AlertmanagerConfig routes are merged in ahead of these
+  # routes with `continue: true`, so they cannot take alerts away from Telegram; their inhibit rules
+  # apply globally, though (matcher strategy None, below), so one can still mute Telegram alerts.
+  # Telegram is configured here, not in an AlertmanagerConfig, because that CRD only takes the chat ID
+  # as a literal integer; here the token and chat ID are both files from a Secret, never in Git.
+  # The restated defaults (global, inhibit_rules, root route timers, templates) are copied from chart
+  # 87.16.1 and no longer follow it: re-sync them with the chart's values.yaml on every chart bump.
+  config:
+    global:
+      resolve_timeout: 5m
+    inhibit_rules:
+      # A critical alert mutes the warning/info alert of the same name in the same namespace.
+      - source_matchers:
+          - 'severity = critical'
+        target_matchers:
+          - 'severity =~ warning|info'
+        equal:
+          - 'namespace'
+          - 'alertname'
+      - source_matchers:
+          - 'severity = warning'
+        target_matchers:
+          - 'severity = info'
+        equal:
+          - 'namespace'
+          - 'alertname'
+      - source_matchers:
+          - 'alertname = InfoInhibitor'
+        target_matchers:
+          - 'severity = info'
+        equal:
+          - 'namespace'
+      - target_matchers:
+          - 'alertname = InfoInhibitor'
+    route:
+      # Alerts no child route matches (severity info or none) end here.
+      receiver: 'null'
+      group_by: ['namespace']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      routes:
+        # The always-firing heartbeat and the inhibitor placeholder are never notified.
+        - receiver: 'null'
+          matchers:
+            - 'alertname =~ "Watchdog|InfoInhibitor"'
+        # Warnings: one message per alert name, all namespaces together, repeated every 12h. A group
+        # chat takes at most 20 bot messages a minute and Alertmanager ignores Telegram's retry_after,
+        # so a node failure, which touches many namespaces at once, must not send one per namespace.
+        - receiver: telegram
+          matchers:
+            - 'severity =~ "critical|warning"'
+          group_by: ['alertname']
+          routes:
+            # Critical: one message per alert name and namespace, repeated every 4h. Critical rules
+            # are cluster-wide or tied to one namespace, so they do not fan out across namespaces.
+            - receiver: telegram
+              matchers:
+                - 'severity = critical'
+              group_by: ['alertname', 'namespace']
+              repeat_interval: 4h
+    receivers:
+      - name: 'null'
+      - name: telegram
+        telegram_configs:
+          # Both files are read when a message is sent, from Secret monitoring/alertmanager-telegram
+          # (SealedSecret platform/monitoring/alertmanager-telegram.sealedsecret.yaml, keys bot-token
+          # and chat-id), mounted by alertmanagerSpec.volumes below.
+          - bot_token_file: /etc/alertmanager/secrets/alertmanager-telegram/bot-token
+            chat_id_file: /etc/alertmanager/secrets/alertmanager-telegram/chat-id
+            send_resolved: true
+            parse_mode: HTML
+            # Kept short on purpose: in HTML mode a message over Telegram's 4096-character limit is
+            # replaced by an error line, so at most 8 alerts are listed. Never write "$(" here: the
+            # config reloader expands $(VAR) references before Alertmanager reads the file.
+            message: |-
+              {{- $alerts := .Alerts.Firing }}{{ if eq .Status "resolved" }}{{ $alerts = .Alerts.Resolved }}{{ end -}}
+              <b>{{ .Status | toUpper }}{{ if eq .Status "firing" }} {{ len .Alerts.Firing }}{{ end }}</b> {{ .CommonLabels.alertname }} [{{ .CommonLabels.severity }}]
+              {{- with .CommonLabels.namespace }} {{ . }}{{ end }}
+              {{- if and (eq .Status "firing") .Alerts.Resolved }} (+{{ len .Alerts.Resolved }} resolved){{ end }}
+              {{- range $i, $a := $alerts }}{{ if lt $i 8 }}
+              - {{ with $a.Annotations.description }}{{ . }}{{ else }}{{ $a.Annotations.summary }}{{ end }}
+              {{- end }}{{ end }}
+              {{- if gt (len $alerts) 8 }}
+              (first 8 of {{ len $alerts }}){{ end }}
+              {{- with .CommonAnnotations.runbook_url }}
+              <a href="{{ . }}">Runbook</a>{{ end }}
+    templates:
+      - '/etc/alertmanager/config/*.tmpl'
   alertmanagerSpec:
     resources:
       requests:
@@ -52,6 +142,18 @@ alertmanager:
     # use `continue: true` and are unaffected.
     alertmanagerConfigMatcherStrategy:
       type: None
+    # Telegram credential files for config.receivers above. optional: true keeps Alertmanager starting
+    # when the Secret is missing (only Telegram sends fail); `secrets:` would block the pod instead.
+    volumes:
+      - name: alertmanager-telegram
+        secret:
+          secretName: alertmanager-telegram
+          optional: true
+          defaultMode: 288  # 0440: root and the pod's fsGroup (2000) can read
+    volumeMounts:
+      - name: alertmanager-telegram
+        mountPath: /etc/alertmanager/secrets/alertmanager-telegram
+        readOnly: true
 
 kubeStateMetrics:
   enabled: true
