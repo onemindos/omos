@@ -19,6 +19,5 @@ resources:
 - sealed/ops-platform-backup-credentials.yaml
 - sealed/ops-ghcr.yaml
 - offsite-copy.yaml
-# Staged placeholder until the owner overwrites it with real kubeseal output
-# (OFFSITE-COPY.md steps 1-5, REMAINING-STEPS.md). It cannot be unsealed.
+# Scoped Spaces key onemind-offsite-copy, sealed 2026-11-16 (OFFSITE-COPY.md step 4).
 - sealed/ops-offsite-copy-credentials.yaml

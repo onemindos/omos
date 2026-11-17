@@ -75,9 +75,9 @@ Current annotations:
 | CronJob | State | Detail |
 |---|---|---|
 | `clickhouse/backup-clickhouse` | active | native BACKUP of `onemind` and `langfuse` to Spaces, daily 03:00 UTC, next to the VolSync snapshot |
-| `ops/backup-offsite-copy` | pending-setup | waits for the owner's kubeseal output over the staged placeholder SealedSecret (kustomization wiring already committed on `fix/offsite-copy-credentials-wiring`); the final replace + `suspend: false` commit also removes both annotations (`platform/backups/OFFSITE-COPY.md` steps 1 to 5, `REMAINING-STEPS.md`) |
+| `ops/backup-offsite-copy` | active | daily 17:00 UTC copy of `onemind-backups` (nyc3) to `onemind-backups-sfo3` (sfo3); enabled 2026-11-16 after a verified seed of 35,116 objects (`platform/backups/OFFSITE-COPY.md`) |
 
-Both keep `suspend: true`. (`backstage/backstage-backup`, superseded by `backup-postgres-backstage`, was removed from Git on 2026-10-27.) Not covered yet: Velero (exports no metrics) and
+Both run on schedule (`suspend: false`). (`backstage/backstage-backup`, superseded by `backup-postgres-backstage`, was removed from Git on 2026-10-27.) Not covered yet: Velero (exports no metrics) and
 CloudNativePG (its metrics carry no cluster name and read `0`, meaning no backup recorded);
 the page says so.
 

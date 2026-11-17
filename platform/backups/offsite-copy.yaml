@@ -85,13 +85,10 @@ metadata:
   # ScheduledBackupOverdue alert (platform/monitoring/backup-health.yaml).
   name: backup-offsite-copy
   namespace: ops
-  annotations:
-    # Read by the portal (Home, Today, Live Ops): shown as "needs setup", not as failing or retired.
-    onemind.io/backup-state: pending-setup
-    onemind.io/pending-reason: Waiting for SealedSecret offsite-copy-credentials (OFFSITE-COPY.md steps 1-5)
 spec:
-  # Suspended until SealedSecret offsite-copy-credentials exists (OFFSITE-COPY.md step 5).
-  suspend: true
+  # Enabled 2026-11-16: SealedSecret offsite-copy-credentials holds the scoped key
+  # onemind-offsite-copy (read onemind-backups, readwrite onemind-backups-sfo3).
+  suspend: false
   # 17:00 UTC: after the last VolSync source (15:00 UTC plus minutes of runtime), after
   # TAK (02:00, ~1.5-2.5 h), NATS 03:30, recovery export 04:00, Postgres 05:00-06:40,
   # Velero 06:00 and CNPG continuous archiving. Leaves ~2 h of slack.

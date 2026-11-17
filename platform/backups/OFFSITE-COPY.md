@@ -194,12 +194,22 @@ Verification remains size-only for each selected object; an independent restore
 and authenticated archive-decryption test is required after initial seeding.
 A successful size check is not a complete recovery drill.
 
-Current deployment remains suspended: no independent destination credentials are
-configured. The destination recorded in `offsite-copy-config` is DigitalOcean Spaces
-bucket `onemind-backups-sfo3` in `sfo3`; that is regional redundancy within
-DigitalOcean, not protection against provider/account loss. On
-`fix/offsite-copy-credentials-wiring` the kustomization wiring is staged against a
-marked placeholder SealedSecret (see `REMAINING-STEPS.md` at the repository root).
-Do not enable the job until the owner seals scoped credentials over that placeholder
-(step 4), the initial copy passes (step 6), and recovery from that destination is
-verified.
+**Status (2026-11-16): enabled.** Steps 1 to 6 are done.
+
+- Destination: Spaces bucket `onemind-backups-sfo3` in `sfo3` (it already existed, empty,
+  since 2026-10-10). Versioning is on, with lifecycle rules `expire-overwritten-90d`
+  (prefix `_overwritten/`) and `abort-incomplete-uploads-7d`. The temporary full-access
+  key used to set them was deleted.
+- Credentials: scoped key `onemind-offsite-copy` (read `onemind-backups`, readwrite
+  `onemind-backups-sfo3`), sealed into `sealed/ops-offsite-copy-credentials.yaml`
+  (namespace-wide scope). The plaintext key files were deleted after sealing.
+- Initial seed (job `offsite-seed-1`, 2026-11-16 22:10 to 2026-11-17 00:10 UTC, 120 min):
+  35,116 objects, 232.9 GiB copied; `rclone check` found 0 differences; heartbeat
+  `_offsite/last-success.json` written (run `20261116T221003Z`).
+- Not done yet: the restore drill (`restic check` against a mirrored repository and
+  `tools/decrypt.py` on a mirrored archive). It needs the restic and archive keys,
+  which are kept outside the cluster.
+
+This is regional redundancy inside DigitalOcean, not protection against losing the
+provider or the account. Moving to Backblaze B2 or a home server is still the next step
+for that.
